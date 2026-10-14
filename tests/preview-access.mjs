@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import ts from 'typescript';
+const source=await readFile('functions/_middleware.ts','utf8');
+const {outputText}=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}});
+const {onRequest}=await import('data:text/javascript;base64,'+Buffer.from(outputText).toString('base64'));
+const check=(env,authorization)=>onRequest({env,request:new Request('https://example.test/_next/data',{headers:authorization?{Authorization:authorization}:{}}),next:async()=>new Response('protected content')});
+test('missing configuration fails closed',async()=>assert.equal((await check({})).status,503));
+test('anonymous requests cannot read preview content',async()=>assert.equal((await check({PREVIEW_PASSWORD:'test-only'})).status,401));
+test('incorrect and malformed credentials are rejected',async()=>{for(const a of ['Basic !!!','Bearer token','Basic '+btoa('hustle:wrong')])assert.equal((await check({PREVIEW_PASSWORD:'test-only'},a)).status,401)});
+test('authenticated request succeeds without shared caching',async()=>{const r=await check({PREVIEW_PASSWORD:'test-only'},'Basic '+btoa('hustle:test-only'));assert.equal(r.status,200);assert.equal(await r.text(),'protected content');assert.equal(r.headers.get('cache-control'),'private, no-store');assert.equal(r.headers.get('x-robots-tag'),'noindex, nofollow')});
