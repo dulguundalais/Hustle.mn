@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import ts from 'typescript';
-const source=await readFile('functions/_middleware.ts','utf8');
+const source=await readFile('optional-preview-auth/middleware.ts','utf8');
 const {outputText}=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}});
 const {onRequest}=await import('data:text/javascript;base64,'+Buffer.from(outputText).toString('base64'));
 const check=(env,authorization)=>onRequest({env,request:new Request('https://example.test/_next/data',{headers:authorization?{Authorization:authorization}:{}}),next:async()=>new Response('protected content')});

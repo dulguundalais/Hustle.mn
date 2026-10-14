@@ -1,3 +1,6 @@
+## Owner update — public sample preview
+Owner requested direct free access on 2026-10-14. Preview authentication middleware moved to optional-preview-auth/middleware.ts and is not deployed. Only fictional sample content is exported; runtime auth/API routes remain excluded. No production changes. Restore protection before deploying private data. The earlier Access blocker no longer applies to this sample-only preview.
+
 # V5 premium marketplace — Stage 1
 
 Branch: feature/premium-marketplace-v5. Base: agent/hustle-mvp-foundation.
