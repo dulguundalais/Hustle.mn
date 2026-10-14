@@ -1,0 +1,4 @@
+/* Premium showcase tokens */
+:root{--bg:#faf9f7;--panel:#ffffff;--ink:#181622;--muted:#777486;--line:#e9e7ee;--accent:#7052e8;--soft:#f1edff}
+.dark{--bg:#11101a;--panel:#1b1927;--ink:#f8f6ff;--muted:#a9a4b8;--line:#302d3c;--accent:#ae96ff;--soft:#302747}
+html{scroll-behavior:smooth}
