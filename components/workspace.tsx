@@ -58,6 +58,7 @@ async function load(){
      setTab('buyer-home');setNotice(t('Энэ freelancer-ийн нийтийн профайл олдсонгүй. Marketplace-ээс дахин сонгоно уу.','That public freelancer profile was not found. Please select a listing again.'));
    }else if(mode==='admin'&&beta.data.role==='admin')setTab('admin');
    else if(mode==='seller')setTab(own?.is_seller?'seller':'profile');
+   else if(linked&&own&&((results[1].data as Listing[]).some(item=>item.id===linked&&item.status==='published')))setTab('browse');
    else setTab(own?'buyer-home':'profile');
    entryApplied.current=true;
  }
@@ -72,6 +73,7 @@ async function auth(e:FormEvent){e.preventDefault();if(register&&emailCooldown>0
  const next=new URLSearchParams();
  const seller=current.get('seller');
  if(seller&&/^[a-z0-9][a-z0-9-]{2,59}$/.test(seller))next.set('seller',seller);
+ const wantedService=current.get('service');if(wantedService&&/^[0-9a-f-]{36}$/.test(wantedService))next.set('service',wantedService);
  const mode=entry==='buyer'?(current.get('mode')||'buyer'):entry;
  if(mode==='buyer'||mode==='seller'||mode==='admin')next.set('mode',mode);
  const ref=current.get('ref');if(ref)next.set('ref',ref);
