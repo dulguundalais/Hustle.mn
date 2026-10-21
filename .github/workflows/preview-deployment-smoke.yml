@@ -3,39 +3,31 @@ on:
   push:
     branches:
       - feature/interactive-functional-v6
-
+  workflow_dispatch:
 permissions:
   contents: read
-
 jobs:
   verify-preview:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
-      - name: Confirm V12 is served by the real Cloudflare preview URL
+      - name: Confirm V26 marker reached real Cloudflare Pages preview
         env:
           URL: https://feature-interactive-function.hustle-mn-preview.pages.dev
         shell: bash
         run: |
           set -euo pipefail
-          # Cloudflare Git integration may be slower than the GitHub push event.
-          ready=0
-          for attempt in $(seq 1 18); do
-            if curl --fail --location --silent --show-error --max-time 20 --output /tmp/hustle-v12.json "$URL/v12-release.json" && \
-              node -e "const f=require('/tmp/hustle-v12.json'); if(f.version!=='V12'||f.channel!=='closed-beta-preview')process.exit(1)"; then
-              ready=1
+          for attempt in $(seq 1 22); do
+            if curl --fail --location --silent --max-time 20 -o /tmp/hustle-v26.json "$URL/v26-release.json" && node -e "const x=require('/tmp/hustle-v26.json');if(x.version!=='V26'||x.channel!=='closed-beta-preview')process.exit(1)"; then
+              echo "V26 marker served by Cloudflare"
               break
             fi
-            echo "V12 marker not yet served (attempt $attempt/18)"
+            if [ "$attempt" = 22 ]; then echo "::error::V26 marker not deployed"; exit 1; fi
             sleep 15
           done
-          if [ "$ready" != 1 ]; then
-            echo "::error::Cloudflare preview has not deployed V12 (or is not reachable). Check Pages branch/deployments."
-            exit 1
-          fi
-          echo "Verified: Cloudflare preview serves V12 release marker"
-          for route in / /explore/ /login/ /workspace/ /buyer/ /seller-studio/ /admin/ /join/seller/; do
-            echo "Checking $route"
-            curl --fail --location --silent --show-error --max-time 20 --output /dev/null "$URL$route"
+          for path in / /explore/ /login/ /auth/reset/ /buyer/ /seller-studio/ /admin/ /faq/ /about/ /privacy/ /terms/ /contact/; do
+            code=$(curl --location --silent --max-time 20 -o /dev/null -w '%{http_code}' "$URL$path")
+            echo "$path => $code"
+            test "$code" = "200"
           done
-          echo "Verified: V12 marker and eight public HTTP routes. Authenticated E2E not included."
+          echo "HTTP and V26 deploy marker PASS; actual email delivery and authenticated live browser E2E require manual verification."
