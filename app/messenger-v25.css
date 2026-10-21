@@ -6,3 +6,7 @@
 .hustle-v5.workspace .v25-messenger textarea{width:100%;max-width:100%;min-width:0}
 @media(max-width:1000px){.hustle-v5.workspace .v25-messenger{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:660px){.hustle-v5.workspace .workspace-layout{grid-template-columns:minmax(0,1fr);padding-left:16px;padding-right:16px}.hustle-v5.workspace .workspace-main{width:100%;min-width:0}}
+
+.v25-messenger .v25-preview{display:block;max-width:155px;max-height:130px;object-fit:contain;border-radius:9px;border:1px solid var(--border);margin-left:6px}
+@media(min-width:661px) and (max-width:1000px){.hustle-v5.workspace .v25-messenger{width:100%;max-width:calc(100vw - 96px);overflow:hidden}}
+@media(max-width:660px){.hustle-v5.workspace .v25-messenger{width:100%;max-width:calc(100vw - 32px);overflow:hidden}}
