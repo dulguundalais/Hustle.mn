@@ -31,6 +31,37 @@ do $$ declare n integer;begin
  select count(*) into n from public.orders;if n<>0 then raise exception 'TEST FAIL: unrelated user read order';end if;
  update public.orders set status='accepted';get diagnostics n=row_count;if n<>0 then raise exception 'TEST FAIL: unrelated user changed order';end if;
 end $$;
+-- V24: sender-only chat INSERT and participant-only read.
+select set_config('request.jwt.claims','{"sub":"10000000-0000-4000-8000-000000000003","email":"qa-buyer@example.test","role":"authenticated"}',true);
+insert into public.messages(sender_id,recipient_id,body) values(auth.uid(),'10000000-0000-4000-8000-000000000002','V24 buyer to seller QA message only.');
+select set_config('request.jwt.claims','{"sub":"10000000-0000-4000-8000-000000000004","email":"qa-other@example.test","role":"authenticated"}',true);
+do $ declare n int;begin
+ select count(*) into n from public.messages where body='V24 buyer to seller QA message only.';
+ if n<>0 then raise exception 'TEST FAIL: unrelated party read chat';end if;
+ begin
+ insert into public.messages(sender_id,recipient_id,body) values('10000000-0000-4000-8000-000000000003','10000000-0000-4000-8000-000000000002','Forged sender');
+ raise exception 'TEST FAIL: forged sender accepted';
+ exception when insufficient_privilege or check_violation then null;
+ when raise_exception then if SQLERRM='TEST FAIL: forged sender accepted' then raise;end if;
+ end;
+end $;
+-- V24: seller reject and buyer cancellation are terminal and restricted.
+select set_config('request.jwt.claims','{"sub":"10000000-0000-4000-8000-000000000003","email":"qa-buyer@example.test","role":"authenticated"}',true);
+insert into public.orders(id,service_id,buyer_id,seller_id,service_title,quoted_price,brief)
+values('30000000-0000-4000-8000-000000000002','20000000-0000-4000-8000-000000000001',auth.uid(),'10000000-0000-4000-8000-000000000002','QA request',1,'V24 rejected workflow with enough descriptive detail.');
+insert into public.orders(id,service_id,buyer_id,seller_id,service_title,quoted_price,brief)
+values('30000000-0000-4000-8000-000000000003','20000000-0000-4000-8000-000000000001',auth.uid(),'10000000-0000-4000-8000-000000000002','QA request',1,'V24 cancellation workflow with enough descriptive detail.');
+update public.orders set status='cancelled' where id='30000000-0000-4000-8000-000000000003';
+select set_config('request.jwt.claims','{"sub":"10000000-0000-4000-8000-000000000002","email":"qa-seller@example.test","role":"authenticated"}',true);
+update public.orders set status='rejected' where id='30000000-0000-4000-8000-000000000002';
+do $ begin
+ if (select status from public.orders where id='30000000-0000-4000-8000-000000000003')<>'cancelled'
+ or (select status from public.orders where id='30000000-0000-4000-8000-000000000002')<>'rejected'
+ then raise exception 'TEST FAIL: reject/cancel';end if;
+ begin update public.orders set status='accepted' where id='30000000-0000-4000-8000-000000000003';
+ raise exception 'TEST FAIL: cancelled order revived';
+ exception when raise_exception then if SQLERRM='TEST FAIL: cancelled order revived' then raise;end if;end;
+end $;
 select set_config('request.jwt.claims','{"sub":"10000000-0000-4000-8000-000000000002","email":"qa-seller@example.test","role":"authenticated"}',true);
 update public.orders set status='accepted';
 update public.orders set status='in_progress';
