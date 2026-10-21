@@ -1,0 +1,10 @@
+{
+  "version": "V10",
+  "channel": "closed-beta-preview",
+  "features": [
+    "buyer-seller-messaging",
+    "order-timeline",
+    "revision-requests"
+  ],
+  "schema": "hustle-v10-20261021"
+}
