@@ -1,7 +1,7 @@
 'use client';
 import {useEffect,useRef,useState,type FormEvent} from 'react';
 import Link from 'next/link';
-import {ArrowUpRight,ArrowLeft,Search,LayoutDashboard,BriefcaseBusiness,UserRound,ShoppingBag,Users,Settings2,LogOut,Sun,Moon,Globe,Plus,Check,Clock,Image as ImageIcon,Share2,ShieldCheck,LoaderCircle,X,Handshake,MessageCircle,Send} from 'lucide-react';
+import {ArrowUpRight,ArrowLeft,Search,LayoutDashboard,PanelsTopLeft,BriefcaseBusiness,UserRound,ShoppingBag,Users,Settings2,LogOut,Sun,Moon,Globe,Plus,Check,Clock,Image as ImageIcon,Share2,ShieldCheck,LoaderCircle,X,Handshake,MessageCircle,Send} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
 import {categories,type Profile,type Listing,type Order,type Portfolio,type Referral,type Rules,type BetaMember} from '../lib/marketplace/types';
 import '../app/marketplace.css';
