@@ -37,6 +37,7 @@ test('UI connects all tiers with atomic save and buyer selection',()=>{
  assert.match(ui,/<PackageEditor/);
  assert.match(ui,/<PackagePicker/);
  const publicUi=read('components/live-catalog.tsx');
- assert.match(publicUi,/Compare packages/);
- assert.match(publicUi,/View Basic \/ Standard \/ Premium/);
+ assert.match(publicUi,/Choose a package/);
+ assert.match(publicUi,/aria-pressed=\{choice===tier\}/);
+ assert.match(publicUi,/const price=picked\?\.price\?\?s\.price/);
 });

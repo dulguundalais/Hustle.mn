@@ -1,0 +1,118 @@
+/* V23 readability-first marketplace. Scoped: preserve beta auth and workflows. */
+.hustle-v5{--v23-border:var(--border);line-height:1.7}
+.hustle-v5 .v23-live-catalog{padding-top:80px;padding-bottom:75px}
+.hustle-v5 .v23-market-head{margin-bottom:32px}
+.hustle-v5 .v23-market-head h2{font-size:clamp(34px,3.5vw,49px);line-height:1.13;letter-spacing:-1.8px;max-width:780px}
+.hustle-v5 .v23-market-head p{font-size:17px;line-height:1.85;max-width:790px;color:var(--sub)}
+.hustle-v5 .v23-market-head .eyebrow{font-size:13px;letter-spacing:1.8px}
+.hustle-v5 .v23-service-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:23px}
+.hustle-v5 .v23-single-listing{grid-template-columns:minmax(0,1fr)}
+.hustle-v5 .v23-service-card{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;padding:30px;min-height:0;border-radius:22px;box-shadow:0 18px 45px #010b1a0a}
+.hustle-v5 .v23-single-listing .v23-service-card{grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);padding:37px;gap:47px}
+.hustle-v5 .v23-service-main{min-width:0}
+.hustle-v5 .v23-service-eyebrow{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:22px}
+.hustle-v5 .v23-category-pill,.hustle-v5 .v23-public-label{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:750;letter-spacing:.4px}
+.hustle-v5 .v23-category-pill{padding:9px 13px;color:var(--purple);background:var(--soft);border-radius:999px}
+.hustle-v5 .v23-public-label{color:#2c9f8d}
+.hustle-v5 .v23-service-card h3{font-size:clamp(26px,2.65vw,36px);line-height:1.23;letter-spacing:-.85px;margin:0 0 24px}
+.hustle-v5 .v23-seller{display:flex;align-items:center;gap:13px;margin:0 0 23px}
+.hustle-v5 .v23-seller-avatar{flex-shrink:0;width:48px;height:48px;display:grid;place-items:center;background:linear-gradient(150deg,#235bbb,#22b9db);color:white;border-radius:15px;font-size:19px;font-weight:800}
+.hustle-v5 .v23-seller>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.hustle-v5 .v23-seller strong{font-size:16px}
+.hustle-v5 .v23-seller span:not(.v23-seller-avatar){font-size:14px;color:var(--sub)}
+.hustle-v5 .v23-service-rating{display:flex;align-items:center;gap:9px;color:#d99e2f;font-size:16px;margin:0 0 16px}
+.hustle-v5 .v23-service-rating span{color:var(--sub);font-size:14px}
+.hustle-v5 .v23-service-card .live-catalog-description{font-size:16px;line-height:1.85;color:var(--sub);margin:0;overflow-wrap:anywhere}
+.hustle-v5 .v23-read-more{display:flex;gap:7px;align-items:center;margin-top:13px;font-size:14px}
+.hustle-v5 .v23-service-offer{padding:25px;background:var(--soft);border:1px solid var(--border);border-radius:18px;min-width:0}
+.hustle-v5 .v23-offer-heading{margin-bottom:19px}
+.hustle-v5 .v23-offer-label{color:var(--purple);font-size:13px;font-weight:800}
+.hustle-v5 .v23-offer-heading h4{font-size:18px;line-height:1.4;font-weight:800;margin:5px 0 0}
+.hustle-v5 .v23-tier-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--border);background:var(--surface);border-radius:11px;padding:5px;gap:4px}
+.hustle-v5 .v23-tier-tabs button{padding:11px 6px;font-size:14px;font-weight:800;border:0;border-radius:8px;background:transparent;color:var(--sub)}
+.hustle-v5 .v23-tier-tabs button.active{background:var(--purple);color:white}
+.hustle-v5 .v23-tier-tabs button:disabled{cursor:not-allowed;opacity:.35}
+.hustle-v5 .v23-offer-details{padding:21px 0}
+.hustle-v5 .v23-price-label{font-size:13px;color:var(--sub);font-weight:700}
+.hustle-v5 .v23-price{font-size:clamp(30px,2.5vw,39px);font-weight:800;letter-spacing:-1.2px;line-height:1.35;margin:5px 0 14px;font-variant-numeric:tabular-nums}
+.hustle-v5 .v23-offer-metrics{display:flex;gap:15px;flex-wrap:wrap}
+.hustle-v5 .v23-offer-metrics span{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:700}
+.hustle-v5 .v23-package-summary{font-size:15px;color:var(--sub);line-height:1.75;margin-top:16px}
+.hustle-v5 .v23-inclusions{list-style:none;margin:19px 0 0;padding:0;display:grid;gap:11px}
+.hustle-v5 .v23-inclusions li{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.55}
+.hustle-v5 .v23-inclusions svg{color:#26a78e;flex-shrink:0}
+.hustle-v5 .v23-card-actions{display:grid;gap:11px}
+.hustle-v5 .v23-card-actions .button{font-size:15px;min-height:52px;border-radius:10px;padding:13px}
+.hustle-v5 .v23-primary-action{background:#2664ec;color:#fff!important}
+.hustle-v5 .v23-secondary-action{background:var(--surface);color:var(--text)!important}
+.hustle-v5 .v23-catalog-note{display:flex;align-items:flex-start;gap:11px;font-size:14px;line-height:1.7;margin-top:22px}
+.hustle-v5 .v23-catalog-note svg{flex-shrink:0;margin-top:2px}
+/* Order dashboards — generous whitespace, readable blocks, primary actions. */
+.hustle-v5.workspace{font-size:16px}
+.hustle-v5.workspace .workspace-layout{grid-template-columns:235px minmax(0,1fr);gap:38px}
+.hustle-v5.workspace .workspace-identity b{font-size:18px}
+.hustle-v5.workspace .workspace-identity small{font-size:12px;letter-spacing:1.2px}
+.hustle-v5.workspace .workspace-sidebar nav button,.hustle-v5.workspace .workspace-admin-link{font-size:15px;padding:15px 14px}
+.hustle-v5.workspace .sidebar-note b,.hustle-v5.workspace .sidebar-note p{font-size:13px;line-height:1.75}
+.hustle-v5.workspace .workspace-heading h1{font-size:clamp(31px,3vw,43px);letter-spacing:-1.3px}
+.hustle-v5.workspace .workspace-heading .eyebrow{font-size:13px}
+.hustle-v5.workspace .workspace-main h2{font-size:clamp(23px,2.2vw,31px)}
+.hustle-v5.workspace .workspace-main h3{font-size:20px}
+.hustle-v5.workspace .stats-row{gap:17px;margin:22px 0 35px}
+.hustle-v5.workspace .stats-row>div{padding:26px;border-radius:16px}
+.hustle-v5.workspace .stats-row small{font-size:14px}
+.hustle-v5.workspace .stats-row strong{font-size:clamp(30px,3vw,40px);line-height:1.4}
+.hustle-v5.workspace .workspace-panel{padding:30px;border-radius:17px}
+.hustle-v5.workspace .workspace-panel>p,.hustle-v5.workspace .inline-note,.hustle-v5.workspace .role-empty p{font-size:15px;line-height:1.8}
+.hustle-v5.workspace .order-grid{gap:24px}
+.hustle-v5.workspace .v23-order-card{padding:31px;border-radius:20px;box-shadow:0 10px 34px #010b1510}
+.hustle-v5.workspace .v23-order-top{margin-bottom:25px;align-items:center}
+.hustle-v5.workspace .v23-order-top small{font-size:13px;color:var(--sub)}
+.hustle-v5.workspace .status{font-size:13px;line-height:1.5;padding:8px 13px}
+.hustle-v5.workspace .v23-order-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:25px}
+.hustle-v5.workspace .v23-order-label{font-size:12px;letter-spacing:1.3px;color:var(--purple);font-weight:850}
+.hustle-v5.workspace .v23-order-heading h3{font-size:clamp(25px,2.6vw,34px);margin:6px 0!important;line-height:1.25;letter-spacing:-.7px}
+.hustle-v5.workspace .v23-order-context{font-size:15px;color:var(--sub);line-height:1.65}
+.hustle-v5.workspace .v23-order-price{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hustle-v5.workspace .v23-order-price strong{font-size:clamp(26px,2.5vw,35px);font-variant-numeric:tabular-nums}
+.hustle-v5.workspace .v23-order-price small{font-size:13px;color:var(--sub)}
+.hustle-v5.workspace .order-timeline{padding:22px 12px;margin:22px 0;gap:7px;border:1px solid var(--border);border-radius:14px;background:var(--soft)}
+.hustle-v5.workspace .order-timeline li{gap:10px}
+.hustle-v5.workspace .order-timeline li span{width:39px;height:39px;font-size:16px}
+.hustle-v5.workspace .order-timeline li small{font-size:13px;line-height:1.5;color:var(--text)}
+.hustle-v5.workspace .v23-order-brief,.hustle-v5.workspace .delivery-note{border:1px solid var(--border);background:var(--soft);border-radius:14px;padding:19px 22px;margin:19px 0}
+.hustle-v5.workspace .v23-order-brief strong,.hustle-v5.workspace .delivery-note b{font-size:15px;font-weight:800}
+.hustle-v5.workspace .v23-order-brief p,.hustle-v5.workspace .delivery-note p{font-size:16px;line-height:1.8;margin:10px 0 0;overflow-wrap:anywhere;white-space:pre-wrap}
+.hustle-v5.workspace .order-package{font-size:15px;line-height:1.7;margin-top:12px}
+.hustle-v5.workspace .order-actions{gap:13px;margin-top:22px;flex-wrap:wrap}
+.hustle-v5.workspace .order-actions .button{font-size:15px;min-height:49px;padding:12px 20px;border-radius:10px}
+.hustle-v5.workspace .order-actions label{font-size:15px}
+.hustle-v5.workspace .order-actions textarea,.hustle-v5.workspace input,.hustle-v5.workspace textarea,.hustle-v5.workspace select{font-size:16px;line-height:1.6}
+.hustle-v5.workspace label{font-size:15px}
+.hustle-v5.workspace .review-existing,.hustle-v5.workspace .seller-review-note{padding:23px;border-radius:15px;margin-top:20px}
+.hustle-v5.workspace .review-existing strong,.hustle-v5.workspace .seller-review-note strong{font-size:18px}
+.hustle-v5.workspace .review-existing p,.hustle-v5.workspace .seller-review-note p{font-size:16px;line-height:1.8}
+.hustle-v5.workspace .review-existing small{font-size:14px}
+.hustle-v5.workspace .review-composer-header h4{font-size:21px}
+.hustle-v5.workspace .review-composer-header p{font-size:15px}
+.hustle-v5.workspace .review-composer-foot small{font-size:14px}
+.hustle-v5.workspace .chat-bubble p{font-size:15px}
+.hustle-v5.workspace .chat-bubble small{font-size:12px}
+.hustle-v5.workspace .chat-peers h2{font-size:22px}
+.hustle-v5.workspace .chat-thread-head small{font-size:13px}
+.hustle-v5 .package-picker-tabs button{font-size:15px;padding:16px 8px}
+.hustle-v5 .package-picker-body{padding:24px}
+.hustle-v5 .package-picker-head h3{font-size:20px!important}
+.hustle-v5 .package-picker-head strong{font-size:26px}
+.hustle-v5 .package-picker-body p,.hustle-v5 .package-picker-metrics,.hustle-v5 .package-picker-body li,.hustle-v5 .package-picker-body h4{font-size:15px}
+.hustle-v5 .package-edit-card label{font-size:15px}
+.hustle-v5 .package-editor-header p,.hustle-v5 .package-edit-card small{font-size:14px}
+.hustle-v5 .signature-person-caption h3{font-size:23px}
+.hustle-v5 .signature-person-caption p{font-size:16px}
+.hustle-v5 .signature-person-caption>span,.hustle-v5 .signature-person-caption small{font-size:14px}
+.hustle-v5 .signature-person{padding:30px;min-height:175px}
+/* Specificity-safe mobile adjustments */
+@media(max-width:1150px){.hustle-v5 .v23-single-listing .v23-service-card{grid-template-columns:1fr;gap:25px}.hustle-v5.workspace .workspace-layout{gap:22px}}
+@media(max-width:900px){.hustle-v5 .v23-service-grid{grid-template-columns:1fr}.hustle-v5.workspace .workspace-layout{grid-template-columns:1fr;gap:20px}.hustle-v5.workspace .workspace-sidebar{border:0;padding-right:0}.hustle-v5.workspace .workspace-sidebar nav{flex-direction:row;overflow-x:auto}}
+@media(max-width:660px){.hustle-v5 .v23-live-catalog{padding-top:52px;padding-bottom:48px}.hustle-v5 .v23-service-card,.hustle-v5 .v23-single-listing .v23-service-card{padding:21px;gap:22px}.hustle-v5 .v23-market-head h2{font-size:34px}.hustle-v5 .v23-market-head p{font-size:16px}.hustle-v5 .v23-service-card h3{font-size:28px}.hustle-v5 .v23-service-offer{padding:17px}.hustle-v5 .v23-tier-tabs button{font-size:12px}.hustle-v5.workspace .v23-order-card{padding:20px}.hustle-v5.workspace .v23-order-price{text-align:left;align-items:flex-start}.hustle-v5.workspace .order-timeline{padding:16px 5px;gap:2px}.hustle-v5.workspace .order-timeline li span{width:29px;height:29px;font-size:12px}.hustle-v5.workspace .order-timeline li small{font-size:11px}.hustle-v5.workspace .v23-order-brief,.hustle-v5.workspace .delivery-note{padding:16px}.hustle-v5.workspace .stats-row>div{padding:17px 12px}.hustle-v5.workspace .stats-row small{font-size:12px}.hustle-v5.workspace .stats-row strong{font-size:27px}}
+@media(prefers-reduced-motion:reduce){.hustle-v5 .v23-service-card,.hustle-v5 .v23-tier-tabs button{transition:none}}
