@@ -3,6 +3,8 @@ import {useEffect,useMemo,useState} from 'react';
 import Link from 'next/link';
 import {ArrowRight,ArrowUpRight,Check,ChevronRight,Clapperboard,Code2,Globe2,Layers3,MessageCircle,MousePointer2,Search,ShieldCheck,Sparkles,Star,PenTool,BriefcaseBusiness,CheckCircle2} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
+import {services} from '../lib/marketplace/catalog';
+import {suggestServices} from '../lib/marketplace/smart-search';
 import '../app/signature-home.css';
 
 type T=(mn:string,en:string)=>string;
@@ -17,6 +19,8 @@ const formatPrice=(amount:number)=>new Intl.NumberFormat('mn-MN').format(amount)
 
 export function SignatureHero({en}:{en:boolean}){
  const [search,setSearch]=useState('');
+ const [showSuggestions,setShowSuggestions]=useState(false);
+ const suggestions=useMemo(()=>suggestServices(search,services,4),[search]);
  const t:T=(mn,english)=>en?english:mn;
  return <section className="signature-hero" aria-labelledby="signature-hero-title">
    <div className="signature-hero-grid" aria-hidden="true"/>
@@ -27,9 +31,10 @@ export function SignatureHero({en}:{en:boolean}){
        <p>{t('Бүтээлч мэргэжилтнээ олж, ажлынхаа талаар ярилцаж, төслөө нэг дор удирдаарай.','Discover ambitious local talent, start the conversation and bring your next project to life.')}</p>
        <form action="/explore/" className="signature-search" role="search">
         <Search size={21} aria-hidden="true"/>
-        <input name="q" aria-label={t('Үйлчилгээ хайх','Find a service')} value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('Лого, вэбсайт, видео эсвэл санаагаа бичээрэй…','Describe what you need — logo, website, video…')}/>
+        <input name="q" aria-label={t('Үйлчилгээ хайх','Find a service')} value={search} onChange={e=>{setSearch(e.target.value);setShowSuggestions(true)}} onFocus={()=>setShowSuggestions(true)} onKeyDown={e=>{if(e.key==='Escape')setShowSuggestions(false)}} placeholder={t('Лого, вэбсайт, видео эсвэл санаагаа бичээрэй…','Describe what you need — logo, website, video…')}/>
         <button type="submit"><span>{t('Хайх','Explore')}</span><ArrowUpRight size={19}/></button>
        </form>
+       {showSuggestions&&suggestions.length>0&&<div className="signature-search-suggestions" id="hero-search-suggestions" role="listbox" aria-label={t('Тохирох жишиг үйлчилгээнүүд','Sample service suggestions')}>{suggestions.map(item=><Link role="option" aria-selected={false} key={item.id} href={'/services/'+item.id}><Search size={15}/>{en?item.en:item.mn}<span>{t('Жишиг','Sample')}</span></Link>)}<Link className="signature-search-all" href={'/explore/?q='+encodeURIComponent(search)}>{t('Бодит үйлчилгээ хайх','Find real services')}<ArrowRight size={15}/></Link></div>}
        <div className="signature-search-subline"><Sparkles size={14}/>{t('Кирилл, латин галиг, англи үгээр хайж болно.','Search in Mongolian, romanized Mongolian or English.')}</div>
        <div className="signature-popular"><span>{t('Эрэлттэй ур чадвар','Explore by skill')}</span><div>{topics.map(({key,mn,en:eng})=><Link href={'/explore/?category='+key} key={key}>{en?eng:mn}<ArrowUpRight size={13}/></Link>)}</div></div>
        <div className="signature-hero-promise"><span><CheckCircle2 size={16}/>{t('Үйлчилгээний тодорхой багцууд','Clear package pricing')}</span><span><MessageCircle size={16}/>{t('Freelancer-тэй шууд холбогдоорой','Direct seller messaging')}</span></div>
