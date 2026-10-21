@@ -74,3 +74,22 @@ from first_answer
 $response$;
 revoke all on function public.seller_average_response(uuid) from public,anon;
 grant execute on function public.seller_average_response(uuid) to authenticated;
+
+create function public.send_chat_attachment(target_recipient uuid, upload_path text, display_name text, mime text, bytes integer)
+returns uuid language plpgsql security invoker set search_path='' as $send_chat_attachment$
+declare new_message_id uuid;
+begin
+ if auth.uid() is null or public.beta_role() is null then raise exception 'Beta login required';end if;
+ if target_recipient=auth.uid() or not exists(select 1 from public.profiles p where p.id=target_recipient) then raise exception 'Recipient unavailable';end if;
+ if upload_path not like auth.uid()::text||'/'||target_recipient::text||'/%' then raise exception 'Invalid upload ownership';end if;
+ if length(display_name) not between 1 and 180 or bytes not between 1 and 10485760 then raise exception 'Invalid file size/name';end if;
+ if mime not in ('image/jpeg','image/png','image/webp','application/pdf','text/plain','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document') then raise exception 'File type not allowed';end if;
+ if not exists(select 1 from storage.objects o where o.bucket_id='chat-attachments' and o.name=upload_path and o.owner_id=auth.uid()::text) then raise exception 'File is not owned by sender';end if;
+ insert into public.messages(sender_id,recipient_id,body)
+ values(auth.uid(),target_recipient,'📎 '||left(display_name,180)) returning id into new_message_id;
+ insert into public.chat_attachments(message_id,sender_id,recipient_id,object_path,file_name,content_type,byte_size)
+ values(new_message_id,auth.uid(),target_recipient,upload_path,display_name,mime,bytes);
+ return new_message_id;
+end $send_chat_attachment$;
+revoke all on function public.send_chat_attachment(uuid,text,text,text,integer) from public,anon;
+grant execute on function public.send_chat_attachment(uuid,text,text,text,integer) to authenticated;
