@@ -36,27 +36,19 @@ export function SignatureHero({en}:{en:boolean}){
        </form>
        {showSuggestions&&suggestions.length>0&&<div className="signature-search-suggestions" id="hero-search-suggestions" role="listbox" aria-label={t('Тохирох жишиг үйлчилгээнүүд','Sample service suggestions')}>{suggestions.map(item=><Link role="option" aria-selected={false} key={item.id} href={'/services/'+item.id}><Search size={15}/>{en?item.en:item.mn}<span>{t('Жишиг','Sample')}</span></Link>)}<Link className="signature-search-all" href={'/explore/?q='+encodeURIComponent(search)}>{t('Бодит үйлчилгээ хайх','Find real services')}<ArrowRight size={15}/></Link></div>}
        <div className="signature-search-subline"><Sparkles size={14}/>{t('Кирилл, латин галиг, англи үгээр хайж болно.','Search in Mongolian, romanized Mongolian or English.')}</div>
-       <div className="signature-popular"><span>{t('Эрэлттэй ур чадвар','Explore by skill')}</span><div>{topics.map(({key,mn,en:eng})=><Link href={'/explore/?category='+key} key={key}>{en?eng:mn}<ArrowUpRight size={13}/></Link>)}</div></div>
-       <div className="signature-hero-promise"><span><CheckCircle2 size={16}/>{t('Үйлчилгээний тодорхой багцууд','Clear package pricing')}</span><span><MessageCircle size={16}/>{t('Freelancer-тэй шууд холбогдоорой','Direct seller messaging')}</span></div>
      </div>
      <div className="signature-orbit" aria-label={t('Бүтээлч ур чадварыг дүрсэлсэн график','Abstract constellation of creative disciplines')}>
        <div className="signature-orbit-halo"/>
        <div className="signature-orbit-ring ring-one"/>
        <div className="signature-orbit-ring ring-two"/>
-       <div className="signature-orbit-ring ring-three"/>
+       
        <div className="signature-orbit-center"><span className="signature-orbit-symbol">h<span>✳</span></span><small>IDEAS INTO IMPACT</small></div>
        <Link className="signature-orbit-chip chip-design" href="/explore/?category=design"><span className="signature-orbit-icon"><PenTool size={20}/></span><span>BRAND<br/><strong>IDENTITY</strong></span><ArrowUpRight size={15}/></Link>
        <Link className="signature-orbit-chip chip-digital" href="/explore/?category=web"><span className="signature-orbit-icon"><Code2 size={20}/></span><span>DIGITAL<br/><strong>EXPERIENCES</strong></span><ArrowUpRight size={15}/></Link>
-       <Link className="signature-orbit-chip chip-motion" href="/explore/?category=video"><span className="signature-orbit-icon"><Clapperboard size={20}/></span><span>STORIES<br/><strong>IN MOTION</strong></span><ArrowUpRight size={15}/></Link>
+       
        <i className="signature-orbit-star star-a"/><i className="signature-orbit-star star-b"/><i className="signature-orbit-star star-c"/><i className="signature-orbit-star star-d"/>
        <div className="signature-orbit-side-label">HUSTLE / CREATIVE NETWORK / 2026</div>
      </div>
-   </div>
-   <div className="shell signature-trust-strip">
-     <div><span className="signature-trust-icon"><ShieldCheck size={19}/></span><span><strong>{t('Хаалттай бета','Private beta')}</strong><small>{t('Бодит төлбөр идэвхгүй','Payments not yet active')}</small></span></div>
-     <div><span className="signature-trust-icon"><Layers3 size={19}/></span><span><strong>Basic · Standard · Premium</strong><small>{t('Үйлчилгээ бүрийн багц','Clear service packages')}</small></span></div>
-     <div><span className="signature-trust-icon"><Globe2 size={19}/></span><span><strong>MN / EN</strong><small>{t('Хоёр хэлний дэмжлэг','Bilingual experience')}</small></span></div>
-     <div><span className="signature-trust-icon"><MessageCircle size={19}/></span><span><strong>{t('Шууд харилцаа','Direct collaboration')}</strong><small>{t('Мессеж ба захиалгын явц','Messaging and order tracking')}</small></span></div>
    </div>
  </section>;
 }
@@ -98,16 +90,16 @@ export function SignatureStory({en}:{en:boolean}){
      <p className="signature-process-note"><ShieldCheck size={15}/>{t('Туршилтын хугацаанд бодит төлбөр, эскроу ашиглахгүй.','No real payments or escrow during the closed beta.')}</p>
     </div>
    </section>
-   <section id="for-freelancers" className="signature-seller-band shell">
-    <div className="signature-seller-text"><span className="signature-section-eyebrow">{t('БИЕ ДААСАН МЭРГЭЖИЛТНҮҮДЭД','FOR THE INDEPENDENT CREATOR')}</span><h2>{t('Ур чадвараа шинэ','Your skills deserve')}<br/><em>{t('боломжтой учруул.','a bigger stage.')}</em></h2><p>{t('Өөрийн нэрийн хуудастай бол. Үйлчилгээгээ багцал. Шинэ хүмүүстэй хамтар.','Build a storefront for your talent, create packages and connect with new clients.')}</p><Link href="/join/seller/" className="signature-cta-button">{t('Freelancer болж эхлэх','Become a freelancer')}<ArrowUpRight size={19}/></Link></div>
-    <div className="signature-seller-art" aria-hidden="true"><div className="signature-art-window"><span className="signature-window-dots">● ● ●</span><div className="signature-art-line strong"/><div className="signature-art-line medium"/><div className="signature-art-row"><i/><i/><i/></div><div className="signature-art-badge"><Sparkles size={17}/> MADE TO CREATE</div></div><div className="signature-art-cube cube-one"/><div className="signature-art-cube cube-two"/></div>
-   </section>
    <section className="signature-spotlight shell" id="talent">
     <div className="signature-section-heading"><div><span className="signature-section-eyebrow">02 / THE PEOPLE BEHIND THE WORK</span><h2>{t('Бүтээлч хүмүүс. Бодит ур чадвар.','Meet the minds behind the work.')}</h2><p>{t('Нийтэд нээлттэй профайлтай, баталгаажуулсан бета оролцогчид л энд гарна.','Only published, opted-in freelancer profiles appear here — never fake reviews or ratings.')}</p></div><Link href="/explore/" className="signature-text-link">{t('Бүх үйлчилгээг үзэх','Explore services')}<ArrowUpRight size={18}/></Link></div>
     {state==='loading'&&<div className="signature-spotlight-empty" role="status">{t('Бодит профайлуудыг ачаалж байна…','Loading live freelancer profiles…')}</div>}
     {state==='error'&&<div className="signature-spotlight-empty" role="status">{t('Одоогоор профайл ачаалж чадсангүй.','Live profiles are temporarily unavailable.')}</div>}
     {state==='ready'&&!spotlights.length&&<div className="signature-spotlight-empty">{t('Freelancer-үүдийн нийтэд нээлттэй профайл энд харагдана.','Published freelancer profiles will appear here.')} <Link href="/join/seller/">{t('Эхэлж нэгдэх','Join as a freelancer')}<ArrowRight size={15}/></Link></div>}
     {state==='ready'&&spotlights.length>0&&<div className="signature-people-grid">{spotlights.map((p,i)=><Link className="signature-person" key={p.slug} href={'/login/?mode=buyer&seller='+encodeURIComponent(p.slug)}><div className={'signature-person-avatar avatar-tone-'+(i%4)}><span>{p.display_name?.trim().slice(0,1).toLocaleUpperCase()||'H'}</span><i/></div><div className="signature-person-caption"><span>{p.category}</span><h3>{p.display_name}</h3><p>{p.headline||p.title}</p><small>{t('Үйлчилгээний эхлэх үнэ','Services from')} <b>{formatPrice(p.price)}</b></small></div><span className="signature-person-arrow"><ArrowUpRight size={18}/></span></Link>)}</div>}
+   </section>
+   <section id="for-freelancers" className="signature-seller-band shell">
+    <div className="signature-seller-text"><span className="signature-section-eyebrow">{t('БИЕ ДААСАН МЭРГЭЖИЛТНҮҮДЭД','FOR THE INDEPENDENT CREATOR')}</span><h2>{t('Ур чадвараа шинэ','Your skills deserve')}<br/><em>{t('боломжтой учруул.','a bigger stage.')}</em></h2><p>{t('Өөрийн нэрийн хуудастай бол. Үйлчилгээгээ багцал. Шинэ хүмүүстэй хамтар.','Build a storefront for your talent, create packages and connect with new clients.')}</p><Link href="/join/seller/" className="signature-cta-button">{t('Freelancer болж эхлэх','Become a freelancer')}<ArrowUpRight size={19}/></Link></div>
+    <div className="signature-seller-art" aria-hidden="true"><div className="signature-art-window"><span className="signature-window-dots">● ● ●</span><div className="signature-art-line strong"/><div className="signature-art-line medium"/><div className="signature-art-row"><i/><i/><i/></div><div className="signature-art-badge"><Sparkles size={17}/> MADE TO CREATE</div></div><div className="signature-art-cube cube-one"/><div className="signature-art-cube cube-two"/></div>
    </section>
    <section className="signature-partner shell">
     <div className="signature-partner-inner"><div className="signature-partner-copy"><span className="signature-section-eyebrow">HUSTLE / PARTNERS</span><h2>{t('Холбоогоо боломж болго.','Good connections make great things happen.')}</h2><p>{t('Бүтээлч мэргэжилтнүүдийг платформтой танилцуулж, түншийн хөтөлбөрт оролцоорой. Урамшуулал бета туршилтад тооцооллын хэлбэртэй.', 'Introduce skilled freelancers to the marketplace. Referral rewards are simulated during beta, not paid out.')}</p><Link className="signature-partner-link" href="/buyer/">{t('Түншийн мэдээлэл үзэх','Explore referrals')}<ArrowUpRight size={16}/></Link></div><div className="signature-partner-stats"><div><strong>1%</strong><span>{t('Үндсэн түнш','Standard partner')}</span></div><div><strong>2%</strong><span>{t('Идэвхтэй түнш','Active partner')}</span></div><div><strong>10%</strong><span>{t('Платформын шимтгэл','Platform commission')}</span></div></div></div>
