@@ -6,6 +6,7 @@ import {marketplaceClient} from '../lib/marketplace/client';
 import {categories,type Profile,type Listing,type Order,type Portfolio,type Referral,type Rules,type BetaMember} from '../lib/marketplace/types';
 import '../app/marketplace.css';
 import '../app/workspace.css';
+import '../app/role-dashboards.css';
 import '../app/chat.css';
 import {threadMessages,normalizedMessage,appendUniqueMessage,type ChatMessage} from '../lib/marketplace/conversations';
 type Tab='buyer-home'|'browse'|'orders'|'messages'|'seller'|'seller-orders'|'profile'|'partner'|'admin';
