@@ -3,6 +3,7 @@ import {useEffect,useMemo,useState} from 'react';
 import Link from 'next/link';
 import {ArrowRight,ArrowUpRight,Check,ChevronRight,Clapperboard,Code2,Globe2,Layers3,MessageCircle,MousePointer2,Search,ShieldCheck,Sparkles,Star,PenTool,BriefcaseBusiness,CheckCircle2} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
+import {orderRecommended} from '../lib/marketplace/recommendations';
 import {services} from '../lib/marketplace/catalog';
 import {suggestServices} from '../lib/marketplace/smart-search';
 import '../app/signature-home.css';
@@ -14,7 +15,7 @@ const topics=[
  {key:'video',mn:'Видео & Reels',en:'Video & reels',Icon:Clapperboard},
  {key:'ui',mn:'UI/UX дизайн',en:'UI/UX design',Icon:Layers3}
 ];
-type Spotlight={id:string;title:string;title_en?:string;category:string;price:number;display_name:string;headline:string;slug:string};
+type Spotlight={id:string;title:string;title_en?:string;category:string;price:number;display_name:string;headline:string;slug:string;review_count:number;average_rating:number|null;completed_orders:number};
 const formatPrice=(amount:number)=>new Intl.NumberFormat('mn-MN').format(amount)+' ₮';
 
 export function SignatureHero({en}:{en:boolean}){
@@ -76,7 +77,7 @@ export function SignatureStory({en}:{en:boolean}){
    const records=Array.isArray(res.data)?res.data as Spotlight[]:[];
    const unique=new Map<string,Spotlight>();
    for(const record of records){if(typeof record.slug==='string'&&/^[a-z0-9][a-z0-9-]{2,59}$/.test(record.slug)&&!unique.has(record.slug))unique.set(record.slug,record);}
-   setSpotlights([...unique.values()].slice(0,6));setState('ready');
+   setSpotlights(orderRecommended([...unique.values()].map(p=>({...p,review_count:Number(p.review_count)||0,average_rating:p.average_rating===null?null:Number(p.average_rating),completed_orders:Number(p.completed_orders)||0}))).slice(0,6));setState('ready');
   }).catch(()=>{if(active)setState('error')});
   return()=>{active=false};
  },[]);
@@ -91,11 +92,11 @@ export function SignatureStory({en}:{en:boolean}){
     </div>
    </section>
    <section className="signature-spotlight shell" id="talent">
-    <div className="signature-section-heading"><div><span className="signature-section-eyebrow">02 / THE PEOPLE BEHIND THE WORK</span><h2>{t('Бүтээлч хүмүүс. Бодит ур чадвар.','Meet the minds behind the work.')}</h2><p>{t('Нийтэд нээлттэй профайлтай, баталгаажуулсан бета оролцогчид л энд гарна.','Only published, opted-in freelancer profiles appear here — never fake reviews or ratings.')}</p></div><Link href="/explore/" className="signature-text-link">{t('Бүх үйлчилгээг үзэх','Explore services')}<ArrowUpRight size={18}/></Link></div>
+    <div className="signature-section-heading"><div><span className="signature-section-eyebrow">02 / THE PEOPLE BEHIND THE WORK</span><h2>{t('Бүтээлч хүмүүс. Бодит ур чадвар.','Meet the minds behind the work.')}</h2><p>{t('Нийтэд нээлттэй профайлтай, баталгаажуулсан бета оролцогчид л энд гарна.','Verified completed-order reviews shape recommendations. New freelancers remain discoverable.')}</p></div><Link href="/explore/" className="signature-text-link">{t('Бүх үйлчилгээг үзэх','Explore services')}<ArrowUpRight size={18}/></Link></div>
     {state==='loading'&&<div className="signature-spotlight-empty" role="status">{t('Бодит профайлуудыг ачаалж байна…','Loading live freelancer profiles…')}</div>}
     {state==='error'&&<div className="signature-spotlight-empty" role="status">{t('Одоогоор профайл ачаалж чадсангүй.','Live profiles are temporarily unavailable.')}</div>}
     {state==='ready'&&!spotlights.length&&<div className="signature-spotlight-empty">{t('Freelancer-үүдийн нийтэд нээлттэй профайл энд харагдана.','Published freelancer profiles will appear here.')} <Link href="/join/seller/">{t('Эхэлж нэгдэх','Join as a freelancer')}<ArrowRight size={15}/></Link></div>}
-    {state==='ready'&&spotlights.length>0&&<div className="signature-people-grid">{spotlights.map((p,i)=><Link className="signature-person" key={p.slug} href={'/login/?mode=buyer&seller='+encodeURIComponent(p.slug)}><div className={'signature-person-avatar avatar-tone-'+(i%4)}><span>{p.display_name?.trim().slice(0,1).toLocaleUpperCase()||'H'}</span><i/></div><div className="signature-person-caption"><span>{p.category}</span><h3>{p.display_name}</h3><p>{p.headline||p.title}</p><small>{t('Үйлчилгээний эхлэх үнэ','Services from')} <b>{formatPrice(p.price)}</b></small></div><span className="signature-person-arrow"><ArrowUpRight size={18}/></span></Link>)}</div>}
+    {state==='ready'&&spotlights.length>0&&<div className="signature-people-grid">{spotlights.map((p,i)=><Link className="signature-person" key={p.slug} href={'/login/?mode=buyer&seller='+encodeURIComponent(p.slug)}><div className={'signature-person-avatar avatar-tone-'+(i%4)}><span>{p.display_name?.trim().slice(0,1).toLocaleUpperCase()||'H'}</span><i/></div><div className="signature-person-caption"><span>{p.category}</span><h3>{p.display_name}</h3><p>{p.headline||p.title}</p>{p.review_count>0&&p.average_rating!==null&&<div className="signature-review-score"><Star size={15} fill="currentColor"/><strong>{p.average_rating.toFixed(1)}</strong><small>({p.review_count} {t('баталгаажсан үнэлгээ','verified reviews')})</small></div>}<small>{t('Үйлчилгээний эхлэх үнэ','Services from')} <b>{formatPrice(p.price)}</b></small></div><span className="signature-person-arrow"><ArrowUpRight size={18}/></span></Link>)}</div>}
    </section>
    <section id="for-freelancers" className="signature-seller-band shell">
     <div className="signature-seller-text"><span className="signature-section-eyebrow">{t('БИЕ ДААСАН МЭРГЭЖИЛТНҮҮДЭД','FOR THE INDEPENDENT CREATOR')}</span><h2>{t('Ур чадвараа шинэ','Your skills deserve')}<br/><em>{t('боломжтой учруул.','a bigger stage.')}</em></h2><p>{t('Өөрийн нэрийн хуудастай бол. Үйлчилгээгээ багцал. Шинэ хүмүүстэй хамтар.','Build a storefront for your talent, create packages and connect with new clients.')}</p><Link href="/join/seller/" className="signature-cta-button">{t('Freelancer болж эхлэх','Become a freelancer')}<ArrowUpRight size={19}/></Link></div>
