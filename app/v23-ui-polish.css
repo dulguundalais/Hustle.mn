@@ -116,3 +116,9 @@
 @media(max-width:900px){.hustle-v5 .v23-service-grid{grid-template-columns:1fr}.hustle-v5.workspace .workspace-layout{grid-template-columns:1fr;gap:20px}.hustle-v5.workspace .workspace-sidebar{border:0;padding-right:0}.hustle-v5.workspace .workspace-sidebar nav{flex-direction:row;overflow-x:auto}}
 @media(max-width:660px){.hustle-v5 .v23-live-catalog{padding-top:52px;padding-bottom:48px}.hustle-v5 .v23-service-card,.hustle-v5 .v23-single-listing .v23-service-card{padding:21px;gap:22px}.hustle-v5 .v23-market-head h2{font-size:34px}.hustle-v5 .v23-market-head p{font-size:16px}.hustle-v5 .v23-service-card h3{font-size:28px}.hustle-v5 .v23-service-offer{padding:17px}.hustle-v5 .v23-tier-tabs button{font-size:12px}.hustle-v5.workspace .v23-order-card{padding:20px}.hustle-v5.workspace .v23-order-price{text-align:left;align-items:flex-start}.hustle-v5.workspace .order-timeline{padding:16px 5px;gap:2px}.hustle-v5.workspace .order-timeline li span{width:29px;height:29px;font-size:12px}.hustle-v5.workspace .order-timeline li small{font-size:11px}.hustle-v5.workspace .v23-order-brief,.hustle-v5.workspace .delivery-note{padding:16px}.hustle-v5.workspace .stats-row>div{padding:17px 12px}.hustle-v5.workspace .stats-row small{font-size:12px}.hustle-v5.workspace .stats-row strong{font-size:27px}}
 @media(prefers-reduced-motion:reduce){.hustle-v5 .v23-service-card,.hustle-v5 .v23-tier-tabs button{transition:none}}
+
+/* V23 hotfix: protect the single-service card from inherited homepage grids. */
+.hustle-v5 .live-catalog-grid.v23-service-grid.v23-single-listing{display:grid;grid-template-columns:minmax(0,1fr);width:100%;min-width:0}
+.hustle-v5 .v23-single-listing>.v23-service-card{width:100%;min-width:0;max-width:none}
+.hustle-v5 .v23-service-main,.hustle-v5 .v23-service-offer{min-width:0;overflow-wrap:break-word}
+@media(max-width:1150px){.hustle-v5 .v23-single-listing>.v23-service-card{grid-template-columns:minmax(0,1fr)}}
