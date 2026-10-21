@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {ArrowUpRight,ArrowLeft,Search,LayoutDashboard,PanelsTopLeft,BriefcaseBusiness,UserRound,ShoppingBag,Users,Settings2,LogOut,Sun,Moon,Globe,Plus,Check,Clock,Image as ImageIcon,Share2,ShieldCheck,LoaderCircle,X,Handshake,MessageCircle,Send} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
 import {normalizeSellerSlug,isValidSellerSlug} from '../lib/marketplace/seller-slug';
+import {resolveSellerContact} from '../lib/marketplace/contact-routing';
 import {categories,type Profile,type Listing,type Order,type Portfolio,type Referral,type Rules,type BetaMember} from '../lib/marketplace/types';
 import '../app/marketplace.css';
 import '../app/workspace.css';
@@ -25,7 +26,7 @@ const t=(mn:string,eng:string)=>en?eng:mn;
 function fail(e:unknown){const code=(e as {code?:string})?.code;if(code==='over_email_send_rate_limit'||/email rate limit/i.test(String((e as {message?:string})?.message||''))){setEmailCooldown(3600);setError(t('Имэйл илгээх үйлчилгээний хязгаарт хүрлээ. Дахин бүртгүүлэх шаардлагагүй. Илгээх хүсэлтийг түр зогсоолоо; имэйл хүргэлтийн тохиргоог засах шаардлагатай.','The email provider limit has been reached. Your account does not need to be created again. Email requests are paused; delivery configuration needs attention.'));return;}setError(e instanceof Error?e.message:String((e as {message?:string})?.message||t('Үйлдэл амжилтгүй. Дахин оролдоно уу.','Request failed. Please try again.')))}
 async function load(){
  const db=await marketplaceClient();const {data:{user},error:authError}=await db.auth.getUser();
- if(authError||!user){setUid('');setRole('');setMessages([]);setChatPeer('');return;}
+ if(authError||!user){setUid('');setRole('');setMessages([]);setChatPeer('');entryApplied.current=false;return;}
  setUid(user.id);setEmail(user.email||'');
  const beta=await db.from('beta_allowlist').select('role').eq('email',user.email?.toLowerCase()||'').eq('enabled',true).maybeSingle();
  if(beta.error)throw beta.error;if(!beta.data){setRole('');setMessages([]);setChatPeer('');return;}
@@ -37,17 +38,24 @@ async function load(){
  const items=results[3].data as Portfolio[];
  const images=await Promise.all(items.map(async p=>{const r=await db.storage.from('portfolio').createSignedUrl(p.object_path,900);return {...p,url:r.data?.signedUrl}}));setPortfolio(images);
  if(beta.data.role==='admin'){const [a,b]=await Promise.all([db.rpc('list_beta'),db.from('audit_events').select('*').order('created_at',{ascending:false}).limit(30)]);if(a.error)throw a.error;if(b.error)throw b.error;setMembers(a.data||[]);setAudit(b.data||[])}
- if(own&&!entryApplied.current){
+ if(!entryApplied.current){
    const params=new URLSearchParams(location.search);
    const slug=params.get('seller');
    const mode=entry==='buyer'?(params.get('mode')||'buyer'):entry;
-   if(slug&&/^[a-z0-9][a-z0-9-]{2,59}$/.test(slug)){
-     const matched=profiles.find(p=>p.slug===slug&&p.is_seller&&p.public_profile&&p.id!==user.id);
-     if(matched){setChatPeer(matched.id);setTab('messages');}
-     else{setTab('buyer-home');setNotice('Сонгосон freelancer одоогоор идэвхгүй байна / Seller is unavailable');}
-   } else if(mode==='admin'&&beta.data.role==='admin')setTab('admin');
-   else if(mode==='seller')setTab(own.is_seller?'seller':'profile');
-   else setTab('buyer-home');
+   const contact=resolveSellerContact(slug,user.id,Boolean(own),profiles);
+   if(contact.kind==='ready'){
+     setChatPeer(contact.sellerId);setTab('messages');
+   }else if(contact.kind==='onboarding'){
+     setChatPeer(contact.sellerId);setTab('profile');
+     setNotice(t('Чатлахын өмнө buyer профайлаа үүсгэнэ үү. Хадгалсны дараа сонгосон freelancer-ийн чат нээгдэнэ.','Create your buyer profile first. Your chosen freelancer will be ready in Messages once you save.'));
+   }else if(contact.kind==='self'){
+     setTab('buyer-home');
+     setNotice(t('Та өөрийн үйлчилгээ рүү холбогдох гэж байна. Чат шалгахын тулд өөр buyer аккаунтаар нэвтэрнэ үү.','This is your own listing. Sign in with a different approved buyer account to test messaging.'));
+   }else if(contact.kind==='unavailable'||contact.kind==='invalid'){
+     setTab('buyer-home');setNotice(t('Энэ freelancer-ийн нийтийн профайл олдсонгүй. Marketplace-ээс дахин сонгоно уу.','That public freelancer profile was not found. Please select a listing again.'));
+   }else if(mode==='admin'&&beta.data.role==='admin')setTab('admin');
+   else if(mode==='seller')setTab(own?.is_seller?'seller':'profile');
+   else setTab(own?'buyer-home':'profile');
    entryApplied.current=true;
  }
 }
@@ -113,7 +121,7 @@ useEffect(()=>{
 function openChat(peerId:string){if(!peerId||peerId===uid)return;setChatPeer(peerId);setTab('messages');setError('')}
 async function sendMessage(e:FormEvent<HTMLFormElement>){e.preventDefault();const body=normalizedMessage(chatDraft);if(!body||!chatPeer||chatPeer===uid||busy)return;setChatLoading(true);try{const db=await marketplaceClient();const r=await db.from('messages').insert({sender_id:uid,recipient_id:chatPeer,body}).select('id,sender_id,recipient_id,body,created_at').single();if(r.error)throw r.error;setMessages(list=>appendUniqueMessage(list,r.data as ChatMessage));setChatDraft('')}catch(e){fail(e)}finally{setChatLoading(false)}}
 async function logout(){await perform(async()=>{const r=await(await marketplaceClient()).auth.signOut();if(r.error)throw r.error;setUid('');setRole('');setProfile(null);setPeople([]);setListings([]);setOrders([]);setPortfolio([]);setMembers([]);setReferrals([]);setAudit([]);setPassword('');setMessages([]);setChatPeer('')},t('Системээс гарлаа.','Signed out.'))}
-const submitProfile=(e:FormEvent<HTMLFormElement>)=>{e.preventDefault();const f=new FormData(e.currentTarget);const slug=normalizeSellerSlug(String(f.get('slug')||''));const publicProfile=f.get('public_profile')==='on';if((slug&&!isValidSellerSlug(slug))||(publicProfile&&!isValidSellerSlug(slug))){setError(t('Профайлын URL нэр 3–60 тэмдэгттэй, зөвхөн жижиг латин үсэг, тоо, зураастай байна. Нийтэд нээх бол энэ нэрийг заавал оруулна.','The public profile URL must be 3–60 characters using lowercase letters, numbers and hyphens. A public profile requires a slug.'));return;}setSlugDraft(slug);void perform(async()=>{const r=await(await marketplaceClient()).from('profiles').upsert({id:uid,display_name:f.get('display_name'),headline:f.get('headline'),bio:f.get('bio'),is_seller:f.get('is_seller')==='on',slug:slug||null,public_profile:publicProfile});if(r.error){if(r.error.code==='23505')throw new Error(t('Энэ профайлын URL нэрийг өөр хүн ашиглаж байна. Өөр нэр сонгоно уу.','This profile URL is already taken. Choose another.'));if(r.error.code==='23514')throw new Error(t('Профайлын нэрийн формат буруу байна. Жишээ: test-freelancer','Invalid profile URL format. Example: test-freelancer'));throw r.error;}},t('Профайл хадгалагдлаа.','Profile saved.'))};
+const submitProfile=(e:FormEvent<HTMLFormElement>)=>{e.preventDefault();const f=new FormData(e.currentTarget);const slug=normalizeSellerSlug(String(f.get('slug')||''));const publicProfile=f.get('public_profile')==='on';if((slug&&!isValidSellerSlug(slug))||(publicProfile&&!isValidSellerSlug(slug))){setError(t('Профайлын URL нэр 3–60 тэмдэгттэй, зөвхөн жижиг латин үсэг, тоо, зураастай байна. Нийтэд нээх бол энэ нэрийг заавал оруулна.','The public profile URL must be 3–60 characters using lowercase letters, numbers and hyphens. A public profile requires a slug.'));return;}setSlugDraft(slug);void perform(async()=>{const r=await(await marketplaceClient()).from('profiles').upsert({id:uid,display_name:f.get('display_name'),headline:f.get('headline'),bio:f.get('bio'),is_seller:f.get('is_seller')==='on',slug:slug||null,public_profile:publicProfile});if(r.error){if(r.error.code==='23505')throw new Error(t('Энэ профайлын URL нэрийг өөр хүн ашиглаж байна. Өөр нэр сонгоно уу.','This profile URL is already taken. Choose another.'));if(r.error.code==='23514')throw new Error(t('Профайлын нэрийн формат буруу байна. Жишээ: test-freelancer','Invalid profile URL format. Example: test-freelancer'));throw r.error;}if(new URLSearchParams(location.search).has('seller'))entryApplied.current=false;},t('Профайл хадгалагдлаа.','Profile saved.'))};
 const submitService=(e:FormEvent<HTMLFormElement>)=>{e.preventDefault();const f=new FormData(e.currentTarget);void perform(async()=>{const db=await marketplaceClient();const value={title:f.get('title'),title_en:f.get('title_en'),description:f.get('description'),category:f.get('category'),price:Number(f.get('price')),delivery_days:Number(f.get('delivery_days')),status:f.get('status')};const r=editing?await db.from('services').update(value).eq('id',editing.id).select('id').single():await db.from('services').insert({...value,seller_id:uid}).select('id').single();if(r.error)throw r.error;setFormOpen(false);setEditing(null)},t('Үйлчилгээ хадгалагдлаа. Нийтлэх хүсэлтийг админ хянана.','Service saved. An admin reviews publication requests.'))};
 async function submitOrder(e:FormEvent<HTMLFormElement>){e.preventDefault();if(!selected)return;const brief=String(new FormData(e.currentTarget).get('brief')||'');await perform(async()=>{const r=await(await marketplaceClient()).from('orders').insert({service_id:selected.id,buyer_id:uid,seller_id:selected.seller_id,service_title:selected.title,quoted_price:selected.price,brief}).select('id').single();if(r.error)throw r.error;setSelected(null);setTab('orders')},t('Захиалгын хүсэлт илгээгдлээ. Төлбөр хийгдээгүй.','Order requested. No payment was taken.'))}
 async function updateOrder(id:string,status:string,note?:string,revision=false){await perform(async()=>{const details=note!==undefined?(revision?{revision_note:note}:{delivery_note:note}):{};const r=await(await marketplaceClient()).from('orders').update({status,...details}).eq('id',id).select('id').single();if(r.error)throw r.error},t('Захиалгын төлөв шинэчлэгдлээ.','Order status updated.'))}

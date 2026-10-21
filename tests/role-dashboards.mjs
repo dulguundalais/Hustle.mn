@@ -26,5 +26,5 @@ test('admin remains role-gated with separate entry point',()=>{
 test('auth redirects to correct buyer/seller/admin route without losing selected seller',()=>{
  assert.match(workspace,/const destination=mode==='seller'\?'\/seller-studio\/'/);
  assert.match(workspace,/next.set\('seller',seller\)/);
- assert.match(workspace,/setChatPeer\(matched.id\);setTab\('messages'\)/);
+ assert.ok(workspace.includes("setChatPeer(contact.sellerId);setTab('messages')"));
 });

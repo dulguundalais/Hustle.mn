@@ -1,0 +1,11 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import ts from 'typescript';import {readFileSync} from 'node:fs';
+const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const src=read('lib/marketplace/contact-routing.ts').replace("import type {Profile} from './types';",'');
+const js=ts.transpileModule(src,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+const {resolveSellerContact}=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
+const profiles=[{id:'seller-1',slug:'test-freelancer',is_seller:true,public_profile:true}];
+test('buyer reaches the selected seller',()=>assert.deepEqual(resolveSellerContact('test-freelancer','buyer-1',true,profiles),{kind:'ready',sellerId:'seller-1'}));
+test('same user cannot message own listing',()=>assert.deepEqual(resolveSellerContact('test-freelancer','seller-1',true,profiles),{kind:'self'}));
+test('new buyer is sent to profile onboarding with seller still selected',()=>assert.deepEqual(resolveSellerContact('test-freelancer','buyer-1',false,profiles),{kind:'onboarding',sellerId:'seller-1'}));
+test('unavailable/invalid seller are distinguished',()=>{assert.equal(resolveSellerContact('removed','buyer-1',true,profiles).kind,'unavailable');assert.equal(resolveSellerContact('BAD SLUG','buyer-1',true,profiles).kind,'invalid')});
+test('saving first buyer profile retries seller handoff',()=>{const ui=read('components/workspace.tsx');assert.match(ui,/if\(new URLSearchParams\(location.search\).has\('seller'\)\)entryApplied.current=false/);assert.match(ui,/contact.kind==='self'/)});

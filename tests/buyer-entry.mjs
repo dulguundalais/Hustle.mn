@@ -11,7 +11,7 @@ test('public listings use only published consent-aware RPC',()=>{
 test('return path preserves seller context through auth to messages',()=>{
  const ui=read('components/workspace.tsx');
  assert.match(ui,/params.get\('seller'\)/);
- assert.match(ui,/setChatPeer\(matched.id\);setTab\('messages'\)/);
+ assert.ok(ui.includes("setChatPeer(contact.sellerId);setTab('messages')"));
  assert.match(ui,/next.set\('seller',seller\)/);
 });
 test('admin access is gated and seller entry exists',()=>{
