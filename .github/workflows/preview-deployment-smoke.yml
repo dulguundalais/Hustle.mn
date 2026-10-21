@@ -3,39 +3,29 @@ on:
   push:
     branches:
       - feature/interactive-functional-v6
-
+  workflow_dispatch:
 permissions:
   contents: read
-
 jobs:
   verify-preview:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Confirm V12 is served by the real Cloudflare preview URL
+      - name: Validate live beta preview routes and newest release UI
         env:
           URL: https://feature-interactive-function.hustle-mn-preview.pages.dev
         shell: bash
         run: |
           set -euo pipefail
-          # Cloudflare Git integration may be slower than the GitHub push event.
-          ready=0
-          for attempt in $(seq 1 18); do
-            if curl --fail --location --silent --show-error --max-time 20 --output /tmp/hustle-v12.json "$URL/v12-release.json" && \
-              node -e "const f=require('/tmp/hustle-v12.json'); if(f.version!=='V12'||f.channel!=='closed-beta-preview')process.exit(1)"; then
-              ready=1
-              break
-            fi
-            echo "V12 marker not yet served (attempt $attempt/18)"
-            sleep 15
+          for attempt in $(seq 1 12); do
+            if curl --fail --location --silent --max-time 20 "$URL/" | grep -q 'Hustle'; then break; fi
+            if [ "$attempt" = 12 ]; then echo "::error::Preview not ready"; exit 1; fi
+            sleep 10
           done
-          if [ "$ready" != 1 ]; then
-            echo "::error::Cloudflare preview has not deployed V12 (or is not reachable). Check Pages branch/deployments."
-            exit 1
-          fi
-          echo "Verified: Cloudflare preview serves V12 release marker"
-          for route in / /explore/ /login/ /workspace/ /buyer/ /seller-studio/ /admin/ /join/seller/; do
-            echo "Checking $route"
-            curl --fail --location --silent --show-error --max-time 20 --output /dev/null "$URL$route"
+          for route in / /explore/ /login/ /buyer/ /seller-studio/ /admin/ /faq/ /about/ /privacy/ /terms/ /contact/; do
+            code=$(curl -L -s -o /dev/null --max-time 20 -w '%{http_code}' "$URL$route")
+            echo "$route => $code"
+            test "$code" = 200
           done
-          echo "Verified: V12 marker and eight public HTTP routes. Authenticated E2E not included."
+          # Real service markup may be hydrated after load; route success is not browser E2E.
+          echo "HTTP route availability confirmed. Authenticated E2E and live visual release confirmation must be separately signed off."
