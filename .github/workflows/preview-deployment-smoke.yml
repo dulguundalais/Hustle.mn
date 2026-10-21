@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Confirm V10 is served by the real Cloudflare preview URL
+      - name: Confirm V12 is served by the real Cloudflare preview URL
         env:
           URL: https://feature-interactive-function.hustle-mn-preview.pages.dev
         shell: bash
@@ -21,21 +21,21 @@ jobs:
           # Cloudflare Git integration may be slower than the GitHub push event.
           ready=0
           for attempt in $(seq 1 18); do
-            if curl --fail --location --silent --show-error --max-time 20 --output /tmp/hustle-v10.json "$URL/v10-release.json" && \
-              node -e "const f=require('/tmp/hustle-v10.json'); if(f.version!=='V10'||f.channel!=='closed-beta-preview')process.exit(1)"; then
+            if curl --fail --location --silent --show-error --max-time 20 --output /tmp/hustle-v12.json "$URL/v12-release.json" && \
+              node -e "const f=require('/tmp/hustle-v12.json'); if(f.version!=='V12'||f.channel!=='closed-beta-preview')process.exit(1)"; then
               ready=1
               break
             fi
-            echo "V10 marker not yet served (attempt $attempt/18)"
+            echo "V12 marker not yet served (attempt $attempt/18)"
             sleep 15
           done
           if [ "$ready" != 1 ]; then
-            echo "::error::Cloudflare preview has not deployed V10 (or is not reachable). Check Pages branch/deployments."
+            echo "::error::Cloudflare preview has not deployed V12 (or is not reachable). Check Pages branch/deployments."
             exit 1
           fi
-          echo "Verified: Cloudflare preview serves V10 release marker"
-          for route in / /explore/ /login/ /workspace/; do
+          echo "Verified: Cloudflare preview serves V12 release marker"
+          for route in / /explore/ /login/ /workspace/ /buyer/ /seller-studio/ /admin/ /join/seller/; do
             echo "Checking $route"
             curl --fail --location --silent --show-error --max-time 20 --output /dev/null "$URL$route"
           done
-          echo "Verified: V10 marker and four public HTTP routes. Authenticated E2E not included."
+          echo "Verified: V12 marker and eight public HTTP routes. Authenticated E2E not included."
