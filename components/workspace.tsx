@@ -37,7 +37,7 @@ async function load(){
  if(own&&!entryApplied.current){
    const params=new URLSearchParams(location.search);
    const slug=params.get('seller');
-   const mode=params.get('mode')||entry;
+   const mode=entry==='buyer'?(params.get('mode')||'buyer'):entry;
    if(slug&&/^[a-z0-9][a-z0-9-]{2,59}$/.test(slug)){
      const matched=profiles.find(p=>p.slug===slug&&p.is_seller&&p.public_profile&&p.id!==user.id);
      if(matched){setChatPeer(matched.id);setTab('messages');}
@@ -58,7 +58,7 @@ async function auth(e:FormEvent){e.preventDefault();if(register&&emailCooldown>0
  const next=new URLSearchParams();
  const seller=current.get('seller');
  if(seller&&/^[a-z0-9][a-z0-9-]{2,59}$/.test(seller))next.set('seller',seller);
- const mode=current.get('mode')||entry;
+ const mode=entry==='buyer'?(current.get('mode')||'buyer'):entry;
  if(mode==='buyer'||mode==='seller'||mode==='admin')next.set('mode',mode);
  const ref=current.get('ref');if(ref)next.set('ref',ref);
  const destination=mode==='seller'?'/seller-studio/':mode==='admin'?'/admin/':'/buyer/';
