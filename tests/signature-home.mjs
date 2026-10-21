@@ -1,0 +1,6 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const ui=read('components/signature-home.tsx');const base=read('components/premium-marketplace.tsx');
+test('home hero retains bilingual search and live marketplace path',()=>{assert.match(ui,/action="\/explore\/"/);assert.match(ui,/name="q"/);assert.match(ui,/Mongolian/);assert.match(base,/<SignatureHero en=\{en\}/);});
+test('buyer and seller instructions are interactive, not fake stats',()=>{assert.match(ui,/setMode\('buyer'\)/);assert.match(ui,/setMode\('seller'\)/);assert.match(ui,/No real payments or escrow/);assert.doesNotMatch(ui,/12K\+|4\.9\/5|Escrow-protected payments|Orders delivered/);});
+test('recommended talent is real public opted-in marketplace data',()=>{assert.match(ui,/rpc\('marketplace_catalog'\)/);assert.match(ui,/if\(res.error\)throw res.error/);assert.match(ui,/spotlights\.length/);assert.match(ui,/encodeURIComponent\(p.slug\)/);});
+test('existing explore and service marketplace functionality remains',()=>{assert.match(base,/<LiveCatalog en=\{en\}/);assert.match(base,/view==='service'/);assert.match(base,/suggestServices\(heroQuery,services,4\)/);});
