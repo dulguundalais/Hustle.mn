@@ -17,7 +17,7 @@ test('return path preserves seller context through auth to messages',()=>{
 test('admin access is gated and seller entry exists',()=>{
  const ui=read('components/workspace.tsx');
  assert.match(ui,/entry==='admin'&&role!=='admin'/);
- assert.match(ui,/nav.filter\(/);
+ assert.match(ui,/activeNav\.map\(/);
  assert.match(read('app/admin/page.tsx'),/entry="admin"/);
  assert.match(read('app/join/seller/page.tsx'),/entry="seller"/);
 });
