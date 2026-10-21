@@ -91,7 +91,7 @@ async function auth(e:FormEvent){e.preventDefault();if(register&&emailCooldown>0
  }}catch(e){fail(e)}finally{setBusy(false)}}
 useEffect(()=>{if(emailCooldown<=0)return;const timer=setInterval(()=>setEmailCooldown(v=>Math.max(0,v-1)),1000);return()=>clearInterval(timer)},[emailCooldown>0]);
 async function resendConfirmation(){if(busy||emailCooldown>0)return;setBusy(true);setError('');setNotice('');try{if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))throw new Error(t('Эхлээд имэйл хаягаа оруулна уу.','Enter your email address first.'));const db=await marketplaceClient();const r=await db.auth.resend({type:'signup',email:email.trim().toLowerCase(),options:{emailRedirectTo:location.origin+'/login/'}});if(r.error)throw r.error;setEmailCooldown(60);setNotice(t('Хүсэлт хүлээн авлаа. Имэйл хүргэгдсэнийг батлах боломжгүй. Өмнө бүртгүүлсэн бол Нэвтрэх эсвэл Нууц үг сэргээх сонголтыг ашиглана уу.','Request accepted; email delivery is not guaranteed. Already registered? Sign in or reset your password instead.'));}catch(e){fail(e)}finally{setBusy(false)}}
-async function refreshMessages(){if(!uid||!role)return;const db=await marketplaceClient();const r=await db.from('messages').select('id,sender_id,recipient_id,body,created_at,read_at,read_at,read_at').or('sender_id.eq.'+uid+',recipient_id.eq.'+uid).order('created_at',{ascending:true}).limit(500);if(r.error)throw r.error;setMessages(r.data as ChatMessage[])}
+async function refreshMessages(){if(!uid||!role)return;const db=await marketplaceClient();const r=await db.from('messages').select('id,sender_id,recipient_id,body,created_at,read_at').or('sender_id.eq.'+uid+',recipient_id.eq.'+uid).order('created_at',{ascending:true}).limit(500);if(r.error)throw r.error;setMessages(r.data as ChatMessage[])}
 useEffect(()=>{
   if(!uid||!role)return;
   let active=true;
@@ -100,7 +100,7 @@ useEffect(()=>{
   const sync=async()=>{
     const db=await marketplaceClient();
     const response=await db.from('messages')
-      .select('id,sender_id,recipient_id,body,created_at')
+      .select('id,sender_id,recipient_id,body,created_at,read_at')
       .or('sender_id.eq.'+uid+',recipient_id.eq.'+uid)
       .order('created_at',{ascending:true}).limit(500);
     if(!active||response.error)return;
