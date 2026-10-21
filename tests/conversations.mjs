@@ -33,3 +33,17 @@ test('workspace exposes messaging while preserving order actions',()=>{
  assert.match(ui,/threadMessages\(messages,uid,chatPeer\)/);
  assert.match(ui,/onClick=\{\(\)=>openChat\(o\.buyer_id===uid\?o\.seller_id:o\.buyer_id\)\}/);
 });
+
+test('realtime subscriptions are limited to signed-in sender/recipient and cleaned up',()=>{
+ const ui=read('components/workspace.tsx');
+ assert.match(ui,/filter:'recipient_id=eq\.'\+uid/);
+ assert.match(ui,/filter:'sender_id=eq\.'\+uid/);
+ assert.match(ui,/db\.removeChannel\(channel\)/);
+ assert.match(ui,/setRealtimeStatus\('fallback'\)/);
+});
+test('revision controls are gated by delivery status and remaining revisions',()=>{
+ const ui=read('components/workspace.tsx');
+ assert.match(ui,/o\.revisions_used<o\.revision_limit/);
+ assert.match(ui,/updateOrder\(o\.id,'in_progress'/);
+ assert.match(ui,/className="order-timeline"/);
+});
