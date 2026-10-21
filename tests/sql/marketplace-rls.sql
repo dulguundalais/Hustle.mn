@@ -13,14 +13,15 @@ insert into public.profiles(id,display_name,is_seller) values
 set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"10000000-0000-4000-8000-000000000002","email":"qa-seller@example.test","role":"authenticated"}',true);
 insert into public.services(id,seller_id,title,description,category,price,delivery_days,status) values('20000000-0000-4000-8000-000000000001',auth.uid(),'QA brand design','A test service with sufficient description.','design',50000,5,'pending');
-do $$ begin
+insert into public.service_packages(service_id,tier,name,summary,price,delivery_days,revisions,includes) values('20000000-0000-4000-8000-000000000001','Basic','QA Basic','QA rollback tier',50000,5,2,array['Brand mock']);
+do $ begin
  begin update public.services set status='published';raise exception 'TEST FAIL: seller published without moderation';exception when insufficient_privilege then null;end;
  begin update public.profiles set created_at=now()-interval '90 days' where id=auth.uid();raise exception 'TEST FAIL: profile timestamp tampering';exception when raise_exception then if SQLERRM='TEST FAIL: profile timestamp tampering' then raise;end if;end;
  begin perform public.manage_beta('attacker@example.test','admin',true);raise exception 'TEST FAIL: admin escalation';exception when raise_exception then if SQLERRM='TEST FAIL: admin escalation' then raise;end if;end;
 end $$;
 select set_config('request.jwt.claims','{"sub":"10000000-0000-4000-8000-000000000001","email":"qa-admin@example.test","role":"authenticated"}',true);
 update public.services set status='published' where id='20000000-0000-4000-8000-000000000001';
-insert into public.service_packages(service_id,tier,name,summary,price,delivery_days,revisions,includes) values('20000000-0000-4000-8000-000000000001','Basic','QA Basic','QA rollback tier',50000,5,2,array['Brand mock']);
+
 select set_config('request.jwt.claims','{"sub":"10000000-0000-4000-8000-000000000003","email":"qa-buyer@example.test","role":"authenticated"}',true);
 insert into public.orders(id,service_id,buyer_id,seller_id,service_title,quoted_price,brief) values('30000000-0000-4000-8000-000000000001','20000000-0000-4000-8000-000000000001',auth.uid(),'10000000-0000-4000-8000-000000000004','forged title',1,'Please create a complete brand identity for this test.');
 do $$ begin
