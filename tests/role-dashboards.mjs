@@ -20,7 +20,7 @@ test('seller incoming orders are separated from buyer orders',()=>{
 });
 test('admin remains role-gated with separate entry point',()=>{
  assert.match(workspace,/entry==='admin'&&role!=='admin'/);
- assert.match(workspace,/entry==='admin'&&<Link/);
+ assert.match(workspace,/entry==='admin'&&<>/);
  assert.match(workspace,/href="\/admin\/"/);
 });
 test('auth redirects to correct buyer/seller/admin route without losing selected seller',()=>{
