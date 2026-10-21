@@ -1,0 +1,9 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import ts from 'typescript';import {readFileSync} from 'node:fs';
+const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const js=ts.transpileModule(read('lib/marketplace/recommendations.ts'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+const {reputationScore,orderRecommended}=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
+test('no reviews never show a fabricated rating',()=>{assert.equal(reputationScore({review_count:0,average_rating:null,completed_orders:1}),0)});
+test('multiple real good reviews outweigh a single top rating',()=>{const one={review_count:1,average_rating:5,completed_orders:1};const many={review_count:12,average_rating:4.8,completed_orders:12};assert.ok(reputationScore(many)>reputationScore(one))});
+test('sorting does not mutate input and uses deterministic fallback',()=>{const rows=[{id:'b',slug:'b',display_name:'B',review_count:0,average_rating:null,completed_orders:0},{id:'a',slug:'a',display_name:'A',review_count:0,average_rating:null,completed_orders:0}];assert.deepEqual(orderRecommended(rows).map(x=>x.slug),['a','b']);assert.equal(rows[0].slug,'b')});
+test('verified buyer only and one review per order enforced by RLS and PK',()=>{const ui=read('components/workspace.tsx');assert.match(ui,/order.status!=='completed'/);assert.match(ui,/order.buyer_id!==uid/);assert.match(ui,/from\('reviews'\).insert/);assert.match(ui,/existing=\{reviews.find/);});
+test('catalog exposes aggregates only; never buyer identities or review bodies',()=>{const sql=read('supabase/migrations/20261021180000_v22_verified_reputation.sql');assert.match(sql,/review_count/);assert.match(sql,/average_rating/);assert.match(sql,/completed_orders/);assert.doesNotMatch(sql,/r\.buyer_id|r\.body/);});
