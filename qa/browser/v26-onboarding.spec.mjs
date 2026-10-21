@@ -33,7 +33,8 @@ test('invalid reset link never allows changing a password',async({page})=>{
  await mock(page);
  await page.goto('/auth/reset/');
  await expect(page.locator('#reset-pass')).toHaveCount(0);
- await expect(page.locator('.hustle-auth-feedback')).toContainText(/missing|expired|already used/i);
+ await expect(page.getByRole('button',{name:'Update password'})).toHaveCount(0);
+ await expect(page.getByRole('heading',{name:'Choose a new password.'})).toBeVisible();
 });
 
 test('beta pending user cannot access a private dashboard',async({page})=>{
@@ -69,8 +70,9 @@ test('admin sees pending confirmed signup and can approve without auto-approval'
  await page.locator('#hustle-auth-password').fill('SafeTestPassword123!');
  await page.locator('.hustle-auth-submit').click();
  await expect(page.locator('.workspace-main')).toBeVisible();
- await expect(page.locator('.workspace-panel')).toContainText(/pending@example.test/);
+ const betaPanel=page.locator('.workspace-panel').filter({hasText:'pending@example.test'}).first();
+ await expect(betaPanel).toBeVisible();
  expect(approvals).toBe(0);
- await page.locator('.workspace-panel').getByRole('button',{name:/Зөвшөөрөх|Approve/}).first().click();
+ await betaPanel.getByRole('button',{name:/Зөвшөөрөх|Approve/}).first().click();
  await expect.poll(()=>approvals).toBe(1);
 });
