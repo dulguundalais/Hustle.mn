@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {ArrowUpRight,ArrowLeft,Search,LayoutDashboard,PanelsTopLeft,BriefcaseBusiness,UserRound,ShoppingBag,Users,Settings2,LogOut,Sun,Moon,Globe,Plus,Check,Clock,Image as ImageIcon,Share2,ShieldCheck,LoaderCircle,X,Handshake,MessageCircle,Send} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
 import {normalizeSellerSlug,isValidSellerSlug} from '../lib/marketplace/seller-slug';
+import {resolveSellerContact} from '../lib/marketplace/contact-routing';
 import {categories,type Profile,type Listing,type Order,type Portfolio,type Referral,type Rules,type BetaMember} from '../lib/marketplace/types';
 import '../app/marketplace.css';
 import '../app/workspace.css';
@@ -25,7 +26,7 @@ const t=(mn:string,eng:string)=>en?eng:mn;
 function fail(e:unknown){const code=(e as {code?:string})?.code;if(code==='over_email_send_rate_limit'||/email rate limit/i.test(String((e as {message?:string})?.message||''))){setEmailCooldown(3600);setError(t('Имэйл илгээх үйлчилгээний хязгаарт хүрлээ. Дахин бүртгүүлэх шаардлагагүй. Илгээх хүсэлтийг түр зогсоолоо; имэйл хүргэлтийн тохиргоог засах шаардлагатай.','The email provider limit has been reached. Your account does not need to be created again. Email requests are paused; delivery configuration needs attention.'));return;}setError(e instanceof Error?e.message:String((e as {message?:string})?.message||t('Үйлдэл амжилтгүй. Дахин оролдоно уу.','Request failed. Please try again.')))}
 async function load(){
  const db=await marketplaceClient();const {data:{user},error:authError}=await db.auth.getUser();
- if(authError||!user){setUid('');setRole('');setMessages([]);setChatPeer('');return;}
+ if(authError||!user){setUid('');setRole('');setMessages([]);setChatPeer('');entryApplied.current=false;return;}
  setUid(user.id);setEmail(user.email||'');
  const beta=await db.from('beta_allowlist').select('role').eq('email',user.email?.toLowerCase()||'').eq('enabled',true).maybeSingle();
  if(beta.error)throw beta.error;if(!beta.data){setRole('');setMessages([]);setChatPeer('');return;}
@@ -37,17 +38,24 @@ async function load(){
  const items=results[3].data as Portfolio[];
  const images=await Promise.all(items.map(async p=>{const r=await db.storage.from('portfolio').createSignedUrl(p.object_path,900);return {...p,url:r.data?.signedUrl}}));setPortfolio(images);
  if(beta.data.role==='admin'){const [a,b]=await Promise.all([db.rpc('list_beta'),db.from('audit_events').select('*').order('created_at',{ascending:false}).limit(30)]);if(a.error)throw a.error;if(b.error)throw b.error;setMembers(a.data||[]);setAudit(b.data||[])}
- if(own&&!entryApplied.current){
+ if(!entryApplied.current){
    const params=new URLSearchParams(location.search);
    const slug=params.get('seller');
    const mode=entry==='buyer'?(params.get('mode')||'buyer'):entry;
-   if(slug&&/^[a-z0-9][a-z0-9-]{2,59}$/.test(slug)){
-     const matched=profiles.find(p=>p.slug===slug&&p.is_seller&&p.public_profile&&p.id!==user.id);
-     if(matched){setChatPeer(matched.id);setTab('messages');}
-     else{setTab('buyer-home');setNotice('Сонгосон freelancer одоогоор идэвхгүй байна / Seller is unavailable');}
-   } else if(mode==='admin'&&beta.data.role==='admin')setTab('admin');
-   else if(mode==='seller')setTab(own.is_seller?'seller':'profile');
-   else setTab('buyer-home');
+   const contact=resolveSellerContact(slug,user.id,Boolean(own),profiles);
+   if(contact.kind==='ready'){
+     setChatPeer(contact.sellerId);setTab('messages');
+   }else if(contact.kind==='onboarding'){
+     setChatPeer(contact.sellerId);setTab('profile');
+     setNotice(t('Чатлахын өмнө buyer профайлаа үүсгэнэ үү. Хадгалсны дараа сонгосон freelancer-ийн чат нээгдэнэ.','Create your buyer profile first. Your chosen freelancer will be ready in Messages once you save.'));
+   }else if(contact.kind==='self'){
+     setTab('buyer-home');
+     setNotice(t('Та өөрийн үйлчилгээ рүү холбогдох гэж байна. Чат шалгахын тулд өөр buyer аккаунтаар нэвтэрнэ үү.','This is your own listing. Sign in with a different approved buyer account to test messaging.'));
+   }else if(contact.kind==='unavailable'||contact.kind==='invalid'){
+     setTab('buyer-home');setNotice(t('Энэ freelancer-ийн нийтийн профайл олдсонгүй. Marketplace-ээс дахин сонгоно уу.','That public freelancer profile was not found. Please select a listing again.'));
+   }else if(mode==='admin'&&beta.data.role==='admin')setTab('admin');
+   else if(mode==='seller')setTab(own?.is_seller?'seller':'profile');
+   else setTab(own?'buyer-home':'profile');
    entryApplied.current=true;
  }
 }
