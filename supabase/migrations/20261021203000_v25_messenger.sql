@@ -34,3 +34,43 @@ grant select,insert,update on public.messenger_presence to authenticated;
 create policy presence_read on public.messenger_presence for select to authenticated using(public.beta_role() is not null and (share_activity or user_id=auth.uid()));
 create policy presence_add on public.messenger_presence for insert to authenticated with check(public.beta_role() is not null and user_id=auth.uid());
 create policy presence_edit on public.messenger_presence for update to authenticated using(user_id=auth.uid() and public.beta_role() is not null) with check(user_id=auth.uid() and public.beta_role() is not null);
+
+-- Accurate presence server timestamp: clients may opt in/out but cannot fabricate last-active times.
+create function hustle_private.presence_stamp() returns trigger language plpgsql security invoker set search_path='' as $presence$
+begin
+ if new.user_id is distinct from auth.uid() then raise exception 'Presence ownership mismatch';end if;
+ new.last_active_at=now();
+ return new;
+end $presence$;
+create trigger presence_stamp before insert or update on public.messenger_presence
+ for each row execute function hustle_private.presence_stamp();
+
+-- A privacy-safe seller metric, not individual buyer correspondence. Minimum three
+-- distinct first replies, real messages only. Limit output to public opted-in sellers.
+create function public.seller_average_response(target_seller uuid)
+returns jsonb language sql stable security definer set search_path='' as $response$
+with visible as (
+ select p.id
+ from public.profiles p
+ join auth.users u on u.id=p.id
+ join public.beta_allowlist a on a.email=lower(u.email)
+ where p.id=target_seller and p.is_seller and p.public_profile and a.enabled
+ and auth.uid() is not null and public.beta_role() is not null
+), first_request as (
+ select m.sender_id as buyer_id,min(m.created_at) as request_at
+ from public.messages m join visible s on m.recipient_id=s.id
+ where m.sender_id<>target_seller
+ group by m.sender_id
+), first_answer as (
+ select b.buyer_id, extract(epoch from min(m.created_at)-b.request_at)/60 as minutes
+ from first_request b join public.messages m on m.sender_id=target_seller
+   and m.recipient_id=b.buyer_id and m.created_at>b.request_at
+   and m.created_at<=b.request_at+interval '7 days'
+ group by b.buyer_id,b.request_at
+)
+select jsonb_build_object('samples',count(*)::int,'average_minutes',
+ case when count(*)>=3 then round(avg(minutes))::int else null end)
+from first_answer
+$response$;
+revoke all on function public.seller_average_response(uuid) from public,anon;
+grant execute on function public.seller_average_response(uuid) to authenticated;
