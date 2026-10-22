@@ -74,3 +74,33 @@ test('malicious signed URLs cannot make profile proxy fetch another host',async(
   assert.equal(r.status,502);assert.equal(hits,1);
  }finally{globalThis.fetch=original}
 });
+
+test('publishable-key Storage signing retries one authentication mismatch without elevated privileges',async()=>{
+ const original=globalThis.fetch;let requests=[];
+ globalThis.fetch=async(url,options={})=>{
+  requests.push({url:String(url),options});
+  if(requests.length===1)return new Response('Authorization required',{status:401});
+  if(requests.length===2)return Response.json({signedURL:'/object/sign/portfolio/'+path+'?token=public-rls-only'});
+  return new Response(new Uint8Array([137,80,78,71]),{status:200,headers:{'Content-Type':'image/png'}});
+ };
+ try{
+  const result=await portfolioImage(new Request('https://preview.example/api/portfolio-image?path='+encodeURIComponent(path)),config);
+  assert.equal(result.status,200);
+  assert.equal(requests.length,3);
+  assert.equal(requests[0].options.headers.Authorization,undefined);
+  assert.equal(requests[1].options.headers.Authorization,'Bearer '+config.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
+  assert.equal(requests[1].options.headers.apikey,config.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
+  assert.equal(requests[2].options.headers,undefined);
+ }finally{globalThis.fetch=original}
+});
+test('failed Storage signing includes only safe HTTP status diagnostics',async()=>{
+ const original=globalThis.fetch;
+ globalThis.fetch=async()=>new Response('Secret internal failure',{status:503});
+ try{
+  const result=await portfolioImage(new Request('https://preview.example/api/portfolio-image?path='+encodeURIComponent(path)),config);
+  assert.equal(result.status,404);
+  assert.equal(result.headers.get('X-Hustle-Storage-Step'),'sign');
+  assert.equal(result.headers.get('X-Hustle-Storage-Status'),'503');
+  assert.doesNotMatch(await result.text(),/Secret internal/);
+ }finally{globalThis.fetch=original}
+});
