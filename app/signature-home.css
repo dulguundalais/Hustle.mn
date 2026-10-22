@@ -11,3 +11,8 @@
 .signature-problem-prompts a:hover,.signature-problem-prompts a:focus-visible{border-color:#9cf1ff;background:#125875}
 .signature-search-suggestions{z-index:6}
 @media(max-width:700px){.signature-hero .signature-search{padding:7px;gap:8px}.signature-hero .signature-search input{font-size:12px}.signature-hero .signature-search button{padding:13px 12px}.signature-problem-prompts{gap:6px}.signature-problem-prompts a{font-size:10px}}
+
+/* V32 preserve the orbit while allowing premium personal/business entry cards */
+@media(min-width:1051px){.signature-hero-inner{min-height:740px;grid-template-columns:minmax(0,1.18fr) minmax(340px,.82fr)}.signature-orbit{height:480px}}
+.signature-hero-copy>.signature-search{margin-top:20px}
+@media(min-width:751px) and (max-width:1050px){.signature-hero-inner{padding-top:60px;padding-bottom:65px}}
