@@ -63,7 +63,8 @@ test('private or revoked portfolio permissions never fall back to public bucket 
  globalThis.fetch=async()=>{hits++;return new Response('Forbidden',{status:403})};
  try{
   const r=await portfolioImage(new Request('https://preview.example/api/portfolio-image?path='+encodeURIComponent(path)),config);
-  assert.equal(r.status,404);assert.equal(hits,1);
+  assert.equal(r.status,404);assert.equal(hits,2); // Same anonymous publishable key, no elevated access.
+  assert.equal(r.headers.get('X-Hustle-Storage-Status'),'403');
  }finally{globalThis.fetch=original}
 });
 test('malicious signed URLs cannot make profile proxy fetch another host',async()=>{
