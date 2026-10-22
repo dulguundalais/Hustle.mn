@@ -21,6 +21,7 @@ test('Business → AI goal → project details → solutions → real Finder',as
  await expect(dialog.locator('.guided-modal-body h2')).toContainText('автоматжуулах');
  await dialog.locator('.guided-brief-toggle').click();
  await expect(dialog.locator('.guided-brief-exposed')).toContainText('500,000 ₮');
+ await expect(dialog.locator('.guided-brief-exposed')).toContainText('Ресторан');
  await dialog.locator('.guided-modal-footer a.guided-next').click();
  await expect(page).toHaveURL(/\/solutions\/\?/);
  await expect(page.locator('.finder-brief-preview')).toContainText('CRM');
