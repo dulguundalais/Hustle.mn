@@ -41,7 +41,13 @@ jobs:
           done
           # /api/config is a public publishable-key endpoint, not a secret API.
           # Check only shape/availability; never print the key in workflow logs.
-          curl --fail --location --silent --max-time 20 -o /tmp/hustle-config.json "$URL/api/config"
+          config_code=$(curl --location --silent --max-time 20 -o /tmp/hustle-config.json -w '%{http_code}' "$URL/api/config")
+          echo "/api/config => $config_code"
+          if [ "$config_code" != "200" ]; then
+            # Print sanitized error code only; never expose the publishable key.
+            node -e "const fs=require('fs');let j={};try{j=JSON.parse(fs.readFileSync('/tmp/hustle-config.json','utf8'))}catch{};console.log('Config error code:',j.code||j.error||'non-JSON response')"
+            exit 1
+          fi
           node -e "const c=require('/tmp/hustle-config.json');if(!c.url?.startsWith('https://')||typeof c.key!=='string'||!c.key.length)process.exit(1)"
           # Known opt-in synthetic beta profile: verify Pages dynamic route and image bytes.
           curl --fail --location --silent --max-time 25 -o /tmp/hustle-public-profile.html "$URL/p/test-freelancer"
