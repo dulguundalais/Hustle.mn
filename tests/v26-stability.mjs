@@ -33,5 +33,5 @@ test('V26 SQL checks actual third-party chat, storage and beta admin denial',()=
 });
 test('latest preview smoke requires real V26 marker, never obsolete V12',()=>{
  const w=read('.github/workflows/preview-deployment-smoke.yml'),marker=JSON.parse(read('public/v26-release.json'));
- assert.equal(marker.version,'V26');assert.match(w,/v26-release\.json/);assert.doesNotMatch(w,/v12-release\.json/);
+ assert.equal(marker.version,'V26');assert.match(w,/v26-release\\.json/);assert.match(w,/preview-build\\.json/);assert.match(w,/EXPECTED_SHA/);assert.match(w,/\\/api\\/config/);assert.doesNotMatch(w,/v12-release\\.json/);
 });
