@@ -6,6 +6,7 @@ import {marketplaceClient} from '../lib/marketplace/client';
 import {orderRecommended} from '../lib/marketplace/recommendations';
 import {services} from '../lib/marketplace/catalog';
 import {suggestLiveServices,type LiveService} from '../lib/marketplace/live-discovery';
+import GuidedEntry from './guided-entry';
 import '../app/signature-home.css';
 
 type T=(mn:string,en:string)=>string;
@@ -32,6 +33,7 @@ export function SignatureHero({en}:{en:boolean}){
        <span className="signature-kicker"><span className="signature-kicker-pulse"/> {t('АСУУДЛАА ХЭЛ · ШИЙДЛЭЭ ОЛ','DESCRIBE THE CHALLENGE · FIND THE SOLUTION')}</span>
        <h1 id="signature-hero-title">{t('Асуудал бүрт','Every challenge')}<br/><span>{t('шийдэл бий.','has a way forward.')}</span></h1>
        <p>{t('Бизнесээ хөгжүүлэх, ажлаа автоматжуулах, санаагаа хэрэгжүүлэхэд хэрэгтэй мэргэжилтнээ ол. Яг ямар үйлчилгээ хэрэгтэйгээ мэдэх албагүй.','From growing sales to automating work, describe the problem and discover the right expertise. No jargon needed.')}</p>
+       <GuidedEntry en={en}/>
        <form action="/solutions/" method="get" className="signature-search" role="search">
         <Search size={21} aria-hidden="true"/>
         <input name="q" aria-label={t('Асуудлаа тайлбарлах','Describe your challenge')} value={search} onChange={e=>{setSearch(e.target.value);setShowSuggestions(true)}} onFocus={()=>setShowSuggestions(true)} onKeyDown={e=>{if(e.key==='Escape')setShowSuggestions(false)}} placeholder={t('Манай ресторан илүү олон захиалгатай болмоор байна…','We need more bookings but do not know where to start…')}/>
