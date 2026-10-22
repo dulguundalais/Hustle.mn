@@ -5,7 +5,7 @@ const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const css=read('app/unified-layout.css');
 
 test('one centralized container grid owns hero, business, header and footer',()=>{
- assert.match(css,/--hustle-content-max:\s*1200px/);
+ assert.match(css,/--hustle-content-max:\s*1400px/);
  assert.match(css,/--hustle-page-gutter:\s*clamp\(20px,\s*3\.7vw,\s*48px\)/);
  assert.match(css,/\.hustle-v5 \.shell,/);
  assert.match(css,/\.hustle-v5 \.business-solutions-inner,/);
@@ -32,4 +32,13 @@ test('existing premium sections retain shared .shell and their own full-bleed ba
  assert.match(business,/className="shell business-solutions-inner"/);
  assert.match(footer,/className="shell footer-columns"/);
  assert.match(footer,/className="shell footer-bottom"/);
+});
+
+test('seller colored banner edges line up with business and partner card at shared inset',()=>{
+ assert.match(css,/\.hustle-v5 \.signature-seller-band\.shell/);
+ assert.match(css,/width:\s*calc\(100%\s*-\s*\(2\s*\*\s*var\(--hustle-page-gutter\)\)\)/);
+ assert.match(css,/\.hustle-v5 \.signature-partner-inner/);
+ const business=read('app/business-solutions.css');
+ assert.doesNotMatch(business,/business-solutions-inner\{max-width:1200px/);
+ assert.match(business,/business-solutions-inner\{max-width:1400px/);
 });
