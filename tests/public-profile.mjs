@@ -45,16 +45,16 @@ test('public opt-in portfolio uses temporary signed URL, never a bare anonymous 
  };
  try{
   const r=await portfolioImage(new Request('https://preview.example/api/portfolio-image?path='+encodeURIComponent(path)),config);
-  assert.equal(r.status,200);
+  assert.equal(r.status,302);
   assert.equal(r.headers.get('Cache-Control'),'no-store');
-  assert.equal(r.headers.get('Content-Type'),'image/png');
-  assert.equal(requests.length,2);
+  assert.equal(r.headers.get('Referrer-Policy'),'no-referrer');
+  assert.match(r.headers.get('Location')||'',/\/storage\/v1\/object\/sign\/portfolio\//);
+  assert.equal(requests.length,1);
   assert.equal(requests[0].options.method,'POST');
   assert.equal(requests[0].options.headers.apikey,config.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
   assert.equal(requests[0].options.headers.Authorization,undefined);
   assert.equal(JSON.parse(requests[0].options.body).expiresIn,60);
-  assert.ok(requests[1].url.includes('/storage/v1/object/sign/portfolio/'));
-  assert.equal(requests[1].options.redirect,'error');
+
  }finally{globalThis.fetch=original}
 });
 
@@ -86,12 +86,12 @@ test('publishable-key Storage signing retries one authentication mismatch withou
  };
  try{
   const result=await portfolioImage(new Request('https://preview.example/api/portfolio-image?path='+encodeURIComponent(path)),config);
-  assert.equal(result.status,200);
-  assert.equal(requests.length,3);
+  assert.equal(result.status,302);
+  assert.equal(requests.length,2);
   assert.equal(requests[0].options.headers.Authorization,undefined);
   assert.equal(requests[1].options.headers.Authorization,'Bearer '+config.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
   assert.equal(requests[1].options.headers.apikey,config.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
-  assert.equal(requests[2].options.headers,undefined);
+  assert.match(result.headers.get('Location')||'',/token=public-rls-only/);
  }finally{globalThis.fetch=original}
 });
 test('failed Storage signing includes only safe HTTP status diagnostics',async()=>{
