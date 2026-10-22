@@ -45,7 +45,7 @@ test('Buyer chooses Premium, Seller delivers, Buyer completes and publishes veri
   // Fresh reload reads the server-side state rather than retaining a stale local card.
   await buyer.goto('/buyer/');
   await expect(buyer.locator('.workspace-main')).toBeVisible();
-  await buyer.getByRole('button',{name:/Миний захиалгууд|My orders/}).first().click();
+  await buyer.getByRole('button',{name:/Миний захиалга|My orders/}).first().click();
   await expect(buyer.locator('.order-card .status-delivered')).toBeVisible();
   await buyer.getByRole('button',{name:/Хүлээн авч дуусгах|Accept delivery/}).click();
   await expect(buyer.locator('.order-card .status-completed')).toBeVisible();
@@ -70,7 +70,7 @@ test('Unrelated beta user cannot view buyer or seller orders',async({page})=>{
  await mockOrderFlow(page,state,'outsider');
  await page.goto('/buyer/');
  await signIn(page,'outsider');
- await page.getByRole('button',{name:/Миний захиалгууд|My orders/}).first().click();
+ await page.getByRole('button',{name:/Миний захиалга|My orders/}).first().click();
  await expect(page.locator('.order-card')).toHaveCount(0);
  await expect(page.getByText('Private buyer project')).toHaveCount(0);
 });
