@@ -2,76 +2,76 @@ import {test,expect} from '@playwright/test';
 import {mock} from './support.mjs';
 test.beforeEach(async({page})=>mock(page));
 
-test('Business → AI goal → project details → solutions → real Finder',async({page})=>{
+test('business buyer sees inline solutions immediately after one goal click',async({page})=>{
  await page.goto('/');
- await expect(page.locator('.guided-entry-choices button')).toHaveCount(2);
+ await expect(page.locator('.guided-entry-choice')).toHaveCount(2);
  await page.locator('.guided-entry-business').click();
- const dialog=page.getByRole('dialog');
- await expect(dialog).toBeVisible();
- await expect(dialog.locator('.guided-goal')).toHaveCount(6);
- await dialog.locator('.guided-goal').filter({hasText:'AI & процесс автоматжуулах'}).click();
- await dialog.locator('.guided-modal-footer button.guided-next').click();
- await expect(dialog.locator('#guided-need')).toBeVisible();
- await dialog.locator('#guided-need').fill('Манай бизнесийн давтагддаг ажлыг автоматжуулж, CRM-тэй холбох хэрэгтэй байна');
- await dialog.locator('#guided-industry').selectOption('restaurant');
- await dialog.locator('#guided-budget').fill('500,000 ₮');
- await dialog.locator('#guided-timeline').fill('2 долоо хоног');
- await dialog.locator('.guided-modal-footer button.guided-next').click();
- await expect(dialog.locator('.guided-recommendation')).toHaveCount(3);
- await expect(dialog.locator('.guided-modal-body h2')).toContainText('автоматжуулах');
- await dialog.locator('.guided-brief-toggle').click();
- await expect(dialog.locator('.guided-brief-exposed')).toContainText('500,000 ₮');
- await expect(dialog.locator('.guided-brief-exposed')).toContainText('Ресторан');
- await dialog.locator('.guided-modal-footer a.guided-next').click();
+ const d=page.getByRole('dialog');
+ await expect(d.locator('.guided-goal')).toHaveCount(6);
+ await d.locator('.guided-goal').filter({hasText:'AI & процесс автоматжуулах'}).click();
+ await expect(d.locator('.guided-result-card')).toHaveCount(3);
+ await expect(d.locator('.guided-modal-body h2')).toContainText('автоматжуулах');
+ await expect(d.locator('.guided-match-status')).toContainText('нийтлэгдсэн freelancer');
+ await d.locator('.guided-optional-toggle').click();
+ await expect(d.locator('.guided-optional-content')).toBeVisible();
+ await d.locator('.guided-optional-content input').first().fill('500,000 ₮');
+ await d.locator('.guided-optional-content input').nth(1).fill('2 долоо хоног');
+ await expect(d.locator('.guided-brief-preview')).toContainText('500,000 ₮');
+ await d.locator('a.guided-next').click();
  await expect(page).toHaveURL(/\/solutions\/\?/);
- await expect(page.locator('.finder-brief-preview')).toContainText('CRM');
  await expect(page.locator('.finder-brief-preview')).toContainText('2 долоо хоног');
- await expect(page.locator('.finder-audience button[aria-pressed=true]')).toContainText('Бизнес');
 });
 
-test('personal choice gives a different path and can close/reopen without signup',async({page})=>{
+test('personal goal shows real published freelancer on the SAME results screen',async({page})=>{
  await page.goto('/');
- const first=page.locator('.guided-entry-choice').first();
- await first.focus();
- await first.click();
- let dialog=page.getByRole('dialog');
- await expect(dialog.locator('.guided-goal')).toHaveCount(6);
- await expect(dialog.locator('.guided-goal').first()).toContainText('Дизайн');
- await page.keyboard.press('Escape');
- await expect(dialog).toHaveCount(0);
- await expect(first).toBeFocused();
- await first.click();
- dialog=page.getByRole('dialog');
- await dialog.locator('.guided-modal-footer button.guided-next').click();
- await dialog.locator('.guided-modal-footer button.guided-next').click();
- await expect(dialog.locator('.guided-recommendation')).toHaveCount(3);
- await dialog.locator('a.guided-next').click();
- await expect(page).toHaveURL(/audience=personal/);
- await expect(page.locator('.finder-brief-preview')).toContainText('Хувь хүн');
+ const trigger=page.locator('.guided-entry-choice').first();
+ await trigger.click();
+ const d=page.getByRole('dialog');
+ await d.locator('.guided-goal').first().click();
+ await expect(d.locator('.guided-result-card')).toHaveCount(3);
+ await expect(d.locator('.guided-published-list a').first()).toHaveAttribute('href',/\/listing\/\?id=20000000/);
+ await d.locator('.guided-published-list a').first().click();
+ await expect(page).toHaveURL(/\/listing\/\?id=20000000/);
 });
 
-test('language toggle keeps English directions with keyboard-operable dialog',async({page})=>{
+test('the user can type a custom problem with no mandatory budget or industry',async({page})=>{
+ await page.goto('/');
+ await page.locator('.guided-entry-business').click();
+ const d=page.getByRole('dialog');
+ await d.locator('#guided-custom-problem').fill('Манай рестораны захиалга бага байна');
+ await d.locator('.guided-custom-row button').click();
+ await expect(d.locator('.guided-result-card')).toHaveCount(3);
+ await expect(d.locator('.guided-modal-body h2')).toContainText('Борлуулалт');
+ await d.locator('.guided-back').click();
+ await expect(d.locator('.guided-goal')).toHaveCount(6);
+ await page.keyboard.press('Escape');
+ await expect(d).toHaveCount(0);
+ await expect(page.locator('.guided-entry-business')).toBeFocused();
+});
+
+test('English mode offers direct two-step navigation',async({page})=>{
  await page.goto('/');
  await page.getByRole('button',{name:'Англи хэл сонгох'}).click();
  await page.locator('.guided-entry-business').click();
- const dialog=page.getByRole('dialog');
- await expect(dialog.getByRole('heading',{name:'What would you like to improve?'})).toBeVisible();
- await dialog.locator('.guided-modal-footer button.guided-next').click();
- await expect(dialog.getByRole('heading',{name:'Tell us about your challenge'})).toBeVisible();
- await expect(dialog.locator('#guided-budget')).toBeVisible();
+ const d=page.getByRole('dialog');
+ await expect(d.getByRole('heading',{name:'What would you like to improve?'})).toBeVisible();
+ await d.locator('.guided-goal').first().click();
+ await expect(d.locator('.guided-result-card')).toHaveCount(3);
+ await expect(d.getByRole('heading',{name:'Grow sales and bookings'})).toBeVisible();
 });
 
 for(const width of [360,390,768,1280]){
- test('responsive premium personal/business gateway '+width,async({page})=>{
+ test('premium two-path entry fits viewport '+width,async({page})=>{
   await page.setViewportSize({width,height:850});
   await page.goto('/');
   await expect(page.locator('.guided-entry-choices')).toBeVisible();
-  const viewport=await page.evaluate(()=>document.documentElement.scrollWidth);
-  expect(viewport).toBeLessThanOrEqual(width+4);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+4);
   await page.locator('.guided-entry-business').click();
-  await expect(page.getByRole('dialog')).toBeVisible();
-  const dWidth=await page.locator('.guided-modal').evaluate(n=>n.getBoundingClientRect().width);
-  expect(dWidth).toBeLessThanOrEqual(width+2);
-  await page.screenshot({path:'test-results/v32-journey-'+width+'.png',fullPage:false});
+  const d=page.getByRole('dialog');
+  await expect(d.locator('.guided-goal')).toHaveCount(6);
+  expect(await d.evaluate(n=>n.getBoundingClientRect().width)).toBeLessThanOrEqual(width+2);
+  await d.locator('.guided-goal').first().click();
+  await expect(d.locator('.guided-result-card')).toHaveCount(3);
+  await page.screenshot({path:'test-results/v321-simple-'+width+'.png',fullPage:false});
  });
 }
