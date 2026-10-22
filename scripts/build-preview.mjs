@@ -13,4 +13,10 @@ await writeFile(path.join(target,'next.config.ts'),`export default {output:'expo
 const run=spawnSync(process.execPath,[path.join(root,'node_modules/next/dist/bin/next'),'build',target],{stdio:'inherit',env:{...process.env,NEXT_TELEMETRY_DISABLED:'1'}});
 if(run.status!==0)process.exit(run.status||1);
 await rm(path.join(root,'out'),{recursive:true,force:true});await cp(path.join(target,'out'),path.join(root,'out'),{recursive:true});
+// Pages injects CF_PAGES_COMMIT_SHA; the deployed artifact must identify its
+// exact commit, not just its V26 label. No credentials or user data are exposed.
+const commitSha=(process.env.CF_PAGES_COMMIT_SHA||process.env.GITHUB_SHA||'').trim();
+await writeFile(path.join(root,'out','preview-build.json'),JSON.stringify({
+ version:'V26',channel:'closed-beta-preview',commit_sha:commitSha||null
+})+'\n');
 console.log('Static visual preview exported to out; runtime source preserved.');
