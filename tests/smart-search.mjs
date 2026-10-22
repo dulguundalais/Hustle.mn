@@ -29,7 +29,7 @@ test('empty query shows no suggestions and unrelated query stays empty',()=>{
 });
 test('the homepage wires smart suggestions to real preview listing links',()=>{
  const ui=read('components/signature-home.tsx');
- assert.match(ui,/suggestServices\(search,services,4\)/);
+ assert.match(ui,/suggestLiveServices\(published,search,4\)/);
  assert.match(ui,/id="hero-search-suggestions"/);
  assert.match(read('components/premium-marketplace.tsx'),/matchesService\(s,query\)/);
 });

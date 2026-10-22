@@ -5,7 +5,7 @@ import {ArrowRight,ArrowUpRight,Check,ChevronRight,Clapperboard,Code2,Globe2,Lay
 import {marketplaceClient} from '../lib/marketplace/client';
 import {orderRecommended} from '../lib/marketplace/recommendations';
 import {services} from '../lib/marketplace/catalog';
-import {suggestServices} from '../lib/marketplace/smart-search';
+import {suggestLiveServices,type LiveService} from '../lib/marketplace/live-discovery';
 import '../app/signature-home.css';
 
 type T=(mn:string,en:string)=>string;
@@ -21,7 +21,9 @@ const formatPrice=(amount:number)=>new Intl.NumberFormat('mn-MN').format(amount)
 export function SignatureHero({en}:{en:boolean}){
  const [search,setSearch]=useState('');
  const [showSuggestions,setShowSuggestions]=useState(false);
- const suggestions=useMemo(()=>suggestServices(search,services,4),[search]);
+ const [published,setPublished]=useState<LiveService[]>([]);
+ useEffect(()=>{let active=true;marketplaceClient().then(db=>db.rpc('marketplace_catalog')).then(r=>{if(active&&!r.error&&Array.isArray(r.data))setPublished(r.data as LiveService[])}).catch(()=>{});return()=>{active=false}},[]);
+ const suggestions=useMemo(()=>suggestLiveServices(published,search,4),[published,search]);
  const t:T=(mn,english)=>en?english:mn;
  return <section className="signature-hero" aria-labelledby="signature-hero-title">
    <div className="signature-hero-grid" aria-hidden="true"/>
@@ -35,7 +37,7 @@ export function SignatureHero({en}:{en:boolean}){
         <input name="q" aria-label={t('Үйлчилгээ хайх','Find a service')} value={search} onChange={e=>{setSearch(e.target.value);setShowSuggestions(true)}} onFocus={()=>setShowSuggestions(true)} onKeyDown={e=>{if(e.key==='Escape')setShowSuggestions(false)}} placeholder={t('Лого, вэбсайт, видео эсвэл санаагаа бичээрэй…','Describe what you need — logo, website, video…')}/>
         <button type="submit"><span>{t('Хайх','Explore')}</span><ArrowUpRight size={19}/></button>
        </form>
-       {showSuggestions&&suggestions.length>0&&<div className="signature-search-suggestions" id="hero-search-suggestions" role="listbox" aria-label={t('Тохирох жишиг үйлчилгээнүүд','Sample service suggestions')}>{suggestions.map(item=><Link role="option" aria-selected={false} key={item.id} href={'/services/'+item.id}><Search size={15}/>{en?item.en:item.mn}<span>{t('Жишиг','Sample')}</span></Link>)}<Link className="signature-search-all" href={'/explore/?q='+encodeURIComponent(search)}>{t('Бодит үйлчилгээ хайх','Find real services')}<ArrowRight size={15}/></Link></div>}
+       {showSuggestions&&suggestions.length>0&&<div className="signature-search-suggestions" id="hero-search-suggestions" role="listbox" aria-label={t('Нийтлэгдсэн үйлчилгээний санал','Published service suggestions')}>{suggestions.map(item=><Link role="option" aria-selected={false} key={item.id} href={'/login/?mode=buyer&service='+encodeURIComponent(item.id)}><Search size={15}/>{en&&item.title_en?item.title_en:item.title}<span>{t('Бодит','Live')}</span></Link>)}<Link className="signature-search-all" href={'/explore/?q='+encodeURIComponent(search)}>{t('Бодит үйлчилгээ хайх','Find real services')}<ArrowRight size={15}/></Link></div>}
        <div className="signature-search-subline"><Sparkles size={14}/>{t('Кирилл, латин галиг, англи үгээр хайж болно.','Search in Mongolian, romanized Mongolian or English.')}</div>
      </div>
      <div className="signature-orbit" aria-label={t('Бүтээлч ур чадварыг дүрсэлсэн график','Abstract constellation of creative disciplines')}>
