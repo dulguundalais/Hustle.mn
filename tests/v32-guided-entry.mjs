@@ -46,6 +46,6 @@ test('new homepage has accessible nonblocking two-path entry and a usable three-
  assert.match(guide,/role="dialog" aria-modal="true"/);
  assert.match(guide,/event\.key==='Escape'/);
  assert.match(guide,/event\.key!=='Tab'/);
- assert.match(guide,/guidedFinderHref\(audience,goal,notes,en,budget,timeline\)/);
+ assert.match(guide,/guidedFinderHref\(audience,goal,problem,en,budget,timeline\)/);
  assert.match(read('components/solution-finder.tsx'),/params\.get\('budget'\)/);
 });
