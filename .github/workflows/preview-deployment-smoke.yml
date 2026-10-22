@@ -43,5 +43,11 @@ jobs:
           # Check only shape/availability; never print the key in workflow logs.
           curl --fail --location --silent --max-time 20 -o /tmp/hustle-config.json "$URL/api/config"
           node -e "const c=require('/tmp/hustle-config.json');if(!c.url?.startsWith('https://')||typeof c.key!=='string'||!c.key.length)process.exit(1)"
+          # Known opt-in synthetic beta profile: verify Pages dynamic route and image bytes.
+          curl --fail --location --silent --max-time 25 -o /tmp/hustle-public-profile.html "$URL/p/test-freelancer"
+          python3 -c 'import re,pathlib; h=pathlib.Path("/tmp/hustle-public-profile.html").read_text(); assert "href=\"/listing/?id=" in h; m=re.search(r"src=\"(/api/portfolio-image\?path=[^\"]+)\"",h); assert m; pathlib.Path("/tmp/hustle-image-path").write_text(m.group(1))'
+          curl --fail --location --silent --max-time 25 -D /tmp/hustle-image-headers -o /tmp/hustle-image.bin "$URL$(cat /tmp/hustle-image-path)"
+          file -b --mime-type /tmp/hustle-image.bin | grep -Eq '^image/(png|jpeg|webp)$'
+          echo "V30 public seller profile and opt-in portfolio image PASS."
           echo "V26 preview commit, core routes and Supabase public config PASS."
           echo "Real signup email, reset link, live cross-account files and auth still require dedicated browser acceptance."

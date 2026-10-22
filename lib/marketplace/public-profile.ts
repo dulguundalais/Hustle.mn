@@ -10,16 +10,46 @@ export async function publicProfile(request:Request,slug:string,env:PublicEnv){
  const p=await result.json() as PublicSeller|null;
  if(!p)return new Response('Profile not found or not shared publicly',{status:404,headers:{'Cache-Control':'no-store'}});
  const origin=new URL(request.url).origin,url=origin+'/p/'+encodeURIComponent(p.slug),title=p.display_name+' — Hustle.mn',description=p.headline||p.bio.slice(0,180),image=origin+'/og/hustle.png';
- const html=`<!doctype html><html lang="${en?'en':'mn'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="${esc(url)}"><meta property="og:type" content="profile"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(url)}"><meta property="og:site_name" content="Hustle.mn"><meta property="og:image" content="${esc(image)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="${esc(image)}"><link rel="stylesheet" href="/public-profile.css"></head><body><header><a class="brand" href="/">hustle<span>✳</span><small>mn</small></a><nav><a href="?lang=${en?'mn':'en'}">${en?'МОН':'EN'}</a><a class="button" href="/login/">${t('Холбогдох','Connect')} ↗</a></nav></header><main><section class="profile-hero"><div class="eyebrow">INDEPENDENT CREATIVE · MONGOLIA</div><div class="avatar">${esc(p.display_name.slice(0,2).toUpperCase())}</div><h1>${esc(p.display_name)}</h1><h2>${esc(p.headline)}</h2><p>${esc(p.bio)}</p><a class="button" href="/login/">${t('Хамтран ажиллах','Let’s work together')} ↗</a><span class="beta">${t('Захиалгыг зөвхөн бета гишүүд илгээнэ.','Orders are available to approved beta members.')}</span></section><section><div class="eyebrow">01 / SELECTED WORK</div><h2>${t('Сонгосон бүтээлүүд','Selected work')}</h2><div class="portfolio">${p.portfolio.map(i=>`<figure><img loading="lazy" src="/api/portfolio-image?path=${encodeURIComponent(i.object_path)}" alt="${esc(i.title)}"><figcaption>${esc(i.title)}</figcaption></figure>`).join('')||`<p>${t('Бүтээл хараахан нэмээгүй.','No portfolio projects yet.')}</p>`}</div></section><section><div class="eyebrow">02 / WORK WITH ME</div><h2>${t('Үйлчилгээнүүд','Services')}</h2><div class="services">${p.services.map(s=>`<article><h3>${esc(en&&s.title_en?s.title_en:s.title)}</h3><p>${esc(s.description)}</p><footer><strong>${esc(new Intl.NumberFormat('mn-MN').format(s.price))} ₮</strong><span>${s.delivery_days} ${t('хоног','days')}</span><a href="/workspace/?service=${encodeURIComponent(s.id)}">${t('Дэлгэрэнгүй','View service')} ↗</a></footer></article>`).join('')||`<p>${t('Нийтэлсэн үйлчилгээ хараахан алга.','No published services yet.')}</p>`}</div></section></main><footer class="site-footer"><a class="brand" href="/">hustle<span>✳</span><small>mn</small></a><p>${t('Монгол ур чадвар. Хязгааргүй боломж.','Local talent. Limitless possibilities.')}</p><span>© 2026</span></footer></body></html>`;
+ const html=`<!doctype html><html lang="${en?'en':'mn'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="${esc(url)}"><meta property="og:type" content="profile"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(url)}"><meta property="og:site_name" content="Hustle.mn"><meta property="og:image" content="${esc(image)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="${esc(image)}"><link rel="stylesheet" href="/public-profile.css"></head><body><header><a class="brand" href="/">hustle<span>✳</span><small>mn</small></a><nav><a href="?lang=${en?'mn':'en'}">${en?'МОН':'EN'}</a><a class="button" href="/login/?mode=buyer&amp;seller=${encodeURIComponent(p.slug)}">${t('Холбогдох','Connect')} ↗</a></nav></header><main><section class="profile-hero"><div class="eyebrow">INDEPENDENT CREATIVE · MONGOLIA</div><div class="avatar">${esc(p.display_name.slice(0,2).toUpperCase())}</div><h1>${esc(p.display_name)}</h1><h2>${esc(p.headline)}</h2><p>${esc(p.bio)}</p><a class="button" href="/login/?mode=buyer&amp;seller=${encodeURIComponent(p.slug)}">${t('Хамтран ажиллах','Let’s work together')} ↗</a><span class="beta">${t('Захиалгыг зөвхөн бета гишүүд илгээнэ.','Orders are available to approved beta members.')}</span></section><section><div class="eyebrow">01 / SELECTED WORK</div><h2>${t('Сонгосон бүтээлүүд','Selected work')}</h2><div class="portfolio">${p.portfolio.map(i=>`<figure><img loading="lazy" src="/api/portfolio-image?path=${encodeURIComponent(i.object_path)}" alt="${esc(i.title)}"><figcaption>${esc(i.title)}</figcaption></figure>`).join('')||`<p>${t('Бүтээл хараахан нэмээгүй.','No portfolio projects yet.')}</p>`}</div></section><section><div class="eyebrow">02 / WORK WITH ME</div><h2>${t('Үйлчилгээнүүд','Services')}</h2><div class="services">${p.services.map(s=>`<article><h3>${esc(en&&s.title_en?s.title_en:s.title)}</h3><p>${esc(s.description)}</p><footer><strong>${esc(new Intl.NumberFormat('mn-MN').format(s.price))} ₮</strong><span>${s.delivery_days} ${t('хоног','days')}</span><a href="/listing/?id=${encodeURIComponent(s.id)}">${t('Дэлгэрэнгүй','View service')} ↗</a></footer></article>`).join('')||`<p>${t('Нийтэлсэн үйлчилгээ хараахан алга.','No published services yet.')}</p>`}</div></section></main><footer class="site-footer"><a class="brand" href="/">hustle<span>✳</span><small>mn</small></a><p>${t('Монгол ур чадвар. Хязгааргүй боломж.','Local talent. Limitless possibilities.')}</p><span>© 2026</span></footer></body></html>`;
  return new Response(html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin'}});
 }
+// The portfolio bucket remains PRIVATE. Anon SELECT is available only for
+// objects explicitly attached to opt-in public seller profiles (database RLS).
+// Sign each permitted image for 60 seconds; never expose a service-role secret
+// or turn the whole bucket public.
 export async function portfolioImage(request:Request,env:PublicEnv){
  const path=new URL(request.url).searchParams.get('path')||'';
- if(!/^[a-f0-9-]{36}\/[a-f0-9-]{36}\.(jpg|png|webp)$/.test(path))return new Response('Not found',{status:404});
- if(!env.NEXT_PUBLIC_SUPABASE_URL||!env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)return new Response('Unavailable',{status:503});
- const r=await fetch(env.NEXT_PUBLIC_SUPABASE_URL+'/storage/v1/object/authenticated/portfolio/'+path,{headers:{apikey:env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}});
- if(!r.ok)return new Response('Image not found',{status:404,headers:{'Cache-Control':'no-store'}});
- const type=r.headers.get('Content-Type')||'';
- if(!['image/jpeg','image/png','image/webp'].some(t=>type.startsWith(t)))return new Response('Unsupported image',{status:415});
- return new Response(r.body,{headers:{'Content-Type':type,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
+ const noStore={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'};
+ if(!/^[a-f0-9-]{36}\/[a-f0-9-]{36}\.(jpg|png|webp)$/.test(path))
+  return new Response('Not found',{status:404,headers:noStore});
+ const url=env.NEXT_PUBLIC_SUPABASE_URL, key=env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+ if(!url||!key)return new Response('Unavailable',{status:503,headers:noStore});
+ let origin:URL;
+ try{origin=new URL(url)}catch{return new Response('Unavailable',{status:503,headers:noStore})}
+ if(origin.protocol!=='https:')return new Response('Unavailable',{status:503,headers:noStore});
+ const headers:Record<string,string>={apikey:key,'Content-Type':'application/json'};
+ // Legacy anon keys are JWTs; newer sb_publishable keys are NOT JWTs and
+ // must not be placed in the Authorization header.
+ if(key.startsWith('eyJ'))headers.Authorization='Bearer '+key;
+ try{
+  const signing=await fetch(origin.origin+'/storage/v1/object/sign/portfolio/'+path,{
+   method:'POST',headers,body:JSON.stringify({expiresIn:60})
+  });
+  if(!signing.ok)return new Response('Image not found',{status:404,headers:noStore});
+  const signed=await signing.json() as {signedURL?:string;signedUrl?:string};
+  const candidate=signed.signedURL||signed.signedUrl||'';
+  const signedUrl=new URL(candidate.startsWith('/object/')?'/storage/v1'+candidate:candidate,origin.origin);
+  // Never follow user-controlled or compromised upstream cross-origin URLs.
+  if(signedUrl.origin!==origin.origin||
+     !signedUrl.pathname.startsWith('/storage/v1/object/sign/portfolio/'+path)||
+     !signedUrl.searchParams.has('token'))
+   return new Response('Image unavailable',{status:502,headers:noStore});
+  const object=await fetch(signedUrl.toString(),{redirect:'error'});
+  if(!object.ok)return new Response('Image not found',{status:404,headers:noStore});
+  const type=(object.headers.get('Content-Type')||'').split(';')[0].trim().toLowerCase();
+  if(!['image/jpeg','image/png','image/webp'].includes(type))
+   return new Response('Unsupported image',{status:415,headers:noStore});
+  return new Response(object.body,{headers:{...noStore,'Content-Type':type,
+    'Content-Security-Policy':"default-src 'none'; sandbox"}});
+ }catch{return new Response('Image unavailable',{status:502,headers:noStore})}
 }
