@@ -50,12 +50,12 @@ export async function portfolioImage(request:Request,env:PublicEnv){
      !signedUrl.pathname.startsWith('/storage/v1/object/sign/portfolio/'+path)||
      !signedUrl.searchParams.has('token'))
    return new Response('Image unavailable',{status:502,headers:noStore});
-  const object=await fetch(signedUrl.toString(),{redirect:'error'});
-  if(!object.ok)return new Response('Image not found',{status:404,headers:{...noStore,'X-Hustle-Storage-Step':'download','X-Hustle-Storage-Status':String(object.status)}});
-  const type=(object.headers.get('Content-Type')||'').split(';')[0].trim().toLowerCase();
-  if(!['image/jpeg','image/png','image/webp'].includes(type))
-   return new Response('Unsupported image',{status:415,headers:noStore});
-  return new Response(object.body,{headers:{...noStore,'Content-Type':type,
-    'Content-Security-Policy':"default-src 'none'; sandbox"}});
+  // A 60-second signed URL is intended for the browser. Redirect directly
+  // instead of re-fetching from a Worker (which can fail on Storage CDN
+  // redirects). The URL was verified to belong to this Supabase project.
+  // Content is still held in a private, RLS-protected Storage bucket.
+  return new Response(null,{status:302,headers:{...noStore,Location:signedUrl.toString(),
+   'Referrer-Policy':'no-referrer'}});
+
  }catch{return new Response('Image unavailable',{status:502,headers:noStore})}
 }
