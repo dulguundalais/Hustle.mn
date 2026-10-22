@@ -1,5 +1,5 @@
 'use client';
-import {useState,type FormEvent} from 'react';
+import {useEffect,useState,type FormEvent} from 'react';
 import Link from 'next/link';
 import {ArrowLeft,ArrowRight,CheckCircle2,Eye,EyeOff,Info,LockKeyhole,Mail,ShieldCheck} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
@@ -19,6 +19,9 @@ export default function PremiumAuth({
  busy,emailCooldown,onSubmit,onResend,notice,error,onDismiss
 }:Props){
  const [showPassword,setShowPassword]=useState(false);
+ const [buyerAudience,setBuyerAudience]=useState<'personal'|'business'>('personal');
+ useEffect(()=>{const selected=new URLSearchParams(location.search).get('audience')||localStorage.getItem('hustle-buyer-audience');if(selected==='personal'||selected==='business')setBuyerAudience(selected)},[]);
+ const chooseBuyerAudience=(next:'personal'|'business')=>{setBuyerAudience(next);try{localStorage.setItem('hustle-buyer-audience',next)}catch{}};
  const [resetMode,setResetMode]=useState(false);
  const [resetBusy,setResetBusy]=useState(false);
  const [resetMessage,setResetMessage]=useState('');
@@ -61,6 +64,13 @@ export default function PremiumAuth({
      <div className="hustle-auth-input"><Mail size={19} aria-hidden="true"/><input id="hustle-recovery-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" required value={email} onChange={e=>onEmailChange(e.target.value)}/></div>
      <button className="hustle-auth-submit" disabled={resetBusy||busy} type="submit">{resetBusy?t('Илгээж байна…','Requesting…'):t('Сэргээх холбоос хүсэх','Request reset link')}<ArrowRight size={19}/></button>
    </form>:<form className="hustle-auth-form" onSubmit={onSubmit}>
+     {register&&entryMode!=='seller'&&entry!=='admin'&&<fieldset className="hustle-buyer-context"><legend>{t('Та голчлон юунд ашиглах вэ?','What will you use Hustle for?')}</legend>
+      <div role="group" aria-label={t('Хэрэглээний чиглэл','Buyer experience')}>
+       <button type="button" aria-pressed={buyerAudience==='personal'} onClick={()=>chooseBuyerAudience('personal')}>{t('Хувийн төсөл','Personal project')}</button>
+       <button type="button" aria-pressed={buyerAudience==='business'} onClick={()=>chooseBuyerAudience('business')}>{t('Бизнес / байгууллага','Business / organization')}</button>
+      </div>
+      <p>{t('Нэг аккаунтаар хоёуланг нь ашиглаж болно. Байгууллагын хамтарсан орон зай дараагийн хөгжүүлэлтэд нэмэгдэнэ.','One account works for both. Shared organization workspaces are planned for a later release.')}</p>
+     </fieldset>}
      <label htmlFor="hustle-auth-email">{t('Имэйл хаяг','Email address')}</label>
      <div className="hustle-auth-input"><Mail size={19} aria-hidden="true"/><input id="hustle-auth-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" required value={email} onChange={e=>onEmailChange(e.target.value)}/></div>
      <div className="hustle-auth-label-row"><label htmlFor="hustle-auth-password">{t('Нууц үг','Password')}</label>{!register&&<button className="hustle-auth-link" type="button" onClick={openRecovery}>{t('Нууц үгээ мартсан уу?','Forgot password?')}</button>}</div>
