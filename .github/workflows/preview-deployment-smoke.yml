@@ -9,25 +9,39 @@ permissions:
 jobs:
   verify-preview:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    # Cloudflare Git deployments can queue behind other previews after GitHub
+    # push events. A bounded, commit-aware wait avoids both false failures and
+    # accidentally passing against an older V26 build.
+    timeout-minutes: 32
     steps:
-      - name: Confirm V26 marker reached real Cloudflare Pages preview
+      - name: Verify exact V26 commit on Cloudflare Pages preview
         env:
           URL: https://feature-interactive-function.hustle-mn-preview.pages.dev
+          EXPECTED_SHA: ${{ github.sha }}
         shell: bash
         run: |
           set -euo pipefail
-          for attempt in $(seq 1 22); do
-            if curl --fail --location --silent --max-time 20 -o /tmp/hustle-v26.json "$URL/v26-release.json" && node -e "const x=require('/tmp/hustle-v26.json');if(x.version!=='V26'||x.channel!=='closed-beta-preview')process.exit(1)"; then
-              echo "V26 marker served by Cloudflare"
-              break
+          for attempt in $(seq 1 100); do
+            if curl --fail --location --silent --max-time 20 -o /tmp/hustle-build.json "$URL/preview-build.json"; then
+              if node -e "const r=require('/tmp/hustle-build.json');if(r.version!=='V26'||r.channel!=='closed-beta-preview'||r.commit_sha!==process.env.EXPECTED_SHA)process.exit(1)"; then
+                echo "Cloudflare is serving the expected V26 commit $EXPECTED_SHA"
+                break
+              fi
             fi
-            if [ "$attempt" = 22 ]; then echo "::error::V26 marker not deployed"; exit 1; fi
+            if [ "$attempt" = 100 ]; then echo "::error::Expected preview commit was not deployed within the acceptance window"; exit 1; fi
+            if (( attempt % 10 == 0 )); then echo "Cloudflare preview not yet at $EXPECTED_SHA (attempt $attempt/100)"; fi
             sleep 15
           done
+          curl --fail --location --silent --max-time 20 -o /tmp/hustle-v26.json "$URL/v26-release.json"
+          node -e "const r=require('/tmp/hustle-v26.json');if(r.version!=='V26'||r.channel!=='closed-beta-preview')process.exit(1)"
           for path in / /explore/ /login/ /auth/reset/ /buyer/ /seller-studio/ /admin/ /faq/ /about/ /privacy/ /terms/ /contact/; do
             code=$(curl --location --silent --max-time 20 -o /dev/null -w '%{http_code}' "$URL$path")
             echo "$path => $code"
             test "$code" = "200"
           done
-          echo "HTTP and V26 deploy marker PASS; actual email delivery and authenticated live browser E2E require manual verification."
+          # /api/config is a public publishable-key endpoint, not a secret API.
+          # Check only shape/availability; never print the key in workflow logs.
+          curl --fail --location --silent --max-time 20 -o /tmp/hustle-config.json "$URL/api/config"
+          node -e "const c=require('/tmp/hustle-config.json');if(!c.url?.startsWith('https://')||typeof c.key!=='string'||!c.key.length)process.exit(1)"
+          echo "V26 preview commit, core routes and Supabase public config PASS."
+          echo "Real signup email, reset link, live cross-account files and auth still require dedicated browser acceptance."
