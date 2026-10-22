@@ -3,18 +3,13 @@ import {useEffect,useMemo,useState} from 'react';
 import Link from 'next/link';
 import {MessageCircle,ArrowUpRight,ShieldCheck,Check,Clock3,RotateCcw,Star,Layers3,ChevronDown} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
-import {normalizeSearch} from '../lib/marketplace/smart-search';
+import {filterLiveServices,type LiveService,type LiveSort} from '../lib/marketplace/live-discovery';
 import {tiers,type ServicePackage,type Tier} from './service-packages';
 import '../app/live-catalog.css';
 import '../app/v23-ui-polish.css';
 
 // Public discovery contains only published listings and opted-in sellers.
-type PublicService={
- id:string;title:string;title_en:string;description:string;category:string;
- price:number;delivery_days:number;revisions:number;package_name:string;
- display_name:string;headline:string;slug:string;packages?:ServicePackage[];
- review_count?:number;average_rating?:number|null;completed_orders?:number;
-};
+type PublicService = LiveService;
 const money=(n:number)=>new Intl.NumberFormat('mn-MN').format(n)+' ₮';
 
 export function contactSellerHref(slug:string):string {
@@ -22,7 +17,7 @@ export function contactSellerHref(slug:string):string {
   ? '/login/?mode=buyer&seller='+encodeURIComponent(slug)
   : '/login/?mode=buyer';
 }
-export default function LiveCatalog({en,query='',category='all'}:{en:boolean;query?:string;category?:string}){
+export default function LiveCatalog({en,query='',category='all',sort='featured',onlySaved=false,saved=[],onSave}:{en:boolean;query?:string;category?:string;sort?:LiveSort;onlySaved?:boolean;saved?:string[];onSave?:(id:string)=>void}){
  const [services,setServices]=useState<PublicService[]>([]);
  const [state,setState]=useState<'loading'|'ready'|'error'>('loading');
  const [expanded,setExpanded]=useState<string|null>(null);
@@ -37,12 +32,7 @@ export default function LiveCatalog({en,query='',category='all'}:{en:boolean;que
   }).catch(()=>{if(active)setState('error')});
   return()=>{active=false};
  },[]);
- const filtered=useMemo(()=>{
-  const term=normalizeSearch(query);
-  return services.filter(s=>(category==='all'||s.category===category)&&(
-   !term||normalizeSearch([s.title,s.title_en,s.description,s.display_name,s.headline].join(' ')).includes(term)
-  ));
- },[services,query,category]);
+ const filtered=useMemo(()=>filterLiveServices(services,{query,category,sort,onlySaved,saved}),[services,query,category,sort,onlySaved,saved]);
  const t=(mn:string,eng:string)=>en?eng:mn;
  return <section className="shell live-catalog v23-live-catalog" aria-labelledby="real-listings-title">
   <div className="section-top v23-market-head"><div><div className="eyebrow muted">HUSTLE.MN / THE MARKETPLACE</div>
@@ -52,6 +42,7 @@ export default function LiveCatalog({en,query='',category='all'}:{en:boolean;que
   {state==='loading'&&<p className="live-catalog-state" role="status">{t('Үйлчилгээг шалгаж байна...','Loading published listings...')}</p>}
   {state==='error'&&<p className="live-catalog-state" role="status">{t('Бодит заруудыг ачаалж чадсангүй. Бета тохиргоог шалгана уу.','Live listings are unavailable. Check beta configuration.')}</p>}
   {state==='ready'&&!filtered.length&&<div className="live-catalog-empty"><h3>{t('Одоогоор нийтлэгдсэн бодит зар алга','No live listings published yet')}</h3><p>{t('Доорх загварууд нь зөвхөн жишиг бүтээл. Seller-ийн зар батлагдмагц энд гарна.','The designs below are examples only. Real seller listings appear here when approved.')}</p><Link className="button outline" href="/join/seller/">{t('Эхний freelancer-ээр нэгдэх','Become a freelancer')}<ArrowUpRight size={17}/></Link></div>}
+  {state==='ready'&&<p className="v28-results-count" aria-live="polite">{filtered.length} {t("бодит үйлчилгээ","published services")}</p>}
   {state==='ready'&&filtered.length>0&&<div className={'live-catalog-grid v23-service-grid '+(filtered.length===1?'v23-single-listing':'')}>
    {filtered.map(s=>{
     const available=tiers.map(tier=>s.packages?.find(p=>p.tier===tier)).filter((p):p is ServicePackage=>Boolean(p)&&Boolean(p?.price&&p.price>0));
@@ -67,7 +58,7 @@ export default function LiveCatalog({en,query='',category='all'}:{en:boolean;que
     return <article key={s.id} className="live-catalog-card v23-service-card">
      <div className="v23-service-main">
       <div className="v23-service-eyebrow"><span className="v23-category-pill"><Layers3 size={17}/>{s.category}</span><span className="v23-public-label"><ShieldCheck size={16}/>{t('Нийтлэгдсэн','Published')}</span></div>
-      <h3>{en&&s.title_en?s.title_en:s.title}</h3>
+      <div className="v28-listing-title"><h3>{en&&s.title_en?s.title_en:s.title}</h3>{onSave&&<button className="v28-save-service" type="button" aria-label={saved.includes(s.id)?t('Хадгалснаас хасах','Remove saved service'):t('Үйлчилгээ хадгалах','Save service')} aria-pressed={saved.includes(s.id)} onClick={()=>onSave(s.id)}>{saved.includes(s.id)?'♥':'♡'}</button>}</div>
       <div className="v23-seller"><span className="v23-seller-avatar" aria-hidden="true">{s.display_name.trim().slice(0,1).toLocaleUpperCase()}</span><div><strong>{s.display_name}</strong>{s.headline&&<span>{s.headline}</span>}</div></div>
       {verified&&<p className="v23-service-rating"><Star size={18} fill="currentColor"/><strong>{rating.toFixed(1)}</strong><span>({s.review_count} {t('баталгаажсан үнэлгээ','verified reviews')})</span></p>}
       <p className="live-catalog-description">{expanded===s.id?s.description:s.description.slice(0,215)+(s.description.length>215?'…':'')}</p>
