@@ -32,10 +32,16 @@ export async function portfolioImage(request:Request,env:PublicEnv){
  // must not be placed in the Authorization header.
  if(key.startsWith('eyJ'))headers.Authorization='Bearer '+key;
  try{
-  const signing=await fetch(origin.origin+'/storage/v1/object/sign/portfolio/'+path,{
-   method:'POST',headers,body:JSON.stringify({expiresIn:60})
-  });
-  if(!signing.ok)return new Response('Image not found',{status:404,headers:noStore});
+  const signingUrl=origin.origin+'/storage/v1/object/sign/portfolio/'+path;
+  const signBody=JSON.stringify({expiresIn:60});
+  let signing=await fetch(signingUrl,{method:'POST',headers,body:signBody});
+  // SDKs on some gateway generations send the publishable key as both
+  // apikey and bearer. Retry only an authorization failure and only with
+  // the same low-privilege public key; no service-role escalation.
+  if((signing.status===401||signing.status===403)&&key.startsWith('sb_publishable_')){
+   signing=await fetch(signingUrl,{method:'POST',headers:{...headers,Authorization:'Bearer '+key},body:signBody});
+  }
+  if(!signing.ok)return new Response('Image not found',{status:404,headers:{...noStore,'X-Hustle-Storage-Step':'sign','X-Hustle-Storage-Status':String(signing.status)}});
   const signed=await signing.json() as {signedURL?:string;signedUrl?:string};
   const candidate=signed.signedURL||signed.signedUrl||'';
   const signedUrl=new URL(candidate.startsWith('/object/')?'/storage/v1'+candidate:candidate,origin.origin);
@@ -45,7 +51,7 @@ export async function portfolioImage(request:Request,env:PublicEnv){
      !signedUrl.searchParams.has('token'))
    return new Response('Image unavailable',{status:502,headers:noStore});
   const object=await fetch(signedUrl.toString(),{redirect:'error'});
-  if(!object.ok)return new Response('Image not found',{status:404,headers:noStore});
+  if(!object.ok)return new Response('Image not found',{status:404,headers:{...noStore,'X-Hustle-Storage-Step':'download','X-Hustle-Storage-Status':String(object.status)}});
   const type=(object.headers.get('Content-Type')||'').split(';')[0].trim().toLowerCase();
   if(!['image/jpeg','image/png','image/webp'].includes(type))
    return new Response('Unsupported image',{status:415,headers:noStore});
