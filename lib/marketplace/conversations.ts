@@ -25,7 +25,25 @@ export function normalizedMessage(body: string): string | null {
   return value.length > 0 && value.length <= 4000 ? value : null;
 }
 
+// Keep ordering stable even when multiple messages have identical timestamps.
+export function compareMessages(a: ChatMessage, b: ChatMessage): number {
+  return a.created_at.localeCompare(b.created_at) || a.id.localeCompare(b.id);
+}
+
+// A realtime event or a later DB refresh may include a newly populated read_at.
+// Keep it without overwriting an existing value with an older null projection.
+export function mergeMessagePage(messages: ChatMessage[], page: ChatMessage[]): ChatMessage[] {
+  const byId = new Map(messages.map(message => [message.id, message]));
+  for (const message of page) {
+    const current = byId.get(message.id);
+    byId.set(message.id, current
+      ? {...current, ...message,
+        read_at: message.read_at ?? current.read_at}
+      : message);
+  }
+  return [...byId.values()].sort(compareMessages);
+}
+
 export function appendUniqueMessage(messages: ChatMessage[], next: ChatMessage): ChatMessage[] {
-  if (messages.some(message => message.id === next.id)) return messages;
-  return [...messages, next].sort((a, b) => a.created_at.localeCompare(b.created_at));
+  return mergeMessagePage(messages, [next]);
 }
