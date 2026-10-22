@@ -21,6 +21,8 @@ export default function SolutionFinder({compact=false,en:language=false}:{compac
   setEn(localStorage.getItem('hustle-language')==='en'||language);
   try{const saved=localStorage.getItem('hustle-buyer-audience');if(saved==='personal'||saved==='business')setAudience(saved)}catch{}
   const params=new URLSearchParams(location.search);
+  setBudget((params.get('budget')||'').slice(0,80));
+  setTimeline((params.get('timeline')||'').slice(0,80));
   if(params.get('audience')==='business'||params.get('audience')==='personal')setAudience(params.get('audience') as Audience);
   const need=params.get('q')||'';
   if(need.trim()){setQuery(need.slice(0,1200));setSubmitted(need.slice(0,1200))}
