@@ -29,16 +29,17 @@ export function SignatureHero({en}:{en:boolean}){
    <div className="signature-hero-grid" aria-hidden="true"/>
    <div className="shell signature-hero-inner">
      <div className="signature-hero-copy">
-       <span className="signature-kicker"><span className="signature-kicker-pulse"/> {t('МОНГОЛ УР ЧАДВАР · ШИНЭ БОЛОМЖ','MONGOLIAN TALENT · NEW POSSIBILITIES')}</span>
-       <h1 id="signature-hero-title">{t('Санаа бүрийн цаана','Every big idea')}<br/><span>{t('зөв хүн бий.','needs the right mind.')}</span></h1>
-       <p>{t('Бүтээлч мэргэжилтнээ олж, ажлынхаа талаар ярилцаж, төслөө нэг дор удирдаарай.','Discover ambitious local talent, start the conversation and bring your next project to life.')}</p>
-       <form action="/explore/" className="signature-search" role="search">
+       <span className="signature-kicker"><span className="signature-kicker-pulse"/> {t('АСУУДЛАА ХЭЛ · ШИЙДЛЭЭ ОЛ','DESCRIBE THE CHALLENGE · FIND THE SOLUTION')}</span>
+       <h1 id="signature-hero-title">{t('Асуудал бүрт','Every challenge')}<br/><span>{t('шийдэл бий.','has a way forward.')}</span></h1>
+       <p>{t('Бизнесээ хөгжүүлэх, ажлаа автоматжуулах, санаагаа хэрэгжүүлэхэд хэрэгтэй мэргэжилтнээ ол. Яг ямар үйлчилгээ хэрэгтэйгээ мэдэх албагүй.','From growing sales to automating work, describe the problem and discover the right expertise. No jargon needed.')}</p>
+       <form action="/solutions/" method="get" className="signature-search" role="search">
         <Search size={21} aria-hidden="true"/>
-        <input name="q" aria-label={t('Үйлчилгээ хайх','Find a service')} value={search} onChange={e=>{setSearch(e.target.value);setShowSuggestions(true)}} onFocus={()=>setShowSuggestions(true)} onKeyDown={e=>{if(e.key==='Escape')setShowSuggestions(false)}} placeholder={t('Лого, вэбсайт, видео эсвэл санаагаа бичээрэй…','Describe what you need — logo, website, video…')}/>
-        <button type="submit"><span>{t('Хайх','Explore')}</span><ArrowUpRight size={19}/></button>
+        <input name="q" aria-label={t('Асуудлаа тайлбарлах','Describe your challenge')} value={search} onChange={e=>{setSearch(e.target.value);setShowSuggestions(true)}} onFocus={()=>setShowSuggestions(true)} onKeyDown={e=>{if(e.key==='Escape')setShowSuggestions(false)}} placeholder={t('Манай ресторан илүү олон захиалгатай болмоор байна…','We need more bookings but do not know where to start…')}/>
+        <button type="submit"><span>{t('Шийдэл олох','Find solutions')}</span><ArrowUpRight size={19}/></button>
        </form>
        {showSuggestions&&suggestions.length>0&&<div className="signature-search-suggestions" id="hero-search-suggestions" role="listbox" aria-label={t('Нийтлэгдсэн үйлчилгээний санал','Published service suggestions')}>{suggestions.map(item=><Link role="option" aria-selected={false} key={item.id} href={'/listing/?id='+encodeURIComponent(item.id)}><Search size={15}/>{en&&item.title_en?item.title_en:item.title}<span>{t('Бодит','Live')}</span></Link>)}<Link className="signature-search-all" href={'/explore/?q='+encodeURIComponent(search)}>{t('Бодит үйлчилгээ хайх','Find real services')}<ArrowRight size={15}/></Link></div>}
-       <div className="signature-search-subline"><Sparkles size={14}/>{t('Кирилл, латин галиг, англи үгээр хайж болно.','Search in Mongolian, romanized Mongolian or English.')}</div>
+       <div className="signature-problem-prompts"><Link href="/solutions/?audience=business&q=%D0%9C%D0%B0%D0%BD%D0%B0%D0%B9%20%D1%80%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%B0%D0%BD%D1%8B%20%D0%B7%D0%B0%D1%85%D0%B8%D0%B0%D0%BB%D0%B3%D0%B0%20%D0%B1%D0%B0%D0%B3%D0%B0%20%D0%B1%D0%B0%D0%B9%D0%BD%D0%B0">{t('Захиалга нэмэгдүүлэх','Increase bookings')}</Link><Link href="/solutions/?audience=business&q=%D0%94%D0%B0%D0%B2%D1%82%D0%B0%D0%B3%D0%B4%D0%B4%D0%B0%D0%B3%20%D0%B0%D0%B6%D0%BB%D0%B0%D0%B0%20%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B6%D1%83%D1%83%D0%BB%D0%B0%D1%85%20%D1%85%D1%8D%D1%80%D1%8D%D0%B3%D1%82%D1%8D%D0%B9%20%D0%B1%D0%B0%D0%B9%D0%BD%D0%B0">{t('AI автоматжуулалт','AI automation')}</Link><Link href="/solutions/?audience=personal&q=%D0%9B%D0%BE%D0%B3%D0%BE%20%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD%20%D1%85%D1%8D%D1%80%D1%8D%D0%B3%D1%82%D1%8D%D0%B9%20%D0%B1%D0%B0%D0%B9%D0%BD%D0%B0">{t('Хувийн төсөл','Personal project')}</Link></div>
+       <div className="signature-search-subline"><Sparkles size={14}/>{t('Smart Finder beta · Кирилл, латин, англи хэлээр асуудлаа бичээрэй.','Smart Finder beta · Describe your challenge in Mongolian, Latin or English.')}</div>
      </div>
      <div className="signature-orbit" aria-label={t('Бүтээлч ур чадварыг дүрсэлсэн график','Abstract constellation of creative disciplines')}>
        <div className="signature-orbit-halo"/>
