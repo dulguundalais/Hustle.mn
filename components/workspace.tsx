@@ -106,9 +106,9 @@ useEffect(()=>{
       .order('created_at',{ascending:false}).order('id',{ascending:false}).limit(500);
     if(!active||response.error)return;
     // Merge rather than overwrite events arriving while a fetch is in flight.
+    setHasOlderMessages(previous=>previous||response.data.length===500);
     setMessages(existing=>{
       const own=existing.filter(message=>message.sender_id===uid||message.recipient_id===uid);
-      setHasOlderMessages(previous=>previous||response.data.length===500);
       return mergeMessagePage(own,response.data as ChatMessage[]);
     });
   };
