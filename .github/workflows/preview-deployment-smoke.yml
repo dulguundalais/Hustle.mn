@@ -57,7 +57,13 @@ jobs:
             exit 1
           fi
           python3 -c 'import re,pathlib; h=pathlib.Path("/tmp/hustle-public-profile.html").read_text(); assert "href=\"/listing/?id=" in h; m=re.search(r"src=\"(/api/portfolio-image\?path=[^\"]+)\"",h); assert m; pathlib.Path("/tmp/hustle-image-path").write_text(m.group(1))'
-          curl --fail --location --silent --max-time 25 -D /tmp/hustle-image-headers -o /tmp/hustle-image.bin "$URL$(cat /tmp/hustle-image-path)"
+          image_code=$(curl --location --silent --max-time 25 -D /tmp/hustle-image-headers -o /tmp/hustle-image.bin -w '%{http_code}' "$URL$(cat /tmp/hustle-image-path)")
+          echo "/api/portfolio-image => $image_code"
+          if [ "$image_code" != "200" ]; then
+            grep -iE '^x-hustle-storage-(step|status):' /tmp/hustle-image-headers || true
+            echo "::error::Public opt-in portfolio image was unavailable"
+            exit 1
+          fi
           file -b --mime-type /tmp/hustle-image.bin | grep -Eq '^image/(png|jpeg|webp)$'
           echo "V30 public seller profile and opt-in portfolio image PASS."
           echo "V26 preview commit, core routes and Supabase public config PASS."
