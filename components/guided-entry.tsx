@@ -21,9 +21,11 @@ export default function GuidedEntry({en}:{en:boolean}){
  const t=(mn:string,english:string)=>en?english:mn;
  const goals=guidedGoals[audience];
  const goal=useMemo(()=>goals.find(g=>g.key===goalKey)||goals[0],[goals,goalKey]);
- const problem=guidedProblem(goal,notes,en);
+ const rawProblem=guidedProblem(goal,notes,en);
+ const selectedIndustry=audience==='business'?guidedIndustries.find(item=>item.value===industry&&item.value!==''):undefined;
+ const problem=selectedIndustry?(en?'Business industry: ':'Бизнесийн салбар: ')+(en?selectedIndustry.en:selectedIndustry.mn)+'. '+rawProblem:rawProblem;
  const outcome=classifyNeed(problem);
- const finderHref=guidedFinderHref(audience,goal,notes,en,budget,timeline);
+ const finderHref=guidedFinderHref(audience,goal,problem,en,budget,timeline);
  const brief=buildProjectBrief(problem,audience,en?'en':'mn',budget,timeline);
  const start=(type:Audience)=>{
   returnFocusRef.current=document.activeElement instanceof HTMLElement?document.activeElement:null;
