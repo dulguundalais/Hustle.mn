@@ -4,6 +4,7 @@ export type ChatMessage = {
   recipient_id: string;
   body: string;
   created_at: string;
+  read_at?: string | null;
 };
 
 export function conversationPeer(message: ChatMessage, currentUserId: string): string | null {
@@ -17,7 +18,7 @@ export function threadMessages(messages: ChatMessage[], currentUserId: string, p
   return messages.filter(message =>
     (message.sender_id === currentUserId && message.recipient_id === peerId) ||
     (message.sender_id === peerId && message.recipient_id === currentUserId)
-  ).sort((a, b) => a.created_at.localeCompare(b.created_at));
+  ).sort(compareMessages);
 }
 
 export function normalizedMessage(body: string): string | null {
