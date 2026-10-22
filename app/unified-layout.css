@@ -1,14 +1,14 @@
 /**
- * V32.2 — One spatial system for Hustle.
+ * V32.3 — Restore Hustle's original wide 1400px spatial system.
  * The .shell element is the single source of page gutters and max width.
  * Sections may have different full-bleed backgrounds, but their *contents*
- * always begin and end at the same grid lines.
+ * always begin and end at the same grid lines, including seller/partner banners.
  *
  * Keep this after earlier V19/V23 CSS imports. Scope to marketplace so that
  * auth, standalone public profile and workspace styles remain unchanged.
  */
 .hustle-v5 {
-  --hustle-content-max: 1200px;
+  --hustle-content-max: 1400px;
   --hustle-page-gutter: clamp(20px, 3.7vw, 48px);
   --hustle-grid-gap: clamp(16px, 2vw, 28px);
 }
@@ -130,6 +130,27 @@
     padding-inline: 9px;
     gap: 5px;
   }
+}
+
+/* The seller CTA is itself a colored, rounded `.shell` card. Unlike other
+ * sections, its background begins at the OUTER shell edge; without this inset
+ * it extends one 48px gutter beyond the Hero text and Partner card.
+ * Inset ONLY the banner surface so its outside boundaries meet the shared
+ * content edges. Preserve its original card shape and internal padding.
+ */
+.hustle-v5 .signature-seller-band.shell {
+  width: calc(100% - (2 * var(--hustle-page-gutter)));
+  max-width: calc(var(--hustle-content-max) - (2 * var(--hustle-page-gutter)));
+  margin-inline: auto !important;
+}
+
+/* The partner surface already sits inside an ordinary padded shell. Keep it
+ * full content-width instead of imposing a second independent max-width.
+ */
+.hustle-v5 .signature-partner-inner {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Explicitly keep one line of alignment through the premium footer. */
