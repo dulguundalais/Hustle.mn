@@ -175,8 +175,8 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
      <p>{mode==='seller'?t('Таны мэргэжил, нийтлэгдсэн үйлчилгээтэй тохирох төслүүдийг эндээс хүлээн авна.','Receive projects that match your published services and availability.'):t('Freelancer-ийг өөрөө сонгох эсвэл асуудлаа илгээж тохирох мэргэжилтнүүдээс санал авах хоёр боломжтой.','Browse and hire directly, or send your challenge to matching specialists for proposals.')}</p>
     </div><Link href="/explore/" className="project-outline"><BriefcaseBusiness size={17}/>{t('Үйлчилгээ үзэх','Browse services')}</Link>
    </header>
-   {error&&<div className="project-alert" role="alert">{error}</div>}
-   {notice&&<div className="project-ok" role="status"><CheckCircle2 size={18}/>{notice}</div>}
+   {error&&<div className="project-alert" role="alert"><span>{error}</span><button type="button" onClick={()=>setError('')} aria-label={t('Алдааны мэдэгдэл хаах','Dismiss error')}><XCircle size={17}/></button></div>}
+   {notice&&<div className="project-ok" role="status"><CheckCircle2 size={18}/><span>{notice}</span><button type="button" onClick={()=>setNotice('')} aria-label={t('Мэдэгдэл хаах','Dismiss message')}><XCircle size={17}/></button></div>}
    {loading?<p className="project-placeholder"><LoaderCircle size={19}/>{t('Мэдээлэл ачаалж байна…','Loading…')}</p>:
    !user?<div className="project-panel"><h2>{t('Нэвтрэх шаардлагатай','Please sign in')}</h2><p>{t('Хүсэлт илгээх эсвэл санал өгөхийн тулд баталгаажсан beta аккаунтаар нэвтэрнэ үү.','Use your approved beta account to post or respond to projects.')}</p><Link className="project-primary" href={signInHref}>{t('Нэвтрэх','Sign in')}<ArrowRight size={16}/></Link></div>:
    !allowed?<div className="project-panel"><h2>{t('Beta зөвшөөрөл шаардлагатай','Beta approval required')}</h2><p>{t('Одоогоор зөвхөн зөвшөөрөгдсөн beta хэрэглэгч ашиглах боломжтой.','This feature is available only to approved beta accounts.')}</p></div>:
@@ -188,7 +188,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
       <h2>{t('Ямар асуудал шийдэх хэрэгтэй вэ?','What problem are you solving?')}</h2>
       <p>{t('Хүсэлт илгээхийг зөвшөөрсний дараа систем зөвхөн тохирох, төсөл авахыг идэвхжүүлсэн 5 хүртэлх freelancer-т хүргэнэ.','On your confirmation, your request goes to up to five matching opt-in freelancers.')}</p>
       <form onSubmit={submitRequest} className="project-form">
-        {draftReadyFor===user&&<div className="project-draft-status" role="status"><span>{t('Хүсэлт энэ tab дээр түр хадгалагдана.','Draft saved in this tab.')}</span><button type="button" disabled={busy} onClick={clearRequestDraft}>{t('Арилгах','Clear draft')}</button></div>}
+        {draftReadyFor===user&&Boolean(title.trim()||brief.trim()||budget||days)&&<div className="project-draft-status" role="status"><span>{t('Хүсэлт энэ tab дээр түр хадгалагдана.','Draft saved in this tab.')}</span><button type="button" disabled={busy} onClick={clearRequestDraft}>{t('Арилгах','Clear draft')}</button></div>}
        <label>{t('Төслийн нэр','Project title')}<input value={title} onChange={e=>setTitle(e.target.value)} minLength={8} maxLength={120} required placeholder={t('Жишээ: Facebook захиалгын автоматжуулалт','e.g., Facebook order automation')}/></label>
        <label>{t('Тайлбар / хийх ажил','Describe the challenge')}<textarea value={brief} onChange={e=>setBrief(e.target.value)} rows={5} minLength={20} maxLength={2000} required placeholder={t('Одоогийн асуудал, хүсэж буй үр дүнгээ бичнэ үү…','Describe the current problem and desired outcome…')}/></label>
        <div className="project-field-row"><label>{t('Чиглэл','Category')}<select value={category} onChange={e=>setCategory(e.target.value)}>{categoryOptions.map(([value,name])=><option key={value} value={value}>{name}</option>)}</select></label><label>{t('Хэрэглээ','Project context')}<select value={audience} onChange={e=>setAudience(e.target.value as Audience)}><option value="business">{t('Бизнес','Business')}</option><option value="personal">{t('Хувь хүн','Personal')}</option></select></label></div>
@@ -234,7 +234,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
      })}
     </section>
     {targetInvite&&<section className="project-panel project-proposal"><div className="project-inbox-heading"><h2>{t('Үнийн санал илгээх','Send a proposal')}</h2><button type="button" onClick={()=>setTargetInvite(null)} className="project-quiet"><XCircle size={18}/>{t('Хаах','Close')}</button></div><p>{targetInvite.title}</p>
-     <form className="project-form" onSubmit={submitProposal}><p className="project-draft-status">{t('Саналын текст энэ tab дээр түр хадгалагдана.','Proposal draft saved in this tab.')}</p>
+     <form className="project-form" onSubmit={submitProposal}>{Boolean(message.trim())&&<p className="project-draft-status">{t('Саналын текст энэ tab дээр түр хадгалагдана.','Proposal draft saved in this tab.')}</p>}
       <label>{t('Өөрийн нийтлэгдсэн үйлчилгээ','Your published service')}<select value={serviceId} required onChange={e=>{setServiceId(e.target.value);setTier('Basic')}}>
        <option value="">{t('Үйлчилгээ сонгох','Select a service')}</option>{services.filter(s=>s.category===targetInvite.category).map(service=><option key={service.id} value={service.id}>{service.title}</option>)}</select></label>
       <label>{t('Багц','Package')}<select value={tier} onChange={e=>setTier(e.target.value)}>{['Basic','Standard','Premium'].filter(k=>packages.some(pkg=>pkg.service_id===serviceId&&pkg.tier===k)).map(k=><option key={k} value={k}>{k}</option>)}</select></label>
