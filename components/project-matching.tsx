@@ -82,8 +82,10 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
  },[mode]);
  // Tab-scoped drafts are keyed to the signed-in account; drafts never go to the server.
  useEffect(()=>{
-  if(mode!=='buyer'||!user){setDraftReady(false);draftOwner.current='';return}
+  if(mode!=='buyer'||!user){setDraftReady(false);return}
   if(draftOwner.current===user)return;
+  // Never carry the previous signed-in account's unsaved form into a new account.
+  if(draftOwner.current&&draftOwner.current!==user){setTitle('');setBrief('');setBudget('');setDays('');setAudience('business');setCategory('ai')}
   draftOwner.current=user;setDraftReady(false);
   try{
    const stored=sessionStorage.getItem(projectDraftKey(user));
