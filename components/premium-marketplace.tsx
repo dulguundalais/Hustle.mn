@@ -7,6 +7,7 @@ import AccountMenu,{type AccountMenuIdentity} from './account-menu';
 import GlobalNotifications from './global-notifications';
 import {services, type Service} from '../lib/marketplace/catalog';
 import {matchesService,suggestServices} from '../lib/marketplace/smart-search';
+import {suggestLiveServices,type LiveService} from '../lib/marketplace/live-discovery';
 import LiveCatalog from './live-catalog';
 import {marketplaceClient} from '../lib/marketplace/client';
 import {signInWithReturn} from '../lib/marketplace/ux-flows';
@@ -26,6 +27,9 @@ const [sessionState,setSessionState]=useState<'checking'|'signed-in'|'guest'>('c
 const [account,setAccount]=useState<AccountMenuIdentity|null>(null);
 const [signingOut,setSigningOut]=useState(false);
 const [guestLoginHref,setGuestLoginHref]=useState('/login/?mode=buyer');
+const [exploreListings,setExploreListings]=useState<LiveService[]>([]);
+const [exploreOpen,setExploreOpen]=useState(false),[exploreActive,setExploreActive]=useState(-1);
+const [exploreLoad,setExploreLoad]=useState<'loading'|'ready'|'error'>('loading');
 const [en,setEn]=useState(false),[dark,setDark]=useState(false),[ready,setReady]=useState(false),[menu,setMenu]=useState(false),[query,setQuery]=useState(''),[cat,setCat]=useState('all'),[sort,setSort]=useState('featured'),[saved,setSaved]=useState<string[]>([]),[onlySaved,setOnlySaved]=useState(false),[notice,setNotice]=useState('');
 const t=(mn:string,english:string)=>en?english:mn;
 useEffect(()=>{try{setEn(localStorage.getItem('hustle-language')==='en');setDark(localStorage.getItem('hustle-theme')==='dark');const s=JSON.parse(localStorage.getItem('hustle-saved')||'[]');if(Array.isArray(s))setSaved(s.filter(x=>typeof x==='string'));}catch{}const p=new URLSearchParams(location.search);setQuery(p.get('q')||'');setCat(p.get('category')||'all');if(view!=='home')setGuestLoginHref(signInWithReturn(location.pathname+location.search));setReady(true)},[]);
@@ -86,6 +90,31 @@ async function signOutFromHome(){
  }catch{setNotice(t('Гарах үйлдэл амжилтгүй. Дахин оролдоно уу.','Could not sign out. Please try again.'))}
  finally{setSigningOut(false)}
 }
+useEffect(()=>{
+ if(view!=='explore')return;
+ let active=true;
+ marketplaceClient().then(db=>db.rpc('marketplace_catalog')).then(r=>{
+  if(!active)return;
+  if(r.error)throw r.error;
+  setExploreListings(Array.isArray(r.data)?r.data as LiveService[]:[]);
+  setExploreLoad('ready');
+ }).catch(()=>{if(active)setExploreLoad('error')});
+ return()=>{active=false};
+},[view]);
+// Keep URLs shareable without a navigation/reset for each keystroke.
+useEffect(()=>{
+ if(!ready||view!=='explore')return;
+ const timer=window.setTimeout(()=>{
+  const u=new URL(window.location.href);
+  if(query.trim())u.searchParams.set('q',query.trim());
+  else u.searchParams.delete('q');
+  if(cat!=='all')u.searchParams.set('category',cat);
+  else u.searchParams.delete('category');
+  window.history.replaceState(window.history.state,'',u.pathname+u.search+u.hash);
+ },250);
+ return()=>clearTimeout(timer);
+},[ready,view,query,cat]);
+const exploreSuggestions=useMemo(()=>suggestLiveServices(exploreListings,query,5),[exploreListings,query]);
 const filtered=useMemo(()=>services.filter(s=>matchesService(s,query)),[query]);
 const [heroQuery,setHeroQuery]=useState('');
 const [suggestOpen,setSuggestOpen]=useState(false);
@@ -100,7 +129,23 @@ return <div className={'hustle-v5 '+(dark?'night':'')}><a className="skip-link" 
 {view==='home'&&<PopularCategories en={en}/>}
 {view==='home'&&<V19FeaturedIntro en={en}/>}
 {(view==='home'||view==='explore')&&<LiveCatalog en={en} query={view==='explore'?query:''} category={view==='explore'?cat:'all'} sort={sort as 'featured'|'low'|'high'} onlySaved={onlySaved} saved={saved} onSave={save}/>}
-{view==='explore'&&<section className="shell discovery"><div className="section-top"><div><div className="eyebrow muted">{t('ҮЙЛЧИЛГЭЭНИЙ СОНГОЛТ','EXPLORE THE MARKETPLACE')}</div><h2>{t('Зөв ур чадварыг олоорой.','Find your kind of talent.')}</h2><p>{t('Брэндийн анхны логоноос дараагийн том төсөл хүртэл.','From your first logo to your next big launch.')}</p></div></div><div className="categories" role="group" aria-label={t('Үйлчилгээний ангилал','Service categories')}><button className={cat==='all'?'selected':''} onClick={()=>setCat('all')}><span className="category-symbol"><PanelsTopLeft size={23} strokeWidth={1.6}/></span><span>{t('Бүгд','All')}</span></button>{categories.map(([key,mn,english,Icon])=><button key={key} className={cat===key?'selected':''} aria-pressed={cat===key} onClick={()=>setCat(key)}><span className="category-symbol"><Icon size={23} strokeWidth={1.6}/></span><span>{en?english:mn}</span></button>)}</div><div className="filter-row"><label className="filter-search"><Search size={18}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t('Үйлчилгээ, мэргэжилтэн хайх','Search services or creatives')} aria-label={t('Хайлтын үг','Search query')}/></label><button className={'saved-filter '+(onlySaved?'selected':'')} onClick={()=>setOnlySaved(!onlySaved)} aria-pressed={onlySaved}><Heart size={16}/>{t('Хадгалсан','Saved')} ({saved.length})</button><select aria-label={t('Эрэмбэлэх','Sort services')} value={sort} onChange={e=>setSort(e.target.value)}><option value="featured">{t('Онцлох','Featured')}</option><option value="low">{t('Үнэ: багаас','Price: low to high')}</option><option value="high">{t('Үнэ: ихээс','Price: high to low')}</option></select></div><div className="results-meta"><span>{t('Дээр бодит үйлчилгээнүүд, багц болон үнийг шүүнэ.','Filter live listings and packages above.')}</span></div></section>}
+{view==='explore'&&<section className="shell discovery"><div className="section-top"><div><div className="eyebrow muted">{t('ҮЙЛЧИЛГЭЭНИЙ СОНГОЛТ','EXPLORE THE MARKETPLACE')}</div><h2>{t('Зөв ур чадварыг олоорой.','Find your kind of talent.')}</h2><p>{t('Брэндийн анхны логоноос дараагийн том төсөл хүртэл.','From your first logo to your next big launch.')}</p></div></div><div className="categories" role="group" aria-label={t('Үйлчилгээний ангилал','Service categories')}><button className={cat==='all'?'selected':''} onClick={()=>setCat('all')}><span className="category-symbol"><PanelsTopLeft size={23} strokeWidth={1.6}/></span><span>{t('Бүгд','All')}</span></button>{categories.map(([key,mn,english,Icon])=><button key={key} className={cat===key?'selected':''} aria-pressed={cat===key} onClick={()=>setCat(key)}><span className="category-symbol"><Icon size={23} strokeWidth={1.6}/></span><span>{en?english:mn}</span></button>)}</div><div className="filter-row"><div className="smart-explore-search" onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node|null))setExploreOpen(false)}}>
+ <label className="filter-search"><Search size={18}/><input value={query} onChange={e=>{setQuery(e.target.value);setExploreOpen(true);setExploreActive(-1)}} onFocus={()=>setExploreOpen(true)}
+ onKeyDown={e=>{
+  if(e.key==='Escape'){setExploreOpen(false);setExploreActive(-1)}
+  else if(e.key==='ArrowDown'&&exploreSuggestions.length){e.preventDefault();setExploreOpen(true);setExploreActive(i=>(i+1)%exploreSuggestions.length)}
+  else if(e.key==='ArrowUp'&&exploreSuggestions.length){e.preventDefault();setExploreOpen(true);setExploreActive(i=>i<0?exploreSuggestions.length-1:(i-1+exploreSuggestions.length)%exploreSuggestions.length)}
+  else if(e.key==='Enter'&&exploreOpen&&exploreActive>=0&&exploreSuggestions[exploreActive]){e.preventDefault();window.location.assign('/listing/?id='+encodeURIComponent(exploreSuggestions[exploreActive].id))}
+ }}
+ role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded={exploreOpen&&exploreLoad==='ready'} aria-controls="explore-search-suggestions" aria-activedescendant={exploreActive>=0&&exploreSuggestions[exploreActive]?'explore-search-option-'+exploreActive:undefined}
+ placeholder={t('Үйлчилгээ, мэргэжилтэн хайх','Search services or creatives')} aria-label={t('Хайлтын үг','Search query')}/></label>
+ {exploreOpen&&exploreLoad==='ready'&&<div className="smart-explore-suggestions" role="listbox" id="explore-search-suggestions" aria-label={t('Бодит үйлчилгээний санал','Published service suggestions')}>
+  {query.trim()?
+   <>{exploreSuggestions.map((s,i)=><Link key={s.id} id={'explore-search-option-'+i} role="option" aria-selected={i===exploreActive} className={i===exploreActive?'active':''} href={'/listing/?id='+encodeURIComponent(s.id)}><Search size={16}/><span>{en&&s.title_en?s.title_en:s.title}</span><small>{s.category}</small></Link>)}
+   {!exploreSuggestions.length&&<p>{t('Одоогоор тохирох нийтлэгдсэн үйлчилгээ алга.','No published services match this search yet.')}</p>}</>:
+   <div className="smart-explore-queries"><small>{t('Хайж үзэх','Try searching')}</small>{[['logo','Лого','Logo'],['website','Вэбсайт','Website'],['video','Видео','Video'],['translation','Орчуулга','Translation']].map(([value,mn,eng])=><button type="button" key={value} onClick={()=>{setQuery(value);setExploreActive(-1)}}>{en?eng:mn}</button>)}</div>}
+ </div>}
+ </div><button className={'saved-filter '+(onlySaved?'selected':'')} onClick={()=>setOnlySaved(!onlySaved)} aria-pressed={onlySaved}><Heart size={16}/>{t('Хадгалсан','Saved')} ({saved.length})</button><select aria-label={t('Эрэмбэлэх','Sort services')} value={sort} onChange={e=>setSort(e.target.value)}><option value="featured">{t('Онцлох','Featured')}</option><option value="low">{t('Үнэ: багаас','Price: low to high')}</option><option value="high">{t('Үнэ: ихээс','Price: high to low')}</option></select></div><div className="results-meta"><span>{t('Дээр бодит үйлчилгээнүүд, багц болон үнийг шүүнэ.','Filter live listings and packages above.')}</span></div></section>}
 {(view==='service'||view==='seller')&&<section className="shell detail"><Link className="text-link back" href="/explore"><ArrowLeft size={16}/>{t('Үйлчилгээнүүд','All services')}</Link><div className="detail-grid"><div>{view==='seller'?<div className="profile-heading"><span className="avatar large">{item.seller.split(' ').map(x=>x[0]).join('')}</span><div><div className="eyebrow muted">INDEPENDENT CREATIVE · MONGOLIA</div><h1>{item.seller}</h1><p>{t('Санааг тань онцгой бүтээл болгоно.','Thoughtful work for ambitious ideas.')}</p></div></div>:<><div className="eyebrow muted">{t('ЖИШИГ ҮЙЛЧИЛГЭЭ · БОДИТ ЗАР БИШ','SAMPLE SERVICE · NOT A LIVE LISTING')}</div><h1>{en?item.en:item.mn}</h1><Link className="seller-line" href={'/sellers/'+item.id}><span className="avatar">{item.seller.split(' ').map(x=>x[0]).join('')}</span>{item.seller}<ArrowUpRight size={15}/></Link></>}<Artwork item={item}/><h2>{view==='seller'?t('Сонгосон бүтээлүүд','Selected work'):t('Үйлчилгээний тухай','About this service')}</h2><p className="detail-description">{t('Таны бизнесийн зорилго, өнгө төрхөд нийцсэн бүтээлч шийдэл. Төслийн чиглэл, гүйцэтгэл болон хүлээлгэн өгөх материалыг ажил эхлэхээс өмнө тохиролцоно. Энэ профайл, portfolio болон үнэ нь интерфэйсийг турших жишиг өгөгдөл юм.','A creative solution shaped around your goals and identity. Scope, deliverables and timing are agreed before work begins. This profile, portfolio and pricing are sample data for interface testing.')}</p>{view==='seller'&&<div className="service-grid profile-services">{services.filter(s=>s.id===item.id).map(card)}</div>}</div><aside className="detail-aside"><div className="eyebrow muted">{t('ХАМТДАА БҮТЭЭЕ','LET’S MAKE IT HAPPEN')}</div><h2>{view==='seller'?item.seller:t('Төслийн эхлэх үнэ','Starting from')}</h2><div className="detail-price">{money(item.price)}</div><ul><li><Check size={18}/>{t('Төслийн чиглэлээ тохиролцоно','Agree on the project scope')}</li><li><Clock size={18}/>{t('Хугацааг хамтдаа төлөвлөнө','Plan the timeline together')}</li><li><Check size={18}/>{t('Төлбөргүй хаалттай туршилт','Closed beta — no payments')}</li></ul><Link className="button" href="/explore/#real-listings-title">{t('Бодит заруудыг харах','Browse real listings')}<ArrowUpRight size={17}/></Link><button className="button outline" onClick={share}><Share2 size={17}/>{t('Холбоос хуваалцах','Share this page')}</button><p>{t('Энэ нь жишиг зар бөгөөд бодит freelancer-тэй холбогдох боломжгүй. Дээрх бодит заруудаас сонгоорой.','This is a sample, not a contactable freelancer. Choose a real published listing instead.')}</p></aside></div></section>}
 {view==='home'&&<SignatureStory en={en}/>}
 </main><PremiumFooter en={en}/>{notice&&<div className="toast" role="status">{notice}<button aria-label={t('Хаах','Dismiss')} onClick={()=>setNotice('')}><X size={16}/></button></div>}</div>
