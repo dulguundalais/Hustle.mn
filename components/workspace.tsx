@@ -65,6 +65,7 @@ async function load(){
    }else if(contact.kind==='unavailable'||contact.kind==='invalid'){
      setTab('buyer-home');setNotice(t('Энэ freelancer-ийн нийтийн профайл олдсонгүй. Marketplace-ээс дахин сонгоно уу.','That public freelancer profile was not found. Please select a listing again.'));
    }else if(mode==='admin'&&beta.data.role==='admin')setTab('admin');
+   else if(mode==='buyer'&&params.get('tab')==='profile')setTab('profile');
    else if(mode==='seller')setTab(own?.is_seller?'seller':'profile');
    else if(linked&&own&&((results[1].data as Listing[]).some(item=>item.id===linked&&item.status==='published')))setTab('browse');
    else setTab(own?'buyer-home':'profile');
