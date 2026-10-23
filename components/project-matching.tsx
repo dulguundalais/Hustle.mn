@@ -13,6 +13,7 @@ type Inbox={id:string;request_id:string;title:string;brief:string;category:strin
 type Proposal={id:string;request_id:string;seller_id:string;service_id:string;tier:string;quoted_price:number;delivery_days:number;message:string;status:string;created_at:string};
 type Package={service_id:string;tier:string;price:number;delivery_days:number};
 type SendResult={id:string;invited:number;status:string};
+type ProjectNotice={id:string;recipient_id:string;request_id:string;kind:'invitation'|'proposal'|'awarded'|'cancelled';source_id:string;created_at:string;read_at:string|null};
 const categoryOptions=[['ai','AI & Automation'],['marketing','Маркетинг / Marketing'],['web','Веб & IT'],['design','Дизайн / Design'],['video','Видео / Video'],['ui','UI/UX'],['translation','Орчуулга / Translation'],['proposals','Төсөл / Planning'],['interior','Интерьер / Interior']] as const;
 const outcomeCategory:Record<string,string>={automation:'ai',growth:'marketing',content:'video',website:'web',brand:'design',analytics:'web',general:'ai'};
 const currency=(value:number)=>new Intl.NumberFormat('mn-MN').format(value)+' ₮';
@@ -27,6 +28,8 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
  const [title,setTitle]=useState(''),[brief,setBrief]=useState(''),[audience,setAudience]=useState<Audience>('business'),[category,setCategory]=useState('ai'),[budget,setBudget]=useState(''),[days,setDays]=useState('');
  const [targetInvite,setTargetInvite]=useState<Inbox|null>(null),[serviceId,setServiceId]=useState(''),[tier,setTier]=useState('Basic'),[message,setMessage]=useState('');
  const [sent,setSent]=useState<SendResult|null>(null);
+ const [notifications,setNotifications]=useState<ProjectNotice[]>([]),[notificationsReady,setNotificationsReady]=useState(true);
+ const [statusFilter,setStatusFilter]=useState('all'),[offerSort,setOfferSort]=useState('newest');
  const t=(mn:string,eng:string)=>en?eng:mn;
  const refresh=async()=>{
   const db=await marketplaceClient();
@@ -40,6 +43,9 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
   if(beta.error)throw beta.error;if(pr.error)throw pr.error;
   const approved=Boolean(beta.data);setAllowed(approved);setProfile(pr.data as Profile|null);
   if(!approved){setLoading(false);return}
+  const notify=await db.from('project_notifications').select('id,recipient_id,request_id,kind,source_id,created_at,read_at').eq('recipient_id',current.id).order('created_at',{ascending:false}).limit(60);
+  if(notify.error){if(['42P01','PGRST205','PGRST116'].includes(notify.error.code||'')){setNotificationsReady(false);setNotifications([])}else throw notify.error}
+  else{setNotificationsReady(true);setNotifications(notify.data as ProjectNotice[])}
   if(mode==='buyer'){
    const [r,i,p,peopleQuery]=await Promise.all([
     db.from('project_requests').select('*').order('created_at',{ascending:false}).limit(100),
@@ -116,6 +122,11 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
   },t('Шинэ төсөл авах тохиргоо шинэчлэгдлээ.','Availability updated.'));
  };
  const canAccept=(profile as Profile&{accepting_projects?:boolean}|null)?.accepting_projects===true;
+ const unreadCount=notifications.filter(n=>!n.read_at).length;
+ const notificationLabel=(kind:ProjectNotice['kind'])=>({invitation:t('Шинэ төслийн урилга','New project invitation'),proposal:t('Шинэ үнийн санал','New proposal'),awarded:t('Таны санал сонгогдлоо','Your proposal was selected'),cancelled:t('Төслийн хүсэлт цуцлагдсан','Project request cancelled')})[kind];
+ const markNotice=async(id:string)=>{if(busy||!user)return;setBusy(true);setError('');try{const db=await marketplaceClient();const result=await db.from('project_notifications').update({read_at:new Date().toISOString()}).eq('id',id).eq('recipient_id',user).is('read_at',null);if(result.error)throw result.error;setNotifications(items=>items.map(n=>n.id===id?{...n,read_at:new Date().toISOString()}:n))}catch(err){setError(reportError(err))}finally{setBusy(false)}};
+ const visibleRequests=requests.filter(r=>statusFilter==='all'||r.status===statusFilter);
+ const sortedOffers=(offers:Proposal[])=>[...offers].sort((a,b)=>offerSort==='price'?a.quoted_price-b.quoted_price:offerSort==='delivery'?a.delivery_days-b.delivery_days:b.created_at.localeCompare(a.created_at));
  return <main className="project-marketplace">
   <div className="project-layout">
    <header className="project-header"><div><Link href={mode==='seller'?'/seller-studio/':'/buyer/'} className="project-back"><ArrowLeft size={16}/>{t('Dashboard руу буцах','Back to dashboard')}</Link>
@@ -130,7 +141,14 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
    !user?<div className="project-panel"><h2>{t('Нэвтрэх шаардлагатай','Please sign in')}</h2><p>{t('Хүсэлт илгээх эсвэл санал өгөхийн тулд баталгаажсан beta аккаунтаар нэвтэрнэ үү.','Use your approved beta account to post or respond to projects.')}</p><Link className="project-primary" href={mode==='seller'?'/login/?mode=seller':'/login/?mode=buyer'}>{t('Нэвтрэх','Sign in')}<ArrowRight size={16}/></Link></div>:
    !allowed?<div className="project-panel"><h2>{t('Beta зөвшөөрөл шаардлагатай','Beta approval required')}</h2><p>{t('Одоогоор зөвхөн зөвшөөрөгдсөн beta хэрэглэгч ашиглах боломжтой.','This feature is available only to approved beta accounts.')}</p></div>:
    !profile?<div className="project-panel"><h2>{t('Эхлээд профайл үүсгэнэ үү','Create your profile first')}</h2><p>{t('Төслийн хүсэлт болон саналууд баталгаатай аккаунттай холбогдоно.','Project requests and proposals require a completed profile.')}</p><Link className="project-primary" href={mode==='seller'?'/seller-studio/':'/buyer/'}>{t('Профайл үүсгэх','Open profile')}</Link></div>:
-   mode==='buyer'?<>
+   <>
+    <section className="project-panel project-notifications" aria-label={t('Төслийн мэдэгдлүүд','Project notifications')}>
+     <div className="project-inbox-heading"><div><span className="project-step">PROJECT / NOTIFICATIONS</span><h2>{t('Мэдэгдлүүд','Notifications')}{unreadCount>0&&<span className="project-notification-count">{unreadCount}</span>}</h2></div></div>
+     {!notificationsReady?<p className="project-muted">{t('Beta мэдээллийн сангийн V34 шинэчлэлт хүлээгдэж байна.','V34 beta database migration is pending.')}</p>:
+      notifications.length===0?<p className="project-muted">{t('Одоогоор мэдэгдэл алга.','No notifications yet.')}</p>:
+      <div className="project-notification-list">{notifications.map(n=><div className={'project-notification '+(!n.read_at?'unread':'')} key={n.id}><div><strong>{notificationLabel(n.kind)}</strong><small>{new Date(n.created_at).toLocaleString(en?'en-US':'mn-MN')}</small></div>{!n.read_at&&<button type="button" disabled={busy} onClick={()=>void markNotice(n.id)}>{t('Уншсан','Mark read')}</button>}</div>)}</div>}
+    </section>
+    {mode==='buyer'?<>
     <div className="project-buyer-grid">
      <section className="project-panel project-request-form">
       <div className="project-step"><FileText size={18}/> {t('01 / ТӨСЛИЙН ХҮСЭЛТ','01 / YOUR CHALLENGE')}</div>
@@ -150,14 +168,14 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
      </aside>
     </div>
     {sent&&<div className="project-ok" role="status"><CheckCircle2 size={20}/><span>{sent.invited>0?t('Хүсэлт '+sent.invited+' freelancer-т хүрлээ.','Request sent to '+sent.invited+' freelancers.'):t('Хүсэлт хадгалагдлаа. Одоогоор тохирох, төсөл авахыг зөвшөөрсөн seller байхгүй.','Request saved, but no opted-in matching sellers are currently available.')}</span></div>}
-    <section className="project-panel project-list"><h2>{t('Миний төслийн хүсэлтүүд','My project requests')}</h2>
-     {requests.length===0?<p className="project-muted">{t('Одоогоор хүсэлт алга.','No requests yet.')}</p>:requests.map(req=>{
+    <section className="project-panel project-list"><div className="project-inbox-heading"><h2>{t('Миний төслийн хүсэлтүүд','My project requests')}</h2><div className="project-filters"><label>{t('Төлөв','Status')} <select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}><option value="all">{t('Бүгд','All')}</option><option value="open">{t('Нээлттэй','Open')}</option><option value="awarded">{t('Захиалга үүссэн','Awarded')}</option><option value="cancelled">{t('Цуцлагдсан','Cancelled')}</option></select></label><label>{t('Саналыг эрэмбэлэх','Sort proposals')} <select value={offerSort} onChange={e=>setOfferSort(e.target.value)}><option value="newest">{t('Шинэ эхэнд','Newest')}</option><option value="price">{t('Үнэ өсөхөөр','Lowest price')}</option><option value="delivery">{t('Хамгийн хурдан','Fastest delivery')}</option></select></label></div></div>
+     {visibleRequests.length===0?<p className="project-muted">{t('Одоогоор хүсэлт алга.','No requests yet.')}</p>:visibleRequests.map(req=>{
       const offers=proposals.filter(p=>p.request_id===req.id);
       const sentCount=invites.filter(i=>i.request_id===req.id).length;
       return <article className="project-item" key={req.id}>
        <div className="project-item-heading"><div><span className="project-chip">{req.category.toUpperCase()} · {req.audience}</span><h3>{req.title}</h3></div><span className="project-chip">{req.status}</span></div>
        <p>{req.brief}</p><small>{t('Хүргэсэн','Invited')}: {sentCount} · {t('Ирсэн санал','Proposals')}: {offers.length}</small>
-       {offers.map(offer=>{
+       {sortedOffers(offers).map(offer=>{
         const freelancer=people.find(p=>p.id===offer.seller_id);
         return <div key={offer.id} className="project-offer"><div><strong>{freelancer?.display_name||t('Freelancer','Freelancer')}</strong><p>{offer.message}</p><small>{offer.tier} · {currency(offer.quoted_price)} · {offer.delivery_days} {t('хоног','days')}</small></div>{req.status==='open'&&offer.status==='pending'?<button disabled={busy} onClick={()=>void action(async()=>{const db=await marketplaceClient();const response=await db.rpc('award_project_proposal',{p_proposal_id:offer.id});if(response.error)throw response.error},t('Саналыг зөвшөөрлөө. Захиалга үүслээ.','Proposal accepted; an order was created.'))}>{t('Сонгож захиалах','Accept & order')}</button>:<span className="project-chip">{offer.status}</span>}</div>;
        })}
@@ -177,7 +195,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
       const offered=proposals.find(p=>p.request_id===inv.request_id);
       return <article key={inv.id} className="project-item"><div className="project-item-heading"><div><span className="project-chip">{inv.category.toUpperCase()} · {inv.audience}</span><h3>{inv.title}</h3></div><span className="project-chip">{inv.invite_status}</span></div>
        <p>{inv.brief}</p><small>{inv.budget_max?currency(inv.budget_max):t('Төсөв тохиролцоно','Budget negotiable')} · {inv.preferred_days?inv.preferred_days+' '+t('хоног','days'):t('Хугацаа тохиролцоно','Timeline negotiable')}</small>
-       {offered?<p className="project-ok"><CheckCircle2 size={16}/>{t('Санал илгээгдсэн','Proposal submitted')} — {currency(offered.quoted_price)}</p>:<div className="project-actions"><button disabled={busy} type="button" onClick={()=>openProposal(inv)}>{t('Санал илгээх','Send a proposal')}</button><button className="project-quiet" disabled={busy} onClick={()=>void action(async()=>{const db=await marketplaceClient();const r=await db.rpc('decline_project_invitation',{p_invitation_id:inv.id});if(r.error)throw r.error},t('Хүсэлтийг татгалзлаа.','Invitation declined.'))}>{t('Татгалзах','Decline')}</button></div>}
+       {inv.invite_status==='declined'?<p className="project-muted">{t('Та урилгаас татгалзсан.','You declined this invitation.')}</p>:offered?<p className="project-ok"><CheckCircle2 size={16}/>{t('Санал илгээгдсэн','Proposal submitted')} — {currency(offered.quoted_price)}</p>:<div className="project-actions"><button disabled={busy} type="button" onClick={()=>openProposal(inv)}>{t('Санал илгээх','Send a proposal')}</button><button className="project-quiet" disabled={busy} onClick={()=>void action(async()=>{const db=await marketplaceClient();const r=await db.rpc('decline_project_invitation',{p_invitation_id:inv.id});if(r.error)throw r.error},t('Хүсэлтийг татгалзлаа.','Invitation declined.'))}>{t('Татгалзах','Decline')}</button></div>}
       </article>;
      })}
     </section>
@@ -192,6 +210,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
       <button disabled={busy||!selectedPackage} className="project-primary" type="submit"><Send size={17}/>{t('Санал илгээх','Submit proposal')}</button>
      </form>
     </section>}
+   </>}
    </>}
   </div>
  </main>;
