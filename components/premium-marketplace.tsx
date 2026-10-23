@@ -2,6 +2,8 @@
 import {useEffect,useMemo,useState} from 'react';
 import Link from 'next/link';
 import {ArrowUpRight,ArrowRight,Search,Sun,Moon,Globe,Menu,X,Heart,PenTool,Clapperboard,Languages,Megaphone,Code2,Armchair,PanelsTopLeft,Sparkles,FileText,Check,Clock,Share2,ArrowLeft} from 'lucide-react';
+import type {User} from '@supabase/supabase-js';
+import AccountMenu,{type AccountMenuIdentity} from './account-menu';
 import {services, type Service} from '../lib/marketplace/catalog';
 import {matchesService,suggestServices} from '../lib/marketplace/smart-search';
 import LiveCatalog from './live-catalog';
@@ -11,6 +13,7 @@ import BusinessSolutions from './business-solutions';
 import {PopularCategories,V19FeaturedIntro} from './v19-discovery';
 import PremiumFooter from './premium-footer';
 import '../app/marketplace.css';
+import '../app/account-menu.css';
 import '../app/smart-search.css';
 import '../app/unified-layout.css';
 const categories=[['design','Дизайн','Design',PenTool],['video','Видео','Video',Clapperboard],['translation','Орчуулга','Translation',Languages],['marketing','Маркетинг','Marketing',Megaphone],['web','Веб & IT','Web & IT',Code2],['interior','Интерьер','Interior',Armchair],['ui','UI/UX','UI/UX',PanelsTopLeft],['ai','AI бүтээл','AI creation',Sparkles],['proposals','Төсөл бичих','Proposals',FileText]] as const;
@@ -18,33 +21,68 @@ const money=(n:number)=>new Intl.NumberFormat('mn-MN').format(n)+' ₮';
 function Artwork({item}:{item:Service}){return <div aria-hidden="true" className={'art art-'+item.id}><span className="art-index">H / SELECTED CONCEPT</span>{item.id==='brand'?<><div className="brand-sheet"><span>n.</span><small>NOMAD STUDIO<br/>BRAND GUIDELINES / 2026</small></div><div className="brand-business"><b>nomad.</b><span>MOVE WITH PURPOSE.</span></div></>:item.id==='ui'?<><div className="mock-browser"><div className="browser-dots">● ● ●<span>form.studio</span></div><div className="mock-content"><small>SPACES FOR LIVING</small><b>Less, but<br/>better.</b><div className="room-arch"/><i>Explore collection ↗</i></div></div><div className="mock-phone"><span>form.</span><div/><small>A quieter<br/>kind of home.</small></div></>:item.id==='video'?<><div className="video-frame"><span>FRAME / 01</span><b>BEYOND<br/>THE FRAME.</b><div className="play-disc">▷</div><small>00:24 / 01:00</small></div><div className="video-timeline">{Array.from({length:13},(_,i)=><i key={i}/>)}</div></>:item.id==='web'?<div className="code-window"><div>● ● ● <span>hustle / next-project</span></div><p><em>const</em> nextIdea = {'{'}</p><p> name: <strong>"Your business"</strong>,</p><p> builtFor: <strong>"what’s next"</strong>,</p><p> possibilities: <strong>Infinity</strong></p><p>{'}'};</p><footer><span/>Ready to launch <ArrowUpRight size={14}/></footer></div>:item.id==='interior'?<><div className="room-wall"/><div className="room-sofa"/><div className="room-table"/><span className="art-label">A space<br/>to belong.</span></>:item.id==='ai'?<><div className="ai-sphere"/><span className="art-label">IMAGINE<br/>OTHERWISE.</span></>:item.id==='marketing'?<><div className="growth-bars">{[25,42,36,64,78].map((h,i)=><i key={i} style={{height:h+'%'}}/>)}</div><span className="art-label">MAKE<br/>YOUR MARK.</span></>:<><div className="document-sheet"><small>{item.id==='translation'?'WORDS THAT CONNECT':'THE NEXT CHAPTER'}</small><b>{item.id==='translation'?'Сайн үг.\nТом нөлөө.':'From idea\nto impact.'}</b><i/><i/><i/><i/></div></>}<span className="art-caption">{item.seller} / CONCEPT</span></div>}
 export default function PremiumMarketplace({view='home',id}:{view?:'home'|'explore'|'service'|'seller';id?:string}){
 const [sessionState,setSessionState]=useState<'checking'|'signed-in'|'guest'>('checking');
+const [account,setAccount]=useState<AccountMenuIdentity|null>(null);
+const [signingOut,setSigningOut]=useState(false);
 const [en,setEn]=useState(false),[dark,setDark]=useState(false),[ready,setReady]=useState(false),[menu,setMenu]=useState(false),[query,setQuery]=useState(''),[cat,setCat]=useState('all'),[sort,setSort]=useState('featured'),[saved,setSaved]=useState<string[]>([]),[onlySaved,setOnlySaved]=useState(false),[notice,setNotice]=useState('');
 const t=(mn:string,english:string)=>en?english:mn;
 useEffect(()=>{try{setEn(localStorage.getItem('hustle-language')==='en');setDark(localStorage.getItem('hustle-theme')==='dark');const s=JSON.parse(localStorage.getItem('hustle-saved')||'[]');if(Array.isArray(s))setSaved(s.filter(x=>typeof x==='string'));}catch{}const p=new URLSearchParams(location.search);setQuery(p.get('q')||'');setCat(p.get('category')||'all');setReady(true)},[]);
 useEffect(()=>{if(!ready)return;document.documentElement.lang=en?'en':'mn';try{localStorage.setItem('hustle-language',en?'en':'mn');localStorage.setItem('hustle-theme',dark?'dark':'light');localStorage.setItem('hustle-saved',JSON.stringify(saved))}catch{}},[en,dark,saved,ready]);
-// Keep the public header in sync with the persisted Supabase session.
- // Navigation between /buyer/, /seller-studio/ and / must never imply logout.
- useEffect(()=>{
-   let active=true;let unsubscribe=()=>{};
-   const verify=async()=>{try{
-     const db=await marketplaceClient();
-     const {data:{user},error}=await db.auth.getUser();
-     if(active)setSessionState(!error&&user?'signed-in':'guest');
-   }catch{if(active)setSessionState('guest')}};
-   void marketplaceClient().then(db=>{
-     if(!active)return;
-     const {data:{subscription}}=db.auth.onAuthStateChange((_event,session)=>{
-       if(active)setSessionState(session?.user?'signed-in':'guest');
-     });
-     unsubscribe=()=>subscription.unsubscribe();
-     void verify();
-   }).catch(()=>{if(active)setSessionState('guest')});
-   const onFocus=()=>{void verify()};
-   const onVisibility=()=>{if(document.visibilityState==='visible')void verify()};
-   window.addEventListener('focus',onFocus);
-   document.addEventListener('visibilitychange',onVisibility);
-   return()=>{active=false;unsubscribe();window.removeEventListener('focus',onFocus);document.removeEventListener('visibilitychange',onVisibility)};
- },[]);
+// Keep the public header in sync with persisted Supabase auth; never infer a session from local UI state.
+useEffect(()=>{
+ let active=true;let generation=0;let unsubscribe=()=>{};
+ type Client=Awaited<ReturnType<typeof marketplaceClient>>;
+ const showUser=async(db:Client,user:User|null,version:number)=>{
+  if(!active||version!==generation)return;
+  if(!user){setSessionState('guest');setAccount(null);return}
+  const fallback=user.email?.split('@')[0]?.trim()||'Member';
+  setSessionState('signed-in');
+  setAccount({id:user.id,name:fallback,isSeller:false});
+  try{
+   // Profile is a presentation detail; auth persists even when this lookup is unavailable.
+   const result=await db.from('profiles').select('id,display_name,is_seller').eq('id',user.id).limit(1);
+   if(!active||version!==generation||result.error)return;
+   const profile=result.data?.[0];
+   setAccount(current=>current?.id===user.id?{
+    id:user.id,name:profile?.display_name?.trim()||fallback,isSeller:profile?.is_seller===true
+   }:current);
+  }catch{/* Continue with the signed-in email-local-part fallback. */}
+ };
+ const verify=async()=>{
+  const version=++generation;
+  try{
+   const db=await marketplaceClient();
+   const {data:{user},error}=await db.auth.getUser();
+   if(active&&version===generation)void showUser(db,error?null:user,version);
+  }catch{if(active&&version===generation){setSessionState('guest');setAccount(null)}}
+ };
+ void marketplaceClient().then(db=>{
+  if(!active)return;
+  const {data:{subscription}}=db.auth.onAuthStateChange((_event,session)=>{
+   const version=++generation;
+   // Schedule profile reads outside the auth callback to avoid Supabase auth lock contention.
+   void Promise.resolve().then(()=>showUser(db,session?.user||null,version));
+  });
+  unsubscribe=()=>subscription.unsubscribe();
+  void verify();
+ }).catch(()=>{if(active){setSessionState('guest');setAccount(null)}});
+ const onFocus=()=>{void verify()};
+ const onVisibility=()=>{if(document.visibilityState==='visible')void verify()};
+ window.addEventListener('focus',onFocus);
+ document.addEventListener('visibilitychange',onVisibility);
+ return()=>{active=false;++generation;unsubscribe();window.removeEventListener('focus',onFocus);document.removeEventListener('visibilitychange',onVisibility)};
+},[]);
+async function signOutFromHome(){
+ if(signingOut)return;
+ setSigningOut(true);
+ try{
+  const db=await marketplaceClient();
+  const {error}=await db.auth.signOut();
+  if(error)throw error;
+  setSessionState('guest');setAccount(null);setMenu(false);
+  setNotice(t('Амжилттай гарлаа.','You have signed out.'));
+ }catch{setNotice(t('Гарах үйлдэл амжилтгүй. Дахин оролдоно уу.','Could not sign out. Please try again.'))}
+ finally{setSigningOut(false)}
+}
 const filtered=useMemo(()=>services.filter(s=>matchesService(s,query)),[query]);
 const [heroQuery,setHeroQuery]=useState('');
 const [suggestOpen,setSuggestOpen]=useState(false);
@@ -53,7 +91,7 @@ const item=services.find(s=>s.id===id)||services[0];
 const save=(key:string)=>setSaved(s=>s.includes(key)?s.filter(k=>k!==key):[...s,key]);
 async function share(){try{await navigator.clipboard.writeText(location.href);setNotice(t('Холбоос хууллаа.','Link copied.'))}catch{setNotice(t('Хөтчийн хаягийн мөрөөс холбоосоо хуулна уу.','Copy the link from your browser address bar.'))}}
 const card=(s:Service)=><article className="service-card-v5" key={s.id}><div className="card-art"><Link href={'/services/'+s.id} aria-label={en?s.en:s.mn}><Artwork item={s}/></Link><button className={'save '+(saved.includes(s.id)?'active':'')} aria-pressed={saved.includes(s.id)} aria-label={t('Үйлчилгээ хадгалах','Save service')} onClick={()=>save(s.id)}><Heart size={17} fill={saved.includes(s.id)?'currentColor':'none'}/></button></div><div className="card-body"><div className="service-kicker">{categories.find(c=>c[0]===s.category)?.[en?2:1]}</div><Link className="seller-line" href={'/sellers/'+s.id}><span className={'avatar avatar-'+s.category}>{s.seller.split(' ').map(x=>x[0]).join('')}</span>{s.seller}<span className="sample-label">{t('Жишиг','Sample')}</span></Link><Link href={'/services/'+s.id}><h3>{en?s.en:s.mn}</h3></Link><div className="card-bottom"><span>{t('Эхлэх үнэ','From')} <strong>{money(s.price)}</strong></span><ArrowUpRight size={18}/></div></div></article>;
-return <div className={'hustle-v5 '+(dark?'night':'')}><a className="skip-link" href="#main">{t('Үндсэн хэсэг рүү','Skip to content')}</a><header className="site-header"><div className="shell header-inner"><Link className="wordmark" href="/">hustle<span>✳</span><small>mn</small></Link><nav className={menu?'open':''} aria-label={t('Үндсэн цэс','Main navigation')}><Link href="/explore" onClick={()=>setMenu(false)}>{t('Үйлчилгээ хайх','Explore services')}</Link><Link href="/solutions/" onClick={()=>setMenu(false)}>{t('Шийдэл олох','Find a solution')}</Link><a href="/#how">{t('Хэрхэн ажилладаг вэ?','How it works')}</a>{sessionState!=='checking'&&<Link className="mobile-auth-nav" href={sessionState==='signed-in'?'/buyer/':'/login/?mode=buyer'} onClick={()=>setMenu(false)}>{sessionState==='signed-in'?t('Миний орон зай','My dashboard'):t('Нэвтрэх','Log in')}</Link>}</nav><div className="header-actions"><button className="icon-button locale" onClick={()=>setEn(!en)} aria-label={t('Англи хэл сонгох','Switch to Mongolian')}><Globe size={16}/>{en?'EN':'MN'}</button><button className="icon-button" onClick={()=>setDark(!dark)} aria-label={t('Өнгөний горим солих','Toggle color theme')}>{dark?<Sun size={18}/>:<Moon size={18}/>}</button>{sessionState==='signed-in'?<><Link href="/buyer/" className="login-link">{t('Миний орон зай','My dashboard')}</Link><Link href="/seller-studio/" className="button small">{t('Seller Studio','Seller Studio')}<ArrowUpRight size={16}/></Link></>:sessionState==='guest'?<><Link href="/login/?mode=buyer" className="login-link">{t('Нэвтрэх','Log in')}</Link><Link href="/join/seller/" className="button small">{t('Бүтээлчээр нэгдэх','Join as a creative')}<ArrowUpRight size={16}/></Link></>:<span className="account-nav-checking" role="status" aria-label={t('Нэвтрэлтийн төлөв шалгаж байна','Checking sign-in status')}/>}<button className="icon-button mobile-menu" aria-expanded={menu} aria-label={t('Цэс','Menu')} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></div></div></header><nav className={view==='home'?'market-category-nav v19-hide-category-nav':'market-category-nav'} aria-label={t('Ангилал үзэх','Browse categories')}><div className="shell">{categories.map(([key,mn,eng])=><Link key={key} href={'/explore/?category='+key}>{en?eng:mn}</Link>)}</div></nav><main id="main">
+return <div className={'hustle-v5 '+(dark?'night':'')}><a className="skip-link" href="#main">{t('Үндсэн хэсэг рүү','Skip to content')}</a><header className="site-header"><div className="shell header-inner"><Link className="wordmark" href="/">hustle<span>✳</span><small>mn</small></Link><nav className={menu?'open':''} aria-label={t('Үндсэн цэс','Main navigation')}><Link href="/explore" onClick={()=>setMenu(false)}>{t('Үйлчилгээ хайх','Explore services')}</Link><Link href="/solutions/" onClick={()=>setMenu(false)}>{t('Шийдэл олох','Find a solution')}</Link><a href="/#how">{t('Хэрхэн ажилладаг вэ?','How it works')}</a>{sessionState!=='checking'&&<Link className="mobile-auth-nav" href={sessionState==='signed-in'?'/buyer/':'/login/?mode=buyer'} onClick={()=>setMenu(false)}>{sessionState==='signed-in'?t('Миний орон зай','My dashboard'):t('Нэвтрэх','Log in')}</Link>}</nav><div className="header-actions"><button className="icon-button locale" onClick={()=>setEn(!en)} aria-label={t('Англи хэл сонгох','Switch to Mongolian')}><Globe size={16}/>{en?'EN':'MN'}</button><button className="icon-button" onClick={()=>setDark(!dark)} aria-label={t('Өнгөний горим солих','Toggle color theme')}>{dark?<Sun size={18}/>:<Moon size={18}/>}</button>{sessionState==='signed-in'&&account?<AccountMenu account={account} en={en} signingOut={signingOut} onSignOut={signOutFromHome}/>:sessionState==='guest'?<><Link href="/login/?mode=buyer" className="login-link">{t('Нэвтрэх','Log in')}</Link><Link href="/join/seller/" className="button small">{t('Бүтээлчээр нэгдэх','Join as a creative')}<ArrowUpRight size={16}/></Link></>:<span className="account-nav-checking" role="status" aria-label={t('Нэвтрэлтийн төлөв шалгаж байна','Checking sign-in status')}/>}<button className="icon-button mobile-menu" aria-expanded={menu} aria-label={t('Цэс','Menu')} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></div></div></header><nav className={view==='home'?'market-category-nav v19-hide-category-nav':'market-category-nav'} aria-label={t('Ангилал үзэх','Browse categories')}><div className="shell">{categories.map(([key,mn,eng])=><Link key={key} href={'/explore/?category='+key}>{en?eng:mn}</Link>)}</div></nav><main id="main">
 {view==='home'&&<SignatureHero en={en}/>}
 {view==='home'&&<BusinessSolutions en={en}/>}
 {view==='home'&&<PopularCategories en={en}/>}
