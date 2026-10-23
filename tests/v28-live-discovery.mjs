@@ -6,7 +6,7 @@ const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const norm=read('lib/marketplace/smart-search.ts').replace("import type {Service} from './catalog';",'');
 const normJs=ts.transpileModule(norm,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const normUrl='data:text/javascript;base64,'+Buffer.from(normJs).toString('base64');
-const moduleText=read('lib/marketplace/live-discovery.ts').replace("import {normalizeSearch} from './smart-search';","import {normalizeSearch} from '"+normUrl+"';");
+const moduleText=read('lib/marketplace/live-discovery.ts').replace("import {normalizeSearch,searchTokens,typoClose} from './smart-search';","import {normalizeSearch,searchTokens,typoClose} from '"+normUrl+"';");
 const js=ts.transpileModule(moduleText,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const {filterLiveServices,suggestLiveServices,liveServicePrice}=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
 const service=(id,title,category,price,pkg=[])=>({id,title,title_en:title,description:title,category,price,delivery_days:5,revisions:1,package_name:'Basic',display_name:'QA Seller',headline:'Expert',slug:'qa-seller',packages:pkg});
