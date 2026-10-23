@@ -12,7 +12,7 @@ export async function mockMessenger(page){
  if(path.includes('/auth/v1/token'))data={access_token:jwt,token_type:'bearer',expires_in:3600,refresh_token:'test-refresh',user:account};
  else if(path==='/auth/v1/user')data=account;
  else if(path==='/rest/v1/beta_allowlist')data={role:'member'};
- else if(path==='/rest/v1/profiles')data=[profile(buyer,'QA Buyer',false),profile(seller,'QA Seller',true)];
+ else if(path==='/rest/v1/profiles'){const idFilter=new URL(req.url()).searchParams.get('id');const profiles=[profile(buyer,'QA Buyer',false),profile(seller,'QA Seller',true)];data=idFilter?.startsWith('eq.')?profiles.filter(p=>p.id===idFilter.slice(3)):profiles;}
  else if(path==='/rest/v1/services')data=[listing];
  else if(path==='/rest/v1/service_packages'||path==='/rest/v1/reviews'||path==='/rest/v1/portfolio_items'||path==='/rest/v1/referrals'||path==='/rest/v1/chat_attachments'||path==='/rest/v1/messenger_presence')data=[];
  else if(path==='/rest/v1/orders')data=[order];
