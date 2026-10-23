@@ -1,7 +1,7 @@
 'use client';
 import {useEffect,useMemo,useState,type FormEvent} from 'react';
 import Link from 'next/link';
-import {ArrowRight,ArrowUpRight,Building2,Check,ClipboardCopy,Lightbulb,Search,Sparkles,UserRound,Workflow} from 'lucide-react';
+import {ArrowRight,ArrowUpRight,Send,Building2,Check,ClipboardCopy,Lightbulb,Search,Sparkles,UserRound,Workflow} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
 import {buildProjectBrief,classifyNeed,matchingPublished,problemExamples,type Audience,type PublishedMatch} from '../lib/marketplace/solution-finder';
 import '../app/solution-finder.css';
@@ -74,7 +74,7 @@ export default function SolutionFinder({compact=false,en:language=false}:{compac
      <div><span className="finder-eyebrow"><ClipboardCopy size={15}/>{t('ТӨСЛИЙН ХҮСЭЛТ','PROJECT BRIEF')}</span><h3>{t('Freelancer-т ойлгомжтой шаардлага бэлдье','Turn your challenge into a clear brief')}</h3></div>
      <div className="finder-brief-fields"><label>{t('Төсөв (сонголттой)','Budget (optional)')}<input value={budget} onChange={e=>setBudget(e.target.value.slice(0,80))} maxLength={80} placeholder={t('Жишээ: 300,000–500,000 ₮','e.g., 300,000–500,000 MNT')}/></label><label>{t('Хугацаа (сонголттой)','Timeline (optional)')}<input value={timeline} onChange={e=>setTimeline(e.target.value.slice(0,80))} maxLength={80} placeholder={t('Жишээ: 2 долоо хоног','e.g., 2 weeks')}/></label></div>
      <pre className="finder-brief-preview">{brief}</pre>
-     <div className="finder-brief-actions"><button type="button" onClick={()=>void copy()}><ClipboardCopy size={16}/>{copied?t('Хуулсан','Copied'):t('Хүсэлт хуулах','Copy project brief')}</button><Link href={'/explore/?q='+encodeURIComponent(submitted)}>{t('Freelancer хайх','Browse freelancers')} <ArrowUpRight size={16}/></Link></div>
+     <div className="finder-brief-actions"><button type="button" onClick={()=>void copy()}><ClipboardCopy size={16}/>{copied?t('Хуулсан','Copied'):t('Хүсэлт хуулах','Copy project brief')}</button><Link href={'/explore/?q='+encodeURIComponent(submitted)}>{t('Freelancer хайх','Browse freelancers')} <ArrowUpRight size={16}/></Link><Link className="finder-project-cta" href={'/project-requests/?'+new URLSearchParams({q:submitted,audience}).toString()}>{t('Асуудлаа freelancer-үүдэд илгээх','Send a project to freelancers')} <Send size={16}/></Link></div>
      <p className="finder-disclosure">{t('Энэ beta хувилбар нь дүрэмд суурилсан ухаалаг чиглүүлэлт юм. Генератив AI зөвлөх хараахан идэвхжээгүй; санал нь баталгаатай бизнесийн үр дүн гэсэн үг биш.','This beta uses rule-based guidance, not a connected generative AI advisor. Suggestions do not guarantee a business outcome.')}</p>
     </div>
    </div>}
