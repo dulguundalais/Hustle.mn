@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit",
     "build:preview": "node scripts/build-preview.mjs",
     "test": "node --test tests/*.mjs",
-    "lint": "eslint components/interactive-stage.tsx components/workspace.tsx lib/marketplace functions app/login app/workspace app/api/config"
+    "lint": "eslint components/interactive-stage.tsx components/premium-marketplace.tsx components/account-menu.tsx components/workspace.tsx lib/marketplace functions app/login app/workspace app/api/config"
   },
   "dependencies": {
     "next": "15.5.27",
