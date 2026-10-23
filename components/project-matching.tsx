@@ -28,7 +28,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
  const [title,setTitle]=useState(''),[brief,setBrief]=useState(''),[audience,setAudience]=useState<Audience>('business'),[category,setCategory]=useState('ai'),[budget,setBudget]=useState(''),[days,setDays]=useState('');
  const [targetInvite,setTargetInvite]=useState<Inbox|null>(null),[serviceId,setServiceId]=useState(''),[tier,setTier]=useState('Basic'),[message,setMessage]=useState('');
  const [sent,setSent]=useState<SendResult|null>(null);
- const [draftReady,setDraftReady]=useState(false),[signInHref,setSignInHref]=useState('/login/?mode=buyer');
+ const [draftReadyFor,setDraftReadyFor]=useState(''),[signInHref,setSignInHref]=useState('/login/?mode=buyer');
  const draftOwner=useRef('');
  const t=(mn:string,eng:string)=>en?eng:mn;
  const refresh=async()=>{
@@ -82,11 +82,11 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
  },[mode]);
  // Tab-scoped drafts are keyed to the signed-in account; drafts never go to the server.
  useEffect(()=>{
-  if(mode!=='buyer'||!user){setDraftReady(false);return}
+  if(mode!=='buyer'||!user){setDraftReadyFor('');return}
   if(draftOwner.current===user)return;
   // Never carry the previous signed-in account's unsaved form into a new account.
   if(draftOwner.current&&draftOwner.current!==user){setTitle('');setBrief('');setBudget('');setDays('');setAudience('business');setCategory('ai')}
-  draftOwner.current=user;setDraftReady(false);
+  draftOwner.current=user;setDraftReadyFor('');
   try{
    const stored=sessionStorage.getItem(projectDraftKey(user));
    if(stored&&!new URLSearchParams(location.search).has('q')){
@@ -99,16 +99,16 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
     if(typeof saved.days==='string'&&/^(|[0-9]{1,3})$/.test(saved.days))setDays(saved.days);
    }
   }catch{}
-  setDraftReady(true);
+  setDraftReadyFor(user);
  },[mode,user]);
  useEffect(()=>{
-  if(mode!=='buyer'||!user||!draftReady)return;
+  if(mode!=='buyer'||!user||draftReadyFor!==user)return;
   try{
    const key=projectDraftKey(user);
    if(title.trim()||brief.trim()||budget||days)sessionStorage.setItem(key,JSON.stringify({title,brief,audience,category,budget,days}));
    else sessionStorage.removeItem(key);
   }catch{}
- },[mode,user,draftReady,title,brief,audience,category,budget,days]);
+ },[mode,user,draftReadyFor,title,brief,audience,category,budget,days]);
  useEffect(()=>{
   if(mode!=='seller'||!user||!targetInvite)return;
   try{
@@ -188,7 +188,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
       <h2>{t('Ямар асуудал шийдэх хэрэгтэй вэ?','What problem are you solving?')}</h2>
       <p>{t('Хүсэлт илгээхийг зөвшөөрсний дараа систем зөвхөн тохирох, төсөл авахыг идэвхжүүлсэн 5 хүртэлх freelancer-т хүргэнэ.','On your confirmation, your request goes to up to five matching opt-in freelancers.')}</p>
       <form onSubmit={submitRequest} className="project-form">
-        {draftReady&&<div className="project-draft-status" role="status"><span>{t('Хүсэлт энэ tab дээр түр хадгалагдана.','Draft saved in this tab.')}</span><button type="button" disabled={busy} onClick={clearRequestDraft}>{t('Арилгах','Clear draft')}</button></div>}
+        {draftReadyFor===user&&<div className="project-draft-status" role="status"><span>{t('Хүсэлт энэ tab дээр түр хадгалагдана.','Draft saved in this tab.')}</span><button type="button" disabled={busy} onClick={clearRequestDraft}>{t('Арилгах','Clear draft')}</button></div>}
        <label>{t('Төслийн нэр','Project title')}<input value={title} onChange={e=>setTitle(e.target.value)} minLength={8} maxLength={120} required placeholder={t('Жишээ: Facebook захиалгын автоматжуулалт','e.g., Facebook order automation')}/></label>
        <label>{t('Тайлбар / хийх ажил','Describe the challenge')}<textarea value={brief} onChange={e=>setBrief(e.target.value)} rows={5} minLength={20} maxLength={2000} required placeholder={t('Одоогийн асуудал, хүсэж буй үр дүнгээ бичнэ үү…','Describe the current problem and desired outcome…')}/></label>
        <div className="project-field-row"><label>{t('Чиглэл','Category')}<select value={category} onChange={e=>setCategory(e.target.value)}>{categoryOptions.map(([value,name])=><option key={value} value={value}>{name}</option>)}</select></label><label>{t('Хэрэглээ','Project context')}<select value={audience} onChange={e=>setAudience(e.target.value as Audience)}><option value="business">{t('Бизнес','Business')}</option><option value="personal">{t('Хувь хүн','Personal')}</option></select></label></div>
