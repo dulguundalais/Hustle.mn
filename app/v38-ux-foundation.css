@@ -1,0 +1,101 @@
+/*
+ * V38 visual/interaction foundation for the existing Hustle product.
+ * Preserves the original 1400px hero grid, color modes, data and workflows.
+ * All rules are scoped to current app surfaces to avoid global regressions.
+ */
+.hustle-v5 {
+  --ux-radius-sm: 10px;
+  --ux-radius-md: 16px;
+  --ux-radius-lg: 22px;
+  --ux-shadow: 0 8px 26px rgba(16,39,77,.055);
+  --ux-shadow-hover: 0 16px 38px rgba(16,39,77,.10);
+}
+.hustle-v5.night {
+  --ux-shadow: 0 10px 28px rgba(0,0,0,.16);
+  --ux-shadow-hover: 0 18px 42px rgba(0,0,0,.26);
+}
+.hustle-v5 :is(a,button,input,textarea,select):focus-visible,
+.project-marketplace :is(a,button,input,textarea,select):focus-visible,
+.v28-detail-page :is(a,button,input,textarea,select):focus-visible {
+  outline: 3px solid #63b6f5;
+  outline-offset: 3px;
+}
+.hustle-v5 .site-header .header-actions>.icon-button {min-width:42px;min-height:42px;justify-content:center;border-radius:10px}
+.hustle-v5 .site-header .header-actions>.icon-button:hover{background:var(--soft)}
+.hustle-v5 :is(.button,.v23-primary-action,.v23-secondary-action){min-height:44px;border-radius:var(--ux-radius-sm)}
+.hustle-v5 .site-header nav a {text-underline-offset:5px}
+.hustle-v5 .site-header nav a:hover {color:var(--purple)}
+.hustle-v5 .discovery .filter-row :is(.saved-filter,select) {min-height:44px}
+.hustle-v5 .live-catalog .v23-service-card {
+  border-radius:var(--ux-radius-md);
+  overflow:hidden;
+  box-shadow:var(--ux-shadow);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.hustle-v5 .live-catalog .v23-service-card:hover {
+  transform:translateY(-3px);box-shadow:var(--ux-shadow-hover);border-color:color-mix(in srgb,var(--purple) 27%,var(--border));
+}
+.hustle-v5 .live-catalog .v28-listing-title h3 {line-height:1.38;letter-spacing:-.025em}
+.hustle-v5 .live-catalog .v28-listing-title h3 a:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.hustle-v5 .live-catalog .v28-save-service {min-width:42px;min-height:42px;border-radius:11px}
+.hustle-v5 .live-catalog .v37-card-selection {padding:2px 0 4px}
+.hustle-v5 .live-catalog .v37-card-selection button {min-height:40px}
+.hustle-v5 .live-catalog .v37-toolbar {padding:16px 18px;border:1px solid var(--border);border-radius:var(--ux-radius-md);background:var(--soft)}
+.hustle-v5 .live-catalog .v37-toolbar .v37-open:disabled{opacity:.7}
+.hustle-v5 .live-catalog .live-catalog-empty {border:1px solid var(--border);border-radius:var(--ux-radius-lg);box-shadow:var(--ux-shadow);padding:30px}
+.hustle-v5 .live-catalog .live-catalog-empty h3 {font-size:clamp(18px,2.4vw,23px);letter-spacing:-.035em}
+.hustle-v5 .live-catalog .live-catalog-state{border-radius:var(--ux-radius-md)}
+.hustle-v5 .ux-filter-hint {margin:0 0 12px;color:var(--sub);font-size:12px}
+.hustle-v5 .ux-inline-link {text-decoration:underline;text-underline-offset:3px;color:var(--purple);font-weight:800}
+.hustle-v5 .ux-loading-tiles {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px;margin:14px 0}
+.hustle-v5 .ux-loading-tile {height:295px;background:linear-gradient(100deg,var(--soft) 0%,var(--surface) 48%,var(--soft) 100%);background-size:200% 100%;border:1px solid var(--border);border-radius:var(--ux-radius-md);animation:ux-shimmer 1.6s ease-in-out infinite}
+@keyframes ux-shimmer{from{background-position:100% 0}to{background-position:-100% 0}}
+/* Workspace: a clear first action, paired alternative, quiet secondary shortcuts */
+.hustle-v5.workspace .workspace-layout {gap:clamp(18px,3.2vw,42px)}
+.hustle-v5.workspace .workspace-heading {padding:12px 0 14px;border-bottom:1px solid var(--border);align-items:center}
+.hustle-v5.workspace .workspace-heading h1{font-size:clamp(24px,2.5vw,34px);letter-spacing:-.04em;line-height:1.25;margin-top:6px}
+.hustle-v5.workspace .workspace-sidebar nav button {min-height:44px;border-radius:11px;transition:background-color .18s ease,color .18s ease}
+.hustle-v5.workspace .workspace-sidebar nav button:hover {background:var(--soft);color:var(--text)}
+.hustle-v5.workspace .workspace-panel {border-radius:var(--ux-radius-md);box-shadow:var(--ux-shadow)}
+.hustle-v5.workspace .role-welcome {padding:clamp(23px,3.2vw,40px);background:var(--surface)}
+.hustle-v5.workspace .role-welcome h2 {font-size:clamp(23px,2.5vw,31px);letter-spacing:-.045em;max-width:610px}
+.hustle-v5.workspace .role-welcome>p {max-width:650px;font-size:13px;line-height:1.8}
+.hustle-v5.workspace .ux-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:23px 0 10px}
+.hustle-v5.workspace .ux-choice {padding:21px;border:1px solid var(--border);background:var(--paper);border-radius:var(--ux-radius-md);display:grid;gap:12px;align-content:start;min-width:0}
+.hustle-v5.workspace .ux-choice-icon{display:inline-grid;place-items:center;width:42px;height:42px;color:var(--purple);border-radius:12px;background:var(--soft)}
+.hustle-v5.workspace .ux-choice h3{font-size:17px;letter-spacing:-.025em;line-height:1.4;margin:0}
+.hustle-v5.workspace .ux-choice p{font-size:12px;color:var(--sub);line-height:1.8;margin:0}
+.hustle-v5.workspace .ux-choice .button{margin-top:auto;justify-self:start}
+.hustle-v5.workspace .ux-quick-actions{display:flex;align-items:center;gap:10px 22px;flex-wrap:wrap;margin:13px 0 0}
+.hustle-v5.workspace .ux-quick-actions :is(a,button){background:transparent;border:0;color:var(--purple);font-size:12px;font-weight:800;display:inline-flex;align-items:center;gap:7px;padding:10px 2px;cursor:pointer}
+.hustle-v5.workspace .stats-row>div {border-radius:13px}
+.hustle-v5.workspace :is(.role-empty,.empty){border-radius:var(--ux-radius-md)}
+.hustle-v5.workspace :is(input,textarea,select){min-height:44px;border-radius:var(--ux-radius-sm)}
+/* Project request page follows the same hierarchy and typography without changing dispatch logic */
+.project-marketplace .project-panel {border-radius:18px;box-shadow:0 8px 32px rgba(16,39,77,.045)}
+.project-marketplace .project-header h1{letter-spacing:-.045em}
+.project-marketplace .ux-project-steps {list-style:none;padding:0;margin:0 0 22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;counter-reset:ux-step}
+.project-marketplace .ux-project-steps li{display:flex;align-items:center;gap:11px;padding:15px 16px;border:1px solid #d8e5ec;border-radius:13px;background:#fff;color:#41677b;font-size:12px;font-weight:750;line-height:1.5}
+.project-marketplace .ux-project-steps li::before {counter-increment:ux-step;content:counter(ux-step);display:grid;place-items:center;width:30px;height:30px;flex:0 0 30px;border-radius:10px;background:#e9f5fa;color:#07537d;font-size:12px;font-weight:850}
+.project-marketplace .ux-project-steps li:first-child{border-color:#b9dfe8;background:#f2fbfd}
+.project-marketplace .project-primary {min-height:46px}
+.v28-detail-page .v28-detail-grid>article,.v28-detail-page .v28-detail-offer {border-radius:18px}
+.v28-detail-page .v28-detail-primary,.v28-detail-page .v28-detail-secondary {min-height:44px}
+.v28-detail-page .ux-detail-next {border-top:1px solid #d9e4ec;margin-top:17px;padding-top:16px;font-size:12px;line-height:1.7;color:#64748b}
+@media(max-width:850px){
+ .hustle-v5 .ux-loading-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .hustle-v5.workspace .ux-choice-grid{grid-template-columns:1fr}
+ .project-marketplace .ux-project-steps {grid-template-columns:1fr}
+}
+@media(max-width:600px){
+ .hustle-v5 .ux-loading-tiles{grid-template-columns:1fr}
+ .hustle-v5.workspace .ux-choice{padding:17px}
+ .hustle-v5.workspace .ux-choice .button{width:100%}
+ .hustle-v5.workspace .workspace-heading{gap:12px}
+ .project-marketplace .ux-project-steps li{padding:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ .hustle-v5 .ux-loading-tile{animation:none}
+ .hustle-v5 .live-catalog .v23-service-card{transition:none}
+ .hustle-v5 .live-catalog .v23-service-card:hover{transform:none}
+}
