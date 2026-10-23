@@ -22,8 +22,10 @@ const formatPrice=(amount:number)=>new Intl.NumberFormat('mn-MN').format(amount)
 export function SignatureHero({en}:{en:boolean}){
  const [search,setSearch]=useState('');
  const [showSuggestions,setShowSuggestions]=useState(false);
+ const [activeSuggestion,setActiveSuggestion]=useState(-1);
+ const [publishedState,setPublishedState]=useState<'loading'|'ready'|'error'>('loading');
  const [published,setPublished]=useState<LiveService[]>([]);
- useEffect(()=>{let active=true;marketplaceClient().then(db=>db.rpc('marketplace_catalog')).then(r=>{if(active&&!r.error&&Array.isArray(r.data))setPublished(r.data as LiveService[])}).catch(()=>{});return()=>{active=false}},[]);
+ useEffect(()=>{let active=true;marketplaceClient().then(db=>db.rpc('marketplace_catalog')).then(r=>{if(!active)return;if(r.error)throw r.error;setPublished(Array.isArray(r.data)?r.data as LiveService[]:[]);setPublishedState('ready')}).catch(()=>{if(active)setPublishedState('error')});return()=>{active=false}},[]);
  const suggestions=useMemo(()=>suggestLiveServices(published,search,4),[published,search]);
  const t:T=(mn,english)=>en?english:mn;
  return <section className="signature-hero" aria-labelledby="signature-hero-title">
@@ -34,12 +36,29 @@ export function SignatureHero({en}:{en:boolean}){
        <h1 id="signature-hero-title">{t('Асуудал бүрт','Every challenge')}<br/><span>{t('шийдэл бий.','has a way forward.')}</span></h1>
        <p>{t('Бизнесээ хөгжүүлэх, ажлаа автоматжуулах, санаагаа хэрэгжүүлэхэд хэрэгтэй мэргэжилтнээ ол. Яг ямар үйлчилгээ хэрэгтэйгээ мэдэх албагүй.','From growing sales to automating work, describe the problem and discover the right expertise. No jargon needed.')}</p>
        <GuidedEntry en={en}/>
-       <form action="/solutions/" method="get" className="signature-search" role="search">
-        <Search size={21} aria-hidden="true"/>
-        <input name="q" aria-label={t('Асуудлаа тайлбарлах','Describe your challenge')} value={search} onChange={e=>{setSearch(e.target.value);setShowSuggestions(true)}} onFocus={()=>setShowSuggestions(true)} onKeyDown={e=>{if(e.key==='Escape')setShowSuggestions(false)}} placeholder={t('Манай ресторан илүү олон захиалгатай болмоор байна…','We need more bookings but do not know where to start…')}/>
-        <button type="submit"><span>{t('Шийдэл олох','Find solutions')}</span><ArrowUpRight size={19}/></button>
-       </form>
-       {showSuggestions&&suggestions.length>0&&<div className="signature-search-suggestions" id="hero-search-suggestions" role="listbox" aria-label={t('Нийтлэгдсэн үйлчилгээний санал','Published service suggestions')}>{suggestions.map(item=><Link role="option" aria-selected={false} key={item.id} href={'/listing/?id='+encodeURIComponent(item.id)}><Search size={15}/>{en&&item.title_en?item.title_en:item.title}<span>{t('Бодит','Live')}</span></Link>)}<Link className="signature-search-all" href={'/explore/?q='+encodeURIComponent(search)}>{t('Бодит үйлчилгээ хайх','Find real services')}<ArrowRight size={15}/></Link></div>}
+       <div className="signature-search-shell" onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node|null))setShowSuggestions(false)}}>
+        <form action="/solutions/" method="get" className="signature-search" role="search">
+         <Search size={21} aria-hidden="true"/>
+         <input name="q" role="combobox" aria-label={t('Асуудлаа тайлбарлах','Describe your challenge')}
+          aria-autocomplete="list" aria-haspopup="listbox" aria-expanded={showSuggestions&&search.trim().length>1&&publishedState==='ready'}
+          aria-controls="hero-search-suggestions" aria-activedescendant={activeSuggestion>=0&&showSuggestions&&suggestions[activeSuggestion]?'hero-search-option-'+activeSuggestion:undefined}
+          value={search} onChange={e=>{setSearch(e.target.value);setShowSuggestions(true);setActiveSuggestion(-1)}}
+          onFocus={()=>setShowSuggestions(true)}
+          onKeyDown={e=>{
+           if(e.key==='Escape'){setShowSuggestions(false);setActiveSuggestion(-1)}
+           else if(e.key==='ArrowDown'&&suggestions.length){e.preventDefault();setShowSuggestions(true);setActiveSuggestion(i=>(i+1)%suggestions.length)}
+           else if(e.key==='ArrowUp'&&suggestions.length){e.preventDefault();setShowSuggestions(true);setActiveSuggestion(i=>i<0?suggestions.length-1:(i-1+suggestions.length)%suggestions.length)}
+           else if(e.key==='Enter'&&showSuggestions&&activeSuggestion>=0&&suggestions[activeSuggestion]){e.preventDefault();window.location.assign('/listing/?id='+encodeURIComponent(suggestions[activeSuggestion].id))}
+          }}
+          placeholder={t('Манай ресторан илүү олон захиалгатай болмоор байна…','We need more bookings but do not know where to start…')}/>
+         <button type="submit"><span>{t('Шийдэл олох','Find solutions')}</span><ArrowUpRight size={19}/></button>
+        </form>
+        {showSuggestions&&search.trim().length>1&&publishedState==='ready'&&<div className="signature-search-suggestions" id="hero-search-suggestions" role="listbox" aria-label={t('Нийтлэгдсэн үйлчилгээний санал','Published service suggestions')}>
+          {suggestions.map((item,i)=><Link id={'hero-search-option-'+i} role="option" aria-selected={activeSuggestion===i} className={activeSuggestion===i?'active':''} key={item.id} href={'/listing/?id='+encodeURIComponent(item.id)}><Search size={15}/>{en&&item.title_en?item.title_en:item.title}<span>{t('Бодит','Live')}</span></Link>)}
+          {suggestions.length===0&&<p className="signature-search-no-match">{t('Энэ хайлтаар нийтлэгдсэн үйлчилгээ хараахан алга. Асуудлаа тайлбарлаж хүсэлт илгээж болно.','No published service matches yet. Describe your goal to find a solution.')}</p>}
+          <Link className="signature-search-all" href={'/explore/?q='+encodeURIComponent(search)}>{t('Бодит үйлчилгээ хайх','Search published services')}<ArrowRight size={15}/></Link>
+        </div>}
+       </div>
        <div className="signature-problem-prompts"><Link href="/solutions/?audience=business&q=%D0%9C%D0%B0%D0%BD%D0%B0%D0%B9%20%D1%80%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%B0%D0%BD%D1%8B%20%D0%B7%D0%B0%D1%85%D0%B8%D0%B0%D0%BB%D0%B3%D0%B0%20%D0%B1%D0%B0%D0%B3%D0%B0%20%D0%B1%D0%B0%D0%B9%D0%BD%D0%B0">{t('Захиалга нэмэгдүүлэх','Increase bookings')}</Link><Link href="/solutions/?audience=business&q=%D0%94%D0%B0%D0%B2%D1%82%D0%B0%D0%B3%D0%B4%D0%B4%D0%B0%D0%B3%20%D0%B0%D0%B6%D0%BB%D0%B0%D0%B0%20%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B6%D1%83%D1%83%D0%BB%D0%B0%D1%85%20%D1%85%D1%8D%D1%80%D1%8D%D0%B3%D1%82%D1%8D%D0%B9%20%D0%B1%D0%B0%D0%B9%D0%BD%D0%B0">{t('AI автоматжуулалт','AI automation')}</Link><Link href="/solutions/?audience=personal&q=%D0%9B%D0%BE%D0%B3%D0%BE%20%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD%20%D1%85%D1%8D%D1%80%D1%8D%D0%B3%D1%82%D1%8D%D0%B9%20%D0%B1%D0%B0%D0%B9%D0%BD%D0%B0">{t('Хувийн төсөл','Personal project')}</Link></div>
        <div className="signature-search-subline"><Sparkles size={14}/>{t('Smart Finder beta · Кирилл, латин, англи хэлээр асуудлаа бичээрэй.','Smart Finder beta · Describe your challenge in Mongolian, Latin or English.')}</div>
      </div>
