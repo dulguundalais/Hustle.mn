@@ -5,3 +5,9 @@
 .project-draft-status button:hover,.project-draft-status button:focus-visible{background:#dceff6}
 .project-draft-status button:disabled{opacity:.5;cursor:wait}
 @media(max-width:650px){.project-draft-status{align-items:flex-start;flex-wrap:wrap}}
+
+/* V35.3 status messages: text wraps and dismiss stays keyboard reachable. */
+.project-marketplace .project-alert>span,.project-marketplace .project-ok>span{flex:1;min-width:0}
+.project-marketplace .project-alert>button,.project-marketplace .project-ok>button{margin-left:auto;display:inline-grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border:0;background:transparent;border-radius:8px;cursor:pointer;color:inherit}
+.project-marketplace .project-alert>button:hover,.project-marketplace .project-ok>button:hover{background:#00000012}
+.project-marketplace .project-alert>button:focus-visible,.project-marketplace .project-ok>button:focus-visible{outline:2px solid currentColor;outline-offset:2px}
