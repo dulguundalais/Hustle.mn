@@ -1,8 +1,9 @@
 'use client';
-import {useEffect,useMemo,useState,type FormEvent} from 'react';
+import {useEffect,useMemo,useRef,useState,type FormEvent} from 'react';
 import Link from 'next/link';
 import {ArrowLeft,ArrowRight,BriefcaseBusiness,CheckCircle2,Clock3,FileText,LoaderCircle,RefreshCw,Send,ShieldCheck,Sparkles,UserRound,Users,XCircle} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
+import {projectDraftKey,proposalDraftKey,signInWithReturn} from '../lib/marketplace/ux-flows';
 import {classifyNeed,type Audience} from '../lib/marketplace/solution-finder';
 import type {Profile,Listing} from '../lib/marketplace/types';
 import '../app/project-matching.css';
@@ -27,6 +28,8 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
  const [title,setTitle]=useState(''),[brief,setBrief]=useState(''),[audience,setAudience]=useState<Audience>('business'),[category,setCategory]=useState('ai'),[budget,setBudget]=useState(''),[days,setDays]=useState('');
  const [targetInvite,setTargetInvite]=useState<Inbox|null>(null),[serviceId,setServiceId]=useState(''),[tier,setTier]=useState('Basic'),[message,setMessage]=useState('');
  const [sent,setSent]=useState<SendResult|null>(null);
+ const [draftReady,setDraftReady]=useState(false),[signInHref,setSignInHref]=useState('/login/?mode=buyer');
+ const draftOwner=useRef('');
  const t=(mn:string,eng:string)=>en?eng:mn;
  const refresh=async()=>{
   const db=await marketplaceClient();
@@ -67,6 +70,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
  useEffect(()=>{
   try{setEn(localStorage.getItem('hustle-language')==='en');const a=localStorage.getItem('hustle-buyer-audience');if(a==='personal')setAudience('personal')}catch{}
   const q=new URLSearchParams(window.location.search);
+   setSignInHref(signInWithReturn(location.pathname+location.search,mode));
   const prompt=(q.get('q')||'').slice(0,2000);
   if(prompt){setBrief(prompt);setTitle(prompt.slice(0,100));setCategory(outcomeCategory[classifyNeed(prompt).key]||'ai')}
   const suggested=q.get('audience');if(suggested==='personal'||suggested==='business')setAudience(suggested);
@@ -88,7 +92,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
    const result=await db.rpc('create_project_request',{p_title:title.trim(),p_brief:brief.trim(),p_category:category,
     p_audience:audience,p_budget_max:budget?Number(budget):null,p_preferred_days:days?Number(days):null});
    if(result.error)throw result.error;
-   setSent(result.data as SendResult);setTitle('');setBrief('');setBudget('');setDays('');
+   setSent(result.data as SendResult);try{if(user)sessionStorage.removeItem(projectDraftKey(user))}catch{}setTitle('');setBrief('');setBudget('');setDays('');
   },t('Төслийн хүсэлт үүслээ.','Your project request was sent.'));
  };
  const openProposal=(invitation:Inbox)=>{
@@ -104,6 +108,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
    const db=await marketplaceClient();
    const r=await db.rpc('submit_project_proposal',{p_invitation_id:targetInvite.id,p_service_id:serviceId,p_tier:tier,p_message:message.trim()});
    if(r.error)throw r.error;
+   try{if(user)sessionStorage.removeItem(proposalDraftKey(user,targetInvite.id))}catch{}
    setTargetInvite(null);
   },t('Таны санал Buyer-д хүрлээ.','Your proposal was sent to the buyer.'));
  };
@@ -127,7 +132,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
    {error&&<div className="project-alert" role="alert">{error}</div>}
    {notice&&<div className="project-ok" role="status"><CheckCircle2 size={18}/>{notice}</div>}
    {loading?<p className="project-placeholder"><LoaderCircle size={19}/>{t('Мэдээлэл ачаалж байна…','Loading…')}</p>:
-   !user?<div className="project-panel"><h2>{t('Нэвтрэх шаардлагатай','Please sign in')}</h2><p>{t('Хүсэлт илгээх эсвэл санал өгөхийн тулд баталгаажсан beta аккаунтаар нэвтэрнэ үү.','Use your approved beta account to post or respond to projects.')}</p><Link className="project-primary" href={mode==='seller'?'/login/?mode=seller':'/login/?mode=buyer'}>{t('Нэвтрэх','Sign in')}<ArrowRight size={16}/></Link></div>:
+   !user?<div className="project-panel"><h2>{t('Нэвтрэх шаардлагатай','Please sign in')}</h2><p>{t('Хүсэлт илгээх эсвэл санал өгөхийн тулд баталгаажсан beta аккаунтаар нэвтэрнэ үү.','Use your approved beta account to post or respond to projects.')}</p><Link className="project-primary" href={signInHref}>{t('Нэвтрэх','Sign in')}<ArrowRight size={16}/></Link></div>:
    !allowed?<div className="project-panel"><h2>{t('Beta зөвшөөрөл шаардлагатай','Beta approval required')}</h2><p>{t('Одоогоор зөвхөн зөвшөөрөгдсөн beta хэрэглэгч ашиглах боломжтой.','This feature is available only to approved beta accounts.')}</p></div>:
    !profile?<div className="project-panel"><h2>{t('Эхлээд профайл үүсгэнэ үү','Create your profile first')}</h2><p>{t('Төслийн хүсэлт болон саналууд баталгаатай аккаунттай холбогдоно.','Project requests and proposals require a completed profile.')}</p><Link className="project-primary" href={mode==='seller'?'/seller-studio/':'/buyer/'}>{t('Профайл үүсгэх','Open profile')}</Link></div>:
    mode==='buyer'?<>
@@ -137,6 +142,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
       <h2>{t('Ямар асуудал шийдэх хэрэгтэй вэ?','What problem are you solving?')}</h2>
       <p>{t('Хүсэлт илгээхийг зөвшөөрсний дараа систем зөвхөн тохирох, төсөл авахыг идэвхжүүлсэн 5 хүртэлх freelancer-т хүргэнэ.','On your confirmation, your request goes to up to five matching opt-in freelancers.')}</p>
       <form onSubmit={submitRequest} className="project-form">
+        {draftReady&&<div className="project-draft-status" role="status"><span>{t('Хүсэлт энэ tab дээр түр хадгалагдана.','Draft saved in this tab.')}</span><button type="button" disabled={busy} onClick={clearRequestDraft}>{t('Арилгах','Clear draft')}</button></div>}
        <label>{t('Төслийн нэр','Project title')}<input value={title} onChange={e=>setTitle(e.target.value)} minLength={8} maxLength={120} required placeholder={t('Жишээ: Facebook захиалгын автоматжуулалт','e.g., Facebook order automation')}/></label>
        <label>{t('Тайлбар / хийх ажил','Describe the challenge')}<textarea value={brief} onChange={e=>setBrief(e.target.value)} rows={5} minLength={20} maxLength={2000} required placeholder={t('Одоогийн асуудал, хүсэж буй үр дүнгээ бичнэ үү…','Describe the current problem and desired outcome…')}/></label>
        <div className="project-field-row"><label>{t('Чиглэл','Category')}<select value={category} onChange={e=>setCategory(e.target.value)}>{categoryOptions.map(([value,name])=><option key={value} value={value}>{name}</option>)}</select></label><label>{t('Хэрэглээ','Project context')}<select value={audience} onChange={e=>setAudience(e.target.value as Audience)}><option value="business">{t('Бизнес','Business')}</option><option value="personal">{t('Хувь хүн','Personal')}</option></select></label></div>
@@ -182,7 +188,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
      })}
     </section>
     {targetInvite&&<section className="project-panel project-proposal"><div className="project-inbox-heading"><h2>{t('Үнийн санал илгээх','Send a proposal')}</h2><button type="button" onClick={()=>setTargetInvite(null)} className="project-quiet"><XCircle size={18}/>{t('Хаах','Close')}</button></div><p>{targetInvite.title}</p>
-     <form className="project-form" onSubmit={submitProposal}>
+     <form className="project-form" onSubmit={submitProposal}><p className="project-draft-status">{t('Саналын текст энэ tab дээр түр хадгалагдана.','Proposal draft saved in this tab.')}</p>
       <label>{t('Өөрийн нийтлэгдсэн үйлчилгээ','Your published service')}<select value={serviceId} required onChange={e=>{setServiceId(e.target.value);setTier('Basic')}}>
        <option value="">{t('Үйлчилгээ сонгох','Select a service')}</option>{services.filter(s=>s.category===targetInvite.category).map(service=><option key={service.id} value={service.id}>{service.title}</option>)}</select></label>
       <label>{t('Багц','Package')}<select value={tier} onChange={e=>setTier(e.target.value)}>{['Basic','Standard','Premium'].filter(k=>packages.some(pkg=>pkg.service_id===serviceId&&pkg.tier===k)).map(k=><option key={k} value={k}>{k}</option>)}</select></label>
