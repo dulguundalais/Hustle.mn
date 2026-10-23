@@ -1,5 +1,16 @@
 # Hustle.mn — One canonical Closed Beta preview
 
+## Canonical browser URL — KEEP THIS HOSTNAME
+**Always use and share:** https://feature-interactive-function.hustle-mn-preview.pages.dev
+
+This is the Cloudflare Pages **stable branch alias** for `feature/interactive-functional-v6`. Cloudflare confirmed the alias from the successful V36 merge deployment. Each new merge automatically updates the content at the **same host**. Keep this stable alias in QA instructions and user messages.
+
+**Never share an immutable hashed deployment URL** such as `https://840b83f5.hustle-mn-preview.pages.dev` as the main beta link. Never suggest `https://hustle-mn-preview.pages.dev` as the beta link either: that project's configured production branch is `feature/homepage-ui-v1`, not `feature/interactive-functional-v6`. These hosts are different browser origins.
+
+**Why this matters:** Supabase JS stores authentication in browser storage scoped to each origin. Users logged in on one hash/branch/root URL are not automatically logged in on a different one. The homepage intentionally renders the recipient-only global notification bell only when `sessionState==='signed-in'`. Switching hostnames makes it seem that notifications have disappeared, when the user is actually a guest on the new origin. A bell must not expose private notifications to unauthenticated users.
+
+**Recovery:** open the canonical stable alias above, sign in there once, and continue using **the same URL** through successive releases. If the bell is still missing while the account menu shows a signed-in user, investigate auth lifecycle and responsive CSS rather than assuming a host mismatch. Do not ask users to share credentials.
+
 ## Policy
 - The shared testing deployment tracks `feature/interactive-functional-v6` only.
 - Develop fixes on a dedicated branch, then merge to that **same** beta branch after automated CI, Cloudflare preview and relevant buyer/seller flow checks.
