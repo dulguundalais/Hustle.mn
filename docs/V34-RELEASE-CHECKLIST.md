@@ -22,3 +22,13 @@ Target: **private closed-beta preview only**. Do not publish `hustle.mn`; do not
 - Historical V33 invitations/proposals are not automatically backfilled.
 - Browser CI green alone does not prove authenticated multi-user RLS; conduct the actor test before declaring live reliability.
 - If the V34 migration is pending, existing buyer/seller workflows continue and the UI clearly shows notifications are pending beta activation.
+
+## Actual beta deployment verification — 2026-10-23
+
+- **Applied** V34 migration via connected Supabase migration service to Hustle.mn beta project `pgrxsphkjudvfbpaudbd` (Singapore), success returned.
+- **Verified** `project_notifications` RLS is enabled.
+- **Verified** `anon` lacks SELECT; `authenticated` has SELECT and UPDATE(`read_at`) only, and lacks INSERT, DELETE and UPDATE(`recipient_id`).
+- **Verified** participant-only SELECT/UPDATE RLS policies and all four project event triggers exist and are enabled.
+- **Not yet verified** real distinct beta-account (buyer/seller/outsider) transaction E2E or beta preview UI. Leave PR draft until those checks pass.
+- **Security advisor warnings** currently include intentional client RPC SECURITY DEFINER warnings and leaked-password protection; review separately: https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable and https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection
+
