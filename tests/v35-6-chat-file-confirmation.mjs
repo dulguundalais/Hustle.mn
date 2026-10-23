@@ -28,6 +28,8 @@ test('the explicit Send handler supports text-only and file-only messages',()=>{
  assert.match(send,/setPendingChatFile\(current=>current===file\?null:current\)/);
  assert.match(source,/disabled=\{chatLoading\|\|uploading\|\|\(!normalizedMessage\(chatDraft\)&&!pendingChatFile\)\}/);
  assert.doesNotMatch(source,/maxLength=\{4000\} required/);
+ assert.match(source,/e\.key==='Enter'&&!e\.shiftKey&&!e\.nativeEvent\.isComposing/);
+ assert.match(source,/e\.currentTarget\.form\?\.requestSubmit\(\)/);
 });
 
 test('draft is removable, reset on peer change and failures do not discard unsent file',()=>{
