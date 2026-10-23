@@ -10,3 +10,12 @@
 .v25-messenger .v25-preview{display:block;max-width:155px;max-height:130px;object-fit:contain;border-radius:9px;border:1px solid var(--border);margin-left:6px}
 @media(min-width:661px) and (max-width:1000px){.hustle-v5.workspace .v25-messenger{width:100%;max-width:calc(100vw - 96px);overflow:hidden}}
 @media(max-width:660px){.hustle-v5.workspace .v25-messenger{width:100%;max-width:calc(100vw - 32px);overflow:hidden}}
+
+/* Files remain a removable local draft until the user explicitly presses Send. */
+.v25-attachment-draft{display:flex;align-items:center;gap:10px;margin:8px 20px 4px;padding:10px 12px;max-width:calc(100% - 40px);border:1px solid var(--border);border-radius:10px;background:var(--soft);color:var(--text);font-size:13px}
+.v25-attachment-draft>span{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v25-attachment-draft small{color:var(--sub)}
+.v25-attachment-draft button{border:0;border-radius:8px;padding:7px;display:grid;place-items:center;background:transparent;color:var(--text);cursor:pointer}
+.v25-attachment-draft button:hover{background:var(--surface)}
+.v25-attachment-draft button:disabled{opacity:.5;cursor:wait}
+@media(max-width:720px){.v25-attachment-draft{margin:8px 15px 4px;max-width:calc(100% - 30px)}}
