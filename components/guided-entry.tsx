@@ -140,7 +140,7 @@ export default function GuidedEntry({en}:{en:boolean}){
      <button className="guided-back" type="button" onClick={()=>{if(screen==='results'){setScreen('choose');setDetailsOpen(false)}else close()}}><ArrowLeft size={16}/>{screen==='results'?t('Өөр чиглэл сонгох','Change goal'):t('Болих','Cancel')}</button>
      <div className="guided-modal-footer-actions">
       {screen==='results'?<>
-       <Link className="guided-secondary-link" href="/explore/" onClick={close}>{t('Бүх үйлчилгээ','All services')}</Link>
+       <Link className="guided-secondary-link" href="/explore/" onClick={close}>{t('Бүх үйлчилгээ','All services')}</Link><Link className="guided-request-cta" href={'/project-requests/?'+new URLSearchParams({q:problem,audience}).toString()} onClick={close}>{t('Төслийн хүсэлт илгээх','Post a project')}</Link>
        <Link className="guided-next" href={'/solutions/?'+new URLSearchParams({audience,q:problem,...(budget.trim()?{budget:budget.trim()}:{}),...(timeline.trim()?{timeline:timeline.trim()}:{})}).toString()} onClick={close}>{t('Илүү дэлгэрэнгүй','Explore more')}<ArrowUpRight size={17}/></Link>
       </>:<span className="guided-selection-hint">{t('Нэг чиглэл сонгоход л хангалттай','Select a goal above')}</span>}
      </div>
