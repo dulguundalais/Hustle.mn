@@ -13,3 +13,11 @@
 .project-filters label{display:grid;gap:5px;color:#617d8d;font-size:11px;font-weight:700}
 .project-filters select{background:#f8fcfd;border:1px solid #cfdee5;border-radius:8px;color:#123a51;padding:9px;max-width:210px}
 @media(max-width:650px){.project-notification{align-items:flex-start;flex-direction:column}.project-filters{width:100%}.project-filters label{flex:1;min-width:125px}.project-filters select{width:100%}}
+
+
+/* V35 proposal-to-chat collaboration */
+.project-proposal-chat{display:inline-flex;margin-top:10px;width:max-content;max-width:100%}
+.project-proposal-management{display:grid;gap:10px;margin-top:14px}
+.project-proposal-management>.project-ok{margin:0}
+.project-proposal-management .project-actions{margin-top:0;flex-wrap:wrap}
+.project-proposal-management .project-actions>button:first-child{background:#003366;color:#fff;border:0;border-radius:10px;padding:11px 15px;cursor:pointer;font-weight:800}

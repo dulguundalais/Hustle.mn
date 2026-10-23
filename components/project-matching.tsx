@@ -97,10 +97,10 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
    setSent(result.data as SendResult);setTitle('');setBrief('');setBudget('');setDays('');
   },t('Төслийн хүсэлт үүслээ.','Your project request was sent.'));
  };
- const openProposal=(invitation:Inbox)=>{
+ const openProposal=(invitation:Inbox,existing?:Proposal)=>{
   setTargetInvite(invitation);
   const first=services.find(s=>s.category===invitation.category);
-  setServiceId(first?.id||'');setTier('Basic');setMessage('');
+  setServiceId(existing?.service_id||first?.id||'');setTier(existing?.tier||'Basic');setMessage(existing?.message||'');
  };
  const selectedService=services.find(s=>s.id===serviceId);
  const selectedPackage=packages.find(p=>p.service_id===serviceId&&p.tier===tier);
@@ -112,6 +112,11 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
    if(r.error)throw r.error;
    setTargetInvite(null);
   },t('Таны санал Buyer-д хүрлээ.','Your proposal was sent to the buyer.'));
+ };
+ const withdrawProposal=(proposal:Proposal)=>{
+  if(proposal.status!=='pending')return;
+  if(!window.confirm(t('Энэ үнийн саналыг буцаан татах уу?','Withdraw this proposal?')))return;
+  void action(async()=>{const db=await marketplaceClient();const r=await db.rpc('withdraw_project_proposal',{p_proposal_id:proposal.id});if(r.error)throw r.error},t('Үнийн саналыг буцаан татлаа.','Proposal withdrawn.'));
  };
  const updateAvailability=()=>{
   if(!profile)return;
@@ -177,7 +182,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
        <p>{req.brief}</p><small>{t('Хүргэсэн','Invited')}: {sentCount} · {t('Ирсэн санал','Proposals')}: {offers.length}</small>
        {sortedOffers(offers).map(offer=>{
         const freelancer=people.find(p=>p.id===offer.seller_id);
-        return <div key={offer.id} className="project-offer"><div><strong>{freelancer?.display_name||t('Freelancer','Freelancer')}</strong><p>{offer.message}</p><small>{offer.tier} · {currency(offer.quoted_price)} · {offer.delivery_days} {t('хоног','days')}</small></div>{req.status==='open'&&offer.status==='pending'?<button disabled={busy} onClick={()=>void action(async()=>{const db=await marketplaceClient();const response=await db.rpc('award_project_proposal',{p_proposal_id:offer.id});if(response.error)throw response.error},t('Саналыг зөвшөөрлөө. Захиалга үүслээ.','Proposal accepted; an order was created.'))}>{t('Сонгож захиалах','Accept & order')}</button>:<span className="project-chip">{offer.status}</span>}</div>;
+        return <div key={offer.id} className="project-offer"><div><strong>{freelancer?.display_name||t('Freelancer','Freelancer')}</strong><p>{offer.message}</p><small>{offer.tier} · {currency(offer.quoted_price)} · {offer.delivery_days} {t('хоног','days')}</small>{freelancer?.public_profile&&freelancer.slug&&offer.status==='pending'&&<Link className="project-outline project-proposal-chat" href={'/buyer/?seller='+encodeURIComponent(freelancer.slug)+'&mode=buyer'}><UserRound size={14}/>{t('Саналын талаар чатлах','Discuss proposal in chat')}</Link>}</div>{req.status==='open'&&offer.status==='pending'?<button disabled={busy} onClick={()=>void action(async()=>{const db=await marketplaceClient();const response=await db.rpc('award_project_proposal',{p_proposal_id:offer.id});if(response.error)throw response.error},t('Саналыг зөвшөөрлөө. Захиалга үүслээ.','Proposal accepted; an order was created.'))}>{t('Сонгож захиалах','Accept & order')}</button>:<span className="project-chip">{offer.status}</span>}</div>;
        })}
        {req.order_id&&<Link className="project-outline" href="/buyer/">{t('Захиалгаа харах','View your order')}<ArrowRight size={15}/></Link>}
        {req.status==='open'&&<button className="project-quiet" disabled={busy} onClick={()=>void action(async()=>{const db=await marketplaceClient();const r=await db.rpc('cancel_project_request',{p_request_id:req.id});if(r.error)throw r.error},t('Хүсэлт цуцлагдлаа.','Project request cancelled.'))}><XCircle size={15}/>{t('Хүсэлт цуцлах','Cancel request')}</button>}
@@ -195,7 +200,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
       const offered=proposals.find(p=>p.request_id===inv.request_id);
       return <article key={inv.id} className="project-item"><div className="project-item-heading"><div><span className="project-chip">{inv.category.toUpperCase()} · {inv.audience}</span><h3>{inv.title}</h3></div><span className="project-chip">{inv.invite_status}</span></div>
        <p>{inv.brief}</p><small>{inv.budget_max?currency(inv.budget_max):t('Төсөв тохиролцоно','Budget negotiable')} · {inv.preferred_days?inv.preferred_days+' '+t('хоног','days'):t('Хугацаа тохиролцоно','Timeline negotiable')}</small>
-       {inv.invite_status==='declined'?<p className="project-muted">{t('Та урилгаас татгалзсан.','You declined this invitation.')}</p>:offered?<p className="project-ok"><CheckCircle2 size={16}/>{t('Санал илгээгдсэн','Proposal submitted')} — {currency(offered.quoted_price)}</p>:<div className="project-actions"><button disabled={busy} type="button" onClick={()=>openProposal(inv)}>{t('Санал илгээх','Send a proposal')}</button><button className="project-quiet" disabled={busy} onClick={()=>void action(async()=>{const db=await marketplaceClient();const r=await db.rpc('decline_project_invitation',{p_invitation_id:inv.id});if(r.error)throw r.error},t('Хүсэлтийг татгалзлаа.','Invitation declined.'))}>{t('Татгалзах','Decline')}</button></div>}
+       {inv.invite_status==='declined'?<p className="project-muted">{t('Та урилгаас татгалзсан.','You declined this invitation.')}</p>:offered?.status==='pending'?<div className="project-proposal-management"><p className="project-ok"><CheckCircle2 size={16}/>{t('Санал илгээгдсэн','Proposal submitted')} — {currency(offered.quoted_price)}</p><div className="project-actions"><button type="button" disabled={busy} onClick={()=>openProposal(inv,offered)}>{t('Санал засах','Edit proposal')}</button><button type="button" className="project-quiet" disabled={busy} onClick={()=>withdrawProposal(offered)}><XCircle size={15}/>{t('Санал татах','Withdraw')}</button></div></div>:offered?.status==='withdrawn'?<div className="project-proposal-management"><p className="project-muted">{t('Энэ саналаа татсан. Хүсэлт нээлттэй байгаа үед дахин санал өгч болно.','Proposal withdrawn. You may submit again while the project is open.')}</p><button type="button" className="project-outline" disabled={busy} onClick={()=>openProposal(inv,offered)}>{t('Дахин санал илгээх','Send again')}</button></div>:offered?<p className="project-ok">{t('Саналын төлөв','Proposal status')}: {offered.status}</p>:<div className="project-actions"><button disabled={busy} type="button" onClick={()=>openProposal(inv)}>{t('Санал илгээх','Send a proposal')}</button><button className="project-quiet" disabled={busy} onClick={()=>void action(async()=>{const db=await marketplaceClient();const r=await db.rpc('decline_project_invitation',{p_invitation_id:inv.id});if(r.error)throw r.error},t('Хүсэлтийг татгалзлаа.','Invitation declined.'))}>{t('Татгалзах','Decline')}</button></div>}
       </article>;
      })}
     </section>

@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - feature/interactive-functional-v6
+      - feature/v34-project-notifications-management-20261023
       - fix/auth-portfolio-security-20261020
   push:
     branches:
