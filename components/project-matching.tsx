@@ -80,6 +80,45 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
   window.addEventListener('focus',focus);
   return()=>window.removeEventListener('focus',focus);
  },[mode]);
+ // Tab-scoped drafts are keyed to the signed-in account; drafts never go to the server.
+ useEffect(()=>{
+  if(mode!=='buyer'||!user){setDraftReady(false);draftOwner.current='';return}
+  if(draftOwner.current===user)return;
+  draftOwner.current=user;setDraftReady(false);
+  try{
+   const stored=sessionStorage.getItem(projectDraftKey(user));
+   if(stored&&!new URLSearchParams(location.search).has('q')){
+    const saved=JSON.parse(stored) as {title?:string;brief?:string;category?:string;audience?:Audience;budget?:string;days?:string};
+    if(typeof saved.title==='string')setTitle(saved.title.slice(0,120));
+    if(typeof saved.brief==='string')setBrief(saved.brief.slice(0,2000));
+    if(categoryOptions.some(([key])=>key===saved.category))setCategory(saved.category!);
+    if(saved.audience==='business'||saved.audience==='personal')setAudience(saved.audience);
+    if(typeof saved.budget==='string'&&/^(|[0-9]{1,9})$/.test(saved.budget))setBudget(saved.budget);
+    if(typeof saved.days==='string'&&/^(|[0-9]{1,3})$/.test(saved.days))setDays(saved.days);
+   }
+  }catch{}
+  setDraftReady(true);
+ },[mode,user]);
+ useEffect(()=>{
+  if(mode!=='buyer'||!user||!draftReady)return;
+  try{
+   const key=projectDraftKey(user);
+   if(title.trim()||brief.trim()||budget||days)sessionStorage.setItem(key,JSON.stringify({title,brief,audience,category,budget,days}));
+   else sessionStorage.removeItem(key);
+  }catch{}
+ },[mode,user,draftReady,title,brief,audience,category,budget,days]);
+ useEffect(()=>{
+  if(mode!=='seller'||!user||!targetInvite)return;
+  try{
+   const key=proposalDraftKey(user,targetInvite.id);
+   if(message.trim())sessionStorage.setItem(key,JSON.stringify({serviceId,tier,message}));
+   else sessionStorage.removeItem(key);
+  }catch{}
+ },[mode,user,targetInvite?.id,serviceId,tier,message]);
+ const clearRequestDraft=()=>{
+  try{if(user)sessionStorage.removeItem(projectDraftKey(user))}catch{}
+  setTitle('');setBrief('');setBudget('');setDays('');
+ };
  const action=async(work:()=>Promise<void>,success:string)=>{
   if(busy)return;setBusy(true);setError('');setNotice('');
   try{await work();setNotice(success);await refresh()}
@@ -98,7 +137,12 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
  const openProposal=(invitation:Inbox)=>{
   setTargetInvite(invitation);
   const first=services.find(s=>s.category===invitation.category);
-  setServiceId(first?.id||'');setTier('Basic');setMessage('');
+  let saved:{serviceId?:string;tier?:string;message?:string}|null=null;
+  try{if(user){const stored=sessionStorage.getItem(proposalDraftKey(user,invitation.id));if(stored)saved=JSON.parse(stored)}}catch{}
+  const draftService=saved?.serviceId&&services.find(s=>s.id===saved.serviceId&&s.category===invitation.category);
+  const nextService=draftService?.id||first?.id||'';
+  const draftTier=saved?.tier&&packages.some(p=>p.service_id===nextService&&p.tier===saved.tier)?saved.tier:'Basic';
+  setServiceId(nextService);setTier(draftTier);setMessage(typeof saved?.message==='string'?saved.message.slice(0,1500):'');
  };
  const selectedService=services.find(s=>s.id===serviceId);
  const selectedPackage=packages.find(p=>p.service_id===serviceId&&p.tier===tier);
@@ -168,7 +212,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
         return <div key={offer.id} className="project-offer"><div><strong>{freelancer?.display_name||t('Freelancer','Freelancer')}</strong><p>{offer.message}</p><small>{offer.tier} · {currency(offer.quoted_price)} · {offer.delivery_days} {t('хоног','days')}</small></div>{req.status==='open'&&offer.status==='pending'?<button disabled={busy} onClick={()=>void action(async()=>{const db=await marketplaceClient();const response=await db.rpc('award_project_proposal',{p_proposal_id:offer.id});if(response.error)throw response.error},t('Саналыг зөвшөөрлөө. Захиалга үүслээ.','Proposal accepted; an order was created.'))}>{t('Сонгож захиалах','Accept & order')}</button>:<span className="project-chip">{offer.status}</span>}</div>;
        })}
        {req.order_id&&<Link className="project-outline" href="/buyer/">{t('Захиалгаа харах','View your order')}<ArrowRight size={15}/></Link>}
-       {req.status==='open'&&<button className="project-quiet" disabled={busy} onClick={()=>void action(async()=>{const db=await marketplaceClient();const r=await db.rpc('cancel_project_request',{p_request_id:req.id});if(r.error)throw r.error},t('Хүсэлт цуцлагдлаа.','Project request cancelled.'))}><XCircle size={15}/>{t('Хүсэлт цуцлах','Cancel request')}</button>}
+       {req.status==='open'&&<button className="project-quiet" disabled={busy} onClick={()=>{if(!window.confirm(t('Энэ хүсэлтийг цуцлах уу?','Cancel this project request?')))return;void action(async()=>{const db=await marketplaceClient();const r=await db.rpc('cancel_project_request',{p_request_id:req.id});if(r.error)throw r.error},t('Хүсэлт цуцлагдлаа.','Project request cancelled.'))}}><XCircle size={15}/>{t('Хүсэлт цуцлах','Cancel request')}</button>}
       </article>;
      })}
     </section>
