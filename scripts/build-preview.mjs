@@ -5,11 +5,18 @@ const root=process.cwd(),target=path.join(root,'.preview-build');
 await rm(target,{recursive:true,force:true});await mkdir(target,{recursive:true});
 for(const name of ['app','components','lib','public','next-env.d.ts','tsconfig.json','postcss.config.js','tailwind.config.ts','package.json']){try{await cp(path.join(root,name),path.join(target,name),{recursive:true})}catch(e){if(e.code!=='ENOENT')throw e}}
 // Build a disposable, sample-only static preview. Runtime auth remains in the source app.
-for(const name of ['api','auth','beta','login'])await rm(path.join(target,'app',name),{recursive:true,force:true});
-await mkdir(path.join(target,'app/login'),{recursive:true});
-await writeFile(path.join(target,'app/login/page.tsx'),`import Link from 'next/link';export default function Login(){return <main style={{maxWidth:600,margin:'100px auto',padding:30,fontFamily:'Arial'}}><h1>Хаалттай туршилт · Private preview</h1><p>Энэ хувилбар нь дизайны preview. Бодит бүртгэл, захиалга хараахан идэвхжээгүй.</p><p>This is a visual preview. Live accounts and orders are not enabled yet.</p><Link href="/">← Hustle.mn</Link></main>}`);
+for(const name of ['api','beta','p'])await rm(path.join(target,'app',name),{recursive:true,force:true});
+// Preserve the client-rendered password recovery page in Cloudflare static preview.
+// Remove only the server-side callback route (which cannot be statically exported).
+await rm(path.join(target,'app','auth','callback'),{recursive:true,force:true});
 await writeFile(path.join(target,'next.config.ts'),`export default {output:'export',images:{unoptimized:true},trailingSlash:true,experimental:{cpus:2}};`);
 const run=spawnSync(process.execPath,[path.join(root,'node_modules/next/dist/bin/next'),'build',target],{stdio:'inherit',env:{...process.env,NEXT_TELEMETRY_DISABLED:'1'}});
 if(run.status!==0)process.exit(run.status||1);
 await rm(path.join(root,'out'),{recursive:true,force:true});await cp(path.join(target,'out'),path.join(root,'out'),{recursive:true});
+// Pages injects CF_PAGES_COMMIT_SHA; the deployed artifact must identify its
+// exact commit, not just its V26 label. No credentials or user data are exposed.
+const commitSha=(process.env.CF_PAGES_COMMIT_SHA||process.env.GITHUB_SHA||'').trim();
+await writeFile(path.join(root,'out','preview-build.json'),JSON.stringify({
+ version:'V26',channel:'closed-beta-preview',commit_sha:commitSha||null
+})+'\n');
 console.log('Static visual preview exported to out; runtime source preserved.');

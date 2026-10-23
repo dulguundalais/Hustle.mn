@@ -8,3 +8,5 @@ node_modules
 .preview-build/
 out/
 *.tsbuildinfo
+
+supabase/.temp/

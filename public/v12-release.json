@@ -1,0 +1,12 @@
+{
+  "version": "V12",
+  "channel": "closed-beta-preview",
+  "features": [
+    "buyer-dashboard",
+    "seller-studio",
+    "admin-console",
+    "contact-seller-messaging"
+  ],
+  "status": "preview-only",
+  "date": "2026-10-21"
+}

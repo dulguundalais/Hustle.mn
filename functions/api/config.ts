@@ -1,0 +1,2 @@
+interface Context{env:{NEXT_PUBLIC_SUPABASE_URL?:string;NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?:string}}
+export function onRequestGet({env}:Context){const url=env.NEXT_PUBLIC_SUPABASE_URL,key=env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;return new Response(JSON.stringify(url&&key?{url,key}:{error:'Beta configuration unavailable'}),{status:url&&key?200:503,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Robots-Tag':'noindex'}})}
