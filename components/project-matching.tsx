@@ -139,7 +139,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
   const first=services.find(s=>s.category===invitation.category);
   let saved:{serviceId?:string;tier?:string;message?:string}|null=null;
   try{if(user){const stored=sessionStorage.getItem(proposalDraftKey(user,invitation.id));if(stored)saved=JSON.parse(stored)}}catch{}
-  const draftService=saved?.serviceId&&services.find(s=>s.id===saved.serviceId&&s.category===invitation.category);
+  const draftService=saved?.serviceId?services.find(s=>s.id===saved.serviceId&&s.category===invitation.category):undefined;
   const nextService=draftService?.id||first?.id||'';
   const draftTier=saved?.tier&&packages.some(p=>p.service_id===nextService&&p.tier===saved.tier)?saved.tier:'Basic';
   setServiceId(nextService);setTier(draftTier);setMessage(typeof saved?.message==='string'?saved.message.slice(0,1500):'');
