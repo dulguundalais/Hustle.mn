@@ -193,6 +193,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
      <p>{mode==='seller'?t('Таны мэргэжил, нийтлэгдсэн үйлчилгээтэй тохирох төслүүдийг эндээс хүлээн авна.','Receive projects that match your published services and availability.'):t('Freelancer-ийг өөрөө сонгох эсвэл асуудлаа илгээж тохирох мэргэжилтнүүдээс санал авах хоёр боломжтой.','Browse and hire directly, or send your challenge to matching specialists for proposals.')}</p>
     </div><Link href="/explore/" className="project-outline"><BriefcaseBusiness size={17}/>{t('Үйлчилгээ үзэх','Browse services')}</Link>
    </header>
+   {mode==='buyer'&&<ol className="ux-project-steps" aria-label={t('Төслийн хүсэлтийн үйл явц','Project request steps')}><li>{t('Асуудлаа тодорхойлох','Describe your need')}</li><li>{t('Тохирох мэргэжилтэнд илгээх','Invite matching specialists')}</li><li>{t('Санал харьцуулж сонгох','Review proposals and choose')}</li></ol>}
    {error&&<div className="project-alert" role="alert"><span>{error}</span><button type="button" onClick={()=>setError('')} aria-label={t('Алдааны мэдэгдэл хаах','Dismiss error')}><XCircle size={17}/></button></div>}
    {notice&&<div className="project-ok" role="status"><CheckCircle2 size={18}/><span>{notice}</span><button type="button" onClick={()=>setNotice('')} aria-label={t('Мэдэгдэл хаах','Dismiss message')}><XCircle size={17}/></button></div>}
    {loading?<p className="project-placeholder"><LoaderCircle size={19}/>{t('Мэдээлэл ачаалж байна…','Loading…')}</p>:
