@@ -3,6 +3,7 @@ import {useEffect,useRef,useState,type FormEvent} from 'react';
 import Link from 'next/link';
 import {ArrowUpRight,ArrowLeft,Search,LayoutDashboard,PanelsTopLeft,BriefcaseBusiness,UserRound,ShoppingBag,Users,Settings2,LogOut,Sun,Moon,Globe,Plus,Check,Clock,Image as ImageIcon,Share2,ShieldCheck,LoaderCircle,X,Handshake,MessageCircle,Send,Paperclip,Smile,Download,CheckCheck} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
+import {safePostLoginPath} from '../lib/marketplace/ux-flows';
 import {PackageEditor,PackagePicker,type ServicePackage,type Tier,initialPackages} from './service-packages';
 import {normalizeSellerSlug,isValidSellerSlug} from '../lib/marketplace/seller-slug';
 import {resolveSellerContact} from '../lib/marketplace/contact-routing';
@@ -79,6 +80,9 @@ async function perform(fn:()=>Promise<void>,message:string){if(busy)return;setBu
 async function auth(e:FormEvent){e.preventDefault();if(register&&emailCooldown>0)return;setBusy(true);setError('');setNotice('');try{const db=await marketplaceClient();const response=register?await db.auth.signUp({email:email.trim().toLowerCase(),password,options:{emailRedirectTo:location.origin+'/login/'}}):await db.auth.signInWithPassword({email:email.trim().toLowerCase(),password});if(response.error){if(response.error.code==='email_not_confirmed')throw new Error(t('Имэйлээ баталгаажуулаагүй байна. Inbox болон Spam хавтсаа шалгаад Confirm your email холбоосыг нээнэ үү. Доорх товчоор дахин авч болно.','Your email is not confirmed. Check Inbox and Spam for Confirm your email, or resend it below.'));throw response.error;}if(register&&!response.data.session)setNotice(t('Хүсэлт хүлээн авлаа. Шинэ бүртгэл бол имэйл ирж болох ч хүргэлт баталгаагүй. Өмнө бүртгэлтэй бол Нэвтрэх сонголтыг ашиглана уу.','Request accepted. New accounts may receive email if delivery is configured, but delivery is not guaranteed. Existing account? Please sign in.'));else{
  await load();
  const current=new URLSearchParams(location.search);
+ // Return only to an allowlisted Hustle page after sign-in; never to an external URL.
+ const returnPath=login?safePostLoginPath(current.get('next')):null;
+ if(returnPath){window.location.replace(returnPath);return}
  const next=new URLSearchParams();
  const seller=current.get('seller');
  if(seller&&/^[a-z0-9][a-z0-9-]{2,59}$/.test(seller))next.set('seller',seller);
