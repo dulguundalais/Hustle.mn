@@ -19,7 +19,7 @@ const aliases: Record<string,string[]> = {
   translation: ['translation', 'орчуулга', 'orchuulga', 'translate', 'хэл', 'hel', 'english', 'англи', 'copywriting', 'текст', 'контент бичих'],
   proposals: ['төсөл', 'tosol', 'төслийн санал', 'business plan', 'бизнес төлөвлөгөө', 'бизнес план', 'proposal', 'tender', 'тендер', 'pitch deck']
 };
-const stopWords = new Set(['hiih','hiilgekh','hiilgeh','heregtei','kheregtei','need','want','to','a','an','the','for','and','service','uilchilgee','авмаар','авах']);
+const stopWords = new Set(['hiih','hiilgekh','hiilgeh','khiilgeh','khiilgekh','heregtei','kheregtei','need','want','to','a','an','the','for','and','service','uilchilgee','avmaar','avakh','авах','авмаар','minii','nadad','nad','please']);
 
 // Normalize mixed Cyrillic, romanized Mongolian, and English on either side.
 export function normalizeSearch(value:string):string {
@@ -28,11 +28,17 @@ export function normalizeSearch(value:string):string {
     .replace(/[а-яөүёъь]/g,ch=>cyrillic[ch] ?? ch)
     .replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
 }
-const tokenize=(value:string)=>normalizeSearch(value).split(' ').filter(w=>w && !stopWords.has(w));
+export const searchTokens=(value:string)=>normalizeSearch(value).split(' ').filter(w=>w && !stopWords.has(w));
+const tokenize=searchTokens;
 
-function typoClose(a:string,b:string) {
+export function typoClose(a:string,b:string) {
   if(a.length<4 || b.length<4 || Math.abs(a.length-b.length)>1)return false;
   if(a===b)return true;
+  // One adjacent swapped letter counts as a single typo (e.g. websiet -> website).
+  if(a.length===b.length){
+    const mismatch=[...a].map((c,i)=>c===b[i]?-1:i).filter(i=>i>=0);
+    if(mismatch.length===2&&mismatch[1]===mismatch[0]+1&&a[mismatch[0]]===b[mismatch[1]]&&a[mismatch[1]]===b[mismatch[0]])return true;
+  }
   // Single edit only, including an inserted/deleted letter; avoids broad fuzzy matches.
   let i=0,j=0,edits=0;
   while(i<a.length && j<b.length) {
