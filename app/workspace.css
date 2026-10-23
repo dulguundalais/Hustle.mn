@@ -3,3 +3,12 @@
 .auth-art{background:linear-gradient(135deg,#dce9ff,#94a3b7);color:#111729}.auth-art em{color:#2664ec}.auth-card{border-color:var(--border)}.workspace-sidebar nav button.selected{color:var(--purple);background:var(--soft)}.workspace .auth-switch:disabled{opacity:.55;cursor:not-allowed}
 
 .workspace-sidebar nav .workspace-admin-link{display:flex;align-items:center;gap:11px;padding:13px 12px;border-radius:9px;text-decoration:none;font-size:12px;font-weight:650;color:var(--purple);background:var(--soft);margin-top:7px}
+
+
+/* V35 order lifecycle notifications */
+.v35-order-notification-list{display:grid;gap:9px;margin-top:18px}
+.v35-order-notice{display:flex;justify-content:space-between;align-items:center;gap:16px;border:1px solid #dce8ee;border-radius:10px;padding:13px 15px;background:#fff}
+.v35-order-notice.unread{border-color:#acd7e5;background:#edf8fc}
+.v35-order-notice b{display:block;font-size:13px;color:#173b55}
+.v35-order-notice small{display:block;margin-top:5px;font-size:11px;color:#718a99}
+@media(max-width:650px){.v35-order-notice{align-items:flex-start;flex-direction:column}}
