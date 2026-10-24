@@ -18,9 +18,9 @@ export default function SellerCoverEditor({sellerId,coverPath,focusY=50,en,onCha
  const [url,setUrl]=useState<string|null>(null);
  const [busy,setBusy]=useState(false);
  const [message,setMessage]=useState('');
- const [focus,setFocus]=useState(Math.min(100,Math.max(0,Number(focusY??50)||50)));
+ const [focus,setFocus]=useState(Math.min(100,Math.max(0,Number.isFinite(Number(focusY))?Number(focusY):50)));
  const t=(mn:string,english:string)=>en?english:mn;
- useEffect(()=>setFocus(Math.min(100,Math.max(0,Number(focusY??50)||50))),[focusY]);
+ useEffect(()=>setFocus(Math.min(100,Math.max(0,Number.isFinite(Number(focusY))?Number(focusY):50))),[focusY]);
  useEffect(()=>{
   let alive=true;setUrl(null);
   if(!coverPath)return()=>{alive=false};
