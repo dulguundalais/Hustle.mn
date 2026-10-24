@@ -158,3 +158,9 @@ main{margin:0;max-width:none;padding:0}
 /* V41 uses the seller-uploaded profile photo only if it is explicitly public. */
 .portfolio-hero-avatar{overflow:hidden}
 .portfolio-hero-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+
+/* V42 optional seller cover; preserves navy gradient when owner did not upload an image. */
+.portfolio-hero:has(.v42-hero-cover-image){background:#111b32;isolation:isolate}
+.portfolio-hero .v42-hero-cover-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.portfolio-hero:has(.v42-hero-cover-image)::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(95deg,#0b1629ee 0%,#12223ad4 40%,#111d30a3 100%)}
+.portfolio-hero:has(.v42-hero-cover-image) .portfolio-hero-inner{position:relative;z-index:2}
