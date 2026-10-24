@@ -48,14 +48,14 @@ export default function LiveCatalog({en,query='',category='all',sort='featured',
  const visible=visibleServices(filtered,homePreview,visibleCount);
  const compareReady=compared.length>=2;
  const toggleCompare=(id:string)=>setCompared(current=>compareSelection(current,id));
- return <section className={'shell live-catalog v39-catalog '+(homePreview?'v39-catalog-home':'v39-catalog-explore')} aria-labelledby="real-listings-title">
-  <div className="v39-section-head">
+ return <section className={'shell live-catalog v39-catalog '+(homePreview?'v39-catalog-home':'v39-catalog-explore')} aria-labelledby={homePreview?'real-listings-title':undefined} aria-label={homePreview?undefined:t('Нийтлэгдсэн үйлчилгээ','Published services')}>
+  {homePreview&&<div className="v39-section-head">
    <div><span className="v39-section-eyebrow"><span/> HUSTLE / {homePreview?'CURATED TALENT':'EXPLORE TALENT'}</span>
     <h2 id="real-listings-title">{homePreview?t('Сайн ажлын ард зөв хүн бий.','Great work begins with great people.'):t('Өөрт тохирох мэргэжилтнээ олоорой.','Find your kind of talent.')}</h2>
     <p>{homePreview?t('Монголын бүтээлч мэргэжилтнүүдийн нийтлэгдсэн үйлчилгээнүүдээс сонгоорой.','Meet professionals offering real published services.'):t('Үйлчилгээ, үнэ, хугацааг харьцуулж, тохирох мэргэжилтэнтэй холбогдоорой.','Discover services, compare starting prices and connect with professionals.')}</p>
    </div>
    <Link className="v39-head-link" href="/explore/">{t('Бүгдийг үзэх','View all')} <ArrowUpRight size={16}/></Link>
-  </div>
+  </div>}
   {state==='loading'&&<div className="v39-skeleton-grid" role="status" aria-label={t('Үйлчилгээ ачаалж байна','Loading services')}>{[0,1,2].map(i=><div className="v39-card-skeleton" key={i} aria-hidden="true"/>)}</div>}
   {state==='error'&&<div className="v39-empty" role="alert"><Search size={23}/><h3>{t('Үйлчилгээг ачаалж чадсангүй','Services could not be loaded')}</h3><p>{t('Холболтоо шалгаад хуудсаа шинэчлээрэй.','Check your connection and refresh this page.')}</p></div>}
   {state==='ready'&&filtered.length===0&&<div className="v39-empty"><Layers3 size={24}/>
