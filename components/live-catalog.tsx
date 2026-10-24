@@ -8,6 +8,7 @@ import {isValidSellerSlug} from '../lib/marketplace/seller-slug';
 import ServiceComparison,{compareSelection,compareLimit} from './service-comparison';
 import '../app/live-catalog.css';
 import '../app/v39-creative-cards.css';
+import '../app/v41-home-card-readability.css';
 
 // The marketplace_catalog RPC is the sole source: published services from real sellers only.
 const START_COUNT=12;
