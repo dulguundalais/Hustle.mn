@@ -111,7 +111,7 @@ export function SignatureStory({en}:{en:boolean}){
     <div className="shell">
      <div className="signature-section-heading"><div><span className="signature-section-eyebrow">01 / HOW IT WORKS</span><h2>{t('Санаанаас бодит ажил хүртэл.','A simpler way to create together.')}</h2><p>{t('3 алхам. Нэг урсгал.', 'Three steps. One clear path.')}</p></div><div className="signature-process-switch" role="group" aria-label={t('Хэрэглэгчийн төрөл','How it works for')}><button aria-pressed={mode==='buyer'} className={mode==='buyer'?'active':''} onClick={()=>setMode('buyer')}>{t('Захиалагчдад','For buyers')}</button><button aria-pressed={mode==='seller'} className={mode==='seller'?'active':''} onClick={()=>setMode('seller')}>{t('Freelancer-д','For freelancers')}</button></div></div>
      <div className="signature-step-grid">{steps.map(({index,mn,en:eng,descMn,descEn,Icon})=><article key={index} className="signature-step"><div className="signature-step-top"><span className="signature-step-icon"><Icon size={24}/></span><strong>{index}</strong></div><h3>{en?eng:mn}</h3><p>{en?descEn:descMn}</p><div className="signature-step-line"/></article>)}</div>
-     <p className="signature-process-note"><ShieldCheck size={15}/>{t('Туршилтын хугацаанд бодит төлбөр, эскроу ашиглахгүй.','No real payments or escrow during the closed beta.')}</p>
+     <p className="signature-process-note"><ShieldCheck size={15}/>{t('Нээлттэй бета хугацаанд бодит төлбөр, эскроу ашиглахгүй.','No real payments or escrow during open beta.')}</p>
     </div>
    </section>
    <section className="signature-spotlight shell" id="talent">

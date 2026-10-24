@@ -8,6 +8,7 @@ on:
       - fix/auth-portfolio-security-20261020
       - feature/v43-premium-editorial-polish-20261025
       - feature/v44-navigation-chat-notifications-20261025
+      - feature/v45-editorial-premium-marketplace-20261025
   push:
     branches:
       - feature/preview-smart-search-20261021

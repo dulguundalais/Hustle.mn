@@ -84,7 +84,7 @@ export default function PremiumAuth({
    {resetMode?<div className="hustle-auth-support"><button type="button" onClick={()=>{setResetMode(false);setResetError('');setResetMessage('')}}><ArrowLeft size={15}/>{t('Нэвтрэх рүү буцах','Back to sign in')}</button></div>:
      <div className="hustle-auth-support">{entry==='admin'?<span className="hustle-auth-beta"><ShieldCheck size={15}/>{t('Зөвхөн эрх бүхий админ','Authorized administrators only')}</span>:
        <><p>{register?t('Бүртгэлтэй юу?','Already have an account?'):t('Hustle-д шинээр нэгдэх үү?','New to Hustle?')} <button type="button" onClick={()=>changeMode(!register)}>{register?t('Нэвтрэх','Sign in'):t('Бүртгэл үүсгэх','Create account')}</button></p>
-       {register&&<p className="hustle-auth-legal">{t('Өмнө бүртгүүлсэн имэйлтэй бол шинээр бүртгүүлэхийн оронд нэвтрэх буюу нууц үгээ сэргээнэ үү.','Already registered? Sign in or reset your password instead of signing up again.')}</p>}
+       {register&&<p className="hustle-auth-legal">{t('Шинэ аккаунт имэйлээ баталгаажуулмагц ашиглах боломжтой. Админ зөвшөөрөл шаардлагагүй. Өмнө бүртгүүлсэн бол Нэвтрэх эсвэл Нууц үг сэргээхийг сонгоно уу.','Confirm your email to get started—no admin approval required. Already registered? Sign in or reset your password.')}</p>}
        {register&&<button type="button" className="hustle-auth-resend" disabled={busy||emailCooldown>0} onClick={onResend}>{emailCooldown>0?t('Дахин хүсэлт өгөх боломж түр хаалттай','Resend temporarily paused'):t('Баталгаажуулах хүсэлт дахин өгөх','Request confirmation again')}</button>}</>}
      </div>}
    <div className="hustle-auth-footer"><Link href="/explore/"><ArrowLeft size={16}/>{t('Үйлчилгээ үзэх','Explore the marketplace')}</Link></div>
