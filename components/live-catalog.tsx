@@ -83,8 +83,9 @@ export default function LiveCatalog({en,query='',category='all',sort='featured',
     const title=en&&s.title_en?s.title_en:s.title;
     const categoryName=categoryNames[s.category]?.[en?1:0]||s.category;
     const avatar=(s.display_name.trim().charAt(0)||'H').toLocaleUpperCase();
+    const avatarSrc=typeof s.avatar_path==='string'&&/^[a-f0-9-]{36}\/[a-f0-9-]{36}\.(jpg|png|webp)$/.test(s.avatar_path)?'/api/portfolio-image?path='+encodeURIComponent(s.avatar_path):null;
     const profileHref=isValidSellerSlug(s.slug||'')?'/p/'+encodeURIComponent(s.slug):null;
-    const sellerIdentity=<><span className={'v39-person-avatar v39-avatar-'+s.category} aria-hidden="true">{avatar}</span><div className="v39-person-name"><strong>{s.display_name}</strong><span>{s.headline||categoryName}</span></div></>;
+    const sellerIdentity=<><span className={'v39-person-avatar v39-avatar-'+s.category} aria-hidden="true">{avatarSrc?<img className="v41-card-avatar-img" src={avatarSrc} alt="" width={54} height={54} loading="lazy" decoding="async"/>:avatar}</span><div className="v39-person-name"><strong>{s.display_name}</strong><span>{s.headline||categoryName}</span></div></>;
     return <article key={s.id} className="v39-talent-card">
      <div className={'v39-card-cover v39-cover-'+s.category}>
       <span className="v39-cover-text">hustle<span>✳</span></span>
