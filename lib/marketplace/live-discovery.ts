@@ -5,7 +5,7 @@ import {normalizeSearch,searchTokens,typoClose} from './smart-search';
 export type LiveService = {
  id:string;title:string;title_en:string;description:string;category:string;
  price:number;delivery_days:number;revisions:number;package_name:string;
- display_name:string;headline:string;slug:string;
+ display_name:string;headline:string;slug:string;avatar_path?:string|null;
  packages?:{tier:string;price:number;delivery_days:number;revisions:number;summary?:string;includes:string[]}[];
  review_count?:number;average_rating?:number|null;completed_orders?:number;
 };

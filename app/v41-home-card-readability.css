@@ -1,0 +1,150 @@
+/* V41.1 — Homepage talent card legibility. Scoped to the Home preview only.
+ * The 3/2/1 grid, favorite button, seller link and service CTA remain unchanged.
+ * Cover height and card width are intentionally unchanged.
+ */
+.hustle-v5 .v39-catalog-home .v39-card-body{
+  padding-right:24px;
+  padding-left:24px;
+  padding-bottom:25px;
+}
+.hustle-v5 .v39-catalog-home .v39-person-line{
+  margin-top:-38px;
+  align-items:center;
+  gap:14px;
+  min-height:80px;
+}
+.hustle-v5 .v39-catalog-home .v39-person-line .v39-profile-link,
+.hustle-v5 .v39-catalog-home .v39-person-line .v39-profile-identity{
+  gap:13px;
+  min-width:0;
+}
+.hustle-v5 .v39-catalog-home .v39-person-avatar{
+  width:80px;
+  height:80px;
+  flex:0 0 80px;
+  border:4px solid var(--surface);
+  border-radius:25px;
+  font-size:31px;
+  box-shadow:0 5px 16px rgba(9,26,51,.17);
+}
+.hustle-v5 .v39-catalog-home .v39-person-avatar .v41-card-avatar-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:21px;
+}
+.hustle-v5 .v39-catalog-home .v39-person-name{
+  gap:3px;
+  padding-top:24px;
+  overflow:hidden;
+}
+.hustle-v5 .v39-catalog-home .v39-person-name strong{
+  font-size:16px;
+  line-height:1.35;
+  font-weight:850;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.hustle-v5 .v39-catalog-home .v39-person-name>span{
+  font-size:13px;
+  line-height:1.5;
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  white-space:normal;
+}
+.hustle-v5 .v39-catalog-home .v39-meta-line{
+  margin-top:18px;
+  gap:12px;
+}
+.hustle-v5 .v39-catalog-home .v39-discipline{
+  font-size:12px;
+  padding:7px 12px;
+  max-width:68%;
+}
+.hustle-v5 .v39-catalog-home .v39-rating{
+  font-size:13px;
+  gap:6px;
+}
+.hustle-v5 .v39-catalog-home .v39-rating small{font-size:12px}
+.hustle-v5 .v39-catalog-home .v39-talent-card h3{
+  font-size:22px;
+  line-height:1.4;
+  min-height:0;
+  margin:16px 0 12px;
+}
+.hustle-v5 .v39-catalog-home .v39-description{
+  font-size:14px;
+  line-height:1.7;
+  min-height:48px;
+  max-height:48px;
+}
+.hustle-v5 .v39-catalog-home .v39-card-bottom{
+  margin-top:22px;
+  padding-top:19px;
+}
+.hustle-v5 .v39-catalog-home .v39-price small{
+  font-size:12px;
+  line-height:1.45;
+}
+.hustle-v5 .v39-catalog-home .v39-price strong{
+  font-size:25px;
+  line-height:1.3;
+  overflow-wrap:anywhere;
+}
+.hustle-v5 .v39-catalog-home .v39-delivery{
+  font-size:12px;
+  line-height:1.45;
+  gap:7px;
+}
+.hustle-v5 .v39-catalog-home .v39-card-actions{
+  margin-top:19px;
+  gap:10px;
+}
+.hustle-v5 .v39-catalog-home .v39-primary{
+  min-height:49px;
+  font-size:14px;
+  line-height:1.4;
+}
+.hustle-v5 .v39-catalog-home .v39-contact{
+  flex-basis:49px;
+  min-height:49px;
+}
+.hustle-v5 .v39-catalog-home .v39-cover-pill{
+  font-size:12px;
+  padding:8px 11px;
+}
+.hustle-v5 .v39-catalog-home .v39-results-bar{
+  font-size:12px;
+}
+@media(max-width:650px){
+  .hustle-v5 .v39-catalog-home .v39-card-body{
+    padding-right:19px;
+    padding-left:19px;
+  }
+  .hustle-v5 .v39-catalog-home .v39-person-avatar{
+    width:72px;
+    height:72px;
+    flex-basis:72px;
+    border-radius:23px;
+    font-size:29px;
+  }
+  .hustle-v5 .v39-catalog-home .v39-person-line{
+    margin-top:-34px;
+    min-height:72px;
+  }
+  .hustle-v5 .v39-catalog-home .v39-person-name{
+    padding-top:19px;
+  }
+  .hustle-v5 .v39-catalog-home .v39-person-name strong{
+    font-size:16px;
+  }
+  .hustle-v5 .v39-catalog-home .v39-person-name>span{
+    font-size:12px;
+  }
+  .hustle-v5 .v39-catalog-home .v39-talent-card h3{
+    font-size:21px;
+  }
+}

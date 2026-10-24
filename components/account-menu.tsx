@@ -41,7 +41,7 @@ export default function AccountMenu({account,en,onSignOut,signingOut}:{
    <div className="global-account-links">
     <Link href="/buyer/" onClick={()=>setOpen(false)}><LayoutDashboard size={17}/>{t('Миний dashboard','My dashboard')}</Link>
     <Link href="/seller-studio/" onClick={()=>setOpen(false)}><BriefcaseBusiness size={17}/>{account.isSeller?t('Seller Studio','Seller Studio'):t('Seller болох','Become a seller')}</Link>
-    <Link href="/buyer/?tab=profile" onClick={()=>setOpen(false)}><UserRound size={17}/>{t('Профайл засах','Edit profile')}</Link>
+    <Link href={account.isSeller?'/my-profile/':'/buyer/?tab=profile'} onClick={()=>setOpen(false)}><UserRound size={17}/>{t('Профайл','Profile')}</Link>
    </div>
    <button type="button" className="global-account-signout" disabled={signingOut} onClick={()=>void onSignOut()}>
     {signingOut?<LoaderCircle size={17} className="spin"/>:<LogOut size={17}/>}

@@ -12,3 +12,10 @@
 .v35-order-notice b{display:block;font-size:13px;color:#173b55}
 .v35-order-notice small{display:block;margin-top:5px;font-size:11px;color:#718a99}
 @media(max-width:650px){.v35-order-notice{align-items:flex-start;flex-direction:column}}
+
+/* V42: link legacy seller settings to the real profile editor (not a duplicate form). */
+.hustle-v5.workspace .v42-workspace-profile-cta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:17px;background:var(--soft);border:1px solid var(--border);border-radius:13px;padding:18px;margin:15px 0 22px}
+.hustle-v5.workspace .v42-workspace-profile-cta>div{flex:1;min-width:200px}
+.hustle-v5.workspace .v42-workspace-profile-cta strong{font-size:15px}
+.hustle-v5.workspace .v42-workspace-profile-cta p{color:var(--sub);font-size:13px;line-height:1.65;margin:7px 0 0}
+.hustle-v5.workspace .v42-workspace-profile-cta>a{min-height:46px;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;font-size:12px;font-weight:800}
