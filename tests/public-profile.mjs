@@ -2,9 +2,15 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import ts from 'typescript';
 import {readFileSync} from 'node:fs';
-const source=readFileSync(new URL('../lib/marketplace/public-profile.ts',import.meta.url),'utf8');
-const js=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
-const {publicProfile,portfolioImage}=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
+const toUrl=content=>'data:text/javascript;base64,'+Buffer.from(ts.transpileModule(content,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText).toString('base64');
+const tools=readFileSync(new URL('../lib/marketplace/creative-tools.ts',import.meta.url),'utf8');
+const toolUrl=toUrl(tools);
+const template=readFileSync(new URL('../lib/marketplace/public-portfolio-render.ts',import.meta.url),'utf8')
+ .replace("from './creative-tools';","from '"+toolUrl+"';");
+const rendererUrl=toUrl(template);
+const source=readFileSync(new URL('../lib/marketplace/public-profile.ts',import.meta.url),'utf8')
+ .replace("from './public-portfolio-render';","from '"+rendererUrl+"';");
+const {publicProfile,portfolioImage}=await import(toUrl(source));
 test('public profile escapes user content and emits OG metadata',async()=>{
  const original=globalThis.fetch;
  globalThis.fetch=async()=>Response.json({display_name:'<script>alert(1)</script>',headline:'" onload="bad',bio:'<img src=x>',slug:'test-seller',portfolio:[],services:[]});
