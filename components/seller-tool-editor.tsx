@@ -2,13 +2,13 @@
 import {useEffect,useMemo,useState} from 'react';
 import {Atom,BarChart3,BookOpen,Bot,Box,Camera,Check,Code2,Database,FileSpreadsheet,FileText,Figma,Image,Layers3,Music2,Palette,PenTool,Plus,Search,Settings2,Video,Wrench,X,type LucideIcon} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
-import {CREATIVE_TOOLS,CREATIVE_TOOL_MAX,CATEGORY_LABELS,creativeToolFor,type CreativeTool} from '../lib/marketplace/creative-tools';
+import {CREATIVE_TOOLS,CREATIVE_TOOL_MAX,CATEGORY_LABELS,creativeToolFor,brandLogoFor,type CreativeTool} from '../lib/marketplace/creative-tools';
 import '../app/v40-seller-portfolio.css';
 
 type Choice={tool_key:string;icon_key:string};
 const icons:Record<CreativeTool['icon'],LucideIcon>={figma:Figma,image:Image,pen:PenTool,video:Video,palette:Palette,box:Box,code:Code2,react:Atom,database:Database,table:FileSpreadsheet,chart:BarChart3,bot:Bot,notebook:BookOpen,audio:Music2,camera:Camera,layers:Layers3,file:FileText};
 const iconChoices=[
- {key:'auto',mn:'Автомат','en':'Default',Icon:Settings2},
+ {key:'auto',mn:'Брэнд лого',en:'Brand logo',Icon:Settings2},
  {key:'palette',mn:'Дизайн',en:'Design',Icon:Palette},
  {key:'code',mn:'Код',en:'Code',Icon:Code2},
  {key:'layers',mn:'Давхарга',en:'Layers',Icon:Layers3},
@@ -95,8 +95,9 @@ export default function SellerToolEditor({sellerId,en}:{sellerId:string;en:boole
      const DefaultIcon=icons[tool.icon];
      const CustomIcon=iconChoices.find(o=>o.key===choice.icon_key)?.Icon;
      const Icon=choice.icon_key==='auto'||!CustomIcon?DefaultIcon:CustomIcon;
+     const brandSrc=brandLogoFor(tool.key);
      return <div className="v40-selected-item" key={tool.key}>
-      <div className="v40-selected-main"><span className="v40-tool-icon"><Icon size={20}/></span><span>{tool.name}</span></div>
+      <div className="v40-selected-main"><span className="v40-tool-icon v40-brand-icon">{brandSrc?<img src={brandSrc} width={28} height={28} alt="" loading="lazy" decoding="async"/>:<Icon size={20}/>}</span><span>{tool.name}</span>{choice.icon_key!=='auto'&&<span className="v40-custom-indicator" title={t('Өөрчилсөн icon','Custom icon')}><Icon size={13}/></span>}</div>
       <div className="v40-selected-actions">
        <button type="button" disabled={busy} aria-expanded={editingIcon===tool.key} aria-label={t('Icon сонгох: ','Choose icon: ')+tool.name} onClick={()=>setEditingIcon(v=>v===tool.key?null:tool.key)} title={t('Icon өөрчлөх','Change icon')}><Settings2 size={17}/></button>
        <button type="button" disabled={busy} aria-label={t('Жагсаалтаас хасах: ','Remove: ')+tool.name} onClick={()=>{void changeTool(tool.key)}}><X size={17}/></button>
@@ -111,7 +112,7 @@ export default function SellerToolEditor({sellerId,en}:{sellerId:string;en:boole
     if(!matches.length)return null;
     return <div key={cat} className="v40-tool-section"><h3>{CATEGORY_LABELS[cat][en?1:0]}</h3><div className="v40-tool-grid">{matches.map(tool=>{
      const Icon=icons[tool.icon];const chosen=saved.some(c=>c.tool_key===tool.key);
-     return <button type="button" key={tool.key} aria-pressed={chosen} disabled={busy||(!chosen&&saved.length>=CREATIVE_TOOL_MAX)} onClick={()=>{void changeTool(tool.key)}} className={'v40-tool-choice '+(chosen?'chosen':'')}><span className="v40-tool-icon"><Icon size={20}/></span><span>{tool.name}</span><span className="v40-tool-choice-end">{chosen?<Check size={17}/>:<Plus size={17}/>}</span></button>
+     return <button type="button" key={tool.key} aria-pressed={chosen} disabled={busy||(!chosen&&saved.length>=CREATIVE_TOOL_MAX)} onClick={()=>{void changeTool(tool.key)}} className={'v40-tool-choice '+(chosen?'chosen':'')}><span className="v40-tool-icon v40-brand-icon">{brandLogoFor(tool.key)?<img src={brandLogoFor(tool.key)} width={28} height={28} alt="" loading="lazy" decoding="async"/>:<Icon size={20}/>}</span><span>{tool.name}</span><span className="v40-tool-choice-end">{chosen?<Check size={17}/>:<Plus size={17}/>}</span></button>
     })}</div></div>;
    })}
    {message&&<p role="alert" className="v40-tools-error">{message}</p>}
