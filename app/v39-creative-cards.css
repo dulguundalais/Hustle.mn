@@ -1,0 +1,103 @@
+/* V39 / HUSTLE DESIGN SYSTEM — editorial minimalism, real freelancers only.
+   Scoped by .v39-* so old V23 dashboard and chat styles remain untouched. */
+.hustle-v5 .v39-catalog{padding-top:clamp(56px,7vw,104px);padding-bottom:78px;color:var(--text)}
+.hustle-v5 .v39-section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:38px}
+.hustle-v5 .v39-section-head>div{max-width:770px}
+.hustle-v5 .v39-section-eyebrow{display:inline-flex;gap:10px;align-items:center;font-size:10px;letter-spacing:.19em;font-weight:850;color:var(--sub)}
+.hustle-v5 .v39-section-eyebrow>span{display:block;width:7px;height:7px;border-radius:50%;background:#3171ff}
+.hustle-v5 .v39-section-head h2{font-size:clamp(29px,3.4vw,48px);font-weight:800;letter-spacing:-.052em;line-height:1.13;margin:15px 0}
+.hustle-v5 .v39-section-head p{font-size:15px;line-height:1.8;color:var(--sub);max-width:620px}
+.hustle-v5 .v39-head-link{font-size:13px;font-weight:750;display:inline-flex;gap:9px;align-items:center;white-space:nowrap;padding:10px 1px}
+.hustle-v5 .v39-head-link:hover{color:var(--purple)}
+.hustle-v5 .v39-results-bar{display:flex;justify-content:space-between;gap:16px;margin-bottom:18px;font-size:11px;font-weight:750;letter-spacing:.1em;color:var(--sub)}
+.hustle-v5 .v39-results-bar>span:last-child{letter-spacing:0;font-weight:550}
+.hustle-v5 .v39-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:stretch}
+.hustle-v5 .v39-talent-card{position:relative;min-width:0;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:23px;overflow:hidden;box-shadow:0 7px 22px rgba(19,35,70,.055);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.hustle-v5 .v39-talent-card:hover{transform:translateY(-4px);box-shadow:0 18px 38px rgba(17,32,65,.105);border-color:color-mix(in srgb,var(--purple) 24%,var(--border))}
+.hustle-v5 .v39-card-cover{position:relative;height:151px;flex:0 0 151px;overflow:hidden;background:linear-gradient(125deg,#d9e5f9 0%,#a3c7f0 55%,#4a76e9 100%)}
+.hustle-v5 .v39-card-cover::before{content:"";position:absolute;top:-114px;right:-64px;width:290px;height:290px;border:1px solid rgba(255,255,255,.45);border-radius:50%;box-shadow:0 0 0 35px rgba(255,255,255,.09),0 0 0 74px rgba(255,255,255,.055)}
+.hustle-v5 .v39-card-cover::after{content:"";position:absolute;left:-70px;bottom:-90px;width:250px;height:180px;border-radius:55% 50% 40% 30%;background:rgba(255,255,255,.11);transform:rotate(-19deg)}
+.hustle-v5 .v39-cover-design{background:linear-gradient(126deg,#f8cecd,#eec2f5 44%,#7d83df)}
+.hustle-v5 .v39-cover-ui{background:linear-gradient(125deg,#ecf0f6,#a7c1f1 49%,#5d70d9)}
+.hustle-v5 .v39-cover-web{background:linear-gradient(125deg,#b0d8d1,#7ab4ca 46%,#466cbd)}
+.hustle-v5 .v39-cover-video{background:linear-gradient(125deg,#f7d9ae,#f2acbe 43%,#b77ac1)}
+.hustle-v5 .v39-cover-translation{background:linear-gradient(125deg,#d6d9fd,#b6cbe9 42%,#7592c6)}
+.hustle-v5 .v39-cover-marketing{background:linear-gradient(125deg,#d6f1cc,#abdfcb 45%,#76ada9)}
+.hustle-v5 .v39-cover-interior{background:linear-gradient(130deg,#e4d8c6,#cebfae 50%,#a2a5b7)}
+.hustle-v5 .v39-cover-ai{background:linear-gradient(125deg,#e3cafb,#bda1ef 40%,#727acb)}
+.hustle-v5 .v39-cover-proposals{background:linear-gradient(125deg,#d3e6db,#bedacd 40%,#7ba6a7)}
+.hustle-v5 .v39-cover-text{position:absolute;z-index:1;bottom:19px;left:24px;color:rgba(20,36,68,.25);font-size:38px;font-weight:850;letter-spacing:-.085em;line-height:1}
+.hustle-v5 .v39-cover-text span{font-weight:900}
+.hustle-v5 .v39-cover-pill{position:absolute;z-index:2;top:16px;left:17px;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.81);backdrop-filter:blur(9px);color:#24445d;border:1px solid rgba(255,255,255,.6);border-radius:999px;font-size:10px;font-weight:800;padding:7px 10px}
+.hustle-v5 .v39-heart{position:absolute;z-index:3;top:14px;right:15px;width:36px;height:36px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.8);border-radius:50%;background:rgba(255,255,255,.88);color:#1e3452;cursor:pointer;transition:transform .2s ease,background .2s ease}
+.hustle-v5 .v39-heart:hover{transform:scale(1.07);background:#fff}
+.hustle-v5 .v39-heart[aria-pressed=true]{color:#2466e9}
+.hustle-v5 .v39-heart:disabled{opacity:.6;cursor:wait}
+.hustle-v5 .v39-card-body{flex:1;display:flex;flex-direction:column;padding:0 23px 23px;min-width:0}
+.hustle-v5 .v39-person-line{display:flex;align-items:center;gap:12px;margin-top:-23px;position:relative;z-index:2;min-width:0}
+.hustle-v5 .v39-person-avatar{width:54px;height:54px;flex:0 0 54px;border-radius:19px;border:4px solid var(--surface);display:grid;place-items:center;font-size:22px;font-weight:850;color:#fff;background:linear-gradient(135deg,#1e4c88,#356def);box-shadow:0 3px 12px rgba(25,50,87,.10)}
+.hustle-v5 .v39-avatar-interior{background:linear-gradient(140deg,#745f68,#bb8f8c)}
+.hustle-v5 .v39-avatar-design{background:linear-gradient(140deg,#8157ac,#d273bb)}
+.hustle-v5 .v39-avatar-marketing{background:linear-gradient(140deg,#3a8074,#67b89c)}
+.hustle-v5 .v39-avatar-video{background:linear-gradient(140deg,#cc805e,#c95b92)}
+.hustle-v5 .v39-person-name{display:grid;min-width:0;gap:1px;padding-top:20px}
+.hustle-v5 .v39-person-name strong{font-size:14px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.hustle-v5 .v39-person-name>span{color:var(--sub);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hustle-v5 .v39-meta-line{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:22px}
+.hustle-v5 .v39-discipline{background:var(--soft);color:var(--purple);padding:6px 11px;border-radius:999px;font-size:10px;font-weight:800;white-space:nowrap;max-width:75%;overflow:hidden;text-overflow:ellipsis}
+.hustle-v5 .v39-rating{display:flex;align-items:center;gap:5px;color:#bd8519;font-size:12px;font-weight:800;white-space:nowrap}
+.hustle-v5 .v39-rating small{font-size:11px;font-weight:500;color:var(--sub)}
+.hustle-v5 .v39-talent-card h3{font-size:19px;line-height:1.45;letter-spacing:-.03em;font-weight:800;margin:14px 0 10px;min-height:55px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hustle-v5 .v39-talent-card h3 a:hover{color:var(--purple)}
+.hustle-v5 .v39-description{color:var(--sub);font-size:12px;line-height:1.75;min-height:42px;max-height:42px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;white-space:normal}
+.hustle-v5 .v39-card-bottom{margin-top:auto;padding-top:22px;display:flex;justify-content:space-between;align-items:end;gap:12px;border-top:1px solid var(--border);margin-top:20px}
+.hustle-v5 .v39-price{display:grid;gap:3px}
+.hustle-v5 .v39-price small{color:var(--sub);font-size:10px;font-weight:650}
+.hustle-v5 .v39-price strong{font-size:22px;letter-spacing:-.04em;font-weight:850;font-variant-numeric:tabular-nums}
+.hustle-v5 .v39-delivery{color:var(--sub);font-size:11px;display:flex;gap:6px;align-items:center;padding-bottom:5px;white-space:nowrap}
+.hustle-v5 .v39-card-actions{display:flex;gap:9px;margin-top:19px}
+.hustle-v5 .v39-primary{min-height:45px;flex:1;display:flex;justify-content:center;align-items:center;gap:10px;background:#111827;color:#fff!important;border-radius:11px;font-size:12px;font-weight:850;transition:background .2s ease}
+.hustle-v5 .v39-primary:hover{background:#2664ec}
+.hustle-v5.night .v39-primary{background:#f1f5f9;color:#111827!important}
+.hustle-v5.night .v39-primary:hover{background:#c9ddff}
+.hustle-v5 .v39-compare-toggle{flex:0 0 45px;min-height:45px;border:1px solid var(--border);border-radius:11px;background:var(--surface);color:var(--text);cursor:pointer;display:grid;place-items:center}
+.hustle-v5 .v39-compare-toggle.chosen{background:var(--soft);color:var(--purple);border-color:var(--purple)}
+.hustle-v5 .v39-compare-toggle:disabled{opacity:.35;cursor:not-allowed}
+.hustle-v5 .v39-all-services{display:flex;justify-content:center;margin-top:32px}
+.hustle-v5 .v39-all-services>a,.hustle-v5 .v39-load-more button{display:inline-flex;align-items:center;gap:11px;padding:13px 19px;border:1px solid var(--border);border-radius:11px;background:var(--surface);color:var(--text);font-size:12px;font-weight:800;cursor:pointer}
+.hustle-v5 .v39-all-services>a:hover,.hustle-v5 .v39-load-more button:hover{border-color:var(--purple);color:var(--purple)}
+.hustle-v5 .v39-load-more{display:flex;align-items:center;justify-content:center;gap:18px;margin:28px auto}
+.hustle-v5 .v39-load-more span{font-size:12px;color:var(--sub)}
+.hustle-v5 .v39-compare-dock{position:sticky;bottom:18px;z-index:8;display:flex;align-items:center;justify-content:space-between;gap:18px;max-width:590px;margin:28px auto;background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:13px 15px;box-shadow:0 16px 54px rgba(7,20,49,.19)}
+.hustle-v5 .v39-compare-dock>div,.hustle-v5 .v39-compare-dock-actions{display:flex;gap:10px;align-items:center}
+.hustle-v5 .v39-compare-avatars{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:var(--soft);color:var(--purple)}
+.hustle-v5 .v39-compare-dock strong{display:block;font-size:12px}
+.hustle-v5 .v39-compare-dock small{display:block;color:var(--sub);font-size:10px;margin-top:3px}
+.hustle-v5 .v39-compare-dock button{border-radius:10px;min-height:40px;cursor:pointer}
+.hustle-v5 .v39-compare-clear{width:40px;border:1px solid var(--border);display:grid;place-items:center;background:var(--surface);color:var(--text)}
+.hustle-v5 .v39-compare-open{background:#2664ec;color:#fff;border:1px solid #2664ec;display:flex;align-items:center;gap:8px;padding:0 15px;font-weight:800;font-size:12px}
+.hustle-v5 .v39-compare-open:disabled{opacity:.5;cursor:not-allowed}
+.hustle-v5 .v39-error{font-size:12px;color:#b91c1c;margin-top:18px}
+.hustle-v5 .v39-market-note{display:flex;gap:8px;align-items:start;line-height:1.65;margin:26px 0 0;font-size:11px;color:var(--sub)}
+.hustle-v5 .v39-market-note svg{flex-shrink:0}
+.hustle-v5 .v39-empty{background:var(--surface);border:1px dashed var(--border);padding:45px 24px;border-radius:20px;text-align:center;max-width:100%}
+.hustle-v5 .v39-empty>svg{color:var(--purple)}
+.hustle-v5 .v39-empty h3{font-size:22px;margin:11px 0 8px}
+.hustle-v5 .v39-empty p{color:var(--sub);font-size:13px;line-height:1.7}
+.hustle-v5 .v39-empty-link{display:inline-flex;align-items:center;gap:7px;font-size:13px;margin-top:16px;font-weight:800}
+.hustle-v5 .v39-skeleton-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.hustle-v5 .v39-card-skeleton{border-radius:23px;border:1px solid var(--border);height:425px;background:linear-gradient(105deg,var(--surface),var(--soft),var(--surface));background-size:200% 100%;animation:v39-shimmer 1.5s ease-in-out infinite}
+@keyframes v39-shimmer{to{background-position:-200% 0}}
+@media(max-width:1060px){.hustle-v5 .v39-card-grid,.hustle-v5 .v39-skeleton-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}}
+@media(max-width:650px){
+ .hustle-v5 .v39-catalog{padding-top:52px;padding-bottom:54px}
+ .hustle-v5 .v39-section-head h2{font-size:30px}
+ .hustle-v5 .v39-section-head p{font-size:13px}
+ .hustle-v5 .v39-card-grid,.hustle-v5 .v39-skeleton-grid{grid-template-columns:minmax(0,1fr);gap:17px}
+ .hustle-v5 .v39-card-cover{height:140px;flex-basis:140px}
+ .hustle-v5 .v39-section-head{align-items:start}
+ .hustle-v5 .v39-head-link{display:none}
+ .hustle-v5 .v39-person-name strong{font-size:14px}
+ .hustle-v5 .v39-compare-dock{bottom:10px}
+}
+@media(prefers-reduced-motion:reduce){.hustle-v5 .v39-talent-card,.hustle-v5 .v39-heart{transition:none}.hustle-v5 .v39-talent-card:hover,.hustle-v5 .v39-heart:hover{transform:none}.hustle-v5 .v39-card-skeleton{animation:none}}
