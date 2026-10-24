@@ -27,7 +27,7 @@ test('no fabricated portraits, reviews, earnings, hourly prices or portfolios',(
  assert.match(catalog,/reviewCount>0&&Number\.isFinite\(rating\)/);
  assert.match(catalog,/liveServicePrice\(s\)/);
  assert.doesNotMatch(catalog,/randomuser\.me|unsplash|placeholder\.com|earnings|\$[0-9]+\/hr/);
- assert.match(read('public/public-profile.css'),/\.profile-hero::before/);
+ assert.match(read('public/public-profile.css'),/\.portfolio-hero/);
 });
 test('Favorites, compare and buyer request flow are unchanged',()=>{
  assert.match(catalog,/onSave\(s\.id\)/);
