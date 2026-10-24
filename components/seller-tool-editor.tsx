@@ -20,7 +20,7 @@ const iconChoices=[
  {key:'wrench',mn:'Хэрэгсэл',en:'Tools',Icon:Wrench}
 ] as const;
 
-export default function SellerToolEditor({sellerId,en}:{sellerId:string;en:boolean}){
+export default function SellerToolEditor({sellerId,en,onUpdated}:{sellerId:string;en:boolean;onUpdated?:()=>void}){
  const [saved,setSaved]=useState<Choice[]>([]);
  const [status,setStatus]=useState<'loading'|'ready'|'error'>('loading');
  const [busy,setBusy]=useState(false);
@@ -59,6 +59,7 @@ export default function SellerToolEditor({sellerId,en}:{sellerId:string;en:boole
     :await db.from('seller_tools').insert({seller_id:sellerId,tool_key:key,icon_key:'auto'});
    if(result.error)throw result.error;
    setSaved(prev=>existing?prev.filter(x=>x.tool_key!==key):[...prev,{tool_key:key,icon_key:'auto'}]);
+   onUpdated?.();
    if(existing&&editingIcon===key)setEditingIcon(null);
   }catch{setMessage(t('Хадгалах үед алдаа гарлаа. Дахин оролдоно уу.','Could not save this tool. Please retry.'))}
   finally{setBusy(false)}
@@ -73,6 +74,7 @@ export default function SellerToolEditor({sellerId,en}:{sellerId:string;en:boole
    const result=await db.from('seller_tools').update({icon_key:icon}).eq('seller_id',sellerId).eq('tool_key',key);
    if(result.error)throw result.error;
    setSaved(prev=>prev.map(v=>v.tool_key===key?{...v,icon_key:icon}:v));
+   onUpdated?.();
    setEditingIcon(null);
   }catch{setMessage(t('Icon хадгалж чадсангүй.','Could not save the icon.'))}
   finally{setBusy(false)}
