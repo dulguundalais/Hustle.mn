@@ -43,3 +43,8 @@
  .hustle-v5 .v40-tools-heading h2{font-size:23px}
 }
 @media(prefers-reduced-motion:reduce){.hustle-v5 .v40-tool-choice{transition:none}}
+
+/* Branded logos are intentionally full-color; the rest of the profile keeps Hustle blue. */
+.hustle-v5 .v40-tool-icon.v40-brand-icon{background:var(--surface);border:1px solid var(--border)}
+.hustle-v5 .v40-tool-icon.v40-brand-icon img{width:28px;height:28px;display:block;object-fit:contain;max-width:100%;max-height:100%}
+.hustle-v5 .v40-custom-indicator{display:grid;place-items:center;flex:0 0 21px;width:21px;height:21px;background:var(--soft);border:1px solid var(--border);border-radius:7px;color:var(--purple)}
