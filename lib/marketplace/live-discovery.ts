@@ -10,6 +10,13 @@ export type LiveService = {
  review_count?:number;average_rating?:number|null;completed_orders?:number;
 };
 export type LiveSort = 'featured'|'low'|'high';
+export const HOME_PREVIEW_LIMIT=6;
+export const EXPLORE_PAGE_SIZE=12;
+// Presentation limit only: results always originate from marketplace_catalog, never demo data.
+export function visibleMarketplaceServices<T extends LiveService>(items:T[],homePreview:boolean,exploreVisible=EXPLORE_PAGE_SIZE):T[]{
+ return items.slice(0,homePreview?HOME_PREVIEW_LIMIT:Math.max(EXPLORE_PAGE_SIZE,exploreVisible));
+}
+
 export type LiveFilters = {
  query:string;category:string;sort:LiveSort;onlySaved:boolean;saved:string[];
 };
