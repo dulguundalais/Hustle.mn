@@ -57,11 +57,13 @@ export default function SellerAvatarEditor({sellerId,name,avatarPath,onChange,en
    const updated=await db.from('profiles').update({avatar_path:newPath}).eq('id',sellerId).eq('is_seller',true).select('avatar_path').single();
    if(updated.error||updated.data?.avatar_path!==newPath)throw updated.error||new Error('Profile update failed');
    const former=avatarPath;
-   onChange(newPath);
-   const url=await db.storage.from('portfolio').createSignedUrl(newPath,600);
-   if(url.data?.signedUrl)setPreview(url.data.signedUrl);
-   if(former&&former.startsWith(sellerId+'/')&&former!==newPath)void db.storage.from('portfolio').remove([former]);
+   const committedPath=newPath;
+   onChange(committedPath);
+   // The database now references this object: later preview failure must NOT delete it.
    newPath='';
+   if(former&&former.startsWith(sellerId+'/')&&former!==committedPath)void db.storage.from('portfolio').remove([former]);
+   // Loading a preview is best-effort; saving the profile picture already succeeded.
+   try{const url=await db.storage.from('portfolio').createSignedUrl(committedPath,600);if(url.data?.signedUrl)setPreview(url.data.signedUrl)}catch{}
   }catch{
    if(newPath){try{const db=await marketplaceClient();await db.storage.from('portfolio').remove([newPath])}catch{}}
    setError(t('Зураг хадгалахад алдаа гарлаа. Дахин оролдоно уу.','Could not save the photo. Please retry.'));
