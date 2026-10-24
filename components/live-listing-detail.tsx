@@ -34,6 +34,7 @@ export default function LiveListingDetail(){
  const chosen=options.find(p=>p.tier===tier)||options[0];
  const price=chosen?.price??listing?.price??0;
  const valid=Boolean(listing&&uuid.test(listing.id)&&price>0);
+ const avatarSrc=listing?.avatar_path&&/^[a-f0-9-]{36}\/[a-f0-9-]{36}\.(jpg|png|webp)$/.test(listing.avatar_path)?'/api/portfolio-image?path='+encodeURIComponent(listing.avatar_path):null;
  return <main className="v28-detail-page v39-detail-page">
   <header className="v28-detail-header"><Link href="/">hustle<span>✳</span>.mn</Link><Link href="/explore/">{t('Бүх үйлчилгээ','Explore services')} ↗</Link></header>
   {status==='loading'&&<section className="v28-detail-shell" role="status">{t('Үйлчилгээ ачаалж байна…','Loading service…')}</section>}
@@ -42,7 +43,7 @@ export default function LiveListingDetail(){
   {status==='ready'&&listing&&<div className="v28-detail-shell v28-detail-grid">
     <article><div className={'v39-detail-cover v39-detail-cover-'+listing.category}><span>hustle✳</span></div><div className="v28-detail-kicker">{listing.category} · {t('БАТАЛГААЖСАН НИЙТЛЭЛ','PUBLISHED SERVICE')}</div>
       <h1>{en&&listing.title_en?listing.title_en:listing.title}</h1>
-      <div className="v28-detail-seller"><span className="v39-detail-avatar" aria-hidden="true">{(listing.display_name.trim().charAt(0)||'H').toLocaleUpperCase()}</span><strong>{listing.display_name}</strong>{listing.headline&&<span>{listing.headline}</span>}</div>
+      <div className="v28-detail-seller"><span className="v39-detail-avatar" aria-hidden="true">{avatarSrc?<img src={avatarSrc} alt="" width={52} height={52}/>: (listing.display_name.trim().charAt(0)||'H').toLocaleUpperCase()}</span><strong>{listing.display_name}</strong>{listing.headline&&<span>{listing.headline}</span>}</div>
       {Number(listing.review_count)>0&&Number.isFinite(Number(listing.average_rating))&&Number(listing.average_rating)>0&&<p className="v39-detail-reviews">★ {Number(listing.average_rating).toFixed(1)} · {listing.review_count} {t('баталгаажсан үнэлгээ','verified reviews')}</p>}
       <h2 className="v39-detail-about-heading">{t('Үйлчилгээний тухай','About this service')}</h2><p className="v28-detail-description">{listing.description}</p>
       <Link href={'/p/'+encodeURIComponent(listing.slug)}>{t('Freelancer-ийн профайл','View seller profile')} ↗</Link>
