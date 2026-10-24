@@ -4,7 +4,7 @@ import Link from 'next/link';
 import {MessageCircle,ArrowUpRight,ShieldCheck,Check,Clock3,RotateCcw,Star,Layers3,ChevronDown} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
 import ServiceComparison,{compareSelection,compareLimit} from './service-comparison';
-import {filterLiveServices,liveServicePrice,type LiveService,type LiveSort} from '../lib/marketplace/live-discovery';
+import {filterLiveServices,liveServicePrice,visibleMarketplaceServices,EXPLORE_PAGE_SIZE,type LiveService,type LiveSort} from '../lib/marketplace/live-discovery';
 import {tiers,type ServicePackage,type Tier} from './service-packages';
 import '../app/live-catalog.css';
 import '../app/v23-ui-polish.css';
@@ -23,7 +23,7 @@ export default function LiveCatalog({en,query='',category='all',sort='featured',
  const [services,setServices]=useState<PublicService[]>([]);
  const [compared,setCompared]=useState<string[]>([]);
  const [showCompare,setShowCompare]=useState(false);
- const [visibleCount,setVisibleCount]=useState(12);
+ const [visibleCount,setVisibleCount]=useState(EXPLORE_PAGE_SIZE);
  const [state,setState]=useState<'loading'|'ready'|'error'>('loading');
  const [expanded,setExpanded]=useState<string|null>(null);
  const [selectedPackage,setSelectedPackage]=useState<Record<string,Tier>>({});
@@ -37,11 +37,11 @@ export default function LiveCatalog({en,query='',category='all',sort='featured',
   }).catch(()=>{if(active)setState('error')});
   return()=>{active=false};
  },[]);
- useEffect(()=>{setVisibleCount(12)},[query,category,sort,onlySaved]);
+ useEffect(()=>{setVisibleCount(EXPLORE_PAGE_SIZE)},[query,category,sort,onlySaved]);
  const compareReady=compared.length>=2;
  const toggleCompare=(id:string)=>setCompared(current=>compareSelection(current,id));
  const filtered=useMemo(()=>filterLiveServices(services,{query,category,sort,onlySaved,saved}),[services,query,category,sort,onlySaved,saved]);
- const visible=homePreview?filtered.slice(0,6):filtered.slice(0,visibleCount);
+ const visible=visibleMarketplaceServices(filtered,homePreview,visibleCount);
  const t=(mn:string,eng:string)=>en?eng:mn;
  return <section className="shell live-catalog v23-live-catalog" aria-labelledby="real-listings-title">
   <div className="section-top v23-market-head"><div><div className="eyebrow muted">HUSTLE.MN / THE MARKETPLACE</div>
@@ -106,7 +106,7 @@ export default function LiveCatalog({en,query='',category='all',sort='featured',
    })}
   </div>}
   {state==='ready'&&homePreview&&filtered.length>0&&<div className="v39-all-services"><Link href="/explore/">{t('Бүх үйлчилгээг харах','Explore all services')}<ArrowUpRight size={18}/></Link></div>}
-  {state==='ready'&&!homePreview&&filtered.length>visibleCount&&<div className="v39-pagination"><span>{visible.length} / {filtered.length} {t('үйлчилгээ','services')}</span><button type="button" onClick={()=>setVisibleCount(n=>n+12)}>{t('Илүү олон үзэх','Load more')}<ArrowUpRight size={16}/></button></div>}
+  {state==='ready'&&!homePreview&&filtered.length>visibleCount&&<div className="v39-pagination"><span>{visible.length} / {filtered.length} {t('үйлчилгээ','services')}</span><button type="button" onClick={()=>setVisibleCount(n=>n+EXPLORE_PAGE_SIZE)}>{t('Илүү олон үзэх','Load more')}<ArrowUpRight size={16}/></button></div>}
   {state==='ready'&&filtered.length>0&&<p className="live-catalog-note v23-catalog-note"><ShieldCheck size={18}/>{t('Холбогдохын тулд зөвшөөрөгдсөн бета аккаунтаар нэвтэрнэ. Бодит төлбөр хийгдэхгүй.','Sign in with an approved beta account to contact sellers. No real payments are processed.')}</p>}
  </section>;
 }
