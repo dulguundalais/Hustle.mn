@@ -148,3 +148,9 @@ main{margin:0;max-width:none;padding:0}
  .portfolio-footer-inner>span{order:3;flex:1 0 100%}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.portfolio-project-visual img{transition:none}.portfolio-project-card:hover img{transform:none}}
+
+/* Actual software brand marks, delivered locally. Custom icon remains a small badge. */
+.portfolio-tool-visual{background:#fff;border:1px solid #e5ebf4;position:relative}
+.portfolio-brand-logo{display:block;width:31px;height:31px;max-width:100%;max-height:100%;object-fit:contain}
+.portfolio-tool-custom-icon{display:grid;place-items:center;margin-left:auto;width:24px;height:24px;border:1px solid #dfebfb;background:#eef5ff;border-radius:8px;color:#326be0;flex-shrink:0}
+.portfolio-tool-custom-icon .portfolio-tool-svg{width:15px;height:15px}
