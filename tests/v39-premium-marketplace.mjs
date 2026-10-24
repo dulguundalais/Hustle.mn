@@ -34,7 +34,7 @@ test('Favorites, compare and buyer request flow are unchanged',()=>{
  assert.match(catalog,/onSignInSave\?\.\(\)/);
  assert.match(catalog,/compareSelection/);
  assert.match(catalog,/ServiceComparison/);
- assert.match(catalog,/contactSellerHref\(s\.slug\)/);
+ assert.match(catalog,/contactSellerHref\(s\.slug,signedIn\)/);
  assert.match(detail,/rpc\('marketplace_catalog'\)/);
  assert.match(detail,/&tier=/);
  assert.match(detail,/\/login\/\?mode=buyer&service=/);

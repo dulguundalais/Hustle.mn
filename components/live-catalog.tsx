@@ -5,6 +5,7 @@ import {ArrowRight,ArrowUpRight,Check,Clock3,Heart,Layers3,MessageCircle,Search,
 import {marketplaceClient} from '../lib/marketplace/client';
 import {filterLiveServices,liveServicePrice,type LiveService,type LiveSort} from '../lib/marketplace/live-discovery';
 import {isValidSellerSlug} from '../lib/marketplace/seller-slug';
+import {sellerContactHref} from '../lib/marketplace/contact-routing';
 import ServiceComparison,{compareSelection,compareLimit} from './service-comparison';
 import '../app/live-catalog.css';
 import '../app/v39-creative-cards.css';
@@ -14,9 +15,8 @@ import '../app/v41-home-card-readability.css';
 const START_COUNT=12;
 const HOME_COUNT=6;
 const money=(n:number)=>new Intl.NumberFormat('mn-MN').format(n)+' ₮';
-export function contactSellerHref(slug:string):string {
- return /^[a-z0-9][a-z0-9-]{2,59}$/.test(slug)
-  ?'/login/?mode=buyer&seller='+encodeURIComponent(slug):'/login/?mode=buyer';
+export function contactSellerHref(slug:string,signedIn=false):string {
+ return sellerContactHref(slug,signedIn);
 }
 export function visibleServices<T>(items:T[],homePreview:boolean,count=START_COUNT):T[]{
  return items.slice(0,homePreview?HOME_COUNT:Math.max(START_COUNT,count));
@@ -26,9 +26,9 @@ const categoryNames:Record<string,[string,string]>={
  marketing:['Маркетинг','Marketing'],web:['Веб & IT','Web & IT'],interior:['Интерьер','Interior'],
  ui:['UI / UX','UI / UX'],ai:['AI & Автоматжуулалт','AI & Automation'],proposals:['Төсөл','Planning']
 };
-type Props={en:boolean;query?:string;category?:string;sort?:LiveSort;onlySaved?:boolean;saved?:string[];
+type Props={en:boolean;signedIn?:boolean;query?:string;category?:string;sort?:LiveSort;onlySaved?:boolean;saved?:string[];
  onSave?:(id:string)=>void;canSave?:boolean;saveBusy?:string[];saveError?:string;onSignInSave?:()=>void;homePreview?:boolean};
-export default function LiveCatalog({en,query='',category='all',sort='featured',onlySaved=false,saved=[],onSave,canSave=false,saveBusy=[],saveError='',onSignInSave,homePreview=false}:Props){
+export default function LiveCatalog({en,signedIn=false,query='',category='all',sort='featured',onlySaved=false,saved=[],onSave,canSave=false,saveBusy=[],saveError='',onSignInSave,homePreview=false}:Props){
  const [services,setServices]=useState<LiveService[]>([]);
  const [state,setState]=useState<'loading'|'ready'|'error'>('loading');
  const [compared,setCompared]=useState<string[]>([]);
@@ -105,7 +105,7 @@ export default function LiveCatalog({en,query='',category='all',sort='featured',
       </div>
       <div className="v39-card-actions">
        <Link href={detailHref} className="v39-primary">{t('Үйлчилгээ үзэх','View service')}<ArrowUpRight size={17}/></Link>
-       {homePreview&&<Link className="v39-contact" href={contactSellerHref(s.slug)} aria-label={t('Freelancer-тэй холбогдох','Contact freelancer')}><MessageCircle size={17}/></Link>}
+       {homePreview&&<Link className="v39-contact" href={contactSellerHref(s.slug,signedIn)} aria-label={t('Freelancer-тэй холбогдох','Contact freelancer')}><MessageCircle size={17}/></Link>}
        {!homePreview&&<button type="button" className={'v39-compare-toggle '+(selected?'chosen':'')} aria-pressed={selected} disabled={!selected&&compared.length>=compareLimit} onClick={()=>toggleCompare(s.id)} aria-label={selected?t('Харьцуулалтаас хасах','Remove from comparison'):t('Харьцуулахад сонгох','Select for comparison')}>{selected?<Check size={17}/>:<Layers3 size={17}/>}</button>}
       </div>
      </div>

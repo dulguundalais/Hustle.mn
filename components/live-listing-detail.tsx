@@ -3,6 +3,7 @@ import {useEffect,useState} from 'react';
 import Link from 'next/link';
 import {marketplaceClient} from '../lib/marketplace/client';
 import type {LiveService} from '../lib/marketplace/live-discovery';
+import {sellerContactHref} from '../lib/marketplace/contact-routing';
 import '../app/live-listing.css';
 import '../app/v39-service-detail.css';
 
@@ -14,7 +15,19 @@ export default function LiveListingDetail(){
  const [status,setStatus]=useState<'loading'|'ready'|'missing'|'error'>('loading');
  const [tier,setTier]=useState<Tier>('Basic');
  const [en,setEn]=useState(false);
+ const [signedIn,setSignedIn]=useState(false);
  const t=(mn:string,english:string)=>en?english:mn;
+ useEffect(()=>{
+  let active=true;let unsubscribe=()=>{};
+  void marketplaceClient().then(async db=>{
+   if(!active)return;
+   const {data:{subscription}}=db.auth.onAuthStateChange((_event,session)=>{if(active)setSignedIn(Boolean(session?.user))});
+   unsubscribe=()=>subscription.unsubscribe();
+   const {data:{user},error}=await db.auth.getUser();
+   if(active)setSignedIn(!error&&Boolean(user));
+  }).catch(()=>{});
+  return()=>{active=false;unsubscribe()};
+ },[]);
  useEffect(()=>{
    let active=true;
    setEn(localStorage.getItem('hustle-language')==='en');
@@ -55,8 +68,8 @@ export default function LiveListingDetail(){
       <div className="v28-detail-spec"><span>{chosen?.delivery_days??listing.delivery_days} {t('хоног','days')}</span><span>{chosen?.revisions??listing.revisions} {t('засвар','revisions')}</span></div>
       {chosen?.summary&&<p>{chosen.summary}</p>}
       {chosen?.includes?.length>0&&<ul>{chosen.includes.map((item,i)=><li key={i}>✓ {item}</li>)}</ul>}
-      {valid&&<Link className="v28-detail-primary" href={'/login/?mode=buyer&service='+encodeURIComponent(listing.id)+'&tier='+encodeURIComponent(chosen?.tier||'Basic')}>{t('Энэ багцаар хүсэлт илгээх','Request this package')} ↗</Link>}
-      {listing.slug&&<Link className="v28-detail-secondary" href={'/login/?mode=buyer&seller='+encodeURIComponent(listing.slug)}>{t('Freelancer-тэй ярилцах','Message this seller')}</Link>}
+      {valid&&<Link className="v28-detail-primary" href={(signedIn?'/buyer/?service=':'/login/?mode=buyer&service=')+encodeURIComponent(listing.id)+'&tier='+encodeURIComponent(chosen?.tier||'Basic')}>{t('Энэ багцаар хүсэлт илгээх','Request this package')} ↗</Link>}
+      {listing.slug&&<Link className="v28-detail-secondary" href={sellerContactHref(listing.slug,signedIn)}>{t('Freelancer-тэй ярилцах','Message this seller')}</Link>}
     </aside>
   </div>}
  </main>;
