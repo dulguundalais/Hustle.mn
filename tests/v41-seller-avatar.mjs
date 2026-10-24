@@ -25,7 +25,7 @@ test('public seller portrait is present only when explicit validated avatar path
 
 test('seller can upload replace or remove real images, bounded and inspected for magic bytes',()=>{
  const editor=read('components/seller-avatar-editor.tsx');
- for(const pattern of ['MAX_AVATAR_BYTES=2*1024*1024',"file.slice(0,16)","'image/jpeg'","'image/png'","'image/webp'","crypto.randomUUID()","storage.from('portfolio').upload","db.from('profiles').update({avatar_path:newPath})","update({avatar_path:null})","db.auth.getUser()","createSignedUrl(avatarPath,600)","onChange(newPath)"])assert.ok(editor.includes(pattern),pattern);
+ for(const pattern of ['MAX_AVATAR_BYTES=2*1024*1024',"file.slice(0,16)","'image/jpeg'","'image/png'","'image/webp'","crypto.randomUUID()","storage.from('portfolio').upload","db.from('profiles').update({avatar_path:newPath})","update({avatar_path:null})","db.auth.getUser()","createSignedUrl(avatarPath,600)","onChange(committedPath)"])assert.ok(editor.includes(pattern),pattern);
  assert.match(editor,/upsert:false/);
  assert.match(editor,/\.eq\('id',sellerId\)/);
  assert.match(editor,/\.eq\('is_seller',true\)/);
