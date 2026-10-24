@@ -69,7 +69,7 @@ export default function LiveCatalog({en,query='',category='all',sort='featured',
     <span>{homePreview?visible.length+' / '+filtered.length:filtered.length} {t('үйлчилгээ','services')}</span>
    </div>
    <div className="v39-card-grid">{visible.map(s=>{
-    const reviewCount=Number(s.review_count||0);
+    const reviewCount=Number(s.review_count)||0;
     const rating=Number(s.average_rating);
     const hasRating=reviewCount>0&&Number.isFinite(rating)&&rating>=1&&rating<=5;
     const minPrice=liveServicePrice(s);
@@ -100,6 +100,7 @@ export default function LiveCatalog({en,query='',category='all',sort='featured',
       </div>
       <div className="v39-card-actions">
        <Link href={detailHref} className="v39-primary">{t('Үйлчилгээ үзэх','View service')}<ArrowUpRight size={17}/></Link>
+       {homePreview&&<Link className="v39-contact" href={contactSellerHref(s.slug)} aria-label={t('Freelancer-тэй холбогдох','Contact freelancer')}><MessageCircle size={17}/></Link>}
        {!homePreview&&<button type="button" className={'v39-compare-toggle '+(selected?'chosen':'')} aria-pressed={selected} disabled={!selected&&compared.length>=compareLimit} onClick={()=>toggleCompare(s.id)} aria-label={selected?t('Харьцуулалтаас хасах','Remove from comparison'):t('Харьцуулахад сонгох','Select for comparison')}>{selected?<Check size={17}/>:<Layers3 size={17}/>}</button>}
       </div>
      </div>
