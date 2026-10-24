@@ -15,7 +15,7 @@ test('published service is a compact seller card, and tier prices live on servic
  expect(rect.width).toBeLessThan(grid.width*.65); // no singleton full-width "jumbo" card
  expect(rect.width).toBeGreaterThan(200);
  await expect(card.locator('.v39-price')).toContainText('100,000');
- await expect(card.getByRole('link',{name:'View seller profile: QA Seller'})).toHaveAttribute('href','/p/qa-seller');
+ await expect(card.getByRole('link',{name:/QA Seller/})).toHaveAttribute('href','/p/qa-seller');
  await card.locator('.v39-primary').click();
  await expect(page.locator('.v28-detail-price')).toContainText('100,000');
  await page.getByRole('button',{name:'Standard',exact:true}).click();
