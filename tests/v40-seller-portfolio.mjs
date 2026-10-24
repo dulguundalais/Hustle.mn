@@ -68,3 +68,28 @@ test('portfolio CSS responsive without changing homepage theme',()=>{
  assert.match(css,/prefers-reduced-motion/);
  assert.doesNotMatch(css,/https:\/\/[^'"]+\.jpg/);
 });
+
+
+test('buyer clicking seller avatar/name opens opt-in public profile, independent of service detail',()=>{
+ const card=read('components/live-catalog.tsx');
+ const css=read('app/v39-creative-cards.css');
+ const slug=read('lib/marketplace/seller-slug.ts');
+ assert.match(card,/isValidSellerSlug\(s\.slug\|\|''\)/);
+ assert.match(card,/profileHref\?\s*<Link className="v39-profile-link"/);
+ assert.match(card,/href=\{profileHref\}/);
+ assert.match(card,/sellerIdentity=<><span className=\{'v39-person-avatar/);
+ assert.match(card,/className="v39-person-name"/);
+ assert.match(card,/aria-label=\{t\('Профайл үзэх: ','View seller profile: '\)\+s\.display_name\}/);
+ assert.match(card,/href=\{detailHref\}/);
+ assert.match(card,/onSave\(s\.id\)/);
+ assert.match(card,/compareSelection\(/);
+ assert.match(css,/\.v39-person-line \.v39-profile-link:hover/);
+ assert.match(css,/\.v39-person-line \.v39-profile-link:focus-visible/);
+ assert.match(slug,/export function isValidSellerSlug/);
+});
+test('seller profile link does not navigate to nonexistent/invalid slugs',()=>{
+ const card=read('components/live-catalog.tsx');
+ assert.match(card,/profileHref=isValidSellerSlug/);
+ assert.match(card,/:<span className="v39-profile-identity">\{sellerIdentity\}<\/span>/);
+ assert.match(read('lib/marketplace/public-profile.ts'),/if\(!\/\^\[a-z0-9\]/);
+});
