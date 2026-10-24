@@ -75,17 +75,15 @@ export default function GuidedEntry({en}:{en:boolean}){
  },[screen,open]);
  return <>
   <div className="guided-entry-intro" aria-labelledby="guided-entry-title">
-   <div className="guided-entry-eyebrow"><Compass size={14}/>{t('ХЭРЭГЦЭЭНДЭЭ ТОХИРОХ ШИЙДЛИЙГ ОЛ','FIND WHAT WORKS FOR YOU')}</div>
-   <h2 id="guided-entry-title">{t('Та хэнд зориулж шийдэл хайж байна?','Who is this project for?')}</h2>
+   <h2 id="guided-entry-title">{t('Эсвэл хэрэгцээнээсээ эхлээрэй','Or start with a goal')}</h2>
    <div className="guided-entry-choices">
     <button type="button" className="guided-entry-choice" onClick={()=>start('personal')} aria-haspopup="dialog">
-     <span className="guided-entry-symbol"><UserRound size={24} strokeWidth={1.8}/></span><span className="guided-entry-choice-copy"><strong>{t('Хувь хүн','Personal')}</strong><small>{t('Хувийн төсөл, бүтээлч ажил','Personal projects & creative work')}</small></span><ArrowUpRight size={19}/>
+     <span className="guided-entry-symbol"><UserRound size={24} strokeWidth={1.8}/></span><span className="guided-entry-choice-copy"><strong>{t('Хувь хүн','Personal')}</strong><small>{t('Хувийн ажил','Personal work')}</small></span><ArrowUpRight size={19}/>
     </button>
     <button type="button" className="guided-entry-choice guided-entry-business" onClick={()=>start('business')} aria-haspopup="dialog">
-     <span className="guided-entry-symbol"><Building2 size={24} strokeWidth={1.8}/></span><span className="guided-entry-choice-copy"><strong>{t('Бизнес / байгууллага','Business')}</strong><small>{t('Борлуулалт, AI, өдөр тутмын ажил','Growth, AI & everyday operations')}</small></span><ArrowUpRight size={19}/>
+     <span className="guided-entry-symbol"><Building2 size={24} strokeWidth={1.8}/></span><span className="guided-entry-choice-copy"><strong>{t('Бизнес / байгууллага','Business')}</strong><small>{t('Бизнесийн хэрэгцээ','Business needs')}</small></span><ArrowUpRight size={19}/>
     </button>
    </div>
-   <p className="guided-entry-assurance">{t('Бүртгэлгүйгээр шийдэл хайж болно. Сонголтоо хэзээ ч сольж болно.','Explore without signing up. Switch paths anytime.')}</p>
   </div>
   {open&&typeof document!=='undefined'&&createPortal(<div className="guided-modal-backdrop" onPointerDown={e=>{if(e.target===e.currentTarget)close()}}>
    <div ref={modalRef} className="guided-modal guided-simplified" role="dialog" aria-modal="true" aria-labelledby="guided-dialog-title" aria-describedby="guided-dialog-description">

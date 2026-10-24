@@ -53,8 +53,8 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
  return <section className={'shell live-catalog v39-catalog '+(homePreview?'v39-catalog-home':'v39-catalog-explore')} aria-labelledby={homePreview?'real-listings-title':undefined} aria-label={homePreview?undefined:t('Нийтлэгдсэн үйлчилгээ','Published services')}>
   {homePreview&&<div className="v39-section-head">
    <div><span className="v39-section-eyebrow"><span/> HUSTLE / {homePreview?'CURATED TALENT':'EXPLORE TALENT'}</span>
-    <h2 id="real-listings-title">{homePreview?t('Сайн ажлын ард зөв хүн бий.','Great work begins with great people.'):t('Өөрт тохирох мэргэжилтнээ олоорой.','Find your kind of talent.')}</h2>
-    <p>{homePreview?t('Монголын бүтээлч мэргэжилтнүүдийн нийтлэгдсэн үйлчилгээнүүдээс сонгоорой.','Meet professionals offering real published services.'):t('Үйлчилгээ, үнэ, хугацааг харьцуулж, тохирох мэргэжилтэнтэй холбогдоорой.','Discover services, compare starting prices and connect with professionals.')}</p>
+    <h2 id="real-listings-title">{homePreview?t('Бүтээх хүнээ сонго.','Meet your next collaborator.'):t('Өөрт тохирох мэргэжилтнээ олоорой.','Find your kind of talent.')}</h2>
+    <p>{homePreview?t('Бодит үйлчилгээ. Ил тод эхлэх үнэ.','Real services. Clear starting prices.'):t('Үйлчилгээ, үнэ, хугацааг харьцуулж, тохирох мэргэжилтэнтэй холбогдоорой.','Discover services, compare starting prices and connect with professionals.')}</p>
    </div>
    <Link className="v39-head-link" href="/explore/">{t('Бүгдийг үзэх','View all')} <ArrowUpRight size={16}/></Link>
   </div>}
@@ -91,7 +91,6 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
      <div className={'v39-card-cover v39-cover-'+s.category}>
       <span className="v39-cover-text">hustle<span>✳</span></span>
       <span className="v39-cover-accent" aria-hidden="true"/>
-      <span className="v39-cover-pill"><Check size={12}/>{t('Нийтлэгдсэн','Published')}</span>
       {onSave&&<button className="v39-heart" type="button" aria-pressed={savedThis} aria-label={savedThis?t('Хадгалснаас хасах','Remove saved service'):t('Үйлчилгээ хадгалах','Save service')} disabled={saveBusy.includes(s.id)} onClick={()=>canSave?onSave(s.id):onSignInSave?.()}><Heart size={19} fill={savedThis?'currentColor':'none'}/></button>}
      </div>
      <div className="v39-card-body">
