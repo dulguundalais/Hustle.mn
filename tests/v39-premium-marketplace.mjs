@@ -45,5 +45,5 @@ test('public seller profile still supports private portfolio signed images and b
  assert.match(publicSource,/public_seller/);
  assert.match(publicSource,/portfolioImage/);
  assert.match(publicSource,/expiresIn:60/);
- assert.match(publicSource,/mode=buyer/);
+ assert.match(read('lib/marketplace/public-portfolio-render.ts'),/mode=buyer/);
 });
