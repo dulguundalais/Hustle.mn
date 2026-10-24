@@ -16,7 +16,7 @@ test('seller portrait appears in homepage service card and preserves profile nav
  const avatar=card.locator('.v41-card-avatar-img');
  await expect(avatar).toBeVisible();
  await expect(avatar).toHaveAttribute('src',new RegExp('^/api/portfolio-image\\?path='));
- await expect(card.getByRole('link',{name:/QA Seller/})).toHaveAttribute('href','/p/qa-seller');
+ await expect(card.getByRole('link',{name:/QA Seller/})).toHaveAttribute('href','/p/qa-seller/');
 });
 
 test('seller portrait appears in Explore and on corresponding detail page',async({page})=>{
