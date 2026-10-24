@@ -106,3 +106,25 @@
 
 /* Explore already has a search/category heading; avoid repeating it above the results. */
 .hustle-v5 .v39-catalog-explore{padding-top:24px}
+
+
+/* Seller profile discovery: identity is a distinct, accessible click target. */
+.hustle-v5 .v39-person-line .v39-profile-link,
+.hustle-v5 .v39-person-line .v39-profile-identity{
+ display:flex;align-items:center;gap:12px;min-width:0;flex:1;
+ border-radius:12px;text-decoration:none;color:inherit;
+}
+.hustle-v5 .v39-person-line .v39-profile-link{cursor:pointer}
+.hustle-v5 .v39-person-line .v39-profile-link:hover .v39-person-name strong,
+.hustle-v5 .v39-person-line .v39-profile-link:focus-visible .v39-person-name strong{
+ color:var(--purple);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;
+}
+.hustle-v5 .v39-person-line .v39-profile-link:focus-visible{
+ outline:3px solid #63b6f5;outline-offset:4px;
+}
+.hustle-v5 .v39-person-line .v39-profile-link:hover .v39-person-avatar{
+ box-shadow:0 0 0 2px var(--purple),0 3px 12px rgba(25,50,87,.13);
+}
+@media(prefers-reduced-motion:reduce){
+ .hustle-v5 .v39-person-line .v39-profile-link .v39-person-avatar{transition:none}
+}
