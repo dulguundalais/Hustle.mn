@@ -6,6 +6,7 @@ on:
       - main
       - feature/interactive-functional-v6
       - fix/auth-portfolio-security-20261020
+      - feature/v43-premium-editorial-polish-20261025
   push:
     branches:
       - feature/preview-smart-search-20261021
