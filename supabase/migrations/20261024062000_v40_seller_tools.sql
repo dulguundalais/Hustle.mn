@@ -31,6 +31,7 @@ create or replace function hustle_private.public_seller(profile_slug text)
  'display_name',p.display_name,
  'headline',p.headline,
  'bio',p.bio,
+ 'skills',p.skills,
  'slug',p.slug,
  'portfolio',coalesce((select jsonb_agg(jsonb_build_object('title',i.title,'object_path',i.object_path) order by i.created_at desc) from public.portfolio_items i where i.seller_id=p.id),'[]'::jsonb),
  'services',coalesce((select jsonb_agg(jsonb_build_object('id',s.id,'title',s.title,'title_en',s.title_en,'description',s.description,'category',s.category,'price',s.price,'delivery_days',s.delivery_days)) from public.services s where s.seller_id=p.id and s.status='published'),'[]'::jsonb),
