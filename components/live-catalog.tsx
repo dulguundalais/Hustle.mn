@@ -82,6 +82,8 @@ export default function LiveCatalog({en,query='',category='all',sort='featured',
     const title=en&&s.title_en?s.title_en:s.title;
     const categoryName=categoryNames[s.category]?.[en?1:0]||s.category;
     const avatar=(s.display_name.trim().charAt(0)||'H').toLocaleUpperCase();
+    const profileHref=typeof s.slug==='string'&&/^[a-z0-9][a-z0-9-]{2,59}$/.test(s.slug)?'/p/'+encodeURIComponent(s.slug):null;
+    const sellerIdentity=<><span className={'v39-person-avatar v39-avatar-'+s.category} aria-hidden="true">{avatar}</span><div className="v39-person-name"><strong>{s.display_name}</strong><span>{s.headline||categoryName}</span></div></>;
     return <article key={s.id} className="v39-talent-card">
      <div className={'v39-card-cover v39-cover-'+s.category}>
       <span className="v39-cover-text">hustle<span>✳</span></span>
@@ -90,7 +92,7 @@ export default function LiveCatalog({en,query='',category='all',sort='featured',
       {onSave&&<button className="v39-heart" type="button" aria-pressed={savedThis} aria-label={savedThis?t('Хадгалснаас хасах','Remove saved service'):t('Үйлчилгээ хадгалах','Save service')} disabled={saveBusy.includes(s.id)} onClick={()=>canSave?onSave(s.id):onSignInSave?.()}><Heart size={19} fill={savedThis?'currentColor':'none'}/></button>}
      </div>
      <div className="v39-card-body">
-      <div className="v39-person-line"><span className={'v39-person-avatar v39-avatar-'+s.category} aria-hidden="true">{avatar}</span><div className="v39-person-name"><strong>{s.display_name}</strong><span>{s.headline||categoryName}</span></div></div>
+      <div className="v39-person-line">{profileHref?<Link className="v39-profile-link" href={profileHref} aria-label={t('Профайл үзэх: ','View seller profile: ')+s.display_name} title={t('Seller-ийн профайл үзэх','View seller profile')}>{sellerIdentity}</Link>:<span className="v39-profile-identity">{sellerIdentity}</span>}</div>
       <div className="v39-meta-line"><span className="v39-discipline">{categoryName}</span>{hasRating&&<span className="v39-rating"><Star size={13} fill="currentColor"/>{rating.toFixed(1)}<small>({reviewCount})</small></span>}</div>
       <h3><Link href={detailHref}>{title}</Link></h3>
       <p className="v39-description">{s.description}</p>
