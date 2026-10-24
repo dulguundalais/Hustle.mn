@@ -1,4 +1,4 @@
-import {creativeToolFor} from './creative-tools';
+import {creativeToolFor,brandLogoFor} from './creative-tools';
 
 export type PublicPortfolioData={
  display_name:string;headline:string;bio:string;skills?:string|null;slug:string;
@@ -54,8 +54,10 @@ export function renderPublicSellerPage(p:PublicPortfolioData,{en,origin,url,titl
   return tool?{tool,icon}:null;
  }).filter((x):x is NonNullable<typeof x>=>Boolean(x)).slice(0,16);
  const toolCards=tools.map(({tool,icon})=>{
-  const appearance=icon==='auto'?tool.icon:icon;
-  return '<li class="portfolio-tool-card"><span class="portfolio-tool-visual">'+svgIcon(appearance)+'</span><span class="portfolio-tool-name">'+e(tool.name)+'</span></li>';
+  const logo=brandLogoFor(tool.key);
+  const artwork=logo?'<img class="portfolio-brand-logo" src="'+e(logo)+'" alt="" width="32" height="32" loading="lazy" decoding="async">':svgIcon(tool.icon);
+  const custom=icon!=='auto'?'<span class="portfolio-tool-custom-icon" title="'+e(t('Өөрчилсөн icon','Custom icon'))+'">'+svgIcon(icon)+'</span>':'';
+  return '<li class="portfolio-tool-card"><span class="portfolio-tool-visual">'+artwork+'</span><span class="portfolio-tool-name">'+e(tool.name)+'</span>'+custom+'</li>';
  }).join('');
  const skillCards=skills.map(skill=>'<li class="portfolio-skill-chip"><span aria-hidden="true">✦</span>'+e(skill)+'</li>').join('');
  const portfolioCards=photos.map((item,i)=>{
