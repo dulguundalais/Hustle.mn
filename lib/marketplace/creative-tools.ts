@@ -27,4 +27,6 @@ export const CREATIVE_TOOLS:readonly CreativeTool[]=[
 ];
 export const CREATIVE_TOOL_MAX=16;
 export const creativeToolFor=(key:string)=>CREATIVE_TOOLS.find(t=>t.key===key);
+// Only curated, self-hosted software logos are served; never use a seller-controlled URL.
+export const brandLogoFor=(key:string):string|undefined=>creativeToolFor(key)?'/tool-logos/'+key+'.svg':undefined;
 export const CATEGORY_LABELS={design:['Дизайн & 3D','Design & 3D'],development:['Хөгжүүлэлт','Development'],media:['Видео & аудио','Video & audio'],productivity:['Бизнес & AI','Business & AI']} as const;
