@@ -1,7 +1,7 @@
 import {creativeToolFor,brandLogoFor} from './creative-tools';
 
 export type PublicPortfolioData={
- display_name:string;headline:string;bio:string;skills?:string|null;slug:string;
+ display_name:string;headline:string;bio:string;skills?:string|null;slug:string;avatar_path?:string|null;
  portfolio:{title:string;object_path:string}[];
  services:{id:string;title:string;title_en:string;description:string;category?:string;price:number;delivery_days:number}[];
  tools?:({key:string;icon:string}|string)[];
