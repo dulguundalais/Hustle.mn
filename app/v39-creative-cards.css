@@ -101,3 +101,5 @@
  .hustle-v5 .v39-compare-dock{bottom:10px}
 }
 @media(prefers-reduced-motion:reduce){.hustle-v5 .v39-talent-card,.hustle-v5 .v39-heart{transition:none}.hustle-v5 .v39-talent-card:hover,.hustle-v5 .v39-heart:hover{transform:none}.hustle-v5 .v39-card-skeleton{animation:none}}
+
+.hustle-v5 .v39-contact{flex:0 0 45px;min-height:45px;border:1px solid var(--border);border-radius:11px;background:var(--surface);color:var(--text);display:grid;place-items:center}.hustle-v5 .v39-contact:hover{color:var(--purple);border-color:var(--purple)}
