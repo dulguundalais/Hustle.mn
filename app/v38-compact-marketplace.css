@@ -1,0 +1,79 @@
+/* V38.1: homepage is an editorial preview, not a full pricing checkout grid.
+   All selectors are scoped; Explore retains the package/action UI. */
+.hustle-v5 .live-catalog-grid.v23-service-grid.v39-home-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:20px;
+  width:100%;
+  align-items:stretch;
+}
+.hustle-v5 .live-catalog-grid.v23-service-grid.v39-explore-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:23px;
+  align-items:start;
+}
+.hustle-v5 .v23-service-card.v39-home-card {
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  padding:22px;
+  min-height:0;
+  border-radius:17px;
+  max-width:none;
+  width:100%;
+}
+.hustle-v5 .v39-home-card .v23-service-main {flex:1;min-width:0}
+.hustle-v5 .v39-home-card .v23-service-eyebrow{margin-bottom:17px;gap:7px}
+.hustle-v5 .v39-home-card .v23-category-pill,
+.hustle-v5 .v39-home-card .v23-public-label{font-size:11px;letter-spacing:0;gap:6px}
+.hustle-v5 .v39-home-card .v23-category-pill{padding:6px 9px}
+.hustle-v5 .v39-home-card h3,
+.hustle-v5 .live-catalog .v39-home-card .v28-listing-title h3 {
+  font-size:19px;
+  line-height:1.4;
+  letter-spacing:-.45px;
+  margin:0;
+  overflow-wrap:anywhere;
+}
+.hustle-v5 .v39-home-card .v28-listing-title{display:flex;align-items:start;gap:8px}
+.hustle-v5 .v39-home-card .v28-save-service{flex:0 0 42px}
+.hustle-v5 .v39-home-card .v23-seller{gap:9px;margin:14px 0}
+.hustle-v5 .v39-home-card .v23-seller-avatar{width:36px;height:36px;border-radius:10px;font-size:14px}
+.hustle-v5 .v39-home-card .v23-seller strong{font-size:12px}
+.hustle-v5 .v39-home-card .v23-seller span:not(.v23-seller-avatar){font-size:11px}
+.hustle-v5 .v39-home-card .v23-service-rating{font-size:13px;gap:6px;margin:0 0 9px}
+.hustle-v5 .v39-home-card .v23-service-rating span{font-size:11px}
+.hustle-v5 .v39-home-card .live-catalog-description {
+  font-size:13px;
+  line-height:1.65;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
+}
+.hustle-v5 .v39-home-card .v39-card-footer{display:grid;gap:13px;margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
+.hustle-v5 .v39-home-card .v39-price-head{display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.hustle-v5 .v39-home-card .v39-price-head>div{display:flex;flex-direction:column;gap:2px}
+.hustle-v5 .v39-home-card .v39-price-head small{color:var(--sub);font-size:11px;font-weight:700}
+.hustle-v5 .v39-home-card .v39-price-head strong{color:var(--text);font-size:20px;font-weight:850;letter-spacing:-.6px;font-variant-numeric:tabular-nums}
+.hustle-v5 .v39-home-card .v39-price-head>span{font-size:12px;color:var(--sub);display:inline-flex;gap:6px;align-items:center}
+.hustle-v5 .v39-home-card .v39-view{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:12px;padding:11px 13px}
+.hustle-v5 .v39-all-services{display:flex;justify-content:center;margin-top:25px}
+.hustle-v5 .v39-all-services a{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-weight:800;font-size:13px;text-decoration:none}
+.hustle-v5 .v39-all-services a:hover{border-color:var(--purple);color:var(--purple)}
+.hustle-v5 .v39-pagination {display:flex;align-items:center;justify-content:center;gap:14px;margin:24px 0 0;flex-wrap:wrap}
+.hustle-v5 .v39-pagination button{border:1px solid var(--border);border-radius:10px;padding:12px 19px;background:var(--surface);color:var(--text);min-height:44px;font-weight:750}
+.hustle-v5 .v39-pagination span{color:var(--sub);font-size:12px}
+@media(max-width:1080px){
+  .hustle-v5 .live-catalog-grid.v23-service-grid.v39-home-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:900px){
+  .hustle-v5 .live-catalog-grid.v23-service-grid.v39-explore-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:660px){
+  .hustle-v5 .live-catalog-grid.v23-service-grid.v39-home-grid{grid-template-columns:minmax(0,1fr)}
+  .hustle-v5 .v23-service-card.v39-home-card{padding:19px}
+  .hustle-v5 .v39-home-card h3,
+  .hustle-v5 .live-catalog .v39-home-card .v28-listing-title h3{font-size:18px}
+}
