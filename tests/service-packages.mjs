@@ -36,8 +36,11 @@ test('UI connects all tiers with atomic save and buyer selection',()=>{
  assert.match(ui,/package_name:packageName/);
  assert.match(ui,/<PackageEditor/);
  assert.match(ui,/<PackagePicker/);
- const publicUi=read('components/live-catalog.tsx');
+ // V39 intentionally moved package tabs out of every listing card and into service detail.
+ const publicUi=read('components/live-listing-detail.tsx');
  assert.match(publicUi,/Choose a package/);
- assert.match(publicUi,/aria-pressed=\{choice===tier\}/);
- assert.match(publicUi,/const price=picked\?\.price\?\?s\.price/);
+ assert.match(publicUi,/aria-pressed=\{tier===option\}/);
+ assert.match(publicUi,/const price=chosen\?\.price\?\?listing\?\.price\?\?0/);
+ const catalog=read('components/live-catalog.tsx');
+ assert.match(catalog,/\/listing\/\?id=/);
 });
