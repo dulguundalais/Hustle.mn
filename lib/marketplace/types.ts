@@ -1,4 +1,4 @@
-export type Profile={id:string;display_name:string;headline:string;bio:string;skills?:string|null;is_seller:boolean;slug:string|null;public_profile:boolean};
+export type Profile={id:string;display_name:string;headline:string;bio:string;skills?:string|null;is_seller:boolean;slug:string|null;public_profile:boolean;avatar_path?:string|null};
 export type Listing={id:string;seller_id:string;title:string;title_en:string;description:string;category:string;price:number;delivery_days:number;revisions:number;package_name:string;status:string};
 export type Order={id:string;buyer_id:string;seller_id:string;service_id:string;service_title:string;quoted_price:number;brief:string;status:string;delivery_note:string;created_at:string;package_name:string;delivery_days:number;revision_limit:number;revisions_used:number;revision_note:string};
 export type Portfolio={id:string;seller_id:string;title:string;object_path:string;url?:string};

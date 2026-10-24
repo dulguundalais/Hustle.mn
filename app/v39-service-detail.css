@@ -55,3 +55,7 @@
  .v39-detail-page .v28-detail-offer{padding:22px}
  .v39-detail-page .v28-detail-shell h1{font-size:30px}
 }
+
+/* V41 profile photo is the same authenticated seller portrait used on cards. */
+.v39-detail-page .v39-detail-avatar{overflow:hidden}
+.v39-detail-page .v39-detail-avatar img{width:100%;height:100%;display:block;object-fit:cover;border-radius:inherit}
