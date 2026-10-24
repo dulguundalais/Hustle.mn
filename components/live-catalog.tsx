@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {ArrowRight,ArrowUpRight,Check,Clock3,Heart,Layers3,MessageCircle,Search,ShieldCheck,Star,X} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
 import {filterLiveServices,liveServicePrice,type LiveService,type LiveSort} from '../lib/marketplace/live-discovery';
+import {isValidSellerSlug} from '../lib/marketplace/seller-slug';
 import ServiceComparison,{compareSelection,compareLimit} from './service-comparison';
 import '../app/live-catalog.css';
 import '../app/v39-creative-cards.css';
@@ -82,7 +83,7 @@ export default function LiveCatalog({en,query='',category='all',sort='featured',
     const title=en&&s.title_en?s.title_en:s.title;
     const categoryName=categoryNames[s.category]?.[en?1:0]||s.category;
     const avatar=(s.display_name.trim().charAt(0)||'H').toLocaleUpperCase();
-    const profileHref=typeof s.slug==='string'&&/^[a-z0-9][a-z0-9-]{2,59}$/.test(s.slug)?'/p/'+encodeURIComponent(s.slug):null;
+    const profileHref=isValidSellerSlug(s.slug||'')?'/p/'+encodeURIComponent(s.slug):null;
     const sellerIdentity=<><span className={'v39-person-avatar v39-avatar-'+s.category} aria-hidden="true">{avatar}</span><div className="v39-person-name"><strong>{s.display_name}</strong><span>{s.headline||categoryName}</span></div></>;
     return <article key={s.id} className="v39-talent-card">
      <div className={'v39-card-cover v39-cover-'+s.category}>
