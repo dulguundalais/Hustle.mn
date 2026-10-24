@@ -7,7 +7,7 @@ do $v41$
 begin
  if not exists(select 1 from pg_constraint where conname='profiles_avatar_owner_path' and conrelid='public.profiles'::regclass) then
   alter table public.profiles add constraint profiles_avatar_owner_path check (
-   avatar_path is null or avatar_path ~ ('^'||id::text||'/[a-f0-9-]{36}\\.(jpg|png|webp)$')
+   avatar_path is null or avatar_path ~ ('^'||id::text||'/[a-f0-9-]{36}[.](jpg|png|webp)$')
   );
  end if;
 end $v41$;
