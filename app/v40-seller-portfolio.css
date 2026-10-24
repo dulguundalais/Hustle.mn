@@ -1,0 +1,45 @@
+/* V40 seller-selected toolkit: scoped to seller studio, existing global theme colors. */
+.hustle-v5 .v40-tools-editor{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:clamp(20px,3vw,34px);margin-top:20px;color:var(--text);box-shadow:0 8px 26px rgba(17,31,58,.045)}
+.hustle-v5 .v40-tools-heading{display:flex;align-items:start;justify-content:space-between;gap:18px}
+.hustle-v5 .v40-eyebrow{color:var(--purple);font-size:10px;letter-spacing:.17em;font-weight:850}
+.hustle-v5 .v40-tools-heading h2{font-size:clamp(22px,2.4vw,30px);letter-spacing:-.045em;margin:8px 0}
+.hustle-v5 .v40-tools-heading p{max-width:740px;color:var(--sub);font-size:13px;line-height:1.85;margin:0 0 23px}
+.hustle-v5 .v40-tools-counter{font-size:13px;white-space:nowrap;border:1px solid var(--border);padding:9px 12px;border-radius:999px;font-weight:800;color:var(--purple)}
+.hustle-v5 .v40-selected-tools{background:var(--soft);border:1px solid var(--border);padding:18px;border-radius:17px;margin:2px 0 24px}
+.hustle-v5 .v40-selected-header{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:13px}
+.hustle-v5 .v40-selected-header strong{font-size:13px}
+.hustle-v5 .v40-selected-header small{font-size:10px;color:var(--sub)}
+.hustle-v5 .v40-tools-empty{font-size:12px;color:var(--sub);margin:0}
+.hustle-v5 .v40-selected-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.hustle-v5 .v40-selected-item{min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px;box-shadow:0 4px 12px #10234508}
+.hustle-v5 .v40-selected-main{display:flex;align-items:center;gap:11px;min-width:0;font-size:12px;font-weight:750}
+.hustle-v5 .v40-selected-main>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hustle-v5 .v40-tool-icon{display:inline-grid;place-items:center;width:37px;height:37px;flex:0 0 37px;background:var(--soft);color:var(--purple);border-radius:11px}
+.hustle-v5 .v40-selected-actions{display:flex;gap:2px}
+.hustle-v5 .v40-selected-actions button{display:grid;place-items:center;width:35px;height:35px;border:0;background:transparent;border-radius:9px;color:var(--sub);cursor:pointer}
+.hustle-v5 .v40-selected-actions button:hover{background:var(--soft);color:var(--purple)}
+.hustle-v5 .v40-icon-picker{grid-column:1/-1;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:7px;padding-top:12px;margin-top:5px}
+.hustle-v5 .v40-icon-picker button{width:38px;height:38px;border:1px solid var(--border);border-radius:10px;display:grid;place-items:center;background:var(--surface);color:var(--sub);cursor:pointer}
+.hustle-v5 .v40-icon-picker button.active{border-color:var(--purple);background:var(--soft);color:var(--purple)}
+.hustle-v5 .v40-tool-search{display:flex!important;gap:10px;align-items:center;border:1px solid var(--border);border-radius:12px;padding:0 14px;max-width:500px;margin-bottom:24px;background:var(--surface);color:var(--sub)}
+.hustle-v5 .v40-tool-search input{height:47px;border:0!important;outline:0;background:transparent;color:var(--text);flex:1;min-width:0;font-size:13px!important;box-shadow:none!important}
+.hustle-v5 .v40-tool-section{margin-top:24px}
+.hustle-v5 .v40-tool-section h3{font-size:14px;letter-spacing:-.01em;margin:0 0 12px}
+.hustle-v5 .v40-tool-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.hustle-v5 .v40-tool-choice{min-width:0;display:flex;align-items:center;gap:9px;min-height:58px;padding:10px 12px;border:1px solid var(--border);background:var(--surface);border-radius:13px;color:var(--text);text-align:left;cursor:pointer;transition:border-color .18s ease,background .18s ease}
+.hustle-v5 .v40-tool-choice:hover:not(:disabled){border-color:var(--purple);background:var(--soft)}
+.hustle-v5 .v40-tool-choice.chosen{border-color:var(--purple);background:var(--soft)}
+.hustle-v5 .v40-tool-choice>span:nth-child(2){font-weight:700;font-size:12px;line-height:1.45;flex:1;min-width:0;overflow-wrap:anywhere}
+.hustle-v5 .v40-tool-choice-end{display:grid;place-items:center;color:var(--purple)}
+.hustle-v5 .v40-tool-choice:disabled{cursor:not-allowed;opacity:.47}
+.hustle-v5 .v40-tools-error{font-size:12px;color:#db5664;margin-top:17px}
+.hustle-v5 .v40-tools-status{font-size:12px;color:var(--sub)}
+.hustle-v5 .v40-tools-editor :is(button,input):focus-visible{outline:3px solid #63b6f5;outline-offset:3px}
+@media(max-width:940px){.hustle-v5 .v40-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){
+ .hustle-v5 .v40-tools-editor{padding:17px;border-radius:16px}
+ .hustle-v5 .v40-selected-grid,.hustle-v5 .v40-tool-grid{grid-template-columns:minmax(0,1fr)}
+ .hustle-v5 .v40-selected-tools{padding:12px}
+ .hustle-v5 .v40-tools-heading h2{font-size:23px}
+}
+@media(prefers-reduced-motion:reduce){.hustle-v5 .v40-tool-choice{transition:none}}
