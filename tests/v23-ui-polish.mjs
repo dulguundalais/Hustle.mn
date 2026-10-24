@@ -9,7 +9,7 @@ test('V39 moves package tabs out of crowded homepage to authentic service detail
  assert.match(detail,/aria-pressed=\{tier===option\}/);
  assert.match(detail,/chosen\?\.delivery_days/);
  assert.match(detail,/chosen\?\.revisions/);
- assert.match(card,/contactSellerHref\(s.slug\)/);
+ assert.match(card,/contactSellerHref\(s.slug,signedIn\)/);
  assert.match(detail,/&tier=/);
  assert.match(card,/review_count/);
 });

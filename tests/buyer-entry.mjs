@@ -5,7 +5,7 @@ const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
 test('public listings use only published consent-aware RPC',()=>{
  const source=read('components/live-catalog.tsx');
  assert.match(source,/rpc\('marketplace_catalog'\)/);
- assert.match(source,/contactSellerHref\(s.slug\)/);
+ assert.match(source,/contactSellerHref\(s.slug,signedIn\)/);
  assert.doesNotMatch(source,/from\('services'\)/);
 });
 test('return path preserves seller context through auth to messages',()=>{

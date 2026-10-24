@@ -8,5 +8,5 @@ test('requested nine homepage sections appear in exact order',()=>{
  assert.ok(offsets[5]<offsets[6]&&offsets[6]<offsets[7]&&offsets[7]<offsets[8]);
 });
 test('homepage categories are actual Explore links, never fake services',()=>{assert.match(discovery,/href=\{'\/explore\/\?category='\+key\}/);assert.match(home,/view==='explore'&&<section className="shell discovery"/);assert.match(home,/view==='home'&&<SignatureStory/);});
-test('seller listings retain real catalog and opt-in visibility',()=>{const s=read('components/live-catalog.tsx');assert.match(s,/rpc\('marketplace_catalog'\)/);assert.match(s,/contactSellerHref\(s.slug\)/);assert.doesNotMatch(discovery,/4\.9|12K|escrow-protected/i)});
+test('seller listings retain real catalog and opt-in visibility',()=>{const s=read('components/live-catalog.tsx');assert.match(s,/rpc\('marketplace_catalog'\)/);assert.match(s,/contactSellerHref\(s.slug,signedIn\)/);assert.doesNotMatch(discovery,/4\.9|12K|escrow-protected/i)});
 test('microcopy reduced and UI type has larger base scale',()=>{const css=read('app/v19-home.css');assert.match(css,/font-size:16px/);assert.match(story,/signature-search-subline/);assert.doesNotMatch(story,/signature-popular/);assert.doesNotMatch(story,/signature-trust-strip/)});
