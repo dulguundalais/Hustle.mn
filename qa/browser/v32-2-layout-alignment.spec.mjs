@@ -37,9 +37,8 @@ for(const width of [390,768,1024,1297,1366,1440,1536,1728,1920]){
   await expect(page.locator('.signature-hero-inner')).toBeVisible();
   await expect(page.locator('.business-solutions-inner')).toBeVisible();
   const p=await positions(page);
-  // Colored CTA banner is a card itself; Partner has a padded .shell
-  // containing an inner card. Their colored outer edges must align with
-  // actual Hero text edges instead of the unpadded viewport shell.
+  // V50: the hero is a centred, full-bleed stage, so the shared page column is
+  // defined by the header. Cards and sections align to it; the hero is centred on it.
   const cardEdges=await page.evaluate(()=>{
    const seller=document.querySelector('.signature-seller-band.shell');
    const partner=document.querySelector('.signature-partner-inner');
@@ -50,12 +49,15 @@ for(const width of [390,768,1024,1297,1366,1440,1536,1728,1920]){
     return [name,{left:b.left,right:b.right}];
    }));
   });
-  const main=p.hero;
+  const main=p.header;
+  const heroMid=(p.hero.left+p.hero.right)/2,mainMid=(main.left+main.right)/2;
+  expect(Math.abs(heroMid-mainMid),'hero centred on the page column').toBeLessThanOrEqual(1.5);
   for(const [name,edge] of Object.entries(cardEdges)){
    expect(Math.abs(edge.left-main.left),name+' card left').toBeLessThanOrEqual(1.5);
    expect(Math.abs(edge.right-main.right),name+' card right').toBeLessThanOrEqual(1.5);
   }
   for(const [name,item] of Object.entries(p)){
+   if(name==='hero')continue;
    expect(Math.abs(item.left-main.left),name+' left mismatch').toBeLessThanOrEqual(1.5);
    expect(Math.abs(item.right-main.right),name+' right mismatch').toBeLessThanOrEqual(1.5);
   }
@@ -80,6 +82,6 @@ test('Explore and footer reuse the same grid, without narrowing after navigation
   const rect=el.getBoundingClientRect(),style=getComputedStyle(el);
   return {left:rect.left+parseFloat(style.paddingLeft),right:rect.right-parseFloat(style.paddingRight)};
  });
- expect(Math.abs(result.left-home.hero.left)).toBeLessThanOrEqual(1.5);
- expect(Math.abs(result.right-home.hero.right)).toBeLessThanOrEqual(1.5);
+ expect(Math.abs(result.left-home.header.left)).toBeLessThanOrEqual(1.5);
+ expect(Math.abs(result.right-home.header.right)).toBeLessThanOrEqual(1.5);
 });
