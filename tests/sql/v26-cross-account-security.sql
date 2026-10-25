@@ -10,7 +10,11 @@ insert into public.beta_allowlist(email,role,enabled) values
  ('v26-admin@example.test','admin',true),
  ('v26-seller@example.test','member',true),
  ('v26-buyer@example.test','member',true),
- ('v26-outsider@example.test','member',true);
+ ('v26-outsider@example.test','member',true) on conflict(email) do update set role=excluded.role,enabled=excluded.enabled;
+-- Since V46, confirmed emails are auto-enrolled. The admin queue now lists
+-- confirmed accounts whose access is disabled, so the pending fixture is disabled.
+insert into public.beta_allowlist(email,role,enabled) values('v26-pending@example.test','member',false)
+ on conflict(email) do update set enabled=false;
 insert into public.profiles(id,display_name,is_seller) values
  ('10000000-0000-4000-8000-000000000011','V26 Admin',false),
  ('10000000-0000-4000-8000-000000000012','V26 Seller',true),

@@ -4,7 +4,7 @@ insert into auth.users(id,email) values
 ('10000000-0000-4000-8000-000000000002','qa-seller@example.test'),
 ('10000000-0000-4000-8000-000000000003','qa-buyer@example.test'),
 ('10000000-0000-4000-8000-000000000004','qa-other@example.test');
-insert into public.beta_allowlist(email,role) values('qa-admin@example.test','admin'),('qa-seller@example.test','member'),('qa-buyer@example.test','member'),('qa-other@example.test','member');
+insert into public.beta_allowlist(email,role) values('qa-admin@example.test','admin'),('qa-seller@example.test','member'),('qa-buyer@example.test','member'),('qa-other@example.test','member') on conflict(email) do update set role=excluded.role;
 insert into public.profiles(id,display_name,is_seller) values
 ('10000000-0000-4000-8000-000000000001','QA admin',false),
 ('10000000-0000-4000-8000-000000000002','QA seller',true),
