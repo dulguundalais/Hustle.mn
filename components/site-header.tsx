@@ -100,7 +100,7 @@ export default function SiteHeader({en,onToggleLanguage,dark,onToggleTheme,activ
   ['categories','/categories/','Ангилал','Categories'],
   ['solutions','/solutions/','Шийдэл олох','Find a solution']
  ];
- return <header className={'hustle-v5 hx-header'+(dark?' night':'')}>
+ return <header className={'hustle-v5 hx-header'+(dark?' hx-night':'')}>
   <div className="shell hx-header-inner">
    <Link className="hx-brand" href="/" aria-label="Hustle.mn">hustle<span>✳</span><small>mn</small></Link>
    <nav className={'hx-nav'+(menu?' open':'')} aria-label={t('Үндсэн цэс','Main navigation')}>
@@ -109,7 +109,7 @@ export default function SiteHeader({en,onToggleLanguage,dark,onToggleTheme,activ
     {sessionState==='guest'&&<div className="hx-nav-auth"><Link href={loginHref}>{t('Нэвтрэх','Log in')}</Link><Link href="/join/seller/" className="hx-nav-cta">{t('Freelancer болох','Become a freelancer')}</Link></div>}
    </nav>
    <div className="hx-actions">
-    <button type="button" className="hx-icon locale" onClick={onToggleLanguage} aria-label={en?'Монгол хэл':'Switch to English'}><Globe size={16} aria-hidden="true"/>{en?'EN':'MN'}</button>
+    <button type="button" className="hx-icon locale" onClick={onToggleLanguage} aria-label={t('Англи хэл сонгох','Switch to Mongolian')}><Globe size={16} aria-hidden="true"/>{en?'EN':'MN'}</button>
     {onToggleTheme&&<button type="button" className="hx-icon" onClick={onToggleTheme} aria-label={t('Өнгөний горим солих','Toggle color theme')}>{dark?<Sun size={18}/>:<Moon size={18}/>}</button>}
     {sessionState==='signed-in'&&account&&<GlobalNotifications key={account.id} userId={account.id} en={en} isSeller={notificationsAsSeller??account.isSeller}/>}
     {sessionState==='signed-in'&&account?<AccountMenu account={account} en={en} signingOut={signingOut} onSignOut={async()=>{const ok=await signOut();setMenu(false);onSignedOut?.(ok)}}/>

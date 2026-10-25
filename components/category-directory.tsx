@@ -1,7 +1,8 @@
 'use client';
 import {useMemo,useState} from 'react';
 import Link from 'next/link';
-import {ArrowUpRight,ChevronRight,Search,ShieldCheck,X} from 'lucide-react';
+import {ArrowUpRight,Search,ShieldCheck,X} from 'lucide-react';
+import {Breadcrumbs} from './site-header';
 import CategoryArt from './category-art';
 import {CATEGORIES,SERVICE_TYPES,type Category} from '../lib/marketplace/taxonomy';
 import {normalizeSearch} from '../lib/marketplace/smart-search';
@@ -45,7 +46,7 @@ export default function CategoryDirectory({en}:{en:boolean}){
  </article>;
  const legalFinance=visible.filter(x=>x.c.id==='legal'||x.c.id==='finance');
  return <section className="cdir shell" aria-labelledby="cdir-title">
-  <nav className="crumbs" aria-label={t('Байршил','Breadcrumb')}><Link href="/">{t('Нүүр','Home')}</Link><ChevronRight size={14} aria-hidden="true"/><span aria-current="page">{t('Ангилал','Categories')}</span></nav>
+  <Breadcrumbs en={en} items={[{label:t('Нүүр','Home'),href:'/'},{label:t('Ангилал','Categories')}]}/>
   <header className="cdir-intro">
    <h1 id="cdir-title">{t('Бүх ангилал','All categories')}</h1>
    <p>{t('Зөвлөх, технологи, санхүү, бүтээлч ажил — бизнес болон хувь хүнд хэрэгтэй мэргэжлийн үйлчилгээг нэг дороос.','Consulting, technology, finance and creative work — professional services for businesses and individuals in one place.')}</p>
