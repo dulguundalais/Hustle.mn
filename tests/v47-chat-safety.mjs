@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const read = p => readFileSync(p, 'utf8');
-const m = read('supabase/migrations/20261025030000_v47_chat_safety.sql');
+const m = read('supabase/migrations/20261025041926_v47_chat_safety.sql');
 const ui = read('components/chat-safety.tsx');
 const w = read('components/workspace.tsx');
 
