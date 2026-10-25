@@ -48,6 +48,7 @@
  .hustle-v5.hx-header .hx-nav-auth .hx-nav-cta{background:#0c334f;border-color:#0c334f;color:#fff}
  .hustle-v5.hx-header .hx-login,.hustle-v5.hx-header .hx-cta{display:none}
  .hustle-v5.hx-header .hx-burger{display:inline-flex}
+ .hustle-v5.hx-header .hx-checking{width:34px;border-radius:50%}
  .hustle-v5.hx-header .hx-brand{font-size:27px}
 }
 @media(max-width:420px){.hustle-v5.hx-header .hx-icon.locale{min-width:36px;padding:0 4px}}
