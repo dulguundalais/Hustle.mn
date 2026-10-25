@@ -44,7 +44,7 @@ test('blocked member does not gain access to a private dashboard',async({page})=
  await page.locator('#hustle-auth-email').fill('buyer@example.test');
  await page.locator('#hustle-auth-password').fill('SafeTestPassword123!');
  await page.locator('.hustle-auth-submit').click();
- await expect(page.locator('.access-card h1')).toContainText(/Хандалт идэвхгүй|Account access unavailable/);
+ await expect(page.locator('.access-card h1')).toContainText(/хандалт идэвхгүй|Account access unavailable/i);
  await expect(page.locator('.workspace-main')).toHaveCount(0);
 });
 
