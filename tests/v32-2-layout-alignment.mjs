@@ -26,7 +26,7 @@ test('existing premium sections retain shared .shell and their own full-bleed ba
  const hero=read('components/signature-home.tsx');
  const business=read('components/business-solutions.tsx');
  const footer=read('components/premium-footer.tsx');
- assert.match(hero,/className="shell signature-hero-inner"/);
+ assert.match(hero,/className="shell signature-hero-inner( hx-hero-inner)?"/);
  assert.match(hero,/className="signature-process"/);
  assert.match(hero,/className="signature-spotlight shell"/);
  assert.match(business,/className="shell business-solutions-inner"/);

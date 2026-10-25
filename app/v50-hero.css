@@ -1,0 +1,60 @@
+/* V50 homepage hero, ported from HUSTLE-COLLAB: centred copy on a soft navy light
+   field (faded blue + cyan aurora, fine grain). Selectors are doubled-up so they win
+   over the older signature-hero rules without !important. */
+@font-face{font-family:'Geologica';src:url('/fonts/geologica.woff') format('woff');font-weight:300 800;font-style:normal;font-display:swap}
+
+.signature-hero.hx-hero{padding:10px;background:var(--paper);color:#eef3ff;overflow:visible}
+.signature-hero.hx-hero .hx-hero-frame{position:relative;isolation:isolate;min-height:max(620px,calc(100svh - 110px));border-radius:24px;overflow:hidden;background:#040b1f;display:grid;place-items:center;box-shadow:inset 0 0 0 1px #ffffff1a}
+.signature-hero.hx-hero .hx-hero-light{position:absolute;inset:-25%;z-index:-2;pointer-events:none;
+ background:radial-gradient(34% 42% at 22% 24%,rgb(43 92 222/.85),transparent 70%),radial-gradient(28% 36% at 82% 16%,rgb(79 215 255/.42),transparent 70%),radial-gradient(42% 50% at 72% 74%,rgb(28 62 168/.7),transparent 72%),radial-gradient(36% 40% at 30% 86%,rgb(11 30 84/.95),transparent 70%);
+ filter:blur(36px);animation:hx-drift 26s ease-in-out infinite alternate}
+@keyframes hx-drift{to{transform:translate3d(4%,-3%,0) scale(1.06) rotate(3deg)}}
+.signature-hero.hx-hero .hx-hero-grain{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.14;mix-blend-mode:overlay;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.signature-hero.hx-hero .signature-hero-inner.hx-hero-inner{display:grid;grid-template-columns:1fr;justify-items:center;gap:0;width:100%;max-width:1040px;min-height:0;padding:72px 24px 80px;text-align:center}
+
+.signature-hero.hx-hero .hx-hero-badge{display:inline-flex;align-items:center;gap:10px;margin:0;padding:5px 16px 5px 5px;border-radius:999px;background:#ffffff14;box-shadow:inset 0 0 0 1px #ffffff29;font-size:14px;font-weight:500;color:#dbe4fa;backdrop-filter:blur(8px)}
+.signature-hero.hx-hero .hx-hero-badge span{padding:5px 11px;border-radius:999px;background:#fff;color:#0a1430;font-size:13px;font-weight:700}
+.signature-hero.hx-hero h1.hx-hero-title{margin:28px 0 0;font-family:'Geologica',Manrope,Arial,sans-serif;font-size:clamp(44px,.9rem + 5.6vw,100px);font-weight:600;letter-spacing:-.045em;line-height:1;color:#fff}
+.signature-hero.hx-hero h1.hx-hero-title span{display:block;background:none;-webkit-text-fill-color:#fff;color:#fff}
+.signature-hero.hx-hero .hx-hero-sub{margin:28px 0 0;max-width:38em;font-size:clamp(17px,.98rem + .35vw,20px);line-height:1.55;color:rgb(222 231 252/.82)}
+
+.signature-hero.hx-hero .hx-hero-search{position:relative;width:min(780px,100%);margin-top:40px;text-align:left}
+.signature-hero.hx-hero .signature-search.hx-searchbar{display:flex;align-items:center;gap:8px;max-width:none;margin:0;padding:8px 8px 8px 20px;border:0;border-radius:16px;background:#fffffff7;color:#0a1430;box-shadow:0 24px 70px #00000061,0 0 0 1px #ffffff4d;transition:box-shadow .26s ease}
+.signature-hero.hx-hero .signature-search.hx-searchbar:focus-within{box-shadow:0 24px 70px #00000061,0 0 0 4px rgb(79 215 255/.45)}
+.signature-hero.hx-hero .hx-searchbar-icon{flex-shrink:0;color:#4a5677}
+.signature-hero.hx-hero .signature-search.hx-searchbar input{flex:1;min-width:0;height:52px;border:0;background:transparent;color:#0a1430;font:inherit;font-size:18px;outline:0}
+.signature-hero.hx-hero .signature-search.hx-searchbar input::placeholder{color:#6b769a}
+.signature-hero.hx-hero .hx-searchbar-go{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;height:52px;padding:0 22px;border:0;border-radius:11px;background:#0a1430;color:#fff;font:inherit;font-size:16px;font-weight:600;cursor:pointer;transition:background-color .14s ease,transform .14s ease}
+.signature-hero.hx-hero .hx-searchbar-go:hover{background:#1d3a78}
+.signature-hero.hx-hero .hx-searchbar-go:active{transform:scale(.98)}
+.signature-hero.hx-hero .hx-searchbar-go:focus-visible{outline:3px solid #4fd7ff;outline-offset:2px}
+
+.signature-hero.hx-hero .signature-search-suggestions.hx-suggest{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 10px);max-width:none;margin:0;padding:8px;border:0;border-radius:14px;background:#fff;color:#0a1430;box-shadow:0 30px 80px #00000066}
+.signature-hero.hx-hero .hx-suggest a{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;color:#0a1430;font-size:15px;font-weight:600;text-decoration:none}
+.signature-hero.hx-hero .hx-suggest a span{margin-left:auto;padding:2px 8px;border-radius:999px;background:#e6f6ef;color:#12795a;font-size:11px;font-weight:700}
+.signature-hero.hx-hero .hx-suggest a:hover,.signature-hero.hx-hero .hx-suggest a.active{background:#edf0f6}
+.signature-hero.hx-hero .hx-suggest .signature-search-no-match{margin:0;padding:10px 12px;font-size:14px;color:#4a5677}
+.signature-hero.hx-hero .hx-suggest .signature-search-all{margin-top:4px;border-top:1px solid #e3e8f1;border-radius:0 0 10px 10px;color:#0b6c99!important;font-size:14px}
+.signature-hero.hx-hero .hx-suggest .signature-search-all:hover{background:#f3f6fb}
+
+/* Personal / business guided entry, restyled as glass cards under the search. */
+.signature-hero.hx-hero .hx-hero-guided{width:min(780px,100%);margin-top:22px;text-align:left}
+.signature-hero.hx-hero .guided-entry-intro{max-width:none;margin:0}
+.signature-hero.hx-hero .guided-entry-eyebrow{display:none}
+.signature-hero.hx-hero .guided-entry-intro h2{margin:0 0 10px;text-align:center;font-size:15px;font-weight:600;letter-spacing:0;color:rgb(222 231 252/.78)}
+.signature-hero.hx-hero .guided-entry-choice,.signature-hero.hx-hero .guided-entry-choice.guided-entry-business{min-height:72px;border:0;border-radius:14px;background:#ffffff14;box-shadow:inset 0 0 0 1px #ffffff2e;backdrop-filter:blur(8px)}
+.signature-hero.hx-hero .guided-entry-choice:hover,.signature-hero.hx-hero .guided-entry-choice:focus-visible{background:#ffffff24;box-shadow:inset 0 0 0 1px #ffffff52,0 14px 34px #010f2666}
+.signature-hero.hx-hero .hx-hero-subline{justify-content:center;margin-top:16px;font-size:12px;color:#a9b9de}
+
+@media (max-width:760px){
+ .signature-hero.hx-hero{padding:6px}
+ .signature-hero.hx-hero .hx-hero-frame{min-height:0;border-radius:18px}
+ .signature-hero.hx-hero .signature-hero-inner.hx-hero-inner{padding:52px 18px 44px}
+ .signature-hero.hx-hero .hx-hero-badge{font-size:12.5px}
+ .signature-hero.hx-hero h1.hx-hero-title{font-size:clamp(40px,12vw,56px)}
+ .signature-hero.hx-hero .signature-search.hx-searchbar{flex-wrap:wrap;padding:8px 8px 8px 16px}
+ .signature-hero.hx-hero .signature-search.hx-searchbar input{font-size:16px;flex-basis:calc(100% - 40px)}
+ .signature-hero.hx-hero .hx-searchbar-go{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){.signature-hero.hx-hero .hx-hero-light{animation:none}}
