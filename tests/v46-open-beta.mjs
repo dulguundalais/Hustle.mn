@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const read=p=>readFileSync(p,'utf8');
-const m=read('supabase/migrations/20261025024500_open_beta_verified_signup.sql');
+const m=read('supabase/migrations/20261025020453_open_beta_verified_signup.sql');
 const w=read('components/workspace.tsx');
 test('only a verified, non-anonymous, non-banned user can be auto-enrolled',()=>{
   assert.match(m,/new\.email_confirmed_at is null/);
@@ -17,10 +17,10 @@ test('auto-enrollment never reactivates blocked users or elevates partner/admin'
   assert.doesNotMatch(m,/on conflict[^;]+do update/i);
   assert.doesNotMatch(m,/\bgrant\s+execute\b/i);
   assert.match(m,/revoke all on function hustle_private\.enroll_confirmed_open_beta_member\(\) from public,anon,authenticated/);
-  assert.match(read('supabase/migrations/20261014100821_marketplace_closed_beta.sql'),/role in \('member','partner','admin'\)/);
+  assert.match(read('supabase/migrations/20261014101004_marketplace_closed_beta.sql'),/role in \('member','partner','admin'\)/);
 });
 test('open beta does not bypass RLS or remove listing moderation',()=>{
-  const base=read('supabase/migrations/20261014100821_marketplace_closed_beta.sql');
+  const base=read('supabase/migrations/20261014101004_marketplace_closed_beta.sql');
   assert.match(base,/create policy orders_read/);
   assert.match(base,/create policy services_insert/);
   assert.match(base,/status in \('draft','pending'\)/);

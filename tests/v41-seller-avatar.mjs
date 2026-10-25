@@ -48,7 +48,7 @@ test('same seller portrait appears in Home, Explore and service details, with le
 });
 
 test('avatar remains private until owner opted in and is approved: same bucket, no public switch',()=>{
- const sql=read('supabase/migrations/20261024185000_v41_seller_avatar_photos.sql');
+ const sql=read('supabase/migrations/20261024111447_v41_seller_avatar_photos.sql');
  assert.match(sql,/public_avatar_image/);
  assert.match(sql,/p.avatar_path=object_name and p.public_profile and p.is_seller and a.enabled/);
  assert.match(sql,/bucket_id='portfolio'/);

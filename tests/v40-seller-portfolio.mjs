@@ -46,7 +46,7 @@ test('no fabricated skills, portfolios or testimonials when seller has no data',
 test('tool icon selection is persisted on current seller account with RLS; public projection is opt-in only',()=>{
  const ui=read('components/seller-tool-editor.tsx');
  const ws=read('components/workspace.tsx');
- const sql=read('supabase/migrations/20261024062000_v40_seller_tools.sql');
+ const sql=read('supabase/migrations/20261024052715_v40_seller_tools.sql');
  assert.match(ui,/\.from\('seller_tools'\)/);
  assert.match(ui,/\.update\(\{icon_key:icon\}\)/);
  assert.match(ui,/getUser\(\)/);

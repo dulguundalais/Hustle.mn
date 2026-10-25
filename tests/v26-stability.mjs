@@ -11,7 +11,7 @@ test('registration, confirmation resend, and reset use current origin',()=>{
  assert.doesNotMatch(login+recovery,/localhost:3000/);
 });
 test('legacy admin list stays protected while open beta has no manual approval queue',()=>{
- const migration=read('supabase/migrations/20261021220000_beta_pending_approvals.sql');
+ const migration=read('supabase/migrations/20261021141415_beta_pending_approvals.sql');
  assert.match(migration,/security definer/);
  assert.match(migration,/a\.enabled and a\.role='admin'/);
  assert.match(migration,/email_confirmed_at is not null/);

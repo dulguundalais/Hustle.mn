@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const load=p=>readFileSync(p,'utf8');
-const sql=load('supabase/migrations/20261023180000_v35_order_collaboration.sql');
+const sql=load('supabase/migrations/20261023062451_v35_order_collaboration.sql');
 const ui=load('components/project-matching.tsx');
 const workspace=load('components/workspace.tsx');
 test('V35 owner-safe withdrawal locks request before proposal and rejects awarded project',()=>{

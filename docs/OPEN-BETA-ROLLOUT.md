@@ -12,7 +12,7 @@ Applies **only** to the original `dulguundalais/Hustle.mn` code and the original
 ## Operations checklist
 1. Confirm **Supabase Auth → Providers → Email → Confirm email** is ON before inviting users. Hosted defaults should not be assumed; verify the dashboard.
 2. Configure a production-grade SMTP provider and email rate limits before broadly sharing signup. The built-in email sender may be rate limited; the frontend does not bypass this.
-3. Apply `supabase/migrations/20261025024500_open_beta_verified_signup.sql` to original beta database only, with a verified backup/rollback plan.
+3. Apply `supabase/migrations/20261025020453_open_beta_verified_signup.sql` to original beta database only, with a verified backup/rollback plan.
 4. Verify trigger and privileges by SQL introspection. Test a *real new test account*: unconfirmed user has no `beta_allowlist` row, confirmed user receives member automatically, after login sees buyer dashboard, can open Seller Studio.
 5. Verify a **disabled** email stays blocked after confirmation event; verify existing admin/partner roles are unchanged. Avoid using real customer accounts as test fixtures.
 6. Verify seller service starts `draft/pending` and moderation is required before `published`; test order/chat/file cross-account RLS.

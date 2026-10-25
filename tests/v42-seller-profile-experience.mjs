@@ -62,7 +62,7 @@ test('profile owner controls show exact public iframe rather than fake buyer dat
 });
 test('cover is owner-managed, 5MB capped and can be repositioned without public bucket',()=>{
  const editor=read('components/seller-cover-editor.tsx');
- const sql=read('supabase/migrations/20261024210000_v42_seller_cover.sql');
+ const sql=read('supabase/migrations/20261024115239_v42_seller_cover.sql');
  for(const token of ['MAX_COVER_BYTES=5*1024*1024','createImageBitmap(file)','crypto.randomUUID()',"storage.from('portfolio').upload","db.from('profiles').update({cover_path:nextPath,cover_focus_y:focus})","update({cover_path:null,cover_focus_y:50})","update({cover_focus_y:focus})","db.auth.getUser()"])assert.ok(editor.includes(token),token);
  assert.match(sql,/add column if not exists cover_path text/);
  assert.match(sql,/add column if not exists cover_focus_y smallint/);

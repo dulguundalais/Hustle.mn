@@ -32,8 +32,8 @@ test('retains merged UX and verified V34/V35 project + order features',()=>{
 
 test('keeps source and regression tests for private beta migrations',()=>{
  for(const p of [
- 'supabase/migrations/20261023150000_v34_project_notifications.sql',
- 'supabase/migrations/20261023180000_v35_order_collaboration.sql',
+ 'supabase/migrations/20261023060757_v34_project_notifications.sql',
+ 'supabase/migrations/20261023062451_v35_order_collaboration.sql',
  'tests/sql/v34-notification-actors.sql',
  'tests/sql/v35-collaboration-actors.sql',
  'tests/v35-4-global-notifications.mjs',
