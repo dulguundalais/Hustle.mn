@@ -1,4 +1,5 @@
 import {normalizeSearch,searchTokens,typoClose} from './smart-search';
+import {serviceSearchTerms} from './taxonomy';
 
 // Only published, opt-in marketplace_catalog RPC records are accepted here.
 // Never mix editorial sample services into the buyer discovery index.
@@ -8,10 +9,11 @@ export type LiveService = {
  display_name:string;headline:string;slug:string;avatar_path?:string|null;
  packages?:{tier:string;price:number;delivery_days:number;revisions:number;summary?:string;includes:string[]}[];
  review_count?:number;average_rating?:number|null;completed_orders?:number;
+ subcategory?:string|null;service_type?:string|null;tags?:string[]|null;
 };
 export type LiveSort = 'featured'|'low'|'high';
 export type LiveFilters = {
- query:string;category:string;sort:LiveSort;onlySaved:boolean;saved:string[];
+ query:string;category:string;subcategory?:string;sort:LiveSort;onlySaved:boolean;saved:string[];
 };
 
 // Search the existing server-filtered, published marketplace_catalog records only.
@@ -46,7 +48,8 @@ export function liveSearchScore(service:LiveService,query:string):number {
  const terms=searchTokens(query);
  if(!terms.length)return 0;
  const title=[service.title,service.title_en].join(' ');
- const category=[service.category,...(categoryAliases[service.category]||[])].join(' ');
+ // V50: main category and own subcategory terms plus the seller's tags (pre-V50 ids keep their aliases).
+ const category=[service.category,...(categoryAliases[service.category]||[]),...serviceSearchTerms(service.category,service.subcategory),...(service.tags||[])].join(' ');
  const pkg=(service.packages||[]).flatMap(p=>[p.summary||'',...(p.includes||[])]).join(' ');
  const seller=[service.display_name,service.headline].join(' ');
  let score=0;
@@ -75,7 +78,7 @@ export function liveServicePrice(service:LiveService):number {
 export function filterLiveServices<T extends LiveService>(items:T[],filters:LiveFilters):T[] {
  const hasQuery=searchTokens(filters.query).length>0;
  const scored=items
-  .filter(s=>(filters.category==='all'||s.category===filters.category)&&(!filters.onlySaved||filters.saved.includes(s.id)))
+  .filter(s=>(filters.category==='all'||s.category===filters.category)&&(!filters.subcategory||s.subcategory===filters.subcategory)&&(!filters.onlySaved||filters.saved.includes(s.id)))
   .map((s,i)=>({s,i,score:hasQuery?liveSearchScore(s,filters.query):0}))
   .filter(row=>!hasQuery||row.score>=0);
  if(filters.sort==='featured'){

@@ -112,7 +112,7 @@ export const CATEGORIES:Category[]=[
  ]},
  {id:'creative',mn:'Дизайн ба бүтээлч',en:'Design & Creative',
   leadMn:'Брэнд, дизайн, видео, орчуулга',leadEn:'Brand, design, video and language',
-  keywords:['design','дизайн','dizain','creative','бүтээлч','logo','лого','video','видео','photo','зураг'],
+  keywords:['design','дизайн','dizain','creative','бүтээлч'],
   subcategories:[
    sub('brand-identity','Брэнд айдентити','Brand identity',['brand identity','брэнд','brend','branding']),
    sub('logo','Лого дизайн','Logo design',['logo','лого','logo hiih']),
@@ -224,4 +224,12 @@ export const normalizeCategory=(id:string|null|undefined):CategoryId|'all'=>{
 export function categorySearchTerms(id:string):string[]{
  const c=categoryById(id);if(!c)return [];
  return [c.mn,c.en,...c.keywords,...c.subcategories.flatMap(s=>[s.mn,s.en,...(s.keywords||[])])];
+}
+
+/** Search terms for one service: its main category plus only its own subcategory,
+    so a video service does not match "logo" just because both are Design & Creative. */
+export function serviceSearchTerms(category:string,subId:string|null|undefined):string[]{
+ const c=categoryById(category);if(!c)return [];
+ const s=c.subcategories.find(x=>x.id===subId);
+ return [c.mn,c.en,...c.keywords,...(s?[s.mn,s.en,...(s.keywords||[])]:[])];
 }

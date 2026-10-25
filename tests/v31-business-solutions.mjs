@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import ts from 'typescript';
 import {readFileSync} from 'node:fs';
 const read=(p)=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const js=ts.transpileModule(read('lib/marketplace/solution-finder.ts'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+const taxUrl='data:text/javascript;base64,'+Buffer.from(ts.transpileModule(read('lib/marketplace/taxonomy.ts'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText).toString('base64');
+const js=ts.transpileModule(read('lib/marketplace/solution-finder.ts').replace("from './taxonomy';","from '"+taxUrl+"';"),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const {classifyNeed,matchingPublished,buildProjectBrief,problemExamples}=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
 test('restaurants with fewer orders are routed to growth and multiple approaches',()=>{
  const o=classifyNeed('Манай рестораны захиалга бага байна. Илүү олон үйлчлүүлэгчтэй болохыг хүсэж байна.');

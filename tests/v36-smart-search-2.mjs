@@ -5,8 +5,9 @@ import ts from 'typescript';
 
 const read=p=>readFileSync(p,'utf8');
 const smartSource=read('lib/marketplace/smart-search.ts');
-const liveSource=read('lib/marketplace/live-discovery.ts').replace("import {normalizeSearch,searchTokens,typoClose} from './smart-search';",'');
-const js=[smartSource,liveSource].map(source=>ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText).join('\n');
+const taxonomySource=read('lib/marketplace/taxonomy.ts');
+const liveSource=read('lib/marketplace/live-discovery.ts').replace("import {normalizeSearch,searchTokens,typoClose} from './smart-search';",'').replace(/import \{[^}]*\} from '\.\/taxonomy';/,'');
+const js=[smartSource,taxonomySource,liveSource].map(source=>ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText).join('\n');
 const {normalizeSearch,searchTokens,typoClose,liveSearchScore,filterLiveServices,suggestLiveServices}=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
 
 function listing(id,category,title,en,price=50000,extra={}){
