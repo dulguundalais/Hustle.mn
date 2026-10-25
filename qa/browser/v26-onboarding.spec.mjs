@@ -37,18 +37,18 @@ test('invalid reset link never allows changing a password',async({page})=>{
  await expect(page.getByRole('heading',{name:'Choose a new password.'})).toBeVisible();
 });
 
-test('beta pending user cannot access a private dashboard',async({page})=>{
+test('blocked member does not gain access to a private dashboard',async({page})=>{
  await mockMessenger(page);
  await page.route('https://mock-messenger.invalid/rest/v1/beta_allowlist*',r=>r.fulfill({status:200,contentType:'application/json',body:'null'}));
  await page.goto('/buyer/');
  await page.locator('#hustle-auth-email').fill('buyer@example.test');
  await page.locator('#hustle-auth-password').fill('SafeTestPassword123!');
  await page.locator('.hustle-auth-submit').click();
- await expect(page.locator('.access-card h1')).toContainText(/Бета эрх|Beta access/);
+ await expect(page.locator('.access-card h1')).toContainText(/хандалт идэвхгүй|Account access unavailable/i);
  await expect(page.locator('.workspace-main')).toHaveCount(0);
 });
 
-test('admin sees pending confirmed signup and can approve without auto-approval',async({page})=>{
+test('admin can manually restrict members, while new verified users need no approval',async({page})=>{
  await mockMessenger(page);
  const admin='10000000-0000-4000-8000-000000000010';
  const user={id:admin,aud:'authenticated',email:'qa-admin@example.test',role:'authenticated',app_metadata:{provider:'email'},user_metadata:{},identities:[]};
@@ -61,7 +61,6 @@ test('admin sees pending confirmed signup and can approve without auto-approval'
    if(path==='/auth/v1/user')return respond(r,user);
    if(path==='/rest/v1/beta_allowlist')return respond(r,{role:'admin'});
    if(path==='/rest/v1/profiles')return respond(r,[{id:admin,display_name:'QA Admin',is_seller:false}]);
-   if(path==='/rest/v1/rpc/list_pending_beta_signups')return respond(r,[{email:'pending@example.test',registered_at:'2026-10-21T14:00:00Z'}]);
    if(path==='/rest/v1/rpc/manage_beta'){approvals++;return respond(r,null)}
    return r.fallback();
  });
@@ -70,9 +69,13 @@ test('admin sees pending confirmed signup and can approve without auto-approval'
  await page.locator('#hustle-auth-password').fill('SafeTestPassword123!');
  await page.locator('.hustle-auth-submit').click();
  await expect(page.locator('.workspace-main')).toBeVisible();
- const betaPanel=page.locator('.workspace-panel').filter({hasText:'pending@example.test'}).first();
- await expect(betaPanel).toBeVisible();
+ const accessPanel=page.locator('.workspace-panel').filter({hasText:/Хэрэглэгчийн эрхийн удирдлага|Account access management/}).first();
+ await expect(accessPanel).toBeVisible();
  expect(approvals).toBe(0);
- await betaPanel.getByRole('button',{name:/Зөвшөөрөх|Approve/}).first().click();
+ await expect(accessPanel.getByRole('button',{name:/Зөвшөөрөх|Approve/})).toHaveCount(0);
+ await accessPanel.locator('input[name=email]').fill('restricted@example.test');
+ await accessPanel.locator('select[name=role]').selectOption('member');
+ await accessPanel.locator('input[name=enabled]').uncheck();
+ await accessPanel.locator('form button').click();
  await expect.poll(()=>approvals).toBe(1);
 });

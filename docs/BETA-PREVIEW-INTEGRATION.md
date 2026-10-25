@@ -21,8 +21,10 @@ This is the Cloudflare Pages **stable branch alias** for `feature/interactive-fu
 - After preview merge, verify homepage notification, buyer↔seller messaging read counts, file selection/Send, matching invitations and order transitions with approved test accounts. CI mocks alone are not real account QA.
 - Keep main, public `hustle.mn`, production database, secrets, payment and escrow untouched; rolling back is a targeted revert PR.
 
-## Beta database source reconciliation gate
-V34 and V35 migrations have **already** been applied in the separate Hustle beta Supabase database under its existing migration history versions (`20261023060757`, `20261023062451`). Source files restored here use earlier PR filenames (`20261023150000_v34_project_notifications.sql`, `20261023180000_v35_order_collaboration.sql`); this history mismatch must be reconciled before anyone uses automatic `supabase db push` or deploys the database to another environment. Do not re-run them blindly. Their presence in Git is for reviewed source traceability and actor tests, not an instruction to apply SQL during web deployment.
+## Beta database source reconciliation (resolved 2026-10-25)
+`supabase/migrations/` now mirrors `supabase_migrations.schema_migrations` of the beta database (`pgrxsphkjudvfbpaudbd`) exactly: same version prefixes, same names, and SQL that matches the applied statements (compared by whitespace-insensitive hash). Three migrations that existed only in the database (`marketplace_collaboration`, `public_marketplace_discovery`, `restrict_private_portfolio_to_own_or_public`) were added, and the two whose files had drifted (`v10_messages_realtime`, `restore_public_rpc_schema_usage`) now carry the applied SQL.
+
+`20261023050000_v33_project_requests.sql` is the one exception: V33 was applied to the database outside the migration history. Its file is kept so a fresh environment can be rebuilt in order (V34 depends on it); it is timestamped just before V34 for that reason. Do not re-run it against the beta database.
 
 ## Manual sign-off checklist
 1. Signed-in homepage: notification bell visible, correct buyer/seller recipient, unread 1→0.

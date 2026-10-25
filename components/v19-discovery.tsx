@@ -6,7 +6,7 @@ const options=[['design','Брэнд & Дизайн','Brand & Design',PenTool,'i
 export function PopularCategories({en}:{en:boolean}){
 const t=(mn:string,eng:string)=>en?eng:mn;
 return <section className="v19-section v19-categories shell" id="popular-categories" aria-labelledby="v19-category-title">
- <div className="v19-heading"><div><span className="v19-eyebrow">01 / EXPLORE BY CATEGORY</span><h2 id="v19-category-title">{t('Танд хэрэгтэй ур чадвар энд бий.','Whatever the project, find your people.')}</h2><p>{t('Санаагаа бодит болгох мэргэжилтнээ салбараар нь олоорой.','Go from a great idea to the right creative partner.')}</p></div><Link className="v19-view-all" href="/explore/">{t('Бүх үйлчилгээг үзэх','Explore all services')}<ArrowUpRight size={18}/></Link></div>
+ <div className="v19-heading"><div><span className="v19-eyebrow">01 / EXPLORE BY CATEGORY</span><h2 id="v19-category-title">{t('Ур чадвараар хай.','Explore by skill.')}</h2></div><Link className="v19-view-all" href="/explore/">{t('Бүх үйлчилгээг үзэх','Explore all services')}<ArrowUpRight size={18}/></Link></div>
  <div className="v19-category-grid">{options.map(([key,mn,eng,Icon,kind],i)=><Link href={'/explore/?category='+key} key={key} className={'v19-category-card v19-cat-'+kind}><span className="v19-category-number">{String(i+1).padStart(2,'0')}</span><div className="v19-category-icon"><Icon size={28} strokeWidth={1.65}/></div><span className="v19-category-title">{en?eng:mn}</span><span className="v19-category-arrow"><ArrowUpRight size={19}/></span></Link>)}</div>
 </section>;
 }

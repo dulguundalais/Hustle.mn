@@ -22,7 +22,7 @@ test('existing service gets actual Basic price without fabricating other prices'
  assert.deepEqual(packs.map(x=>x.tier),['Basic','Standard','Premium']);
 });
 test('database owns order pricing and immutable package snapshots',()=>{
- const sql=read('supabase/migrations/20261021170000_v17_service_packages.sql');
+ const sql=read('supabase/migrations/20261021084746_v17_service_packages.sql');
  assert.match(sql,/new.quoted_price=pkg.price/);
  assert.match(sql,/new.included_features=pkg.includes/);
  assert.match(sql,/new.included_features is distinct from old.included_features/);
@@ -36,8 +36,11 @@ test('UI connects all tiers with atomic save and buyer selection',()=>{
  assert.match(ui,/package_name:packageName/);
  assert.match(ui,/<PackageEditor/);
  assert.match(ui,/<PackagePicker/);
- const publicUi=read('components/live-catalog.tsx');
+ // V39 intentionally moved package tabs out of every listing card and into service detail.
+ const publicUi=read('components/live-listing-detail.tsx');
  assert.match(publicUi,/Choose a package/);
- assert.match(publicUi,/aria-pressed=\{choice===tier\}/);
- assert.match(publicUi,/const price=picked\?\.price\?\?s\.price/);
+ assert.match(publicUi,/aria-pressed=\{tier===option\}/);
+ assert.match(publicUi,/const price=chosen\?\.price\?\?listing\?\.price\?\?0/);
+ const catalog=read('components/live-catalog.tsx');
+ assert.match(catalog,/\/listing\/\?id=/);
 });

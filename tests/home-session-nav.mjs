@@ -14,7 +14,7 @@ test('public header resolves Supabase persisted auth, profile identity and guest
  assert.match(src,/AccountMenu account=\{account\}/);
  assert.match(menu,/href="\/buyer\/"/);
  assert.match(menu,/href="\/seller-studio\/"/);
- assert.match(menu,/href="\/buyer\/\?tab=profile"/);
+ assert.match(menu,/href=\{account.isSeller\?'\/my-profile\/'\:'\/buyer\/\?tab=profile'\}/);
  assert.match(menu,/onSignOut/);
 });
 

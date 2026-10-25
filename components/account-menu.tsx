@@ -13,6 +13,7 @@ export default function AccountMenu({account,en,onSignOut,signingOut}:{
  const trigger=useRef<HTMLButtonElement>(null);
  const t=(mn:string,english:string)=>en?english:mn;
  const initial=Array.from(account.name.trim())[0]?.toLocaleUpperCase()||'H';
+ const dashboardHref=account.isSeller?'/seller-studio/':'/buyer/';
  useEffect(()=>{
   if(!open)return;
   const outside=(event:PointerEvent)=>{
@@ -39,9 +40,10 @@ export default function AccountMenu({account,en,onSignOut,signingOut}:{
     <div><strong title={account.name}>{account.name}</strong><small>{t('Нэвтэрсэн аккаунт','Signed in')}</small></div>
    </div>
    <div className="global-account-links">
-    <Link href="/buyer/" onClick={()=>setOpen(false)}><LayoutDashboard size={17}/>{t('Миний dashboard','My dashboard')}</Link>
+    <Link href={dashboardHref} onClick={()=>setOpen(false)}><LayoutDashboard size={17}/>{account.isSeller?t('Миний студи','Seller dashboard'):t('Миний dashboard','My dashboard')}</Link>
+    {account.isSeller&&<Link href="/buyer/" onClick={()=>setOpen(false)}><LayoutDashboard size={17}/>{t('Buyer горим','Buyer dashboard')}</Link>}
     <Link href="/seller-studio/" onClick={()=>setOpen(false)}><BriefcaseBusiness size={17}/>{account.isSeller?t('Seller Studio','Seller Studio'):t('Seller болох','Become a seller')}</Link>
-    <Link href="/buyer/?tab=profile" onClick={()=>setOpen(false)}><UserRound size={17}/>{t('Профайл засах','Edit profile')}</Link>
+    <Link href={account.isSeller?'/my-profile/':'/buyer/?tab=profile'} onClick={()=>setOpen(false)}><UserRound size={17}/>{t('Профайл','Profile')}</Link>
    </div>
    <button type="button" className="global-account-signout" disabled={signingOut} onClick={()=>void onSignOut()}>
     {signingOut?<LoaderCircle size={17} className="spin"/>:<LogOut size={17}/>}

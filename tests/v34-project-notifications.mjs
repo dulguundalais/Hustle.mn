@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 
-const migration=readFileSync('supabase/migrations/20261023150000_v34_project_notifications.sql','utf8');
+const migration=readFileSync('supabase/migrations/20261023060757_v34_project_notifications.sql','utf8');
 const project=readFileSync('components/project-matching.tsx','utf8');
 const css=readFileSync('app/project-matching.css','utf8');
 

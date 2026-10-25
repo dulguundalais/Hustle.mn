@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const sql=read('supabase/migrations/20261023120000_v33_project_requests.sql');
+const sql=read('supabase/migrations/20261023050000_v33_project_requests.sql');
 const buyer=read('components/project-matching.tsx');
 const finder=read('components/solution-finder.tsx');
 test('V33 matches only approved opted-in sellers with actual published category services',()=>{

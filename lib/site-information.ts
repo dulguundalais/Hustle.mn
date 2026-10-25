@@ -60,8 +60,8 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Hustle.mn хаалттай бета туршилтын шатанд байна. Зөвшөөрөгдсөн имэйлтэй хэрэглэгч л туршилтын ажлын орчинд нэвтэрнэ.",
-            "en": "Hustle.mn is in a closed beta. Access to authenticated workspaces is limited to approved email addresses."
+            "mn": "Hustle.mn нээлттэй бета туршилтын шатанд байна. Шинэ хэрэглэгч имэйлээ баталгаажуулаад шууд ашиглаж болно.",
+            "en": "Hustle.mn is in open beta. New users can access their workspace after email verification without manual approval."
           },
           {
             "mn": "Одоогоор бодит мөнгөн төлбөр, escrow санхүүгийн хамгаалалт, банк болон QPay холболт ажиллахгүй. Дэлгэцэд харагдах үнэ, referral урамшуулал нь туршилтын мэдээлэл бөгөөд төлбөр нэхэмжилсэн гэсэн үг биш.",
@@ -100,8 +100,8 @@ export const informationPages:Record<string,InfoPage>={
       "en": "Transparent terms for working together."
     },
     "subtitle": {
-      "mn": "Энэхүү баримт бичиг нь Hustle.mn-ийн хаалттай туршилтын үеийн үйлчилгээний нөхцөлийн санал болгож буй төсөл юм.",
-      "en": "This document describes proposed platform terms for the Hustle.mn closed beta. It is a draft for operator and legal review."
+      "mn": "Энэхүү баримт бичиг нь Hustle.mn-ийн нээлттэй бета туршилтын үеийн үйлчилгээний нөхцөлийн санал болгож буй төсөл юм.",
+      "en": "This document describes proposed platform terms for the Hustle.mn open beta. It is a draft for operator and legal review."
     },
     "review": true,
     "sections": [
@@ -117,8 +117,8 @@ export const informationPages:Record<string,InfoPage>={
             "en": "Hustle.mn provides a digital environment to connect independent service providers (Sellers) with Buyers. The platform does not automatically warrant a freelancer's work or results."
           },
           {
-            "mn": "Энэхүү нөхцөл нь одоогийн closed-beta туршилтын функцийг тайлбарлана. Төлбөртэй үйлчилгээ нэвтрэхэд нэмэлт нөхцөл, тусгай зөвшөөрөл болон үнэ, татварын мэдээлэл шаардлагатай.",
-            "en": "These terms describe current closed-beta capabilities. Any future paid launch requires additional terms, verified operator disclosures and applicable payment/tax arrangements."
+            "mn": "Энэхүү нөхцөл нь одоогийн нээлттэй бета туршилтын функцийг тайлбарлана. Төлбөртэй үйлчилгээ нэвтрэхэд нэмэлт нөхцөл, тусгай зөвшөөрөл болон үнэ, татварын мэдээлэл шаардлагатай.",
+            "en": "These terms describe current open-beta capabilities. Any future paid launch requires additional terms, verified operator disclosures and applicable payment/tax arrangements."
           }
         ],
         "bullets": []
@@ -131,8 +131,8 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Хэрэглэгч өөрийн хянадаг имэйлээр бүртгүүлж, баталгаажуулалтыг гүйцэтгэх ёстой. Бүртгэлтэй байх нь автоматаар хаалттай бета эрхтэй болно гэсэн үг биш; admin allowlist-д зөвшөөрсөн үед нэвтэрнэ.",
-            "en": "Users must register with an email address they control and complete required verification. Account creation does not automatically grant beta workspace access; an administrator must approve access."
+            "mn": "Хэрэглэгч өөрийн хянадаг имэйлээр бүртгүүлж, баталгаажуулалтыг гүйцэтгэх ёстой. Шинэ хэрэглэгч имэйлээ баталгаажуулмагц энгийн гишүүний эрх автоматаар олгогдоно. Аюулгүй байдлын үүднээс аккаунтын хандалтыг хязгаарлаж болно.",
+            "en": "Users must register with an email address they control and complete required verification. Verified new accounts receive standard member access automatically; accounts can be restricted for safety."
           },
           {
             "mn": "Нэвтрэх мэдээллээ хамгаалах, өөрийн аккаунтад хийгдсэн үйлдлийг хянах үүрэг хэрэглэгчид байна. Нэг хүн buyer болон freelancer горимыг ашиглаж болно; admin эрхийг зөвхөн эрх бүхий этгээд олгоно.",
@@ -185,8 +185,8 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Хаалттай бета туршилтад платформ бодит мөнгө хүлээн авахгүй, төлбөр шилжүүлэхгүй, escrow данс ажиллуулахгүй. Дэлгэцэд харагдах MNT үнэ болон 10% платформын комиссын дүрэм нь санхүүгийн гүйлгээ биш.",
-            "en": "During closed beta the platform does not collect or remit real money and does not operate escrow. MNT prices and the configurable 10% platform commission are not evidence of an actual transaction."
+            "mn": "Нээлттэй бета туршилтад платформ бодит мөнгө хүлээн авахгүй, төлбөр шилжүүлэхгүй, escrow данс ажиллуулахгүй. Дэлгэцэд харагдах MNT үнэ болон 10% платформын комиссын дүрэм нь санхүүгийн гүйлгээ биш.",
+            "en": "During open beta the platform does not collect or remit real money and does not operate escrow. MNT prices and the configurable 10% platform commission are not evidence of an actual transaction."
           },
           {
             "mn": "Ирээдүйн төлбөр, буцаан олголт, escrow болон татварын дүрмийг бодит үйлчилгээ эхлэхээс өмнө тусад нь нийтэлж, эрх зүйн шаардлагаар нягтална.",
@@ -370,8 +370,8 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Бүртгэл баталгаажуулах, beta allowlist эрх шалгах, freelancer-үүдийг хайлтад харуулах, чат/захиалга ажиллуулах, аюулгүй байдал хамгаалах, алдаа шалгах, үйлчилгээний чанарыг сайжруулахад ашиглана.",
-            "en": "Information supports account verification, beta access checks, opted-in freelancer discovery, messaging and order functionality, safety, troubleshooting and product improvement."
+            "mn": "Бүртгэл баталгаажуулах, нээлттэй бета гишүүний эрх болон хандалтын хязгаарлалт шалгах, freelancer-үүдийг хайлтад харуулах, чат/захиалга ажиллуулах, аюулгүй байдал хамгаалах, алдаа шалгах, үйлчилгээний чанарыг сайжруулахад ашиглана.",
+            "en": "Information supports account verification, open-beta member access checks, opted-in freelancer discovery, messaging and order functionality, safety, troubleshooting and product improvement."
           }
         ],
         "bullets": []
@@ -529,7 +529,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Нэвтрэлтийн cookie/session өгөгдөл нь аккаунт баталгаажуулах болон хаалттай ажлын орчинд хандахад хэрэгтэй. Browser-д cookie хаахад нэвтрэлт саатаж болно.",
+            "mn": "Нэвтрэлтийн cookie/session өгөгдөл нь аккаунт баталгаажуулах болон хэрэглэгчийн ажлын орчинд хандахад хэрэгтэй. Browser-д cookie хаахад нэвтрэлт саатаж болно.",
             "en": "Session cookies support sign-in and authenticated workspaces. Blocking necessary cookies may prevent access."
           }
         ],
@@ -641,8 +641,8 @@ export const informationPages:Record<string,InfoPage>={
             "en": "Use Contact Seller to start a conversation. If not signed in, you are guided through login/sign-up with the selected seller carried forward."
           },
           {
-            "mn": "Бета эрхтэй аккаунт шаардлагатай. Өөрийн seller үйлчилгээ дээр өөртэйгөө чат эхлүүлэх боломжгүй.",
-            "en": "An approved beta account is required. You cannot start a conversation with your own listing."
+            "mn": "Имэйл нь баталгаажсан, идэвхтэй аккаунт шаардлагатай. Өөрийн seller үйлчилгээ дээр өөртэйгөө чат эхлүүлэх боломжгүй.",
+            "en": "An active, verified account is required. You cannot start a conversation with your own listing."
           }
         ],
         "bullets": []
@@ -703,8 +703,8 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Нэг аккаунтаар Buyer/Seller хоёр горимыг ашиглаж болно. Seller Studio руу орж профайлаа seller болгон тохируул. Бета эрхийг админ зөвшөөрнө.",
-            "en": "You can use Buyer and Seller modes with one account. Enter Seller Studio to configure your seller profile; beta access is approved separately by an administrator."
+            "mn": "Нэг аккаунтаар Buyer/Seller хоёр горимыг ашиглаж болно. Имэйлээ баталгаажуулаад Seller Studio-д профайлаа тохируулна. Үйлчилгээ нийтлэхэд хяналт үйлчилнэ.",
+            "en": "You can use Buyer and Seller modes with one verified account. Set up your seller profile in Seller Studio; published services remain subject to moderation."
           }
         ],
         "bullets": []
@@ -869,18 +869,18 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
           "en": "Who can sign up?"
         },
         "a": {
-          "mn": "Одоогоор хаалттай бета туршилт. Бүртгэл үүсгээд имэйлээ баталгаажуулсан ч админы beta allowlist зөвшөөрөл хэрэгтэй.",
-          "en": "Hustle.mn is currently in closed beta. Creating and verifying an account is not enough: an administrator must also approve beta access."
+          "mn": "Hustle.mn нээлттэй бета туршилттай. Хэн ч бүртгүүлж болно; имэйлээ баталгаажуулсны дараа admin approval шаардлагагүй.",
+          "en": "Hustle.mn is in open beta. Anyone may sign up; email verification unlocks standard access without manual approval."
         }
       },
       {
         "q": {
-          "mn": "Бета эрх хүлээгдэж байна гэсэн нь юу гэсэн үг вэ?",
-          "en": "What does Beta access pending mean?"
+          "mn": "Аккаунтын хандалт идэвхгүй байвал яах вэ?",
+          "en": "What if my account access is unavailable?"
         },
         "a": {
-          "mn": "Та амжилттай нэвтэрсэн боловч тухайн имэйл allowlist-д идэвхжээгүй байна. Админтай өмнө тохиролцсон сувгаар холбогдон зөвшөөрөл хүснэ.",
-          "en": "You have signed in, but your email is not enabled in the beta allowlist. Ask the beta administrator through an existing verified channel."
+          "mn": "Имэйлээ баталгаажуулсныхаа дараа нэвтэрч, эрхээ дахин шалгана уу. Хандалт идэвхгүй хэвээр байвал аккаунт хязгаарлагдсан эсэхийг админаас лавлана уу.",
+          "en": "After verifying your email, sign in and check access again. If you are still blocked, contact the administrator to review possible account restrictions."
         }
       },
       {
@@ -1005,8 +1005,8 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
           "en": "Do I pay real money during beta?"
         },
         "a": {
-          "mn": "Үгүй. Одоогийн closed beta-д банк, QPay, escrow болон төлбөрийн гүйлгээ идэвхгүй. Үнэ нь захиалгын туршилтын мэдээлэл.",
-          "en": "No. Banking, QPay, escrow and real money transactions are not active in the current closed beta. Displayed prices support order testing."
+          "mn": "Үгүй. Одоогийн нээлттэй бета хувилбарт банк, QPay, escrow болон төлбөрийн гүйлгээ идэвхгүй. Үнэ нь захиалгын туршилтын мэдээлэл.",
+          "en": "No. Banking, QPay, escrow and real money transactions are not active in the current open beta. Displayed prices support order testing."
         }
       }
     ]
@@ -1071,8 +1071,8 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
           "en": "Is an official support email available?"
         },
         "a": {
-          "mn": "Одоогоор албан ёсны support имэйл баталгаажаагүй тул зохиомол хаяг нийтлэхгүй. Бета туршилтад урьсан админтай өмнө ашиглаж байсан сувгаар холбогдоно.",
-          "en": "No verified official support mailbox has been published. Contact the beta administrator through the channel used for your invitation."
+          "mn": "Одоогоор албан ёсны support имэйл баталгаажаагүй тул зохиомол хаяг нийтлэхгүй. Платформын админтай өмнө ашиглаж байсан баталгаатай сувгаар холбогдоно.",
+          "en": "No verified official support mailbox has been published. Contact the platform administrator through an existing trusted channel."
         }
       },
       {

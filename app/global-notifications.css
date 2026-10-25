@@ -30,3 +30,18 @@
 @media(max-width:800px){.hustle-v5 .global-notice-trigger{width:37px;height:37px}.hustle-v5 .global-notice-panel{right:-49px;top:calc(100% + 17px)}}
 @media(max-width:480px){.hustle-v5 .global-notice-panel{right:-46px;width:min(340px,calc(100vw - 24px))}.hustle-v5.workspace .global-notice-panel{right:-36px}}
 @media(prefers-reduced-motion:reduce){.hustle-v5 .global-notice-trigger{transition:none}}
+
+/* V44: readable interactive controls and clearer loading feedback. */
+.hustle-v5 .global-notice-heading button,.hustle-v5 .global-notice-read{min-height:36px;min-width:36px;cursor:pointer}
+.hustle-v5 .global-notice-heading button:disabled{opacity:.5;cursor:wait}
+.hustle-v5 .global-notice-read:focus-visible,.hustle-v5 .global-notice-heading button:focus-visible,.hustle-v5 .global-notice-info a:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.hustle-v5 .global-notice-info a{font-size:13px;line-height:1.6}
+.hustle-v5 .global-notice-info small{font-size:11px;line-height:1.5}
+.hustle-v5 .global-notice-refreshing{animation:global-notice-spin 1s linear infinite}
+@keyframes global-notice-spin{to{transform:rotate(360deg)}}
+@media(max-width:480px){
+ .hustle-v5 .global-notice-item{padding:14px 12px;gap:12px}
+ .hustle-v5 .global-notice-info a{font-size:13px}
+ .hustle-v5 .global-notice-footer a{min-height:36px}
+}
+@media(prefers-reduced-motion:reduce){.hustle-v5 .global-notice-refreshing{animation:none}}

@@ -10,7 +10,7 @@ Target: **private closed-beta preview only**. Do not publish `hustle.mn`; do not
 
 ## Database rollout gate — manual review required
 1. Confirm V33 deployed objects in beta: `project_requests`, `project_invitations`, `project_proposals`, opt-in seller profiles, and server RPCs.
-2. Review `supabase/migrations/20261023150000_v34_project_notifications.sql`; apply **only** to the Hustle.mn beta database once approved. The SQL is additive, transaction-wrapped, creates no client INSERT permission, and never sends external email.
+2. Review `supabase/migrations/20261023060757_v34_project_notifications.sql`; apply **only** to the Hustle.mn beta database once approved. The SQL is additive, transaction-wrapped, creates no client INSERT permission, and never sends external email.
 3. Inspect `pg_policies` and `information_schema.role_table_grants`: authenticated SELECT own notifications, UPDATE(read_at) own rows, anonymous no access, no client INSERT/DELETE.
 4. Run authenticated actor tests (buyer A, seller B invited, unrelated C, nonapproved D): A sees only proposal events, B only invitation/award/cancel for assigned projects, C/D see none; writing different recipient or deleting/inserting should be rejected.
 5. Exercise buyer request→seller inbox→proposal→buyer accept and cancel using real allowed beta accounts. Confirm no duplicate rows (unique key), counts change on reload, and original orders/chat remain intact.

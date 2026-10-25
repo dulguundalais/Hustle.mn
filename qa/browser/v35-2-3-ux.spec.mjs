@@ -29,6 +29,8 @@ test('guest project request login returns with guided-entry text',async({page})=
 test('project draft survives route navigation and can be cleared',async({page})=>{
  await page.goto('/buyer/');
  await loginBuyer(page);
+ // Wait for the actual Supabase session and dashboard to finish before navigating.
+ await expect(page.locator('.workspace-main')).toBeVisible();
  await page.goto('/project-requests/');
  await expect(page.locator('.project-request-form')).toBeVisible();
  const title=page.locator('.project-request-form input').first();

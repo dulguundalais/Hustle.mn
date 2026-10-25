@@ -9,6 +9,13 @@ export type SellerContactResult =
 
 const sellerSlugPattern=/^[a-z0-9][a-z0-9-]{2,59}$/;
 
+// Keep the selected seller across sign-in; already signed-in buyers can enter
+// their workspace directly instead of being sent back through the login screen.
+export function sellerContactHref(slug:string,signedIn=false):string{
+ if(!sellerSlugPattern.test(slug))return '/explore/';
+ return signedIn?'/buyer/?seller='+encodeURIComponent(slug):'/login/?mode=buyer&seller='+encodeURIComponent(slug);
+}
+
 export function resolveSellerContact(
  slug:string|null,
  currentUserId:string,
