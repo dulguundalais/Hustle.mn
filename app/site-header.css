@@ -1,0 +1,52 @@
+/* V50 — one header for every public page (components/site-header.tsx).
+   The header element carries .hustle-v5 so account/notification menus keep their tokens,
+   but it never inherits page-level min-height or backgrounds. */
+.hustle-v5.hx-header{position:sticky;top:0;z-index:40;min-height:0;height:auto;font-size:14px;line-height:1.4;
+ background:rgba(255,255,255,.94);border-bottom:1px solid rgba(12,49,78,.09);color:var(--text);
+ backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.hustle-v5.hx-header.night{background:rgba(13,24,37,.95);border-color:var(--border)}
+.hustle-v5.hx-header .hx-header-inner{max-width:1400px;margin:0 auto;height:72px;padding:0 clamp(16px,3.4vw,48px);display:flex;align-items:center;gap:clamp(18px,3vw,44px)}
+.hustle-v5.hx-header .hx-brand{display:inline-flex;align-items:center;font-size:30px;font-weight:850;letter-spacing:-.08em;line-height:1;color:var(--text);text-decoration:none;white-space:nowrap}
+.hustle-v5.hx-header .hx-brand span{color:#13b7d4;font-size:28px}
+.hustle-v5.hx-header .hx-brand small{font-size:12px;letter-spacing:-.02em;margin:13px 0 0 3px}
+.hustle-v5.hx-header .hx-nav{display:flex;align-items:center;gap:clamp(6px,1.2vw,14px)}
+.hustle-v5.hx-header .hx-nav>a{position:relative;padding:9px 10px;border-radius:10px;font-size:14px;font-weight:700;color:var(--sub);text-decoration:none;transition:color .15s ease,background-color .15s ease}
+.hustle-v5.hx-header .hx-nav>a:hover{color:var(--text);background:var(--soft)}
+.hustle-v5.hx-header .hx-nav>a[aria-current=page]{color:var(--text)}
+.hustle-v5.hx-header .hx-nav>a[aria-current=page]::after{content:'';position:absolute;left:10px;right:10px;bottom:-15px;height:2px;border-radius:2px;background:#13b7d4}
+.hustle-v5.hx-header .hx-nav-auth{display:none}
+.hustle-v5.hx-header .hx-actions{margin-left:auto;display:flex;align-items:center;gap:clamp(4px,.8vw,12px)}
+.hustle-v5.hx-header .hx-icon{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:40px;min-height:40px;padding:0 8px;border:0;border-radius:11px;background:transparent;color:inherit;cursor:pointer}
+.hustle-v5.hx-header .hx-icon:hover{background:var(--soft)}
+.hustle-v5.hx-header .hx-icon.locale{font-size:12px;font-weight:750}
+.hustle-v5.hx-header .hx-login{padding:9px 10px;font-size:14px;font-weight:750;color:var(--text);text-decoration:none;white-space:nowrap}
+.hustle-v5.hx-header .hx-cta{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 16px;border-radius:11px;background:#0c334f;color:#fff;font-size:13.5px;font-weight:800;text-decoration:none;white-space:nowrap;box-shadow:0 6px 18px rgba(6,42,77,.12);transition:background-color .15s ease}
+.hustle-v5.hx-header .hx-cta:hover{background:#075b84}
+.hustle-v5.hx-header.night .hx-cta{background:#e7f6fb;color:#062b4b}
+.hustle-v5.hx-header .hx-checking{display:inline-block;width:110px;height:34px;border-radius:10px;background:var(--soft)}
+.hustle-v5.hx-header .hx-burger{display:none}
+.hustle-v5.hx-header :is(a,button):focus-visible{outline:3px solid #3cd3e8;outline-offset:2px}
+
+/* Breadcrumbs */
+.hx-crumbs ol{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:0;padding:0;list-style:none;font-size:13px;line-height:1.4;color:#5d6f80}
+.hx-crumbs li{display:inline-flex;align-items:center;gap:4px;min-width:0}
+.hx-crumbs li+li::before{content:'›';margin:0 4px;color:#9aabb8}
+.hx-crumbs a{color:#3e5566;text-decoration:none;border-radius:4px}
+.hx-crumbs a:hover{color:#095b88;text-decoration:underline;text-underline-offset:3px}
+.hx-crumbs [aria-current=page]{color:#102435;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:42ch}
+
+@media(max-width:900px){
+ .hustle-v5.hx-header .hx-header-inner{height:64px}
+ .hustle-v5.hx-header .hx-nav{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;align-items:stretch;gap:4px;padding:12px 16px 18px;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:0 18px 40px rgba(6,42,77,.12)}
+ .hustle-v5.hx-header .hx-nav.open{display:flex}
+ .hustle-v5.hx-header .hx-nav>a{padding:13px 12px;font-size:16px;color:var(--text)}
+ .hustle-v5.hx-header .hx-nav>a[aria-current=page]{background:var(--soft)}
+ .hustle-v5.hx-header .hx-nav>a[aria-current=page]::after{display:none}
+ .hustle-v5.hx-header .hx-nav-auth{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+ .hustle-v5.hx-header .hx-nav-auth a{display:flex;align-items:center;justify-content:center;min-height:46px;border-radius:11px;border:1px solid var(--border);font-weight:750;color:var(--text);text-decoration:none}
+ .hustle-v5.hx-header .hx-nav-auth .hx-nav-cta{background:#0c334f;border-color:#0c334f;color:#fff}
+ .hustle-v5.hx-header .hx-login,.hustle-v5.hx-header .hx-cta{display:none}
+ .hustle-v5.hx-header .hx-burger{display:inline-flex}
+ .hustle-v5.hx-header .hx-brand{font-size:27px}
+}
+@media(max-width:420px){.hustle-v5.hx-header .hx-icon.locale{min-width:36px;padding:0 4px}}

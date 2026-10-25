@@ -46,10 +46,11 @@ test('account menu names Profile and chooses protected owner UI for sellers',()=
  assert.match(editor,/status==='guest'/);
  assert.match(editor,/status==='not-seller'/);
 });
-test('profile owner controls show exact public iframe rather than fake buyer data',()=>{
+test('profile owner studio previews the live draft, not a stale iframe',()=>{
  const editor=read('components/seller-profile-manager.tsx');
- assert.match(editor,/<iframe/);
- assert.match(editor,/src=\{previewUrl\}/);
+ const preview=read('components/seller-profile-preview.tsx');
+ assert.doesNotMatch(editor,/<iframe/);
+ assert.match(editor,/<SellerProfilePreview draft=\{draft\}/);
  assert.match(editor,/profile\?\.public_profile&&publicSlug/);
  assert.match(editor,/onClick=\{\(\)=>setBuyerView/);
  assert.match(editor,/onChange=\{e=>setDraft/);
@@ -59,6 +60,14 @@ test('profile owner controls show exact public iframe rather than fake buyer dat
  assert.match(editor,/<SellerCoverEditor/);
  assert.match(editor,/db.from\('portfolio_items'\).insert/);
  assert.match(editor,/db.from\('portfolio_items'\).delete/);
+ // Completeness checklist, unsaved-changes bar and a mobile edit/preview switch.
+ assert.match(editor,/const checks:/);
+ assert.match(editor,/className="sp-savebar"/);
+ assert.match(editor,/beforeunload/);
+ assert.match(editor,/sp-mobile-switch/);
+ // Only published services are shown to buyers in the preview.
+ assert.match(preview,/services.filter\(s=>s.status==='published'\)/);
+ assert.doesNotMatch(preview,/dangerouslySetInnerHTML/);
 });
 test('cover is owner-managed, 5MB capped and can be repositioned without public bucket',()=>{
  const editor=read('components/seller-cover-editor.tsx');

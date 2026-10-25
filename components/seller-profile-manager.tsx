@@ -1,39 +1,55 @@
 'use client';
-import {useCallback,useEffect,useRef,useState} from 'react';
+import {useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import Link from 'next/link';
-import {ArrowLeft,ArrowUpRight,BriefcaseBusiness,CheckCircle2,Eye,EyeOff,FileImage,ImagePlus,Layers3,LoaderCircle,Pencil,Plus,RefreshCw,Save,ShieldCheck,Trash2,UserRound,Wrench} from 'lucide-react';
+import {ArrowUpRight,BriefcaseBusiness,Check,CheckCircle2,Eye,EyeOff,FileImage,Globe2,Layers3,LoaderCircle,Maximize2,Minimize2,Monitor,Pencil,Plus,RotateCcw,Save,Smartphone,Trash2,UploadCloud,UserRound,Wrench,X} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
 import {normalizeSellerSlug,isValidSellerSlug} from '../lib/marketplace/seller-slug';
 import type {Profile} from '../lib/marketplace/types';
 import SellerAvatarEditor from './seller-avatar-editor';
 import SellerCoverEditor from './seller-cover-editor';
 import SellerToolEditor from './seller-tool-editor';
+import SellerProfilePreview,{splitSkills,type PreviewSection,type PreviewService} from './seller-profile-preview';
+import SiteHeader,{Breadcrumbs,useSiteAccount} from './site-header';
 import '../app/v42-profile-owner.css';
+import '../app/v50-profile-studio.css';
 
-type Tab='about'|'photos'|'tools'|'projects'|'services';
+type Tab=PreviewSection;
 type Item={id:string;title:string;object_path:string;url?:string};
 type ProfileDraft={display_name:string;headline:string;bio:string;skills:string;slug:string;public_profile:boolean};
 const fileExt:Record<string,string>={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'};
 const emptyDraft:ProfileDraft={display_name:'',headline:'',bio:'',skills:'',slug:'',public_profile:false};
+const BIO_MIN=80;
+const toDraft=(p:Profile):ProfileDraft=>({display_name:p.display_name||'',headline:p.headline||'',bio:p.bio||'',skills:p.skills||'',slug:p.slug||'',public_profile:!!p.public_profile});
+const sameDraft=(a:ProfileDraft,b:ProfileDraft)=>(Object.keys(a) as (keyof ProfileDraft)[]).every(k=>a[k]===b[k]);
+
 export default function SellerProfileManager(){
  const [uid,setUid]=useState('');
  const [profile,setProfile]=useState<Profile|null>(null);
  const [draft,setDraft]=useState<ProfileDraft>(emptyDraft);
  const [items,setItems]=useState<Item[]>([]);
+ const [tools,setTools]=useState<string[]>([]);
+ const [services,setServices]=useState<PreviewService[]>([]);
+ const [photoUrls,setPhotoUrls]=useState<{avatar:string|null;cover:string|null}>({avatar:null,cover:null});
  const [status,setStatus]=useState<'loading'|'ready'|'error'|'guest'|'not-seller'>('loading');
  const [tab,setTab]=useState<Tab>('about');
  const [buyerView,setBuyerView]=useState(false);
+ const [mobilePane,setMobilePane]=useState<'edit'|'preview'>('edit');
+ const [device,setDevice]=useState<'desktop'|'mobile'>('desktop');
  const [busy,setBusy]=useState(false);
  const [message,setMessage]=useState('');
  const [error,setError]=useState('');
- const [previewRevision,setPreviewRevision]=useState(0);
  const [en,setEn]=useState(false);
+ const [skillInput,setSkillInput]=useState('');
  const [projectTitle,setProjectTitle]=useState('');
  const [projectFile,setProjectFile]=useState<File|null>(null);
+ const [projectPreview,setProjectPreview]=useState<string|null>(null);
+ const [dragging,setDragging]=useState(false);
+ const [confirmRemove,setConfirmRemove]=useState('');
  const portfolioFile=useRef<HTMLInputElement>(null);
+ const editorTop=useRef<HTMLDivElement>(null);
+ const session=useSiteAccount();
  const t=(mn:string,english:string)=>en?english:mn;
- const refreshPreview=useCallback(()=>setPreviewRevision(v=>v+1),[]);
- const syncProfile=(p:Profile)=>{setProfile(p);setDraft({display_name:p.display_name||'',headline:p.headline||'',bio:p.bio||'',skills:p.skills||'',slug:p.slug||'',public_profile:!!p.public_profile})};
+ const syncProfile=(p:Profile)=>{setProfile(p);setDraft(toDraft(p))};
  const loadItems=async(id:string)=>{
   const db=await marketplaceClient();
   const res=await db.from('portfolio_items').select('id,title,object_path').eq('seller_id',id).order('created_at',{ascending:false});
@@ -44,6 +60,16 @@ export default function SellerProfileManager(){
    return {...item,url:s.data?.signedUrl};
   }));
   setItems(signed);
+ };
+ const loadTools=useCallback(async(id:string)=>{
+  const db=await marketplaceClient();
+  const r=await db.from('seller_tools').select('tool_key').eq('seller_id',id).order('created_at',{ascending:true});
+  if(!r.error)setTools(((r.data||[]) as {tool_key:string}[]).map(x=>x.tool_key));
+ },[]);
+ const loadServices=async(id:string)=>{
+  const db=await marketplaceClient();
+  const r=await db.from('services').select('id,title,title_en,category,price,status').eq('seller_id',id).order('created_at',{ascending:false});
+  if(!r.error)setServices((r.data||[]) as PreviewService[]);
  };
  useEffect(()=>{
   let alive=true;setStatus('loading');
@@ -59,27 +85,76 @@ export default function SellerProfileManager(){
    setUid(user.id);
    if(!own||!own.is_seller){setStatus('not-seller');return}
    syncProfile(own);
-   await loadItems(user.id);
+   await Promise.all([loadItems(user.id),loadTools(user.id),loadServices(user.id)]);
    if(alive)setStatus('ready');
   })().catch(()=>{if(alive)setStatus('error')});
   return()=>{alive=false};
- },[]);
+ },[loadTools]);
+ // Signed URLs for the live preview follow the saved photo paths.
+ useEffect(()=>{
+  if(!profile)return;
+  let alive=true;
+  void (async()=>{
+   const db=await marketplaceClient();
+   const sign=async(path?:string|null)=>{if(!path)return null;try{const s=await db.storage.from('portfolio').createSignedUrl(path,600);return s.data?.signedUrl||null}catch{return null}};
+   const [avatar,cover]=await Promise.all([sign(profile.avatar_path),sign(profile.cover_path)]);
+   if(alive)setPhotoUrls({avatar,cover});
+  })();
+  return()=>{alive=false};
+ },[profile?.avatar_path,profile?.cover_path]);// eslint-disable-line react-hooks/exhaustive-deps
+ useEffect(()=>{try{localStorage.setItem('hustle-language',en?'en':'mn');document.documentElement.lang=en?'en':'mn'}catch{}},[en]);
+ // Object URL for the project the seller is about to upload.
+ useEffect(()=>{
+  if(!projectFile){setProjectPreview(null);return}
+  const u=URL.createObjectURL(projectFile);setProjectPreview(u);
+  return()=>URL.revokeObjectURL(u);
+ },[projectFile]);
+ const saved=useMemo(()=>profile?toDraft(profile):emptyDraft,[profile]);
+ const dirty=status==='ready'&&!sameDraft(draft,saved);
+ // Warn before leaving with unsaved text.
+ useEffect(()=>{
+  if(!dirty)return;
+  const warn=(e:BeforeUnloadEvent)=>{e.preventDefault();e.returnValue=''};
+  window.addEventListener('beforeunload',warn);
+  return()=>window.removeEventListener('beforeunload',warn);
+ },[dirty]);
  const validSlug=isValidSellerSlug(draft.slug);
  const publicSlug=profile?.slug&&isValidSellerSlug(profile.slug)?profile.slug:null;
  const isPublic=Boolean(profile?.public_profile&&publicSlug);
  const url=publicSlug?'/p/'+encodeURIComponent(publicSlug)+'/':'';
- const previewUrl=url+'?lang='+(en?'en':'mn')+'&rev='+previewRevision;
- const nav:[Tab,string,string,typeof UserRound][]=[
-  ['about','Миний тухай','About',UserRound],
-  ['photos','Зураг & Cover','Photos & cover',FileImage],
-  ['tools','Skills & Tools','Skills & tools',Wrench],
-  ['projects','Бүтээлүүд','Projects',Layers3],
-  ['services','Үйлчилгээ','Services',BriefcaseBusiness]
+ const skills=splitSkills(draft.skills);
+ const published=services.filter(s=>s.status==='published').length;
+ const checks:{id:string;section:Tab;mn:string;en:string;done:boolean}[]=[
+  {id:'photo',section:'photos',mn:'Профайл зураг',en:'Profile photo',done:Boolean(profile?.avatar_path)},
+  {id:'name',section:'about',mn:'Нэр ба мэргэжил',en:'Name and headline',done:draft.display_name.trim().length>=2&&draft.headline.trim().length>=3},
+  {id:'bio',section:'about',mn:'Танилцуулга ('+BIO_MIN+'+ тэмдэгт)',en:'About you ('+BIO_MIN+'+ characters)',done:draft.bio.trim().length>=BIO_MIN},
+  {id:'skills',section:'skills',mn:'3+ ур чадвар',en:'3+ skills',done:skills.length>=3},
+  {id:'portfolio',section:'projects',mn:'3+ бүтээл',en:'3+ portfolio projects',done:items.length>=3},
+  {id:'cover',section:'photos',mn:'Cover зураг',en:'Cover photo',done:Boolean(profile?.cover_path)},
+  {id:'service',section:'services',mn:'Нийтлэгдсэн үйлчилгээ',en:'A published service',done:published>0},
+  {id:'public',section:'publish',mn:'Профайлаа нийтэд нээх',en:'Profile set to public',done:isPublic}
  ];
- const saveProfile=async(e:React.FormEvent)=>{
-  e.preventDefault();if(busy||!uid)return;
+ const doneCount=checks.filter(c=>c.done).length;
+ const percent=Math.round(doneCount/checks.length*100);
+ const nextCheck=checks.find(c=>!c.done);
+ const sectionDone=(s:Tab)=>checks.filter(c=>c.section===s).every(c=>c.done);
+ const nav:[Tab,string,string,typeof UserRound][]=[
+  ['about','Танилцуулга','About',UserRound],
+  ['photos','Зураг ба cover','Photo & cover',FileImage],
+  ['skills','Ур чадвар ба програм','Skills & tools',Wrench],
+  ['projects','Бүтээлүүд','Portfolio',Layers3],
+  ['services','Үйлчилгээ','Services',BriefcaseBusiness],
+  ['publish','Хаяг ба нийтлэх','URL & visibility',Globe2]
+ ];
+ const go=(s:Tab)=>{
+  setTab(s);setBuyerView(false);setMobilePane('edit');setError('');setMessage('');setConfirmRemove('');
+  requestAnimationFrame(()=>editorTop.current?.scrollIntoView({block:'nearest',behavior:'smooth'}));
+ };
+ const saveProfile=async(e?:React.FormEvent)=>{
+  e?.preventDefault();if(busy||!uid)return;
   setError('');setMessage('');
-  if(draft.display_name.trim().length<2||!validSlug){setError(t('Нэр болон профайлын URL-аа шалгана уу.','Check your name and profile URL.'));return}
+  if(draft.display_name.trim().length<2){setError(t('Нэрээ 2-оос дээш тэмдэгтээр бичнэ үү.','Your name needs at least 2 characters.'));go('about');return}
+  if(!validSlug){setError(t('Профайлын хаяг 3-60 тэмдэгт, жижиг латин үсэг, тоо, зураас байна.','Your profile URL must be 3–60 lowercase letters, numbers or dashes.'));go('publish');return}
   setBusy(true);
   try{
    const db=await marketplaceClient();
@@ -89,21 +164,35 @@ export default function SellerProfileManager(){
    const response=await db.from('profiles').update(payload).eq('id',uid).eq('is_seller',true).select('*').single();
    if(response.error||!response.data)throw response.error||Error('No profile response');
    syncProfile(response.data as Profile);
-   refreshPreview();
-   setMessage(t('Өөрчлөлт амжилттай хадгалагдлаа.','Your changes have been saved.'));
-  }catch{setError(t('Хадгалж чадсангүй. Профайлын URL давхардаагүй эсэхийг шалгаарай.','Unable to save. Check whether this profile URL is already taken.'))}
+   setMessage(t('Өөрчлөлт хадгалагдлаа.','Changes saved.'));
+  }catch{setError(t('Хадгалж чадсангүй. Профайлын хаяг өөр хүнд бүртгэгдсэн эсэхийг шалгаарай.','Unable to save. That profile URL may already be taken.'))}
   finally{setBusy(false)}
  };
  const updatePhotos=(path:string|null,kind:'avatar'|'cover',focusY=50)=>{
   setProfile(prev=>prev?{...prev,...(kind==='avatar'?{avatar_path:path}:{cover_path:path,cover_focus_y:focusY})}:prev);
-  refreshPreview();
  };
+ const addSkill=(raw:string)=>{
+  const next=raw.split(',').map(s=>s.trim().slice(0,40)).filter(Boolean);
+  if(!next.length)return;
+  const merged=[...skills];
+  for(const s of next)if(!merged.some(x=>x.toLocaleLowerCase()===s.toLocaleLowerCase()))merged.push(s);
+  setDraft(v=>({...v,skills:merged.join(', ').slice(0,400)}));setSkillInput('');
+ };
+ const removeSkill=(s:string)=>setDraft(v=>({...v,skills:splitSkills(v.skills).filter(x=>x!==s).join(', ')}));
+ const pickProject=(file?:File|null)=>{
+  setError('');
+  if(!file)return;
+  if(!fileExt[file.type]||file.size===0||file.size>5*1024*1024){setError(t('5 MB хүртэл JPEG, PNG, WebP зураг сонгоно уу.','Choose a JPEG, PNG or WebP image under 5 MB.'));return}
+  setProjectFile(file);
+  if(!projectTitle)setProjectTitle(file.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').slice(0,140));
+ };
+ const clearProject=()=>{setProjectFile(null);setProjectTitle('');if(portfolioFile.current)portfolioFile.current.value=''};
  const addProject=async(e:React.FormEvent)=>{
   e.preventDefault();if(!projectFile||busy||!uid)return;
   setMessage('');setError('');
   const file=projectFile,title=projectTitle.trim();
   if(!title||title.length>140||!fileExt[file.type]||file.size===0||file.size>5*1024*1024){
-   setError(t('Зургийн нэр болон 5 MB хүртэл JPEG, PNG, WebP файлыг шалгана уу.','Provide a title and a JPEG, PNG or WebP file under 5 MB.'));return;
+   setError(t('Бүтээлийн нэр болон 5 MB хүртэл JPEG, PNG, WebP файлыг шалгана уу.','Provide a title and a JPEG, PNG or WebP file under 5 MB.'));return;
   }
   const b=new Uint8Array(await file.slice(0,12).arrayBuffer());
   const valid=file.type==='image/jpeg'?b[0]===255&&b[1]===216&&b[2]===255:file.type==='image/png'?[137,80,78,71,13,10,26,10].every((v,i)=>b[i]===v):String.fromCharCode(...b.slice(0,4))==='RIFF'&&String.fromCharCode(...b.slice(8,12))==='WEBP';
@@ -119,8 +208,8 @@ export default function SellerProfileManager(){
    if(upload.error)throw upload.error;
    const insert=await db.from('portfolio_items').insert({seller_id:uid,title,object_path:path}).select('id,title,object_path').single();
    if(insert.error||!insert.data)throw insert.error||Error('Failed to save project');
-   path='';setProjectTitle('');setProjectFile(null);if(portfolioFile.current)portfolioFile.current.value='';
-   await loadItems(uid);refreshPreview();
+   path='';clearProject();
+   await loadItems(uid);
    setMessage(t('Бүтээл нэмэгдлээ.','Project added.'));
   }catch{
    if(path){try{await (await marketplaceClient()).storage.from('portfolio').remove([path])}catch{}}
@@ -129,7 +218,7 @@ export default function SellerProfileManager(){
  };
  const removeProject=async(item:Item)=>{
   if(busy||!uid)return;
-  setBusy(true);setError('');
+  setBusy(true);setError('');setConfirmRemove('');
   try{
    const db=await marketplaceClient();
    const {data:{user}}=await db.auth.getUser();
@@ -137,50 +226,131 @@ export default function SellerProfileManager(){
    const result=await db.from('portfolio_items').delete().eq('id',item.id).eq('seller_id',uid);
    if(result.error)throw result.error;
    setItems(list=>list.filter(x=>x.id!==item.id));
-   refreshPreview();
    if(item.object_path.startsWith(uid+'/'))void db.storage.from('portfolio').remove([item.object_path]);
   }catch{setError(t('Бүтээл устгаж чадсангүй.','Could not remove the project.'))}
   finally{setBusy(false)}
  };
- if(status==='loading')return <main className="v42-owner-empty" role="status"><LoaderCircle className="spin" size={25}/>{t('Профайл ачаалж байна…','Loading your profile…')}</main>;
- if(status==='guest')return <main className="v42-owner-empty"><h1>{t('Профайл руу нэвтрэх','Sign in to your profile')}</h1><Link href="/login/?mode=seller">{t('Нэвтрэх','Sign in')} →</Link></main>;
- if(status==='not-seller')return <main className="v42-owner-empty"><h1>{t('Seller профайл шаардлагатай','Seller profile required')}</h1><p>{t('Эхлээд Seller Studio-д профайлаа үүсгээрэй.','Create your seller profile in Seller Studio first.')}</p><Link href="/seller-studio/?tab=profile">{t('Профайл үүсгэх','Set up profile')} →</Link></main>;
- if(status==='error'||!profile)return <main className="v42-owner-empty"><h1>{t('Профайл ачаалж чадсангүй','Cannot load profile')}</h1><Link href="/seller-studio/">{t('Seller Studio руу буцах','Back to Seller Studio')}</Link></main>;
- return <main className="v42-owner">
-  <header className="v42-owner-top"><Link href="/" className="v42-owner-brand">hustle<span>✳</span><small>mn</small></Link><nav><Link href="/seller-studio/"><ArrowLeft size={16}/>{t('Seller Studio','Seller Studio')}</Link><Link href="/explore/">{t('Үйлчилгээ хайх','Explore')}</Link></nav></header>
-  <div className="v42-owner-shell">
-   <div className="v42-owner-intro"><span className="v42-owner-eyebrow">HUSTLE / SELLER PROFILE</span><h1>{t('Миний профайл','My profile')}</h1><p>{t('Buyer-ийн харах профайлыг хажууд нь харж байгаад хэсэг бүрийг засаж болно.','Edit each part while viewing the same public portfolio your buyers see.')}</p></div>
-   <div className="v42-owner-status"><span className={isPublic?'v42-status-public':'v42-status-private'}>{isPublic?<Eye size={16}/>:<EyeOff size={16}/>}{isPublic?t('Нийтэд харагдана','Public profile'):t('Одоогоор нийтэд харагдахгүй','Private / setup mode')}</span>
-    <div className="v42-owner-actions">{isPublic&&<Link target="_blank" rel="noopener noreferrer" href={url}>{t('Нийтийн холбоос','Public link')}<ArrowUpRight size={16}/></Link>}<button type="button" aria-pressed={buyerView} onClick={()=>setBuyerView(v=>!v)}>{buyerView?<Pencil size={16}/>:<Eye size={16}/>}{buyerView?t('Засварлах горим','Edit mode'):t('Buyer view','Buyer view')}</button></div>
-   </div>
-   <div className={'v42-editor-layout '+(buyerView?'buyer-view':'')}>
-    {!buyerView&&<aside className="v42-edit-panel" aria-label={t('Профайл засварлах хэсэг','Profile editor')}>
-     <div className="v42-editor-nav">{nav.map(([id,mn,english,Icon])=><button key={id} type="button" className={tab===id?'selected':''} aria-current={tab===id?'page':undefined} onClick={()=>{setTab(id);setError('');setMessage('')}}><Icon size={17}/>{t(mn,english)}</button>)}</div>
-     <div className="v42-editor-content">
-      {tab==='about'&&<form className="v42-edit-fields" onSubmit={e=>{void saveProfile(e)}}>
-       <h2>{t('Танилцуулга','About me')}</h2><label>{t('Нэр','Display name')}<input required minLength={2} maxLength={80} value={draft.display_name} onChange={e=>setDraft(v=>({...v,display_name:e.target.value}))}/></label>
-       <label>{t('Мэргэжил / Гарчиг','Professional headline')}<input maxLength={150} value={draft.headline} onChange={e=>setDraft(v=>({...v,headline:e.target.value}))}/></label>
-       <label>{t('Миний тухай','Biography')}<textarea rows={6} maxLength={3000} value={draft.bio} onChange={e=>setDraft(v=>({...v,bio:e.target.value}))}/></label>
-       <label>{t('Ур чадварууд (таслалаар)','Skills (comma separated)')}<textarea rows={3} maxLength={400} value={draft.skills} onChange={e=>setDraft(v=>({...v,skills:e.target.value}))}/></label>
-       <label>{t('Профайлын хаяг','Public URL slug')}<input value={draft.slug} onChange={e=>setDraft(v=>({...v,slug:normalizeSellerSlug(e.target.value)}))} minLength={3} maxLength={60} required pattern="[a-z0-9][a-z0-9-]{2,59}"/><small>hustle.mn/p/{draft.slug||'your-name'}</small></label>
-       <label className="v42-public-toggle"><input type="checkbox" checked={draft.public_profile} onChange={e=>setDraft(v=>({...v,public_profile:e.target.checked}))}/><span>{t('Профайлаа нийтэд харуулахыг зөвшөөрөх','Make my portfolio public')}</span></label>
-       <button className="v42-save" type="submit" disabled={busy||!validSlug}><Save size={16}/>{busy?t('Хадгалж байна…','Saving…'):t('Өөрчлөлт хадгалах','Save changes')}</button>
-      </form>}
-      {tab==='photos'&&<div className="v42-photo-panel"><h2>{t('Зураг & Cover','Photos & cover')}</h2><SellerCoverEditor sellerId={uid} coverPath={profile.cover_path} focusY={profile.cover_focus_y} en={en} onChange={(path,y)=>updatePhotos(path,'cover',y)}/><div className="v42-avatar-panel"><SellerAvatarEditor sellerId={uid} name={profile.display_name} avatarPath={profile.avatar_path} en={en} onChange={path=>updatePhotos(path,'avatar')}/></div></div>}
-      {tab==='tools'&&<div className="v42-owner-tools"><SellerToolEditor sellerId={uid} en={en} onUpdated={refreshPreview}/></div>}
-      {tab==='projects'&&<section className="v42-project-editor"><h2>{t('Бүтээлүүд','Projects & portfolio')}</h2><p>{t('Нийтэд харуулахыг зөвшөөрсөн профайлынхаа бүтээлүүдийг энд удирдана.','Manage images and projects you want buyers to see when your profile is public.')}</p><form onSubmit={e=>{void addProject(e)}}><label>{t('Бүтээлийн нэр','Project title')}<input required maxLength={140} value={projectTitle} onChange={e=>setProjectTitle(e.target.value)}/></label><label>{t('Зураг (JPEG, PNG, WebP)','Image (JPEG, PNG, WebP)')}<input ref={portfolioFile} type="file" required accept="image/jpeg,image/png,image/webp" onChange={e=>setProjectFile(e.target.files?.[0]||null)}/></label><button className="v42-save" disabled={busy||!projectFile} type="submit"><Plus size={16}/>{t('Бүтээл нэмэх','Add project')}</button></form>
-       <div className="v42-project-list">{items.map(item=><article key={item.id}><div>{item.url?<img src={item.url} alt="" width={68} height={68}/>:<FileImage size={22}/>}</div><strong>{item.title}</strong><button type="button" disabled={busy} aria-label={t('Устгах: ','Remove: ')+item.title} onClick={()=>{void removeProject(item)}}><Trash2 size={17}/></button></article>)}{!items.length&&<p>{t('Одоогоор бүтээл алга.','No projects yet.')}</p>}</div>
-      </section>}
-      {tab==='services'&&<div className="v42-services-panel"><h2>{t('Миний үйлчилгээнүүд','My services')}</h2><p>{t('Үйлчилгээ, үнэ болон Basic/Standard/Premium багцуудаа Seller Studio-д удирдана.','Manage your published services and pricing packages from Seller Studio.')}</p><Link className="v42-save" href="/seller-studio/"><BriefcaseBusiness size={17}/>{t('Үйлчилгээ удирдах','Manage services')}</Link></div>}
-      {error&&<p className="v42-error" role="alert">{error}</p>}
-      {message&&<p className="v42-success" role="status"><CheckCircle2 size={16}/>{message}</p>}
-     </div>
-    </aside>}
-    <section className="v42-preview-column" aria-label={t('Buyer-ийн харах профайл','Buyer-facing profile preview')}>
-     <div className="v42-preview-toolbar"><div><span className="v42-live-dot"/><strong>{t('Buyer preview','Buyer preview')}</strong><small>{isPublic?t('Нийтийн профайлын бодит харагдац','Actual public portfolio view'):t('Профайл нийтэд нээгдээгүй','Not public yet')}</small></div><button type="button" onClick={refreshPreview}><RefreshCw size={16}/>{t('Шинэчлэх','Refresh')}</button></div>
-     {isPublic?<iframe key={previewUrl} title={t('Нийтийн профайл','Public seller portfolio')} src={previewUrl} className="v42-preview-frame" loading="eager" referrerPolicy="strict-origin-when-cross-origin"/>:<div className="v42-not-published"><ShieldCheck size={36}/><h2>{t('Хувийн профайлаа бүрдүүлнэ үү','Finish your seller profile')}</h2><p>{t('“Миний тухай” хэсэгт мэдээллээ бөглөж, нийтэд харагдахыг зөвшөөрсний дараа buyer-ийн харагдац энд нээгдэнэ.','Fill out your details, then enable public sharing to see the exact buyer-facing portfolio.')}</p><button type="button" onClick={()=>{setBuyerView(false);setTab('about')}}>{t('Профайл бөглөх','Complete profile')}</button></div>}
-    </section>
+ const header=<SiteHeader en={en} onToggleLanguage={()=>setEn(v=>!v)} session={session}/>;
+ const shell=(body:React.ReactNode)=><div className="sp-page">{header}{body}</div>;
+ if(status==='loading')return shell(<main className="v42-owner-empty" role="status"><LoaderCircle className="spin" size={25}/>{t('Профайл ачаалж байна…','Loading your profile…')}</main>);
+ if(status==='guest')return shell(<main className="v42-owner-empty"><h1>{t('Профайл руу нэвтрэх','Sign in to your profile')}</h1><Link href="/login/?mode=seller">{t('Нэвтрэх','Sign in')} →</Link></main>);
+ if(status==='not-seller')return shell(<main className="v42-owner-empty"><h1>{t('Freelancer профайл шаардлагатай','Freelancer profile required')}</h1><p>{t('Эхлээд Freelancer болж профайлаа үүсгээрэй.','Become a freelancer first to create your profile.')}</p><Link href="/join/seller/">{t('Freelancer болох','Become a freelancer')} →</Link></main>);
+ if(status==='error'||!profile)return shell(<main className="v42-owner-empty"><h1>{t('Профайл ачаалж чадсангүй','Cannot load profile')}</h1><Link href="/seller-studio/">{t('Freelancer самбар руу буцах','Back to the freelancer dashboard')}</Link></main>);
+ const statusChip=<span className={'sp-chip '+(isPublic?'is-public':'is-private')}>{isPublic?<Eye size={14} aria-hidden="true"/>:<EyeOff size={14} aria-hidden="true"/>}{isPublic?t('Нийтэд харагдаж байна','Public'):t('Хувийн горим','Private')}</span>;
+ const ring=<div className="sp-ring" style={{'--p':percent} as React.CSSProperties} role="img" aria-label={t('Профайл '+percent+'% бүрдсэн','Profile '+percent+'% complete')}><span>{percent}<small>%</small></span></div>;
+ return shell(<main className={'sp v42-owner'+(dirty?' has-savebar':'')}>
+  <div className="sp-head">
+   <Breadcrumbs en={en} items={[{label:t('Нүүр','Home'),href:'/'},{label:t('Freelancer самбар','Freelancer dashboard'),href:'/seller-studio/'},{label:t('Миний профайл','My profile')}]}/>
+   <div className="sp-title">
+    <div><h1>{t('Миний профайл','My profile')}</h1>{statusChip}</div>
+    <div className="sp-title-actions">
+     {isPublic&&<a className="sp-link" target="_blank" rel="noopener noreferrer" href={url}>{t('Нийтийн хуудсыг нээх','Open public page')}<ArrowUpRight size={15} aria-hidden="true"/></a>}
+    </div>
    </div>
   </div>
- </main>;
+  <div className="sp-mobile-switch" role="tablist" aria-label={t('Харагдац','View')}>
+   <button type="button" role="tab" aria-selected={mobilePane==='edit'} onClick={()=>setMobilePane('edit')}><Pencil size={15} aria-hidden="true"/>{t('Засах','Edit')}</button>
+   <button type="button" role="tab" aria-selected={mobilePane==='preview'} onClick={()=>setMobilePane('preview')}><Eye size={15} aria-hidden="true"/>{t('Урьдчилан харах','Preview')}</button>
+  </div>
+  <div className={'sp-grid'+(buyerView?' is-full':'')+' pane-'+mobilePane}>
+   {!buyerView&&<aside className="sp-rail" aria-label={t('Профайлын хэсгүүд','Profile sections')}>
+    <div className="sp-progress">
+     {ring}
+     <div><b>{percent===100?t('Профайл бүрэн боллоо','Your profile is complete'):t('Профайлаа бүрдүүлэх','Complete your profile')}</b>
+      <small>{t(doneCount+'/'+checks.length+' алхам','Step '+doneCount+' of '+checks.length)}</small>
+      {nextCheck&&<button type="button" className="sp-next" onClick={()=>go(nextCheck.section)}>{t('Дараагийн алхам: ','Next: ')}{en?nextCheck.en:nextCheck.mn}</button>}
+     </div>
+    </div>
+    <nav className="sp-nav">{nav.map(([id,mn,english,Icon])=><button key={id} type="button" className={tab===id?'selected':''} aria-current={tab===id?'step':undefined} onClick={()=>go(id)}>
+     <Icon size={17} aria-hidden="true"/><span>{t(mn,english)}</span>{sectionDone(id)?<Check className="sp-done" size={15} aria-label={t('Бүрэн','Done')}/>:<i className="sp-todo" aria-hidden="true"/>}
+    </button>)}</nav>
+    <details className="sp-checklist">
+     <summary>{t('Шалгах жагсаалт','Checklist')}</summary>
+     <ul>{checks.map(c=><li key={c.id} className={c.done?'done':''}><button type="button" onClick={()=>go(c.section)}>{c.done?<CheckCircle2 size={15} aria-hidden="true"/>:<i aria-hidden="true"/>}{en?c.en:c.mn}</button></li>)}</ul>
+    </details>
+   </aside>}
+   {!buyerView&&<section className="sp-editor" aria-labelledby="sp-editor-title">
+    <div ref={editorTop} className="sp-editor-scroll"/>
+    {tab==='about'&&<form className="sp-card v42-edit-fields" onSubmit={e=>{void saveProfile(e)}}>
+     <header><h2 id="sp-editor-title">{t('Танилцуулга','About you')}</h2><p>{t('Buyer таныг хэн бэ, юугаар туслах вэ гэдгийг эхний 5 секундэд ойлгох ёстой.','Buyers should understand who you are and how you help within five seconds.')}</p></header>
+     <label>{t('Нэр','Display name')}<input required minLength={2} maxLength={80} value={draft.display_name} onChange={e=>setDraft(v=>({...v,display_name:e.target.value}))} placeholder={t('Жишээ: Б. Анударь','e.g. Anudari B.')}/></label>
+     <label>{t('Мэргэжил','Headline')}<input maxLength={150} value={draft.headline} onChange={e=>setDraft(v=>({...v,headline:e.target.value}))} placeholder={t('Жишээ: Брэнд дизайнер · 6 жил туршлагатай','e.g. Brand designer · 6 years of experience')}/><small className="sp-count">{draft.headline.length}/150</small></label>
+     <label>{t('Миний тухай','About')}<textarea rows={7} maxLength={3000} value={draft.bio} onChange={e=>setDraft(v=>({...v,bio:e.target.value}))} placeholder={t('Юу хийдэг, хэнтэй ажилладаг, ямар үр дүн гаргадаг вэ?','What you do, who you work with and the results you deliver.')}/>
+      <small className={'sp-count'+(draft.bio.trim().length>=BIO_MIN?' ok':'')}>{draft.bio.trim().length<BIO_MIN?t('Дор хаяж '+BIO_MIN+' тэмдэгт · '+draft.bio.trim().length+'/'+BIO_MIN,'At least '+BIO_MIN+' characters · '+draft.bio.trim().length+'/'+BIO_MIN):draft.bio.length+'/3000'}</small></label>
+    </form>}
+    {tab==='photos'&&<div className="sp-card v42-photo-panel hustle-v5 sp-v5">
+     <header><h2 id="sp-editor-title">{t('Зураг ба cover','Photo & cover')}</h2><p>{t('Нүүр нь тод харагдах зураг итгэл төрүүлнэ. Cover нь таны ажлын төрлийг илэрхийлбэл сайн.','A clear face builds trust. A cover that shows your kind of work helps buyers decide.')}</p></header>
+     <div className="sp-subsection"><div className="v42-avatar-panel"><SellerAvatarEditor sellerId={uid} name={profile.display_name} avatarPath={profile.avatar_path} en={en} onChange={path=>updatePhotos(path,'avatar')}/></div></div>
+     <div className="sp-subsection"><h3>{t('Cover зураг','Cover photo')}</h3><SellerCoverEditor sellerId={uid} coverPath={profile.cover_path} focusY={profile.cover_focus_y} en={en} onChange={(path,y)=>updatePhotos(path,'cover',y)}/></div>
+    </div>}
+    {tab==='skills'&&<div className="sp-card">
+     <header><h2 id="sp-editor-title">{t('Ур чадвар ба програм','Skills & tools')}</h2><p>{t('Buyer хайлт хийхдээ эдгээр үгээр таныг олно. Enter эсвэл таслал дарж нэмнэ.','Buyers find you by these words. Press Enter or a comma to add one.')}</p></header>
+     <div className="sp-skills">
+      <ul>{skills.map(s=><li key={s}>{s}<button type="button" onClick={()=>removeSkill(s)} aria-label={t('Хасах: ','Remove: ')+s}><X size={13}/></button></li>)}</ul>
+      <input value={skillInput} maxLength={80} aria-label={t('Ур чадвар нэмэх','Add a skill')} placeholder={skills.length?t('Дахин нэмэх…','Add another…'):t('Жишээ: Брэндинг, Figma, SMM','e.g. Branding, Figma, SMM')}
+       onChange={e=>{const v=e.target.value;if(v.includes(','))addSkill(v);else setSkillInput(v)}}
+       onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();addSkill(skillInput)}else if(e.key==='Backspace'&&!skillInput&&skills.length)removeSkill(skills[skills.length-1])}}
+       onBlur={()=>addSkill(skillInput)}/>
+     </div>
+     <small className={'sp-count'+(skills.length>=3?' ok':'')}>{t(skills.length+' ур чадвар · 3-аас дээш байхад хайлтад илүү олддог','{n} skills · 3 or more helps you show up in search').replace('{n}',String(skills.length))}</small>
+     <div className="sp-subsection v42-owner-tools"><h3>{t('Ашигладаг програм','Tools you use')}</h3><div className="hustle-v5 sp-v5 sp-tools"><SellerToolEditor sellerId={uid} en={en} onUpdated={()=>{void loadTools(uid)}}/></div></div>
+    </div>}
+    {tab==='projects'&&<section className="sp-card v42-project-editor">
+     <header><h2 id="sp-editor-title">{t('Бүтээлүүд','Portfolio')}</h2><p>{t('Хамгийн сайн 3–6 ажлаа оруулаарай. Эхний зураг buyer-т хамгийн түрүүнд харагдана.','Add your best 3–6 pieces. The first one is what buyers see first.')}</p></header>
+     <form className="sp-upload" onSubmit={e=>{void addProject(e)}}>
+      <label className={'sp-drop'+(dragging?' is-drag':'')+(projectPreview?' has-file':'')}
+       onDragOver={e=>{e.preventDefault();setDragging(true)}} onDragLeave={()=>setDragging(false)}
+       onDrop={e=>{e.preventDefault();setDragging(false);pickProject(e.dataTransfer.files?.[0])}}>
+       <input ref={portfolioFile} className="sr-only" type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>pickProject(e.target.files?.[0])}/>
+       {projectPreview?<img src={projectPreview} alt=""/>:<><UploadCloud size={26} aria-hidden="true"/><b>{t('Зураг чирж оруулах эсвэл сонгох','Drop an image or browse')}</b><small>JPEG, PNG, WebP · 5 MB</small></>}
+      </label>
+      {projectFile&&<div className="sp-upload-meta">
+       <label>{t('Бүтээлийн нэр','Project title')}<input required maxLength={140} value={projectTitle} onChange={e=>setProjectTitle(e.target.value)}/></label>
+       <div className="sp-row"><button className="v42-save" disabled={busy||!projectTitle.trim()} type="submit"><Plus size={16} aria-hidden="true"/>{busy?t('Оруулж байна…','Uploading…'):t('Бүтээл нэмэх','Add project')}</button><button type="button" className="sp-ghost-btn" onClick={clearProject}>{t('Болих','Cancel')}</button></div>
+      </div>}
+     </form>
+     <ul className="sp-work">{items.map((item,i)=><li key={item.id}>
+      <div className="sp-work-img">{item.url?<img src={item.url} alt=""/>:<FileImage size={22} aria-hidden="true"/>}{i===0&&<span>{t('Нүүр','Cover')}</span>}</div>
+      <strong>{item.title}</strong>
+      {confirmRemove===item.id?<span className="sp-confirm"><button type="button" className="danger" disabled={busy} onClick={()=>{void removeProject(item)}}>{t('Устгах','Delete')}</button><button type="button" onClick={()=>setConfirmRemove('')}>{t('Болих','Keep')}</button></span>
+       :<button type="button" className="sp-icon-btn" disabled={busy} aria-label={t('Устгах: ','Remove: ')+item.title} onClick={()=>setConfirmRemove(item.id)}><Trash2 size={16}/></button>}
+     </li>)}</ul>
+     {!items.length&&!projectFile&&<p className="sp-empty">{t('Одоогоор бүтээл алга. Эхний ажлаа дээрээс нэмээрэй.','No projects yet. Add your first one above.')}</p>}
+    </section>}
+    {tab==='services'&&<div className="sp-card">
+     <header><h2 id="sp-editor-title">{t('Үйлчилгээ','Services')}</h2><p>{t('Нийтлэгдсэн үйлчилгээ профайл дээр харагдана. Шинэ үйлчилгээ админ хянасны дараа нийтлэгдэнэ.','Published services appear on your profile. New services go live after an admin review.')}</p></header>
+     {services.length?<ul className="sp-services">{services.map(s=><li key={s.id}><b>{en&&s.title_en?s.title_en:s.title}</b><span className={'sp-status st-'+s.status}>{s.status==='published'?t('Нийтлэгдсэн','Published'):s.status==='pending'?t('Хянагдаж байна','In review'):s.status==='rejected'?t('Засвар шаардлагатай','Needs changes'):s.status==='draft'?t('Ноорог','Draft'):t('Түр зогссон','Paused')}</span></li>)}</ul>:<p className="sp-empty">{t('Одоогоор үйлчилгээ алга.','No services yet.')}</p>}
+     <Link className="v42-save" href="/seller-studio/?tab=seller"><Plus size={16} aria-hidden="true"/>{t('Үйлчилгээ нэмэх, засах','Add or edit services')}</Link>
+    </div>}
+    {tab==='publish'&&<form className="sp-card v42-edit-fields" onSubmit={e=>{void saveProfile(e)}}>
+     <header><h2 id="sp-editor-title">{t('Хаяг ба нийтлэх','URL & visibility')}</h2><p>{t('Хаягаа нэг удаа сонгоод олон нийтийн сүлжээ, CV-дээ ашиглаарай.','Pick your address once and share it on social media or your CV.')}</p></header>
+     <label>{t('Профайлын хаяг','Profile URL')}<span className="sp-slug"><span>hustle.mn/p/</span><input value={draft.slug} onChange={e=>setDraft(v=>({...v,slug:normalizeSellerSlug(e.target.value)}))} minLength={3} maxLength={60} required pattern="[a-z0-9][a-z0-9-]{2,59}" aria-invalid={!validSlug}/></span>
+      <small className={validSlug?'sp-count ok':'sp-count bad'}>{validSlug?t('Зөв хаяг','Looks good'):t('3-60 тэмдэгт: жижиг латин үсэг, тоо, зураас','3–60 characters: lowercase letters, numbers, dashes')}</small></label>
+     <label className="sp-switch"><input type="checkbox" role="switch" checked={draft.public_profile} onChange={e=>setDraft(v=>({...v,public_profile:e.target.checked}))}/><span className="sp-switch-ui" aria-hidden="true"/><span><b>{t('Профайлаа нийтэд нээх','Make my profile public')}</b><small>{t('Унтраасан үед зөвхөн та харна.','When off, only you can see it.')}</small></span></label>
+    </form>}
+    {error&&<p className="v42-error sp-alert" role="alert">{error}</p>}
+    {message&&!dirty&&<p className="v42-success sp-alert" role="status"><CheckCircle2 size={16}/>{message}</p>}
+   </section>}
+   <section className="sp-preview" aria-label={t('Buyer-ийн харах профайл','Buyer-facing profile preview')}>
+    <div className="sp-preview-bar">
+     <div><span className="v42-live-dot" aria-hidden="true"/><strong>{t('Шууд харагдац','Live preview')}</strong><small>{dirty?t('Хадгалаагүй өөрчлөлт харагдаж байна','Showing unsaved changes'):t('Buyer яг ингэж харна','Exactly what buyers see')}</small></div>
+     <div className="sp-preview-tools">
+      <div className="sp-device" role="group" aria-label={t('Төхөөрөмж','Device')}>
+       <button type="button" aria-pressed={device==='desktop'} onClick={()=>setDevice('desktop')} aria-label={t('Компьютер','Desktop')}><Monitor size={15}/></button>
+       <button type="button" aria-pressed={device==='mobile'} onClick={()=>setDevice('mobile')} aria-label={t('Утас','Phone')}><Smartphone size={15}/></button>
+      </div>
+      <button type="button" className="sp-full" aria-pressed={buyerView} onClick={()=>setBuyerView(v=>!v)}>{buyerView?<Minimize2 size={15} aria-hidden="true"/>:<Maximize2 size={15} aria-hidden="true"/>}<span>{buyerView?t('Засах горим','Back to editing'):t('Томоор харах','Expand')}</span></button>
+     </div>
+    </div>
+    <div className="sp-stage">
+     <SellerProfilePreview draft={draft} avatarUrl={photoUrls.avatar} coverUrl={photoUrls.cover} coverFocusY={Math.max(0,Math.min(100,Number(profile.cover_focus_y??50)))} items={items} tools={tools} services={services} en={en} device={device} onJump={go}/>
+    </div>
+   </section>
+  </div>
+  {dirty&&<div className="sp-savebar" role="region" aria-label={t('Хадгалаагүй өөрчлөлт','Unsaved changes')}>
+   <span><i aria-hidden="true"/>{t('Хадгалаагүй өөрчлөлт байна','You have unsaved changes')}</span>
+   <div><button type="button" className="sp-ghost-btn" disabled={busy} onClick={()=>{setDraft(saved);setError('')}}><RotateCcw size={15} aria-hidden="true"/>{t('Буцаах','Discard')}</button>
+    <button type="button" className="v42-save" disabled={busy} onClick={()=>{void saveProfile()}}>{busy?<LoaderCircle className="spin" size={16}/>:<Save size={16} aria-hidden="true"/>}{busy?t('Хадгалж байна…','Saving…'):t('Хадгалах','Save changes')}</button></div>
+  </div>}
+ </main>);
 }
