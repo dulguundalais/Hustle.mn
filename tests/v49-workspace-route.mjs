@@ -44,3 +44,10 @@ test('workspace routes sign-in through one function and navigates between dashbo
   assert.match(w,/if\(mode!==entry\)\{window\.location\.replace\(target\);return\}/);
   assert.match(w,/localStorage\.setItem\(WORKSPACE_KEY,w\)/);
 });
+
+test('admin console views are reachable from the rail and by ?view=',()=>{
+  const w=readFileSync('components/workspace.tsx','utf8');
+  for(const v of ['overview','members','services','orders','settings'])assert.match(w,new RegExp("\\{adminView==='"+v+"'&&"));
+  assert.match(w,/if\(view==='members'\|\|view==='services'\|\|view==='orders'\|\|view==='settings'\)setAdminView\(view\)/);
+  assert.match(w,/onClick=\{\(\)=>\{setTab\('admin'\);setAdminView\(key\)\}\}/);
+});

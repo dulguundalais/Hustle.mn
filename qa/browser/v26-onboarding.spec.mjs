@@ -69,6 +69,8 @@ test('admin can manually restrict members, while new verified users need no appr
  await page.locator('#hustle-auth-password').fill('SafeTestPassword123!');
  await page.locator('.hustle-auth-submit').click();
  await expect(page.locator('.workspace-main')).toBeVisible();
+ // V49: the admin console is split into views; account access lives under Members.
+ await page.getByRole('button',{name:/^Хэрэглэгчид|^Members/}).first().click();
  const accessPanel=page.locator('.workspace-panel').filter({hasText:/Хэрэглэгчийн эрхийн удирдлага|Account access management/}).first();
  await expect(accessPanel).toBeVisible();
  expect(approvals).toBe(0);

@@ -78,7 +78,7 @@ async function load(){
      setNotice(t('Та өөрийн үйлчилгээ рүү холбогдох гэж байна. Чат шалгахын тулд өөр buyer аккаунтаар нэвтэрнэ үү.','This is your own listing. Sign in with a different approved buyer account to test messaging.'));
    }else if(contact.kind==='unavailable'||contact.kind==='invalid'){
      setTab('buyer-home');setNotice(t('Энэ freelancer-ийн нийтийн профайл олдсонгүй. Marketplace-ээс дахин сонгоно уу.','That public freelancer profile was not found. Please select a listing again.'));
-   }else if(mode==='admin'&&beta.data.role==='admin')setTab('admin');
+   }else if(mode==='admin'&&beta.data.role==='admin'){setTab('admin');const view=params.get('view');if(view==='members'||view==='services'||view==='orders'||view==='settings')setAdminView(view)}
    else if(mode==='buyer'&&params.get('tab')==='profile')setTab('profile');
     else if((mode==='buyer'||mode==='seller')&&params.get('tab')==='messages')setTab('messages');
     else if(mode==='buyer'&&params.get('tab')==='orders')setTab('orders');
