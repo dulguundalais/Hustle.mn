@@ -123,7 +123,7 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
      {showCompare&&compareReady&&<ServiceComparison en={en} services={services} ids={compared} onRemove={id=>setCompared(p=>compareSelection(p,id))} onClear={()=>{setCompared([]);setShowCompare(false)}}/>}
     </>}
    {saveError&&<p className="v39-error" role="alert">{saveError}</p>}
-   <p className="v39-market-note"><ShieldCheck size={16}/>{t('Төлбөргүй хаалттай туршилт. Зөвшөөрөгдсөн хэрэглэгч нэвтэрч хүсэлт илгээнэ.','Closed beta, no payments. Approved users can sign in to request services.')}</p>
+   <p className="v39-market-note"><ShieldCheck size={16}/>{t('Төлбөргүй нээлттэй бета. Имэйлээ баталгаажуулсан хэрэглэгч хүсэлт илгээж болно.','Open beta, no payments. Email-verified users can request services.')}</p>
   </>}
  </section>;
 }

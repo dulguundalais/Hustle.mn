@@ -60,7 +60,7 @@ export default function LiveListingDetail(){
       {Number(listing.review_count)>0&&Number.isFinite(Number(listing.average_rating))&&Number(listing.average_rating)>0&&<p className="v39-detail-reviews">★ {Number(listing.average_rating).toFixed(1)} · {listing.review_count} {t('баталгаажсан үнэлгээ','verified reviews')}</p>}
       <h2 className="v39-detail-about-heading">{t('Үйлчилгээний тухай','About this service')}</h2><p className="v28-detail-description">{listing.description}</p>
       <Link href={'/p/'+encodeURIComponent(listing.slug)}>{t('Freelancer-ийн профайл','View seller profile')} ↗</Link>
-      <p className="v28-detail-policy">{t('Хаалттай бета туршилт: захиалга нь хүсэлт бөгөөд бодит төлбөр хийхгүй.','Closed beta: orders are requests; no money is collected.')}</p>
+      <p className="v28-detail-policy">{t('Нээлттэй бета: захиалга нь хүсэлт бөгөөд бодит төлбөр хийхгүй.','Open beta: orders are requests; no money is collected.')}</p>
     </article>
     <aside className="v28-detail-offer"><p>{t('Багцаа сонгоно уу','Choose a package')}</p>
       {options.length>0&&<div className="v28-detail-tiers">{(['Basic','Standard','Premium'] as const).map(option=><button key={option} type="button" aria-pressed={tier===option} disabled={!options.some(p=>p.tier===option)} onClick={()=>setTier(option)}>{option}</button>)}</div>}
