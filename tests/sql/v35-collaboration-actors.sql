@@ -14,12 +14,12 @@ insert into public.profiles(id,display_name,is_seller,public_profile,accepting_p
  ('10000000-0000-4000-8000-000000000453','V35 Outsider',false,false,false);
 insert into public.services(id,seller_id,title,description,category,price,delivery_days,status) values
  ('20000000-0000-4000-8000-000000000451','10000000-0000-4000-8000-000000000452',
- 'V35 demo collaboration service','Testing safe order workflow for beta users only','web',120000,5,'published');
+ 'V35 demo collaboration service','Testing safe order workflow for beta users only','tech',120000,5,'published');
 insert into public.service_packages(service_id,tier,name,price,delivery_days,revisions,includes) values
  ('20000000-0000-4000-8000-000000000451','Basic','V35 Basic',120000,5,2,array['V35 QA']);
 insert into public.project_requests(id,buyer_id,title,brief,audience,category,status) values
  ('30000000-0000-4000-8000-000000000451','10000000-0000-4000-8000-000000000451',
- 'V35 request QA','This is the synthetic project brief for verifying proposals.','business','web','open');
+ 'V35 request QA','This is the synthetic project brief for verifying proposals.','business','tech','open');
 insert into public.project_invitations(id,request_id,seller_id,status) values
  ('40000000-0000-4000-8000-000000000451','30000000-0000-4000-8000-000000000451','10000000-0000-4000-8000-000000000452','proposed');
 insert into public.project_proposals(id,request_id,seller_id,service_id,tier,quoted_price,delivery_days,message,status) values

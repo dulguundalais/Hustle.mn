@@ -46,7 +46,7 @@ test('migration is additive only', () => {
 test('workspace wires block, report, blocked composer, admin queue and friendly errors', () => {
   assert.match(w, /from '\.\/chat-safety'/);
   assert.match(w, /const chatBlocks=useChatBlocks\(uid\)/);
-  assert.match(w, /const safety=chatSafetyMessage\(e,en\);if\(safety\)\{setError\(safety\);return;\}/);
+  assert.match(w, /const safety=chatSafetyMessage\(e,en\)(\|\|categoryErrorMessage\(e,en\))?;if\(safety\)\{setError\(safety\);return;\}/);
   assert.match(w, /<ChatSafetyActions uid=\{uid\} peerId=\{chatPeer\}/);
   assert.match(w, /chatBlocks\.blocked\.includes\(chatPeer\)\?<BlockedComposer/);
   assert.match(w, /{adminView==='overview'&&<>[\s\S]*?<AdminChatReports en={en}/);

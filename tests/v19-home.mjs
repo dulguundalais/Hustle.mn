@@ -1,7 +1,7 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const home=read('components/premium-marketplace.tsx');const story=read('components/signature-home.tsx');const discovery=read('components/v19-discovery.tsx');
 test('home sections retain discovery, marketplace and trust without redundant intro',()=>{
- const needles=["<header className=\"site-header\"","<SignatureHero en={en}/>","<PopularCategories en={en}/>","<LiveCatalog en={en}","id=\"how\"","id=\"talent\"","id=\"for-freelancers\"","className=\"signature-partner shell\"","<PremiumFooter en={en}/>"];
+ const needles=["<header className=\"site-header\"","<SignatureHero en={en}/>","<CategoryShowcase en={en}/>","<LiveCatalog en={en}","id=\"how\"","id=\"talent\"","id=\"for-freelancers\"","className=\"signature-partner shell\"","<PremiumFooter en={en}/>"];
  const offsets=needles.map((n,i)=>{const s=i<4||i===8?home:story;return s.indexOf(n)});
  assert.ok(offsets.every(i=>i>=0),JSON.stringify(offsets));
  assert.ok(offsets[0]<offsets[1]&&offsets[1]<offsets[2]&&offsets[2]<offsets[3]);
