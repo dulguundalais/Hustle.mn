@@ -100,11 +100,20 @@ async function auth(e:FormEvent){e.preventDefault();if(register&&emailCooldown>0
  if(seller&&/^[a-z0-9][a-z0-9-]{2,59}$/.test(seller))next.set('seller',seller);
  const wantedService=current.get('service');if(wantedService&&/^[0-9a-f-]{36}$/.test(wantedService))next.set('service',wantedService);
  const wantedTier=current.get('tier');if(wantedService&&(wantedTier==='Basic'||wantedTier==='Standard'||wantedTier==='Premium'))next.set('tier',wantedTier);
- const mode=entry==='buyer'?(current.get('mode')||'buyer'):entry;
- if(mode==='buyer'||mode==='seller'||mode==='admin')next.set('mode',mode);
+ // V48: a general /login/ sign-in (header link sends mode=buyer) lands admins in the admin
+ // console. Seller mode, or a buyer intent such as contacting a seller or ordering, still wins.
+ const asked=current.get('mode');
+ const buyerIntent=next.has('seller')||next.has('service');
+ const signedEmail=response.data.user?.email?.toLowerCase()||'';
+ const signedRole=login&&entry==='buyer'&&(!asked||asked==='buyer')&&!buyerIntent&&signedEmail?((await db.from('beta_allowlist').select('role').eq('email',signedEmail).eq('enabled',true).maybeSingle()).data?.role||''):'';
+ const mode=entry==='buyer'?(signedRole==='admin'?'admin':asked==='seller'||asked==='admin'?asked:'buyer'):entry;
+ next.set('mode',mode);
  const ref=current.get('ref');if(ref)next.set('ref',ref);
  const destination=mode==='seller'?'/seller-studio/':mode==='admin'?'/admin/':'/buyer/';
- history.replaceState(null,'',destination+(next.toString()?'?'+next.toString():''));
+ const target=destination+(next.toString()?'?'+next.toString():'');
+ // This page renders the dashboard for its own entry, so a different dashboard needs a real navigation.
+ if(mode!==entry){window.location.replace(target);return}
+ history.replaceState(null,'',target);
  }}catch(e){fail(e)}finally{setBusy(false)}}
 useEffect(()=>{if(emailCooldown<=0)return;const timer=setInterval(()=>setEmailCooldown(v=>Math.max(0,v-1)),1000);return()=>clearInterval(timer)},[emailCooldown>0]);
 async function resendConfirmation(){if(busy||emailCooldown>0)return;setBusy(true);setError('');setNotice('');try{if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))throw new Error(t('Эхлээд имэйл хаягаа оруулна уу.','Enter your email address first.'));const db=await marketplaceClient();const r=await db.auth.resend({type:'signup',email:email.trim().toLowerCase(),options:{emailRedirectTo:location.origin+'/login/'}});if(r.error)throw r.error;setEmailCooldown(60);setNotice(t('Хүсэлт хүлээн авлаа. Имэйл хүргэгдсэнийг батлах боломжгүй. Өмнө бүртгүүлсэн бол Нэвтрэх эсвэл Нууц үг сэргээх сонголтыг ашиглана уу.','Request accepted; email delivery is not guaranteed. Already registered? Sign in or reset your password instead.'));}catch(e){fail(e)}finally{setBusy(false)}}
