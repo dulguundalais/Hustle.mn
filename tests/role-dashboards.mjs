@@ -11,7 +11,7 @@ test('three dedicated dashboards load the correctly scoped workspace',()=>{
 test('buyer overview only displays own orders',()=>{
  assert.match(workspace,/tab==='buyer-home'/);
  assert.match(workspace,/myOrders=orders.filter\(o=>o.buyer_id===uid\)/);
- assert.match(workspace,/myOrders.slice\(0,3\).map\(orderCard\)/);
+ assert.match(workspace,/myOrders.slice\(0,4\).map\(orderRow\)/);
 });
 test('seller incoming orders are separated from buyer orders',()=>{
  assert.match(workspace,/tab==='seller-orders'/);

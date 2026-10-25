@@ -1,9 +1,9 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
 import Link from 'next/link';
-import {BriefcaseBusiness,ChevronDown,LayoutDashboard,LoaderCircle,LogOut,UserRound} from 'lucide-react';
+import {BriefcaseBusiness,ChevronDown,LayoutDashboard,LoaderCircle,LogOut,Settings2,UserRound} from 'lucide-react';
 
-export type AccountMenuIdentity={id:string;name:string;isSeller:boolean};
+export type AccountMenuIdentity={id:string;name:string;isSeller:boolean;isAdmin?:boolean};
 
 export default function AccountMenu({account,en,onSignOut,signingOut}:{
  account:AccountMenuIdentity;en:boolean;onSignOut:()=>Promise<void>;signingOut:boolean
@@ -43,6 +43,7 @@ export default function AccountMenu({account,en,onSignOut,signingOut}:{
     <Link href={dashboardHref} onClick={()=>setOpen(false)}><LayoutDashboard size={17}/>{account.isSeller?t('Миний студи','Seller dashboard'):t('Миний dashboard','My dashboard')}</Link>
     {account.isSeller&&<Link href="/buyer/" onClick={()=>setOpen(false)}><LayoutDashboard size={17}/>{t('Buyer горим','Buyer dashboard')}</Link>}
     <Link href="/seller-studio/" onClick={()=>setOpen(false)}><BriefcaseBusiness size={17}/>{account.isSeller?t('Seller Studio','Seller Studio'):t('Seller болох','Become a seller')}</Link>
+    {account.isAdmin&&<Link href="/admin/" onClick={()=>setOpen(false)}><Settings2 size={17}/>{t('Админ төв','Admin console')}</Link>}
     <Link href={account.isSeller?'/my-profile/':'/buyer/?tab=profile'} onClick={()=>setOpen(false)}><UserRound size={17}/>{t('Профайл','Profile')}</Link>
    </div>
    <button type="button" className="global-account-signout" disabled={signingOut} onClick={()=>void onSignOut()}>
