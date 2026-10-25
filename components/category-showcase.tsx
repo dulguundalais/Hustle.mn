@@ -35,6 +35,7 @@ export default function CategoryShowcase({en}:{en:boolean}){
  return <section className="cat-showcase shell" aria-labelledby="cat-showcase-title">
   <div className="cat-showcase-head">
    <div>
+    <span className="hx-eyebrow">{t('Ангилал','Categories')}</span>
     <h2 id="cat-showcase-title">{t('Мэргэжлийн үйлчилгээ','Professional services')}</h2>
     <p>{t('Бизнес болон хувь хүнд зориулсан туршлагатай мэргэжилтнүүд.','Experienced professionals for businesses and individuals.')}</p>
    </div>

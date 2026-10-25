@@ -51,7 +51,7 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
  const toggleCompare=(id:string)=>setCompared(current=>compareSelection(current,id));
  return <section className={'shell live-catalog v39-catalog '+(homePreview?'v39-catalog-home':'v39-catalog-explore')} aria-labelledby={homePreview?'real-listings-title':undefined} aria-label={homePreview?undefined:t('Нийтлэгдсэн үйлчилгээ','Published services')}>
   {homePreview&&<div className="v39-section-head">
-   <div><span className="v39-section-eyebrow"><span/> HUSTLE / {homePreview?'CURATED TALENT':'EXPLORE TALENT'}</span>
+   <div><span className="v39-section-eyebrow"><span/>{homePreview?(en?'Services':'Үйлчилгээ'):(en?'Explore':'Бүх үйлчилгээ')}</span>
     <h2 id="real-listings-title">{homePreview?t('Бүтээх хүнээ сонго.','Meet your next collaborator.'):t('Өөрт тохирох мэргэжилтнээ олоорой.','Find your kind of talent.')}</h2>
     <p>{homePreview?t('Бодит үйлчилгээ. Ил тод эхлэх үнэ.','Real services. Clear starting prices.'):t('Үйлчилгээ, үнэ, хугацааг харьцуулж, тохирох мэргэжилтэнтэй холбогдоорой.','Discover services, compare starting prices and connect with professionals.')}</p>
    </div>

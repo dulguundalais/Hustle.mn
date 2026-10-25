@@ -14,6 +14,9 @@ type CatalogStatus='loading'|'ready'|'unavailable';
 
 export default function GuidedEntry({en}:{en:boolean}){
  const [open,setOpen]=useState(false);
+ // V51: remember which path the visitor last chose so the hero selector shows it as current.
+ const [remembered,setRemembered]=useState<Audience|null>(null);
+ useEffect(()=>{try{const a=localStorage.getItem('hustle-buyer-audience');if(a==='personal'||a==='business')setRemembered(a)}catch{}},[]);
  const [audience,setAudience]=useState<Audience>('business');
  const [screen,setScreen]=useState<Screen>('choose');
  const [goal,setGoal]=useState<GuidedGoal>(guidedGoals.business[0]);
@@ -34,6 +37,7 @@ export default function GuidedEntry({en}:{en:boolean}){
   setAudience(kind);setGoal(guidedGoals[kind][0]);setScreen('choose');
   setNotes('');setBudget('');setTimeline('');setDetailsOpen(false);setCopied(false);
   setOpen(true);
+  setRemembered(kind);
   try{localStorage.setItem('hustle-buyer-audience',kind)}catch{}
  };
  const choose=(item:GuidedGoal)=>{
@@ -77,10 +81,10 @@ export default function GuidedEntry({en}:{en:boolean}){
   <div className="guided-entry-intro" aria-labelledby="guided-entry-title">
    <h2 id="guided-entry-title">{t('Эсвэл хэрэгцээнээсээ эхлээрэй','Or start with a goal')}</h2>
    <div className="guided-entry-choices">
-    <button type="button" className="guided-entry-choice" onClick={()=>start('personal')} aria-haspopup="dialog">
+    <button type="button" className={'guided-entry-choice'+(remembered==='personal'?' is-current':'')} onClick={()=>start('personal')} aria-haspopup="dialog">
      <span className="guided-entry-symbol"><UserRound size={24} strokeWidth={1.8}/></span><span className="guided-entry-choice-copy"><strong>{t('Хувь хүн','Personal')}</strong><small>{t('Хувийн ажил','Personal work')}</small></span><ArrowUpRight size={19}/>
     </button>
-    <button type="button" className="guided-entry-choice guided-entry-business" onClick={()=>start('business')} aria-haspopup="dialog">
+    <button type="button" className={'guided-entry-choice guided-entry-business'+(remembered==='business'?' is-current':'')} onClick={()=>start('business')} aria-haspopup="dialog">
      <span className="guided-entry-symbol"><Building2 size={24} strokeWidth={1.8}/></span><span className="guided-entry-choice-copy"><strong>{t('Бизнес / байгууллага','Business')}</strong><small>{t('Бизнесийн хэрэгцээ','Business needs')}</small></span><ArrowUpRight size={19}/>
     </button>
    </div>
