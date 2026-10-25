@@ -47,10 +47,10 @@ test('global bell uses only signed-in recipient RLS and read_at writes',()=>{
  assert.match(s,/db\.from\('messages'\)/);
  assert.match(s,/\.update\(\{read_at:/);
  assert.doesNotMatch(s,/service_role|secret_key|create table/i);
- const home=read('components/premium-marketplace.tsx');
+ const home=read('components/premium-marketplace.tsx')+read('components/site-header.tsx');
  assert.match(home,/sessionState==='signed-in'&&account&&<GlobalNotifications/);
  const dashboard=read('components/workspace.tsx');
- assert.match(dashboard,/uid&&role&&<GlobalNotifications/);
+ assert.match(dashboard,/<SiteHeader /);
  assert.match(dashboard,/params\.get\('tab'\)==='messages'/);
  assert.match(dashboard,/params\.get\('tab'\)==='orders'/);
  assert.match(dashboard,/params\.get\('tab'\)==='seller-orders'/);

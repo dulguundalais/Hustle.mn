@@ -74,7 +74,7 @@ test('price sort stays numerical and suggestions contain only passed-in real res
 });
 test('homepage and Explore preserve real-data-only typeahead and existing notifications',()=>{
  const home=read('components/signature-home.tsx');
- const page=read('components/premium-marketplace.tsx');
+ const page=read('components/premium-marketplace.tsx')+read('components/site-header.tsx');
  const real=read('components/live-catalog.tsx');
  assert.match(home,/suggestLiveServices\(published,search,4\)/);
  assert.match(home,/role="combobox"/);

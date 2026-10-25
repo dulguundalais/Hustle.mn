@@ -7,7 +7,7 @@ test.beforeEach(async({page})=>mock(page));
 async function positions(page){
  return page.evaluate(()=>{
   const selectors={
-   header:'.site-header .header-inner.shell',
+   header:'.hx-header .hx-header-inner.shell',
    hero:'.signature-hero-inner.shell',
    business:'.business-solutions-inner.shell',
    process:'.signature-process > .shell',

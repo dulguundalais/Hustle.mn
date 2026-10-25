@@ -81,17 +81,19 @@ type HeaderProps={
  en:boolean;onToggleLanguage:()=>void;
  dark?:boolean;onToggleTheme?:()=>void;
  active?:SiteSection;
+ /** Dashboards route the bell to the inbox of the dashboard being viewed. */
+ notificationsAsSeller?:boolean;
  session:ReturnType<typeof useSiteAccount>;
  onSignedOut?:(ok:boolean)=>void;
 };
 
 /** V50: the one header used on every public page. Logo, three destinations,
  *  then notifications + account (or sign in + become a freelancer) on the right. */
-export default function SiteHeader({en,onToggleLanguage,dark,onToggleTheme,active=null,session,onSignedOut}:HeaderProps){
+export default function SiteHeader({en,onToggleLanguage,dark,onToggleTheme,active=null,notificationsAsSeller,session,onSignedOut}:HeaderProps){
  const [menu,setMenu]=useState(false);
  const [loginHref,setLoginHref]=useState('/login/?mode=buyer');
  const t=(mn:string,english:string)=>en?english:mn;
- useEffect(()=>{setLoginHref(signInWithReturn(location.pathname+location.search,'buyer'))},[]);
+ useEffect(()=>{if(location.pathname!=='/')setLoginHref(signInWithReturn(location.pathname+location.search,'buyer'))},[]);
  const {sessionState,account,signingOut,signOut}=session;
  const links:[Exclude<SiteSection,null>,string,string,string][]=[
   ['services','/explore/','Үйлчилгээ','Services'],
@@ -99,16 +101,17 @@ export default function SiteHeader({en,onToggleLanguage,dark,onToggleTheme,activ
   ['solutions','/solutions/','Шийдэл олох','Find a solution']
  ];
  return <header className={'hustle-v5 hx-header'+(dark?' night':'')}>
-  <div className="hx-header-inner">
+  <div className="shell hx-header-inner">
    <Link className="hx-brand" href="/" aria-label="Hustle.mn">hustle<span>✳</span><small>mn</small></Link>
    <nav className={'hx-nav'+(menu?' open':'')} aria-label={t('Үндсэн цэс','Main navigation')}>
     {links.map(([id,href,mn,english])=><Link key={id} href={href} aria-current={active===id?'page':undefined} onClick={()=>setMenu(false)}>{t(mn,english)}</Link>)}
+    {sessionState==='signed-in'&&account&&<Link className="mobile-auth-nav" href={account.isSeller?'/seller-studio/':'/buyer/'} onClick={()=>setMenu(false)}>{t('Миний самбар','My dashboard')}</Link>}
     {sessionState==='guest'&&<div className="hx-nav-auth"><Link href={loginHref}>{t('Нэвтрэх','Log in')}</Link><Link href="/join/seller/" className="hx-nav-cta">{t('Freelancer болох','Become a freelancer')}</Link></div>}
    </nav>
    <div className="hx-actions">
     <button type="button" className="hx-icon locale" onClick={onToggleLanguage} aria-label={en?'Монгол хэл':'Switch to English'}><Globe size={16} aria-hidden="true"/>{en?'EN':'MN'}</button>
     {onToggleTheme&&<button type="button" className="hx-icon" onClick={onToggleTheme} aria-label={t('Өнгөний горим солих','Toggle color theme')}>{dark?<Sun size={18}/>:<Moon size={18}/>}</button>}
-    {sessionState==='signed-in'&&account&&<GlobalNotifications key={account.id} userId={account.id} en={en} isSeller={account.isSeller}/>}
+    {sessionState==='signed-in'&&account&&<GlobalNotifications key={account.id} userId={account.id} en={en} isSeller={notificationsAsSeller??account.isSeller}/>}
     {sessionState==='signed-in'&&account?<AccountMenu account={account} en={en} signingOut={signingOut} onSignOut={async()=>{const ok=await signOut();setMenu(false);onSignedOut?.(ok)}}/>
      :sessionState==='guest'?<><Link href={loginHref} className="hx-login">{t('Нэвтрэх','Log in')}</Link><Link href="/join/seller/" className="hx-cta">{t('Freelancer болох','Become a freelancer')}<ArrowUpRight size={15} aria-hidden="true"/></Link></>
      :<span className="hx-checking" role="status" aria-label={t('Нэвтрэлтийн төлөв шалгаж байна','Checking sign-in status')}/>}

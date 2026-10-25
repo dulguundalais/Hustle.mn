@@ -48,7 +48,7 @@ test('V44: seller account routes header, account menu and chat notifications to 
  await expect(page.locator('#global-account-panel a[href="/seller-studio/"]')).toHaveCount(2);
  await expect(page.locator('#global-account-panel a[href="/buyer/"]')).toBeVisible();
  await avatar.click();
- const mobileMenu=page.locator('.site-header .mobile-menu');
+ const mobileMenu=page.locator('.hx-header .hx-burger');
  await mobileMenu.click();
  await expect(page.locator('.mobile-auth-nav')).toHaveAttribute('href','/seller-studio/');
  await mobileMenu.click();

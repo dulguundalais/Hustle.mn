@@ -37,7 +37,7 @@ test('Favorites, compare and buyer request flow are unchanged',()=>{
  assert.match(catalog,/contactSellerHref\(s\.slug,signedIn\)/);
  assert.match(detail,/rpc\('marketplace_catalog'\)/);
  assert.match(detail,/&tier=/);
- assert.match(detail,/\/login\/\?mode=buyer&service=/);
+ assert.match(detail,/signInWithReturn\(returnPath,'buyer'\)/);
  assert.match(detail,/v28-detail-tiers/);
 });
 test('public seller profile still supports private portfolio signed images and beta-only contact',()=>{

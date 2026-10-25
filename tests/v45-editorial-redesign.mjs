@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 
 const read=path=>readFileSync(path,'utf8');
-const home=read('components/premium-marketplace.tsx');
+const home=read('components/premium-marketplace.tsx')+read('components/site-header.tsx');
 const hero=read('components/signature-home.tsx');
 const discover=read('components/v19-discovery.tsx');
 const catalog=read('components/live-catalog.tsx');

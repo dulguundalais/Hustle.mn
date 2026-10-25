@@ -20,12 +20,19 @@ test('Buyer chooses Premium, Seller delivers, Buyer completes and publishes veri
   await expect(buyer.getByRole('heading',{name:'Professional brand identity'})).toBeVisible();
   await buyer.locator('.v28-detail-tiers button',{hasText:'Premium'}).click();
   await expect(buyer.locator('.v28-detail-price')).toContainText('350,000');
+  // Guest presses the one primary CTA, signs in and lands back on the same service with the drawer open.
   await buyer.locator('.v28-detail-primary').click();
-  await signIn(buyer,'buyer');
-  await expect(buyer.locator('.live-detail')).toBeVisible();
-  await expect(buyer.locator('.package-picker-head')).toContainText('350,000');
-  await buyer.locator('textarea[name="brief"]').fill(brief);
-  await buyer.getByRole('button',{name:/Захиалгын хүсэлт илгээх|Request this service/}).click();
+  await buyer.locator('#hustle-auth-email').fill('buyer@example.test');
+  await buyer.locator('#hustle-auth-password').fill('QaOnlyPassword123!');
+  await buyer.locator('.hustle-auth-submit').click();
+  await expect(buyer).toHaveURL(/\/listing\/\?id=/);
+  const drawer=buyer.getByRole('dialog');
+  await expect(drawer).toBeVisible();
+  await expect(drawer.locator('.v50-tier-pick label.selected')).toContainText('350,000');
+  await drawer.locator('textarea[name="brief"]').fill(brief);
+  await drawer.getByRole('button',{name:/Захиалга илгээх|Send order/}).click();
+  await expect(drawer.locator('.v50-sent')).toBeVisible();
+  await drawer.getByRole('link',{name:/Захиалгаа харах|View my order/}).click();
   await expect(buyer.locator('.order-card .status-requested')).toBeVisible();
   expect(state.orders).toHaveLength(1);
   expect(state.orders[0]).toMatchObject({buyer_id:buyerId,seller_id:sellerId,package_name:'Premium',quoted_price:350000,delivery_days:12,revision_limit:3,status:'requested'});
@@ -83,7 +90,7 @@ for(const width of [390,768]){
   await expect(page.locator('.v28-detail-offer')).toBeVisible();
   await page.locator('.v28-detail-tiers button',{hasText:'Standard'}).click();
   await expect(page.locator('.v28-detail-price')).toContainText('220,000');
-  await expect(page.locator('.v28-detail-primary')).toHaveAttribute('href',/tier=Standard/);
+  await expect(page.locator('.v28-detail-primary')).toHaveAttribute('href',/tier%3DStandard/);
   const scrollWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
   expect(scrollWidth).toBeLessThanOrEqual(width+4);
   await page.screenshot({path:'test-results/v29-detail-'+width+'.png',fullPage:true});

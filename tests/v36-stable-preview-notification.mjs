@@ -10,7 +10,7 @@ test('release guide uses canonical beta branch alias, never immutable/root host'
  assert.match(guide,/sign in there once/);
 });
 test('homepage global notification bell remains available to a signed-in user and not an anonymous guest',()=>{
- const home=read('components/premium-marketplace.tsx');
+ const home=read('components/premium-marketplace.tsx')+read('components/site-header.tsx');
  assert.match(home,/import GlobalNotifications from '\.\/global-notifications'/);
  assert.match(home,/sessionState==='signed-in'&&account&&<GlobalNotifications/);
  assert.match(home,/db\.auth\.getUser\(\)/);

@@ -2,17 +2,14 @@
 import {useEffect,useMemo,useState} from 'react';
 import Link from 'next/link';
 import {useSavedServices} from '../lib/marketplace/use-saved-services';
-import {ArrowUpRight,ArrowRight,Search,Sun,Moon,Globe,Menu,X,Heart,PenTool,Clapperboard,Languages,Megaphone,Code2,Armchair,PanelsTopLeft,Sparkles,FileText,Check,Clock,Share2,ArrowLeft,Bot,BriefcaseBusiness,Calculator,Scale,BarChart3,Store,GraduationCap,HeartHandshake} from 'lucide-react';
+import {ArrowUpRight,ArrowRight,Search,X,Heart,PenTool,Clapperboard,Languages,Megaphone,Code2,Armchair,PanelsTopLeft,Sparkles,FileText,Check,Clock,Share2,ArrowLeft,Bot,BriefcaseBusiness,Calculator,Scale,BarChart3,Store,GraduationCap,HeartHandshake} from 'lucide-react';
 import {CATEGORIES,categoryById,normalizeCategory} from '../lib/marketplace/taxonomy';
-import type {User} from '@supabase/supabase-js';
-import AccountMenu,{type AccountMenuIdentity} from './account-menu';
-import GlobalNotifications from './global-notifications';
+import SiteHeader,{useSiteAccount} from './site-header';
 import {services, type Service} from '../lib/marketplace/catalog';
 import {matchesService,suggestServices} from '../lib/marketplace/smart-search';
 import {suggestLiveServices,type LiveService} from '../lib/marketplace/live-discovery';
 import LiveCatalog from './live-catalog';
 import {marketplaceClient} from '../lib/marketplace/client';
-import {signInWithReturn} from '../lib/marketplace/ux-flows';
 import {SignatureHero,SignatureStory} from './signature-home';
 import BusinessSolutions from './business-solutions';
 import {V19FeaturedIntro} from './v19-discovery';
@@ -33,73 +30,16 @@ function Artwork({item}:{item:Service}){return <div aria-hidden="true" className
 export default function PremiumMarketplace({view='home',id}:{view?:'home'|'explore'|'service'|'seller'|'categories';id?:string}){
 const favorites=useSavedServices();
 const [sampleSaved,setSampleSaved]=useState<string[]>([]);
-const [sessionState,setSessionState]=useState<'checking'|'signed-in'|'guest'>('checking');
-const [account,setAccount]=useState<AccountMenuIdentity|null>(null);
-const [signingOut,setSigningOut]=useState(false);
-const [guestLoginHref,setGuestLoginHref]=useState('/login/?mode=buyer');
+// V50: one shared header; session state comes from the same hook on every page.
+const session=useSiteAccount();
+const {sessionState,account}=session;
 const [exploreListings,setExploreListings]=useState<LiveService[]>([]);
 const [exploreOpen,setExploreOpen]=useState(false),[exploreActive,setExploreActive]=useState(-1);
 const [exploreLoad,setExploreLoad]=useState<'loading'|'ready'|'error'>('loading');
-const [en,setEn]=useState(false),[dark,setDark]=useState(false),[ready,setReady]=useState(false),[menu,setMenu]=useState(false),[query,setQuery]=useState(''),[cat,setCat]=useState('all'),[sub,setSub]=useState(''),[sort,setSort]=useState('featured'),[onlySaved,setOnlySaved]=useState(false),[notice,setNotice]=useState('');
+const [en,setEn]=useState(false),[dark,setDark]=useState(false),[ready,setReady]=useState(false),[query,setQuery]=useState(''),[cat,setCat]=useState('all'),[sub,setSub]=useState(''),[sort,setSort]=useState('featured'),[onlySaved,setOnlySaved]=useState(false),[notice,setNotice]=useState('');
 const t=(mn:string,english:string)=>en?english:mn;
-useEffect(()=>{try{setEn(localStorage.getItem('hustle-language')==='en');setDark(localStorage.getItem('hustle-theme')==='dark');const s=JSON.parse(localStorage.getItem('hustle-saved')||'[]');if(Array.isArray(s))setSampleSaved(s.filter(x=>typeof x==='string'&&!/^[0-9a-f-]{36}$/i.test(x)));}catch{}const p=new URLSearchParams(location.search);setQuery(p.get('q')||'');setCat(normalizeCategory(p.get('category')));setSub(p.get('sub')||'');setOnlySaved(p.get('saved')==='1');if(view!=='home')setGuestLoginHref(signInWithReturn(location.pathname+location.search));setReady(true)},[]);
+useEffect(()=>{try{setEn(localStorage.getItem('hustle-language')==='en');setDark(localStorage.getItem('hustle-theme')==='dark');const s=JSON.parse(localStorage.getItem('hustle-saved')||'[]');if(Array.isArray(s))setSampleSaved(s.filter(x=>typeof x==='string'&&!/^[0-9a-f-]{36}$/i.test(x)));}catch{}const p=new URLSearchParams(location.search);setQuery(p.get('q')||'');setCat(normalizeCategory(p.get('category')));setSub(p.get('sub')||'');setOnlySaved(p.get('saved')==='1');setReady(true)},[]);
 useEffect(()=>{if(!ready)return;document.documentElement.lang=en?'en':'mn';try{localStorage.setItem('hustle-language',en?'en':'mn');localStorage.setItem('hustle-theme',dark?'dark':'light');localStorage.setItem('hustle-saved',JSON.stringify(sampleSaved))}catch{}},[en,dark,sampleSaved,ready]);
-// Keep the public header in sync with persisted Supabase auth; never infer a session from local UI state.
-useEffect(()=>{
- let active=true;let generation=0;let unsubscribe=()=>{};
- type Client=Awaited<ReturnType<typeof marketplaceClient>>;
- const showUser=async(db:Client,user:User|null,version:number)=>{
-  if(!active||version!==generation)return;
-  if(!user){setSessionState('guest');setAccount(null);return}
-  const fallback=user.email?.split('@')[0]?.trim()||'Member';
-  setSessionState('signed-in');
-  setAccount({id:user.id,name:fallback,isSeller:false});
-  try{
-   // Profile is a presentation detail; auth persists even when this lookup is unavailable.
-   const [result,beta]=await Promise.all([db.from('profiles').select('id,display_name,is_seller').eq('id',user.id).limit(1),Promise.resolve(db.from('beta_allowlist').select('role').eq('email',(user.email||'').toLowerCase()).eq('enabled',true).maybeSingle()).catch(()=>({data:null}))]);
-   if(!active||version!==generation||result.error)return;
-   const profile=result.data?.[0];
-   setAccount(current=>current?.id===user.id?{
-    id:user.id,name:profile?.display_name?.trim()||fallback,isSeller:profile?.is_seller===true,isAdmin:(beta.data as {role?:string}|null)?.role==='admin'
-   }:current);
-  }catch{/* Continue with the signed-in email-local-part fallback. */}
- };
- const verify=async()=>{
-  const version=++generation;
-  try{
-   const db=await marketplaceClient();
-   const {data:{user},error}=await db.auth.getUser();
-   if(active&&version===generation)void showUser(db,error?null:user,version);
-  }catch{if(active&&version===generation){setSessionState('guest');setAccount(null)}}
- };
- void marketplaceClient().then(db=>{
-  if(!active)return;
-  const {data:{subscription}}=db.auth.onAuthStateChange((_event,session)=>{
-   const version=++generation;
-   // Schedule profile reads outside the auth callback to avoid Supabase auth lock contention.
-   void Promise.resolve().then(()=>showUser(db,session?.user||null,version));
-  });
-  unsubscribe=()=>subscription.unsubscribe();
-  void verify();
- }).catch(()=>{if(active){setSessionState('guest');setAccount(null)}});
- const onFocus=()=>{void verify()};
- const onVisibility=()=>{if(document.visibilityState==='visible')void verify()};
- window.addEventListener('focus',onFocus);
- document.addEventListener('visibilitychange',onVisibility);
- return()=>{active=false;++generation;unsubscribe();window.removeEventListener('focus',onFocus);document.removeEventListener('visibilitychange',onVisibility)};
-},[]);
-async function signOutFromHome(){
- if(signingOut)return;
- setSigningOut(true);
- try{
-  const db=await marketplaceClient();
-  const {error}=await db.auth.signOut();
-  if(error)throw error;
-  setSessionState('guest');setAccount(null);setMenu(false);
-  setNotice(t('Амжилттай гарлаа.','You have signed out.'));
- }catch{setNotice(t('Гарах үйлдэл амжилтгүй. Дахин оролдоно уу.','Could not sign out. Please try again.'))}
- finally{setSigningOut(false)}
-}
 useEffect(()=>{
  if(view!=='explore')return;
  let active=true;
@@ -136,7 +76,7 @@ const save=(key:string)=>{void favorites.toggle(key)};
 const saveSample=(key:string)=>setSampleSaved(s=>s.includes(key)?s.filter(k=>k!==key):[...s,key]);
 async function share(){try{await navigator.clipboard.writeText(location.href);setNotice(t('Холбоос хууллаа.','Link copied.'))}catch{setNotice(t('Хөтчийн хаягийн мөрөөс холбоосоо хуулна уу.','Copy the link from your browser address bar.'))}}
 const card=(s:Service)=><article className="service-card-v5" key={s.id}><div className="card-art"><Link href={'/services/'+s.id} aria-label={en?s.en:s.mn}><Artwork item={s}/></Link><button className={'save '+(sampleSaved.includes(s.id)?'active':'')} aria-pressed={sampleSaved.includes(s.id)} aria-label={t('Үйлчилгээ хадгалах','Save service')} onClick={()=>saveSample(s.id)}><Heart size={17} fill={sampleSaved.includes(s.id)?'currentColor':'none'}/></button></div><div className="card-body"><div className="service-kicker">{categories.find(c=>c[0]===s.category)?.[en?2:1]}</div><Link className="seller-line" href={'/sellers/'+s.id}><span className={'avatar avatar-'+s.category}>{s.seller.split(' ').map(x=>x[0]).join('')}</span>{s.seller}<span className="sample-label">{t('Жишиг','Sample')}</span></Link><Link href={'/services/'+s.id}><h3>{en?s.en:s.mn}</h3></Link><div className="card-bottom"><span>{t('Эхлэх үнэ','From')} <strong>{money(s.price)}</strong></span><ArrowUpRight size={18}/></div></div></article>;
-return <div className={'hustle-v5 '+(dark?'night':'')}><a className="skip-link" href="#main">{t('Үндсэн хэсэг рүү','Skip to content')}</a><header className="site-header"><div className="shell header-inner"><Link className="wordmark" href="/">hustle<span>✳</span><small>mn</small></Link><nav className={menu?'open':''} aria-label={t('Үндсэн цэс','Main navigation')}><Link href="/explore" onClick={()=>setMenu(false)}>{t('Үйлчилгээ хайх','Explore services')}</Link><Link href="/solutions/" onClick={()=>setMenu(false)}>{t('Шийдэл олох','Find a solution')}</Link><a href="/#how">{t('Хэрхэн ажилладаг вэ?','How it works')}</a>{sessionState!=='checking'&&<Link className="mobile-auth-nav" href={sessionState==='signed-in'?(account?.isSeller?'/seller-studio/':'/buyer/'):guestLoginHref} onClick={()=>setMenu(false)}>{sessionState==='signed-in'?t('Миний орон зай','My dashboard'):t('Нэвтрэх','Log in')}</Link>}</nav><div className="header-actions"><button className="icon-button locale" onClick={()=>setEn(!en)} aria-label={t('Англи хэл сонгох','Switch to Mongolian')}><Globe size={16}/>{en?'EN':'MN'}</button><button className="icon-button" onClick={()=>setDark(!dark)} aria-label={t('Өнгөний горим солих','Toggle color theme')}>{dark?<Sun size={18}/>:<Moon size={18}/>}</button>{sessionState==='signed-in'&&account&&<GlobalNotifications key={account.id} userId={account.id} en={en} isSeller={account.isSeller}/>}{sessionState==='signed-in'&&account?<AccountMenu account={account} en={en} signingOut={signingOut} onSignOut={signOutFromHome}/>:sessionState==='guest'?<><Link href={guestLoginHref} className="login-link">{t('Нэвтрэх','Log in')}</Link><Link href="/join/seller/" className="button small">{t('Бүтээлчээр нэгдэх','Join as a creative')}<ArrowUpRight size={16}/></Link></>:<span className="account-nav-checking" role="status" aria-label={t('Нэвтрэлтийн төлөв шалгаж байна','Checking sign-in status')}/>}<button className="icon-button mobile-menu" aria-expanded={menu} aria-label={t('Цэс','Menu')} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></div></div></header><nav className={(view==='home'||view==='explore')?'market-category-nav v19-hide-category-nav':'market-category-nav'} aria-label={t('Ангилал үзэх','Browse categories')}><div className="shell">{categories.map(([key,mn,eng])=><Link key={key} href={'/explore/?category='+key}>{en?eng:mn}</Link>)}</div></nav><main id="main">
+return <div className={'hustle-v5 '+(dark?'night':'')}><a className="skip-link" href="#main">{t('Үндсэн хэсэг рүү','Skip to content')}</a><SiteHeader en={en} onToggleLanguage={()=>setEn(!en)} dark={dark} onToggleTheme={()=>setDark(!dark)} active={view==='explore'||view==='service'||view==='seller'?'services':view==='categories'?'categories':null} session={session} onSignedOut={ok=>setNotice(ok?t('Амжилттай гарлаа.','You have signed out.'):t('Гарах үйлдэл амжилтгүй. Дахин оролдоно уу.','Could not sign out. Please try again.'))}/><main id="main">
 {view==='home'&&<SignatureHero en={en}/>}
 {view==='home'&&<BusinessSolutions en={en}/>}
 {view==='home'&&<CategoryShowcase en={en}/>}
