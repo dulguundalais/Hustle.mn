@@ -1,10 +1,137 @@
-.hustle-auth-scene{min-height:calc(100vh - 70px);padding:54px 18px 80px;display:grid;place-items:center;position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 13% 4%,#172e60 0,transparent 44%),radial-gradient(ellipse at 91% 88%,#10265a 0,transparent 40%),#0a1022;color:#f5f7ff}.hustle-auth-glow{pointer-events:none;position:absolute;inset:0;z-index:-1;background:linear-gradient(135deg,transparent 26%,#1b367322 55%,transparent 80%)}.hustle-auth-panel{width:min(100%,575px);padding:42px 48px 30px;border-radius:22px;background:linear-gradient(151deg,#182744ef 0%,#111b30f7 56%,#121d38f3 100%);border:1px solid #4868a36e;box-shadow:0 26px 95px #02081475,0 0 48px #2252bb10}.hustle-auth-brand{display:flex;justify-content:center;align-items:center;gap:12px;font-size:21px;font-weight:800;letter-spacing:-.8px}.hustle-auth-mark{display:grid;place-items:center;width:38px;height:38px;background:linear-gradient(150deg,#5394ff,#1d52ee);color:white;border-radius:11px;font-size:23px;position:relative}.hustle-auth-mark span{font-size:11px;position:absolute;right:3px;top:3px}.hustle-auth-dot{color:#b4c3df}.hustle-auth-intro{text-align:center;margin:31px 0 25px}.hustle-auth-eyebrow{font-size:10px;font-weight:750;letter-spacing:3px;color:#77a8ff}.hustle-auth-intro h1{margin:13px 0 10px;font-size:clamp(29px,4vw,38px);letter-spacing:-1.5px;line-height:1.15;color:#fff;font-weight:800}.hustle-auth-intro p{font-size:13px;line-height:1.7;color:#9eacc6;max-width:380px;margin:auto}.hustle-auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:4px;background:#111b30;border:1px solid #334667;border-radius:13px;margin:25px 0 24px}.hustle-auth-tabs button{border:0;border-radius:10px;background:transparent;color:#aebfdb;min-height:42px;font-weight:680;font-size:13px;cursor:pointer}.hustle-auth-tabs button.active{color:#fff;background:linear-gradient(120deg,#234fa9,#1d3981);box-shadow:inset 0 0 0 1px #4079e9,0 3px 12px #02081840}.workspace .hustle-auth-form{display:flex;flex-direction:column;gap:11px;margin:0}.hustle-auth-form>label,.hustle-auth-label-row label{font-size:12px;font-weight:700;color:#e5ecff}.hustle-auth-label-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}.hustle-auth-input{display:flex;align-items:center;gap:12px;border:1px solid #36496b;border-radius:10px;padding:0 15px;background:#17233b;color:#a3bde9;min-height:55px;transition:border-color .18s,box-shadow .18s}.hustle-auth-input:focus-within{border-color:#6396ff;box-shadow:0 0 0 3px #2864d733}.workspace .hustle-auth-input input{background:transparent;border:0;outline:0;box-shadow:none;padding:14px 0;font-size:13px;color:#fff;width:100%;min-width:0}.workspace .hustle-auth-input input:focus{outline:0}.hustle-auth-input input::placeholder{color:#71839f}.hustle-auth-visibility{background:transparent;border:0;color:#9caed0;padding:5px;cursor:pointer;display:grid;place-items:center}.hustle-auth-link,.hustle-auth-support button,.hustle-auth-feedback-actions button,.hustle-auth-resend{border:0;background:transparent;color:#70a4ff;font-size:12px;font-weight:650;cursor:pointer}.hustle-auth-submit{margin-top:16px;display:flex;justify-content:center;align-items:center;gap:10px;border:1px solid #4d8dff;background:linear-gradient(135deg,#357cf9,#1e5df0);color:white;padding:16px;border-radius:10px;font-weight:750;min-height:53px;box-shadow:0 8px 25px #0759ee30;cursor:pointer}.hustle-auth-submit:hover{filter:brightness(1.08)}.hustle-auth-submit:disabled{opacity:.55;cursor:not-allowed}.hustle-auth-support{text-align:center;font-size:12px;color:#a5b3ce;margin:24px 0}.hustle-auth-support p{color:#a5b3ce}.hustle-auth-support button{padding:3px}.hustle-auth-support .hustle-auth-legal{margin-top:10px;font-size:11px;line-height:1.7;color:#8090b1}.hustle-auth-resend{margin-top:9px}.hustle-auth-feedback{display:flex;align-items:flex-start;gap:11px;padding:14px;border-radius:10px;margin-top:17px;border:1px solid #385782;background:#243250;color:#e4eeff;font-size:12px;line-height:1.6}.hustle-auth-feedback.is-error{border-color:#a67648;background:#422f30}.hustle-auth-feedback.is-success{border-color:#34796c;background:#193937}.hustle-auth-feedback>svg{flex-shrink:0}.hustle-auth-feedback p{color:inherit;margin:0;font-size:12px;overflow-wrap:anywhere}.hustle-auth-feedback-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px}.hustle-auth-footer{border-top:1px solid #354562;margin-top:28px;padding-top:24px;text-align:center}.hustle-auth-footer a{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-size:12px;color:#b5c3dd}.hustle-auth-footer a:hover,.hustle-auth-link:hover,.hustle-auth-support button:hover{text-decoration:underline}.hustle-auth-beta{display:inline-flex;gap:8px;align-items:center}.hustle-auth-scene button:focus-visible,.hustle-auth-scene a:focus-visible{outline:2px solid #83b1ff;outline-offset:3px}@media(max-width:600px){.hustle-auth-scene{padding:25px 14px 45px;align-items:start}.hustle-auth-panel{padding:26px 21px 22px;border-radius:16px}.hustle-auth-intro{margin:22px 0}.hustle-auth-intro h1{font-size:29px}.hustle-auth-tabs{margin:18px 0}.hustle-auth-footer{margin-top:23px}}
+/* V48 auth: split card (benefits + form), dark-native controls, autofill fix. */
+.hustle-auth-scene{
+  --auth-bg:#0a1022;--auth-surface:#111b30;--auth-field:#0d1628;--auth-line:#2a3b5c;--auth-line-strong:#3c5383;
+  --auth-text:#f3f6ff;--auth-muted:#9aa9c4;--auth-faint:#7183a3;--auth-accent:#3b7cff;--auth-accent-soft:#8fb3ff;
+  --auth-ok:#4fd1a1;--auth-error:#ff9b9b;
+  color-scheme:dark;min-height:calc(100vh - 70px);padding:48px 20px 56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+  position:relative;isolation:isolate;overflow:hidden;color:var(--auth-text);
+  background:radial-gradient(ellipse at 12% 0%,#172e60 0,transparent 46%),radial-gradient(ellipse at 92% 92%,#10265a 0,transparent 42%),var(--auth-bg)
+}
+.hustle-auth-card{width:min(100%,980px);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);border:1px solid var(--auth-line);border-radius:20px;overflow:hidden;background:var(--auth-surface);box-shadow:0 30px 90px #02081480}
+.hustle-auth-card.is-solo{width:min(100%,480px);grid-template-columns:1fr}
 
-/* V31: optional buyer context without separate authentication identities */
-.hustle-buyer-context{border:1px solid #cde2ec;border-radius:14px;padding:17px;margin:0 0 20px;background:#f4fafc}
-.hustle-buyer-context legend{padding:0 5px;color:#173c56;font-size:12px;font-weight:800}
-.hustle-buyer-context>div{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.hustle-buyer-context button{border-radius:10px;border:1px solid #b9cfdb;padding:12px 8px;font-size:12px;font-weight:750;background:#fff;color:#244f68;cursor:pointer}
-.hustle-buyer-context button[aria-pressed=true]{background:#d6f5fb;border-color:#0a8db0;box-shadow:inset 0 0 0 1px #0a8db0;color:#034b65}
-.hustle-buyer-context p{font-size:11px;line-height:1.6;color:#6b8290;margin:13px 0 0}
-@media(max-width:420px){.hustle-buyer-context>div{grid-template-columns:1fr}}
+/* Left: what you get */
+.hustle-auth-aside{display:flex;flex-direction:column;gap:36px;padding:40px 40px 32px;background:linear-gradient(165deg,#1f44a3 0%,#15306f 48%,#0f2152 100%);border-right:1px solid #ffffff14;position:relative}
+.hustle-auth-aside::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 100% 0,#6ea0ff33 0,transparent 55%)}
+.hustle-auth-wordmark{position:relative;z-index:1;align-self:flex-start;font-size:20px;font-weight:800;letter-spacing:-.6px;color:#fff;text-decoration:none}
+.hustle-auth-wordmark span{color:#b8caf0}
+.hustle-auth-aside-body{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center}
+.hustle-auth-scene .hustle-auth-aside h2{margin:0 0 26px;font-size:28px;line-height:1.2;letter-spacing:-.8px;font-weight:800;color:#fff;max-width:14ch}
+.hustle-auth-aside ul{list-style:none;margin:0;padding:0;display:grid;gap:20px}
+.hustle-auth-aside li{display:grid;grid-template-columns:36px 1fr;gap:14px;align-items:start}
+.hustle-auth-aside-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#ffffff1a;border:1px solid #ffffff26;color:#fff}
+.hustle-auth-aside li b{display:block;font-size:15px;font-weight:700;color:#fff;margin-top:1px}
+.hustle-auth-scene .hustle-auth-aside li p{margin:4px 0 0;font-size:13px;line-height:1.55;color:#c9d6f2}
+.hustle-auth-aside-note{position:relative;z-index:1;display:flex;gap:9px;align-items:center;margin:0;padding-top:20px;border-top:1px solid #ffffff1f;font-size:12.5px;line-height:1.5;color:#c9d6f2}
+.hustle-auth-aside-note svg{flex-shrink:0}
+
+/* Right: form */
+.hustle-auth-panel{padding:44px 48px 36px;min-width:0}
+.hustle-auth-card .hustle-auth-panel{width:auto;border:0;border-radius:0;background:none;box-shadow:none}
+.is-solo .hustle-auth-wordmark{display:inline-block;margin-bottom:28px}
+.hustle-auth-intro{margin:0 0 24px}
+.hustle-auth-scene .hustle-auth-intro h1{margin:0 0 8px;font-size:30px;line-height:1.15;letter-spacing:-1px;font-weight:800;color:#fff}
+.hustle-auth-scene .hustle-auth-intro p{margin:0;font-size:14px;line-height:1.6;color:var(--auth-muted)}
+
+.hustle-auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin:0 0 24px;background:var(--auth-field);border:1px solid var(--auth-line);border-radius:12px}
+.hustle-auth-tabs button{min-height:40px;border:0;border-radius:9px;background:transparent;color:var(--auth-muted);font:inherit;font-size:14px;font-weight:650;cursor:pointer;transition:color .15s,background-color .15s}
+.hustle-auth-tabs button:hover{color:#fff}
+.hustle-auth-tabs button.active{color:#fff;background:#1f3a78;box-shadow:inset 0 0 0 1px #3f66b8}
+
+.workspace .hustle-auth-form,.hustle-auth-form{display:flex;flex-direction:column;gap:8px;margin:0}
+.hustle-auth-scene .hustle-auth-form>label,.hustle-auth-scene .hustle-auth-label-row label{display:block;font-size:13px;font-weight:650;color:#dfe7fb}
+.hustle-auth-scene .hustle-auth-form>label{margin-top:8px}
+.hustle-auth-label-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:8px}
+.hustle-auth-input{display:flex;align-items:center;gap:11px;min-height:50px;padding:0 6px 0 14px;border:1px solid var(--auth-line);border-radius:10px;background:var(--auth-field);color:var(--auth-faint);transition:border-color .15s,box-shadow .15s}
+.hustle-auth-input:hover{border-color:var(--auth-line-strong)}
+.hustle-auth-input:focus-within{border-color:var(--auth-accent);box-shadow:0 0 0 3px #3b7cff33;color:var(--auth-accent-soft)}
+.hustle-auth-input>svg{flex-shrink:0}
+.workspace .hustle-auth-input input,.hustle-auth-input input{flex:1;width:100%;min-width:0;padding:13px 8px 13px 0;margin:0;border:0;outline:0;box-shadow:none;border-radius:0;background:transparent;color:#fff;font:inherit;font-size:15px}
+.workspace .hustle-auth-input input:focus{outline:0;box-shadow:none}
+.hustle-auth-input input::placeholder{color:#62738f}
+/* Browser autofill paints its own box inside the field; repaint it in the field colour. */
+.hustle-auth-input input:-webkit-autofill,.hustle-auth-input input:-webkit-autofill:hover,.hustle-auth-input input:-webkit-autofill:focus{
+  -webkit-text-fill-color:#fff;caret-color:#fff;-webkit-box-shadow:0 0 0 100px var(--auth-field) inset;box-shadow:0 0 0 100px var(--auth-field) inset;transition:background-color 100000s
+}
+.hustle-auth-visibility{display:grid;place-items:center;width:38px;height:38px;flex-shrink:0;padding:0;border:0;border-radius:8px;background:transparent;color:var(--auth-muted);cursor:pointer}
+.hustle-auth-visibility:hover{color:#fff;background:#ffffff0d}
+
+.hustle-auth-scene .hustle-auth-hint{display:flex;align-items:center;gap:7px;margin:2px 0 0;font-size:12.5px;color:var(--auth-faint);transition:color .2s}
+.hustle-auth-hint svg{opacity:.45;transition:opacity .2s}
+.hustle-auth-scene .hustle-auth-hint.is-met{color:var(--auth-ok)}
+.hustle-auth-hint.is-met svg{opacity:1}
+
+/* Buyer context: two dark choice cards */
+.hustle-buyer-context{min-width:0;margin:0 0 6px;padding:0;border:0}
+.hustle-auth-scene .hustle-buyer-context legend{float:left;width:100%;padding:0;margin:0 0 10px;font-size:13px;font-weight:650;color:#dfe7fb}
+.hustle-buyer-context>div{clear:both;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hustle-buyer-context button{position:relative;display:grid;grid-template-columns:34px 1fr;gap:11px;align-items:center;min-height:64px;padding:12px 30px 12px 12px;text-align:left;border:1px solid var(--auth-line);border-radius:12px;background:var(--auth-field);color:var(--auth-text);font:inherit;cursor:pointer;transition:border-color .15s,background-color .15s}
+.hustle-buyer-context button:hover{border-color:var(--auth-line-strong)}
+.hustle-buyer-context button::after{content:"";position:absolute;top:12px;right:12px;width:14px;height:14px;border-radius:50%;border:1.5px solid #4a5f86}
+.hustle-buyer-context button[aria-pressed=true]{border-color:var(--auth-accent);background:#12244d;box-shadow:inset 0 0 0 1px var(--auth-accent)}
+.hustle-buyer-context button[aria-pressed=true]::after{border-color:var(--auth-accent);background:var(--auth-accent);box-shadow:inset 0 0 0 3px #12244d}
+.hustle-choice-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#1a2a4c;color:var(--auth-accent-soft)}
+.hustle-buyer-context button[aria-pressed=true] .hustle-choice-icon{background:var(--auth-accent);color:#fff}
+.hustle-choice-text{display:grid;gap:2px;min-width:0}
+.hustle-choice-text b{font-size:14px;font-weight:700;line-height:1.3}
+.hustle-choice-text small{font-size:12px;line-height:1.35;color:var(--auth-muted)}
+.hustle-auth-scene .hustle-buyer-context p{margin:9px 0 0;font-size:12.5px;color:var(--auth-faint)}
+
+.hustle-auth-submit{display:flex;justify-content:center;align-items:center;gap:9px;min-height:50px;margin-top:18px;padding:0 18px;border:0;border-radius:10px;background:var(--auth-accent);color:#fff;font:inherit;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 10px 26px #1f5df040;transition:background-color .15s,transform .15s}
+.hustle-auth-submit:hover{background:#5590ff}
+.hustle-auth-submit:active{transform:translateY(1px)}
+.hustle-auth-submit:disabled{opacity:.55;cursor:not-allowed;transform:none}
+
+.hustle-auth-link,.hustle-auth-support button,.hustle-auth-feedback-actions button,.hustle-auth-scene .hustle-auth-legal a{padding:0;border:0;background:transparent;color:var(--auth-accent-soft);font:inherit;font-weight:650;text-decoration:none;cursor:pointer}
+.hustle-auth-scene .hustle-auth-link{font-size:13px}
+.hustle-auth-link:hover,.hustle-auth-support button:hover:not(:disabled),.hustle-auth-feedback-actions button:hover,.hustle-auth-legal a:hover{text-decoration:underline;text-underline-offset:3px}
+.hustle-auth-support{margin-top:22px;display:grid;gap:10px;font-size:13px;line-height:1.6;color:var(--auth-muted)}
+.hustle-auth-scene .hustle-auth-support p{margin:0;color:var(--auth-muted)}
+.hustle-auth-support>button{display:inline-flex;align-items:center;gap:7px;justify-self:start}
+.hustle-auth-resend:disabled{color:var(--auth-faint);cursor:not-allowed}
+.hustle-auth-scene .hustle-auth-support .hustle-auth-legal{padding-top:14px;border-top:1px solid var(--auth-line);font-size:12px;color:var(--auth-faint)}
+
+.hustle-auth-feedback{display:flex;align-items:flex-start;gap:11px;margin-top:18px;padding:13px 14px;border:1px solid var(--auth-line);border-radius:10px;background:#16223a;color:#e4eeff;font-size:13px;line-height:1.55}
+.hustle-auth-feedback.is-error{border-color:#7a3a45;background:#2a1a24;color:#ffd9d9}
+.hustle-auth-feedback.is-error>svg{color:var(--auth-error)}
+.hustle-auth-feedback.is-success{border-color:#23665a;background:#0f2a2a;color:#d6f7ec}
+.hustle-auth-feedback.is-success>svg{color:var(--auth-ok)}
+.hustle-auth-feedback>svg{flex-shrink:0;margin-top:1px}
+.hustle-auth-feedback p{margin:0;color:inherit;font-size:13px;overflow-wrap:anywhere}
+.hustle-auth-feedback-actions{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px}
+
+.hustle-auth-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#b5c3dd;text-decoration:none}
+.hustle-auth-back:hover{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.hustle-auth-scene button:focus-visible,.hustle-auth-scene a:focus-visible{outline:2px solid var(--auth-accent-soft);outline-offset:3px}
+.hustle-buyer-context button:focus-visible{outline-offset:2px}
+
+/* Older single-panel screens (password reset page) */
+.hustle-auth-scene>.hustle-auth-panel{width:min(100%,480px);border:1px solid var(--auth-line);border-radius:20px;background:var(--auth-surface);box-shadow:0 30px 90px #02081480}
+.hustle-auth-brand{display:flex;align-items:center;gap:0;margin-bottom:28px;font-size:20px;font-weight:800;letter-spacing:-.6px}
+.hustle-auth-mark{display:none}
+.hustle-auth-dot{color:#b8caf0}
+.hustle-auth-eyebrow{display:none}
+.hustle-auth-footer{margin-top:26px;padding-top:20px;border-top:1px solid var(--auth-line)}
+.hustle-auth-footer a{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#b5c3dd;text-decoration:none}
+
+@media (max-width:900px){
+  .hustle-auth-card{grid-template-columns:1fr;width:min(100%,520px)}
+  .hustle-auth-aside{gap:0;padding:20px 28px;border-right:0;border-bottom:1px solid #ffffff14}
+  .hustle-auth-aside-body,.hustle-auth-aside-note{display:none}
+  .hustle-auth-panel{padding:30px 28px 28px}
+}
+@media (max-width:600px){
+  .hustle-auth-scene{justify-content:flex-start;padding:16px 12px 32px;gap:18px}
+  .hustle-auth-card{border-radius:16px}
+  .hustle-auth-aside{padding:16px 20px}
+  .hustle-auth-panel,.hustle-auth-scene>.hustle-auth-panel{padding:24px 20px}
+  .hustle-auth-scene .hustle-auth-intro h1{font-size:26px}
+  /* 16px stops iOS from zooming into the field */
+  .workspace .hustle-auth-input input,.hustle-auth-input input{font-size:16px}
+}
+@media (max-width:420px){
+  .hustle-buyer-context>div{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .hustle-auth-scene *{transition:none!important}
+}
