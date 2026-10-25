@@ -101,7 +101,7 @@ export default function SellerProfileManager(){
    if(alive)setPhotoUrls({avatar,cover});
   })();
   return()=>{alive=false};
- },[profile?.avatar_path,profile?.cover_path]);// eslint-disable-line react-hooks/exhaustive-deps
+ },[profile?.avatar_path,profile?.cover_path]);
  useEffect(()=>{try{localStorage.setItem('hustle-language',en?'en':'mn');document.documentElement.lang=en?'en':'mn'}catch{}},[en]);
  // Object URL for the project the seller is about to upload.
  useEffect(()=>{

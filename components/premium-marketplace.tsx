@@ -7,6 +7,7 @@ import {CATEGORIES,categoryById,normalizeCategory} from '../lib/marketplace/taxo
 import SiteHeader,{useSiteAccount} from './site-header';
 import {services, type Service} from '../lib/marketplace/catalog';
 import {matchesService,suggestServices} from '../lib/marketplace/smart-search';
+import {signInWithReturn} from '../lib/marketplace/ux-flows';
 import {suggestLiveServices,type LiveService} from '../lib/marketplace/live-discovery';
 import LiveCatalog from './live-catalog';
 import {marketplaceClient} from '../lib/marketplace/client';

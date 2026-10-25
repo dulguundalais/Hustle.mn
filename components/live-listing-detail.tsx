@@ -82,7 +82,7 @@ export default function LiveListingDetail(){
   document.addEventListener('keydown',esc);
   if(drawer==='form')requestAnimationFrame(()=>briefRef.current?.focus());
   return()=>{document.body.style.overflow=prev;document.removeEventListener('keydown',esc)};
- },[drawer]);// eslint-disable-line react-hooks/exhaustive-deps
+ },[drawer]);
  const options=(listing?.packages||[]).filter(p=>p.price>0);
  const chosen=options.find(p=>p.tier===tier)||options[0];
  const price=chosen?.price??listing?.price??0;
