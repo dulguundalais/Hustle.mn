@@ -8,15 +8,15 @@ import '../app/v40-seller-portfolio.css';
 type Choice={tool_key:string;icon_key:string};
 const icons:Record<CreativeTool['icon'],LucideIcon>={figma:Figma,image:Image,pen:PenTool,video:Video,palette:Palette,box:Box,code:Code2,react:Atom,database:Database,table:FileSpreadsheet,chart:BarChart3,bot:Bot,notebook:BookOpen,audio:Music2,camera:Camera,layers:Layers3,file:FileText};
 const iconChoices=[
- {key:'auto',mn:'Брэнд лого',en:'Brand logo',Icon:Settings2},
+ {key:'auto',mn:'Програмын лого',en:'Brand logo',Icon:Settings2},
  {key:'palette',mn:'Дизайн',en:'Design',Icon:Palette},
  {key:'code',mn:'Код',en:'Code',Icon:Code2},
  {key:'layers',mn:'Давхарга',en:'Layers',Icon:Layers3},
  {key:'video',mn:'Видео',en:'Video',Icon:Video},
  {key:'sparkles',mn:'AI / Бүтээл',en:'AI / Creative',Icon:Atom},
- {key:'chart',mn:'Аналитик',en:'Analytics',Icon:BarChart3},
+ {key:'chart',mn:'Шинжилгээ',en:'Analytics',Icon:BarChart3},
  {key:'camera',mn:'Зураг',en:'Photo',Icon:Camera},
- {key:'file',mn:'Баримт',en:'Documents',Icon:FileText},
+ {key:'file',mn:'Баримт бичиг',en:'Documents',Icon:FileText},
  {key:'wrench',mn:'Хэрэгсэл',en:'Tools',Icon:Wrench}
 ] as const;
 
@@ -76,21 +76,21 @@ export default function SellerToolEditor({sellerId,en,onUpdated}:{sellerId:strin
    setSaved(prev=>prev.map(v=>v.tool_key===key?{...v,icon_key:icon}:v));
    onUpdated?.();
    setEditingIcon(null);
-  }catch{setMessage(t('Icon хадгалж чадсангүй.','Could not save the icon.'))}
+  }catch{setMessage(t('Дүрс хадгалж чадсангүй.','Could not save the icon.'))}
   finally{setBusy(false)}
  }
- return <section className="v40-tools-editor" aria-label={t('Миний ашигладаг хэрэгслүүд','My software and tools')}>
+ return <section className="v40-tools-editor" aria-label={t('Ашигладаг програмууд','My software and tools')}>
   <div className="v40-tools-heading">
-   <div><span className="v40-eyebrow">HUSTLE / CREATIVE TOOLKIT</span><h2>{t('Миний ашигладаг хэрэгслүүд','Tools I work with')}</h2>
-   <p>{t('Програм сонгоод хүсвэл icon-ийг нь өөрчил. Сонголт зөвхөн өөрийн public portfolio дээр харагдана.','Choose the software you use and customize its icon. Only your selected tools appear on your public profile.')}</p></div>
+   <div><span className="v40-eyebrow">{t('Ашигладаг програмууд','HUSTLE / CREATIVE TOOLKIT')}</span><h2>{t('Ашигладаг програмууд','Tools I work with')}</h2>
+   <p>{t('Ашигладаг програмаа сонгоорой. Хүсвэл дүрсийг нь өөрчилж болно. Сонголт таны нийтэд нээлттэй профайлд харагдана.','Choose the software you use and customize its icon. Only your selected tools appear on your public profile.')}</p></div>
    <span className="v40-tools-counter">{saved.length}/{CREATIVE_TOOL_MAX}</span>
   </div>
   {status==='loading'&&<p role="status" className="v40-tools-status">{t('Хэрэгслүүдийг шалгаж байна…','Loading tools…')}</p>}
   {status==='error'&&<p role="alert" className="v40-tools-error">{message}</p>}
   {status==='ready'&&<>
    <div className="v40-selected-tools">
-    <div className="v40-selected-header"><strong>{t('Сонгосон хэрэгслүүд','Your selected tools')}</strong><small>{t('Шууд хадгалагдана','Saved automatically')}</small></div>
-    {!saved.length&&<p className="v40-tools-empty">{t('Одоогоор сонгосон хэрэгсэл алга. Доороос сонгоорой.','No tools selected yet. Choose tools from below.')}</p>}
+    <div className="v40-selected-header"><strong>{t('Сонгосон програмууд','Your selected tools')}</strong><small>{t('Шууд хадгалагдана','Saved automatically')}</small></div>
+    {!saved.length&&<p className="v40-tools-empty">{t('Одоогоор програм сонгоогүй байна. Доорх жагсаалтаас сонгоорой.','No tools selected yet. Choose tools from below.')}</p>}
     <div className="v40-selected-grid">{saved.map(choice=>{
      const tool=creativeToolFor(choice.tool_key);
      if(!tool)return null;
@@ -99,12 +99,12 @@ export default function SellerToolEditor({sellerId,en,onUpdated}:{sellerId:strin
      const Icon=choice.icon_key==='auto'||!CustomIcon?DefaultIcon:CustomIcon;
      const brandSrc=brandLogoFor(tool.key);
      return <div className="v40-selected-item" key={tool.key}>
-      <div className="v40-selected-main"><span className="v40-tool-icon v40-brand-icon">{brandSrc?<img src={brandSrc} width={28} height={28} alt="" loading="lazy" decoding="async"/>:<Icon size={20}/>}</span><span>{tool.name}</span>{choice.icon_key!=='auto'&&<span className="v40-custom-indicator" title={t('Өөрчилсөн icon','Custom icon')}><Icon size={13}/></span>}</div>
+      <div className="v40-selected-main"><span className="v40-tool-icon v40-brand-icon">{brandSrc?<img src={brandSrc} width={28} height={28} alt="" loading="lazy" decoding="async"/>:<Icon size={20}/>}</span><span>{tool.name}</span>{choice.icon_key!=='auto'&&<span className="v40-custom-indicator" title={t('Өөрчилсөн дүрс','Custom icon')}><Icon size={13}/></span>}</div>
       <div className="v40-selected-actions">
-       <button type="button" disabled={busy} aria-expanded={editingIcon===tool.key} aria-label={t('Icon сонгох: ','Choose icon: ')+tool.name} onClick={()=>setEditingIcon(v=>v===tool.key?null:tool.key)} title={t('Icon өөрчлөх','Change icon')}><Settings2 size={17}/></button>
+       <button type="button" disabled={busy} aria-expanded={editingIcon===tool.key} aria-label={t('Дүрс сонгох: ','Choose icon: ')+tool.name} onClick={()=>setEditingIcon(v=>v===tool.key?null:tool.key)} title={t('Дүрс өөрчлөх','Change icon')}><Settings2 size={17}/></button>
        <button type="button" disabled={busy} aria-label={t('Жагсаалтаас хасах: ','Remove: ')+tool.name} onClick={()=>{void changeTool(tool.key)}}><X size={17}/></button>
       </div>
-      {editingIcon===tool.key&&<div className="v40-icon-picker" aria-label={t('Icon-ийн төрөл','Icon style')}>{iconChoices.map(option=><button type="button" className={choice.icon_key===option.key?'active':''} key={option.key} aria-pressed={choice.icon_key===option.key} title={en?option.en:option.mn} aria-label={en?option.en:option.mn} disabled={busy} onClick={()=>{void changeIcon(tool.key,option.key)}}><option.Icon size={18}/></button>)}</div>}
+      {editingIcon===tool.key&&<div className="v40-icon-picker" aria-label={t('Дүрсний төрөл','Icon style')}>{iconChoices.map(option=><button type="button" className={choice.icon_key===option.key?'active':''} key={option.key} aria-pressed={choice.icon_key===option.key} title={en?option.en:option.mn} aria-label={en?option.en:option.mn} disabled={busy} onClick={()=>{void changeIcon(tool.key,option.key)}}><option.Icon size={18}/></button>)}</div>}
      </div>
     })}</div>
    </div>

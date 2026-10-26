@@ -92,15 +92,15 @@ export default function GuidedEntry({en}:{en:boolean}){
   {open&&typeof document!=='undefined'&&createPortal(<div className="guided-modal-backdrop" onPointerDown={e=>{if(e.target===e.currentTarget)close()}}>
    <div ref={modalRef} className="guided-modal guided-simplified" role="dialog" aria-modal="true" aria-labelledby="guided-dialog-title" aria-describedby="guided-dialog-description">
     <div className="guided-modal-header">
-     <div className="guided-modal-mark"><span>h<span>✳</span></span><small>HUSTLE / GUIDED DISCOVERY</small></div>
+     <div className="guided-modal-mark"><span>h<span>✳</span></span><small>{t('HUSTLE · Хэрэгцээгээ тодорхойлох','HUSTLE / GUIDED DISCOVERY')}</small></div>
      <button type="button" className="guided-modal-close" aria-label={t('Хаах','Close')} onClick={close}><X size={19}/></button>
     </div>
     <div className="guided-modal-body">
      <div className="guided-step-meta"><span>{audience==='business'?<Building2 size={15}/>:<UserRound size={15}/>} {audience==='business'?t('Бизнесийн хэрэгцээ','For business'):t('Хувийн хэрэгцээ','For personal projects')}</span><span>{screen==='choose'?'01 / 02':'02 / 02'}</span></div>
      {screen==='choose'?<>
-      <span className="guided-step-eyebrow">{t('ЗӨВ ЧИГЛЭЛЭЭС ЭХЭЛЬЕ','START WITH A GOAL')}</span>
+      <span className="guided-step-eyebrow">{t('Хэрэгцээгээ тодорхойлоё','START WITH A GOAL')}</span>
       <h2 id="guided-dialog-title">{audience==='business'?t('Юуг сайжруулахыг хүсэж байна?','What would you like to improve?'):t('Ямар ажилд тусламж хэрэгтэй вэ?','What can we help you with?')}</h2>
-      <p id="guided-dialog-description">{t('Доороос сонговол шууд тохирох шийдэл харагдана.','Pick a goal to see relevant solutions immediately.')}</p>
+      <p id="guided-dialog-description">{t('Чиглэлээ сонгоод тохирох шийдлүүдийг хараарай.','Pick a goal to see relevant solutions immediately.')}</p>
       <div className="guided-goals">{guidedGoals[audience].map(item=>{
        const Icon=icons[item.key as GuidedGoalKey];
        return <button className="guided-goal" type="button" key={item.key} onClick={()=>choose(item)}>
@@ -109,7 +109,7 @@ export default function GuidedEntry({en}:{en:boolean}){
       })}</div>
       <div className="guided-custom-need">
        <label className="guided-label" htmlFor="guided-custom-problem">{t('Эсвэл асуудлаа өөрийн үгээр бич','Or describe it in your own words')}</label>
-       <div className="guided-custom-row"><input id="guided-custom-problem" value={notes} maxLength={1200} onChange={event=>setNotes(event.target.value)} placeholder={t('Жишээ: Манай рестораны захиалга бага байна…','e.g. Our restaurant needs more bookings…')}/><button type="button" disabled={notes.trim().length<5} onClick={()=>setScreen('results')} aria-label={t('Өөрийн асуудлаар шийдэл харах','Find solutions for my challenge')}><Search size={18}/><ArrowRight size={15}/></button></div>
+       <div className="guided-custom-row"><input id="guided-custom-problem" value={notes} maxLength={1200} onChange={event=>setNotes(event.target.value)} placeholder={t('Хэрэгцээгээ өөрийн үгээр бичээрэй','e.g. Our restaurant needs more bookings…')}/><button type="button" disabled={notes.trim().length<5} onClick={()=>setScreen('results')} aria-label={t('Тохирох шийдэл харах','Find solutions for my challenge')}><Search size={18}/><ArrowRight size={15}/></button></div>
       </div>
      </>:<>
       <span className="guided-step-eyebrow"><Sparkles size={14}/>{t('ТАНД ТОХИРОХ ШИЙДЛҮҮД','SOLUTIONS TO CONSIDER')}</span>
@@ -121,15 +121,15 @@ export default function GuidedEntry({en}:{en:boolean}){
         return <article key={solution.id} className="guided-result-card">
          <span className="guided-rec-index">0{index+1}</span>
          <div className="guided-result-content"><h3>{en?solution.en:solution.mn}</h3><p>{en?solution.whyEn:solution.whyMn}</p>
-          {matches.length>0&&<div className="guided-published-list"><span>{t('БОДИТ ҮЙЛЧИЛГЭЭ','PUBLISHED SERVICE')}</span>{matches.map(item=><Link key={item.id} href={'/listing/?id='+encodeURIComponent(item.id)} onClick={close}>{en&&item.title_en?item.title_en:item.title}<ArrowUpRight size={15}/></Link>)}</div>}
+          {matches.length>0&&<div className="guided-published-list"><span>{t('Нийтлэгдсэн үйлчилгээ','PUBLISHED SERVICE')}</span>{matches.map(item=><Link key={item.id} href={'/listing/?id='+encodeURIComponent(item.id)} onClick={close}>{en&&item.title_en?item.title_en:item.title}<ArrowUpRight size={15}/></Link>)}</div>}
          </div>
         </article>;
        })}</div>
       {catalogStatus==='loading'?<div className="guided-match-status"><LoaderCircle size={15}/>{t('Нийтлэгдсэн үйлчилгээнүүдийг хайж байна…','Loading published services…')}</div>
-       :catalogStatus==='unavailable'?<div className="guided-match-status">{t('Бодит каталог түр холбогдохгүй байна. Бүх үйлчилгээг хайж болно.','Live catalog is temporarily unavailable. You can still browse services.')}</div>
-       :countUnique===0?<div className="guided-match-status">{t('Одоогоор яг тохирох нийтлэгдсэн freelancer алга. Та төслийн хүсэлтээ бэлдэж болно.','No exact published match yet. You can still prepare a project brief.')}</div>:null}
+       :catalogStatus==='unavailable'?<div className="guided-match-status">{t('Үйлчилгээг ачаалж чадсангүй. Үйлчилгээний жагсаалтаас дахин хайж үзээрэй.','Live catalog is temporarily unavailable. You can still browse services.')}</div>
+       :countUnique===0?<div className="guided-match-status">{t('Одоогоор тохирох үйлчилгээ алга. Та төслийн хүсэлт бэлдэж болно.','No exact published match yet. You can still prepare a project brief.')}</div>:null}
       <div className="guided-optional">
-       <button type="button" className="guided-optional-toggle" aria-expanded={detailsOpen} onClick={()=>setDetailsOpen(v=>!v)}><ClipboardCopy size={16}/>{t('Төслийн хүсэлт бэлдэх (сонголттой)','Prepare a project brief (optional)')}<ChevronDown size={17}/></button>
+       <button type="button" className="guided-optional-toggle" aria-expanded={detailsOpen} onClick={()=>setDetailsOpen(v=>!v)}><ClipboardCopy size={16}/>{t('Төслийн хүсэлт бэлдэх (заавал биш)','Prepare a project brief (optional)')}<ChevronDown size={17}/></button>
        {detailsOpen&&<div className="guided-optional-content">
         <div className="guided-field-grid"><label className="guided-label">{t('Төсөв','Budget')}<input value={budget} onChange={e=>setBudget(e.target.value.slice(0,80))} placeholder={t('Жишээ: 500,000 ₮','e.g. 500,000 MNT')}/></label><label className="guided-label">{t('Хугацаа','Timeline')}<input value={timeline} onChange={e=>setTimeline(e.target.value.slice(0,80))} placeholder={t('Жишээ: 2 долоо хоног','e.g. 2 weeks')}/></label></div>
         <pre className="guided-brief-preview">{brief}</pre>
@@ -147,7 +147,7 @@ export default function GuidedEntry({en}:{en:boolean}){
       </>:<span className="guided-selection-hint">{t('Нэг чиглэл сонгоход л хангалттай','Select a goal above')}</span>}
      </div>
     </div>
-    <div className="guided-modal-bottomline">{t('Smart Finder beta — дүрэмд суурилсан зөвлөмж; бодит AI загвар хараахан холбогдоогүй.','Smart Finder beta uses transparent rule-based guidance, not a connected AI model.')}</div>
+    <div className="guided-modal-bottomline">{t('Туршилтын хувилбар: түлхүүр үг, ангилалд тулгуурлан санал болгоно. AI зөвлөх хараахан ажиллахгүй.','Smart Finder beta uses transparent rule-based guidance, not a connected AI model.')}</div>
    </div>
   </div>,document.body)}
  </>;

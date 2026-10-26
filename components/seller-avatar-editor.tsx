@@ -46,7 +46,7 @@ export default function SellerAvatarEditor({sellerId,name,avatarPath,onChange,en
   if(!file||loading)return;
   setError('');
   const invalid=await checkAvatarFile(file);
-  if(invalid){setError(invalid==='size'?t('Зураг 2 MB-аас бага байх ёстой.','Photo must be under 2 MB.'):t('Зөвхөн JPEG, PNG эсвэл WebP зураг сонгоно уу.','Choose a genuine JPEG, PNG or WebP image.'));return}
+  if(invalid){setError(invalid==='size'?t('Зураг 2 MB-аас ихгүй байх ёстой.','Photo must be under 2 MB.'):t('Зөвхөн JPEG, PNG эсвэл WebP зураг сонгоно уу.','Choose a genuine JPEG, PNG or WebP image.'));return}
   setLoading(true);
   let newPath='';
   try{
@@ -85,7 +85,7 @@ export default function SellerAvatarEditor({sellerId,name,avatarPath,onChange,en
  return <section className="v41-avatar-editor" aria-label={t('Профайлын зураг','Profile photo')}>
   <div className="v41-avatar-preview">{preview?<img src={preview} alt={t('Миний профайлын зураг','My profile picture')} width={104} height={104}/>:<span aria-hidden="true">{initial}</span>}<i aria-hidden="true"><Camera size={16}/></i></div>
   <div className="v41-avatar-info"><h3>{t('Профайлын зураг','Profile picture')}</h3>
-   <p>{t('Нүүр хуудасны seller card, үйлчилгээ болон public portfolio дээр ижил зураг харагдана. 1:1 хэмжээтэй JPEG, PNG, WebP · 2 MB хүртэл.','Your photo will appear on seller cards, service details and your public portfolio. Square JPEG, PNG or WebP, up to 2 MB.')}</p>
+   <p>{t('Таны зураг нүүр хуудас, үйлчилгээ болон нийтэд нээлттэй профайлд харагдана. Дөрвөлжин JPEG, PNG эсвэл WebP зураг · 2 MB хүртэл.','Your photo will appear on seller cards, service details and your public portfolio. Square JPEG, PNG or WebP, up to 2 MB.')}</p>
    <input ref={picker} className="v41-avatar-file" type="file" accept="image/jpeg,image/png,image/webp" aria-label={t('Зураг сонгох','Choose a profile photo')} disabled={loading} onChange={e=>{void upload(e.currentTarget.files?.[0])}}/>
    <div className="v41-avatar-actions"><button type="button" className="button" disabled={loading} onClick={()=>picker.current?.click()}><ImagePlus size={16}/>{loading?t('Хадгалж байна…','Saving…'):preview?t('Зураг солих','Change photo'):t('Зураг оруулах','Upload photo')}</button>
    {avatarPath&&<button type="button" className="button outline" disabled={loading} onClick={()=>{void remove()}}><Trash2 size={16}/>{t('Устгах','Remove')}</button>}</div>

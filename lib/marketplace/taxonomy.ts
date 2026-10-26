@@ -20,7 +20,7 @@ const sub=(id:string,mn:string,en:string,keywords:string[]=[]):Subcategory=>({id
 
 export const CATEGORIES:Category[]=[
  {id:'ai',mn:'AI ба автоматжуулалт',en:'AI & Automation',
-  leadMn:'Давтагддаг ажлыг ухаалаг систем болгоно',leadEn:'Turn repetitive work into smart systems',
+  leadMn:'Давтагддаг ажлаа автоматжуулах шийдлүүд',leadEn:'Turn repetitive work into smart systems',
   keywords:['ai','хиймэл оюун','hiimel oyun','artificial intelligence','automation','автоматжуулалт','avtomatjuulalt','n8n','make','zapier','gpt','chatgpt','бот','bot'],
   subcategories:[
    sub('chatbots','AI чатбот','AI chatbots',['chatbot','чатбот','messenger bot','мессенжер бот']),
@@ -42,8 +42,8 @@ export const CATEGORIES:Category[]=[
    sub('management','Менежментийн зөвлөгөө','Management consulting',['management','менежмент','удирдлага']),
    sub('business-model','Бизнес загвар','Business model design',['business model','бизнес загвар']),
    sub('franchise','Франчайз зөвлөгөө','Franchise consulting',['franchise','франчайз']),
-   sub('pitch-deck','Хөрөнгө оруулагчийн танилцуулга','Investor pitch decks',['pitch deck','хөрөнгө оруулалт','investor']),
-   sub('proposals','Төсөл, тендер бичих','Proposals & tenders',['proposal','төсөл','tosol','tender','тендер','грант','grant'])
+   sub('pitch-deck','Хөрөнгө оруулагчдад зориулсан танилцуулга','Investor pitch decks',['pitch deck','хөрөнгө оруулалт','investor']),
+   sub('proposals','Төсөл, тендерийн баримт бичиг','Proposals & tenders',['proposal','төсөл','tosol','tender','тендер','грант','grant'])
  ]},
  {id:'marketing',mn:'Маркетинг ба борлуулалт',en:'Marketing & Sales',
   leadMn:'Хэрэглэгч татаж, борлуулалтаа өсгөнө',leadEn:'Reach customers and grow sales',
@@ -60,10 +60,10 @@ export const CATEGORIES:Category[]=[
    sub('growth','Өсөлтийн маркетинг','Growth marketing',['growth','өсөлт','performance'])
  ]},
  {id:'tech',mn:'Технологи ба дижитал бүтээгдэхүүн',en:'Technology & Digital Products',
-  leadMn:'Веб, апп, програм хангамж',leadEn:'Websites, apps and software',
+  leadMn:'Вэб, апп, програм хангамж',leadEn:'Websites, apps and software',
   keywords:['web','website','веб','вэб','сайт','sait','app','апп','software','програм','program','developer','хөгжүүлэлт','hogjuulelt','it'],
   subcategories:[
-   sub('web','Вебсайт хөгжүүлэлт','Website development',['website','вебсайт','landing page','сайт хийх','sait hiih']),
+   sub('web','Вэбсайт хөгжүүлэлт','Website development',['website','вэбсайт','landing page','сайт хийх','sait hiih']),
    sub('mobile','Мобайл апп','Mobile apps',['mobile','app','апп','ios','android']),
    sub('ui-ux','UI/UX дизайн','UI/UX design',['ui','ux','figma','интерфейс','prototype']),
    sub('ecommerce-dev','Онлайн дэлгүүр хөгжүүлэлт','Ecommerce development',['shopify','woocommerce','онлайн дэлгүүр хийх']),
@@ -98,7 +98,7 @@ export const CATEGORIES:Category[]=[
    sub('compliance','Зохицуулалтын нийцэл','Regulatory compliance',['compliance','зөвшөөрөл','license','тусгай зөвшөөрөл'])
  ]},
  {id:'research',mn:'Судалгаа ба өгөгдөл',en:'Research & Data',
-  leadMn:'Шийдвэрээ баримт, өгөгдөлд тулгуурлана',leadEn:'Decisions grounded in evidence and data',
+  leadMn:'Баримт, өгөгдөлд тулгуурлан шийдвэр гаргаарай',leadEn:'Decisions grounded in evidence and data',
   keywords:['research','судалгаа','sudalgaa','data','өгөгдөл','ogogdol','analytics','аналитик','excel','power bi'],
   subcategories:[
    sub('market-research','Зах зээлийн судалгаа','Market research',['market research','зах зээлийн судалгаа']),
@@ -108,21 +108,21 @@ export const CATEGORIES:Category[]=[
    sub('analytics','Өгөгдлийн шинжилгээ','Data analytics',['analytics','шинжилгээ','python','sql']),
    sub('power-bi','Power BI dashboard','Power BI dashboards',['power bi','dashboard','powerbi']),
    sub('excel','Excel тайлан ба загвар','Excel reporting',['excel','spreadsheet','хүснэгт']),
-   sub('bi','Бизнесийн тагнуул (BI)','Business intelligence',['bi','business intelligence','kpi'])
+   sub('bi','Бизнесийн өгөгдлийн шинжилгээ (BI)','Business intelligence',['bi','business intelligence','kpi'])
  ]},
- {id:'creative',mn:'Дизайн ба бүтээлч',en:'Design & Creative',
+ {id:'creative',mn:'Дизайн, бүтээлч үйлчилгээ',en:'Design & Creative',
   leadMn:'Брэнд, дизайн, видео, орчуулга',leadEn:'Brand, design, video and language',
   keywords:['design','дизайн','dizain','creative','бүтээлч'],
   subcategories:[
-   sub('brand-identity','Брэнд айдентити','Brand identity',['brand identity','брэнд','brend','branding']),
+   sub('brand-identity','Брэндийн өнгө төрх','Brand identity',['brand identity','брэнд','brend','branding']),
    sub('logo','Лого дизайн','Logo design',['logo','лого','logo hiih']),
    sub('graphic-design','График дизайн','Graphic design',['graphic design','график','poster','постер']),
-   sub('video-production','Видео продакшн','Video production',['video production','зураг авалт','commercial']),
+   sub('video-production','Видео бүтээх','Video production',['video production','зураг авалт','commercial']),
    sub('video-editing','Видео эвлүүлэг','Video editing',['video editing','эвлүүлэг','evluuleg','reels','рилс','montaj','монтаж']),
-   sub('animation','Анимэйшн ба motion','Animation & motion',['animation','анимэйшн','motion']),
+   sub('animation','Анимэйшн, хөдөлгөөнт график','Animation & motion',['animation','анимэйшн','motion']),
    sub('photography','Гэрэл зураг','Photography',['photo','фото','гэрэл зураг']),
-   sub('presentations','Танилцуулга дизайн','Presentation design',['presentation','powerpoint','слайд']),
-   sub('translation','Орчуулга ба локалчлал','Translation & localization',['translation','орчуулга','orchuulga','english','англи','localization']),
+   sub('presentations','Танилцуулгын дизайн','Presentation design',['presentation','powerpoint','слайд']),
+   sub('translation','Орчуулга, нутагшуулалт','Translation & localization',['translation','орчуулга','orchuulga','english','англи','localization']),
    sub('interior','Интерьер дизайн','Interior design',['interior','интерьер','дотоод засал','3d'])
  ]},
  {id:'commerce',mn:'Цахим худалдаа ба үйл ажиллагаа',en:'Ecommerce & Operations',
@@ -130,7 +130,7 @@ export const CATEGORIES:Category[]=[
   keywords:['ecommerce','цахим худалдаа','онлайн дэлгүүр','online store','operations','үйл ажиллагаа','inventory','агуулах'],
   subcategories:[
    sub('online-store','Онлайн дэлгүүр нээх','Online store setup',['online store','онлайн дэлгүүр','shop']),
-   sub('marketplace','Маркетплейс менежмент','Marketplace management',['marketplace','shoppy','emart','amazon']),
+   sub('marketplace','Цахим худалдааны платформын удирдлага','Marketplace management',['marketplace','shoppy','emart','amazon']),
    sub('operations','Цахим худалдааны үйл ажиллагаа','Ecommerce operations',['fulfilment','хүргэлт','захиалгын урсгал']),
    sub('product','Бүтээгдэхүүний менежмент','Product management',['product','бүтээгдэхүүн','catalog']),
    sub('inventory','Нөөц, агуулахын систем','Inventory systems',['inventory','агуулах','нөөц']),
@@ -144,20 +144,20 @@ export const CATEGORIES:Category[]=[
    sub('language','Хэлний хичээл','Language tutoring',['english','англи хэл','ielts','toefl','хятад хэл','солонгос хэл']),
    sub('business-coaching','Бизнес коучинг','Business coaching',['business coach','бизнес коуч']),
    sub('professional-training','Мэргэжлийн сургалт','Professional training',['training','сургалт']),
-   sub('career','Карьерын ментор','Career mentoring',['career','карьер','cv','ярилцлага']),
+   sub('career','Ажил мэргэжлийн зөвлөх','Career mentoring',['career','карьер','cv','ярилцлага']),
    sub('software-training','Програм хангамжийн сургалт','Software training',['excel training','figma','программ сурах']),
-   sub('private-lessons','Хувийн хичээл','Private lessons',['private lesson','хувийн хичээл','math','математик']),
+   sub('private-lessons','Ганцаарчилсан хичээл','Private lessons',['private lesson','хувийн хичээл','math','математик']),
    sub('corporate-training','Байгууллагын сургалт','Corporate training',['corporate training','байгууллагын сургалт'])
  ]},
- {id:'wellbeing',mn:'Сэтгэл зүй ба сайн сайхан',en:'Psychology & Wellbeing',regulated:true,
+ {id:'wellbeing',mn:'Сэтгэл зүй, хувь хүний хөгжил',en:'Psychology & Wellbeing',regulated:true,
   leadMn:'Баталгаажсан мэргэжилтнүүдтэй нууцлалтай уулзалт',leadEn:'Private sessions with verified professionals',
   keywords:['psychology','сэтгэл зүй','setgel zui','psychologist','сэтгэл зүйч','wellbeing','stress','стресс','counselling','зөвлөгөө'],
   subcategories:[
    sub('consultation','Сэтгэл зүйн зөвлөгөө','Psychological consultation',['psychologist','сэтгэл зүйч']),
-   sub('stress','Стресс удирдах','Stress management',['stress','стресс','burnout']),
+   sub('stress','Стрессээ зохицуулах','Stress management',['stress','стресс','burnout']),
    sub('relationships','Харилцааны зөвлөгөө','Relationship counselling',['relationship','харилцаа','гэр бүл']),
    sub('personal-development','Хувь хүний хөгжил','Personal development',['personal development','хувь хүний хөгжил']),
-   sub('workplace','Ажлын байрны сайн сайхан','Workplace wellbeing',['workplace','ажлын байр','team wellbeing']),
+   sub('workplace','Ажлын байрны сэтгэл зүй','Workplace wellbeing',['workplace','ажлын байр','team wellbeing']),
    sub('emotional-skills','Сэтгэл хөдлөлийн ур чадвар','Emotional skills training',['emotional','сэтгэл хөдлөл'])
  ]}
 ];
@@ -182,7 +182,7 @@ export const SHOWCASE:ShowcaseCard[]=[
  {key:'research',mn:'Судалгаа ба өгөгдөл',en:'Research & Data',href:'/categories/#research',categories:['research'],art:'research'},
  {key:'commerce',mn:'Цахим худалдаа',en:'Ecommerce & Operations',href:'/categories/#commerce',categories:['commerce'],art:'commerce'},
  {key:'education',mn:'Боловсрол ба коучинг',en:'Education & Coaching',href:'/categories/#education',categories:['education'],art:'education'},
- {key:'wellbeing',mn:'Сэтгэл зүй ба сайн сайхан',en:'Psychology & Wellbeing',href:'/categories/#wellbeing',categories:['wellbeing'],art:'wellbeing'}
+ {key:'wellbeing',mn:'Сэтгэл зүй, хувь хүний хөгжил',en:'Psychology & Wellbeing',href:'/categories/#wellbeing',categories:['wellbeing'],art:'wellbeing'}
 ];
 
 /** Category artwork available as raster images in public/categories/<art>.webp.
@@ -192,7 +192,7 @@ export const CATEGORY_IMAGES:string[]=[];
 /** How a service is sold. Inquiry-based models never take payment on Hustle. */
 export type ServiceType='fixed'|'hourly'|'custom'|'monthly'|'mentoring';
 export const SERVICE_TYPES:{id:ServiceType;mn:string;en:string;hintMn:string;hintEn:string;priceMn:string;priceEn:string}[]=[
- {id:'fixed',mn:'Тогтмол үнэтэй багц',en:'Fixed-price package',hintMn:'Basic, Standard, Premium багцтай тодорхой үр дүн.',hintEn:'Clear deliverables in Basic, Standard and Premium packages.',priceMn:'-аас эхэлнэ',priceEn:'starting price'},
+ {id:'fixed',mn:'Тогтмол үнэтэй багц',en:'Fixed-price package',hintMn:'Суурь, Стандарт, Дээд багцаас ажлын хүрээгээ сонгоно.',hintEn:'Clear deliverables in Basic, Standard and Premium packages.',priceMn:'-аас эхэлнэ',priceEn:'starting price'},
  {id:'hourly',mn:'Цагийн зөвлөгөө',en:'Hourly consultation',hintMn:'Мэргэжилтэнтэй цагаар уулзаж зөвлөгөө авна.',hintEn:'Book an expert by the hour.',priceMn:'/ цаг',priceEn:'/ hour'},
  {id:'custom',mn:'Захиалгат төсөл',en:'Custom project',hintMn:'Хэрэгцээгээ тайлбарлаад үнийн санал авна.',hintEn:'Describe your needs and receive a quote.',priceMn:'-аас эхэлнэ',priceEn:'from'},
  {id:'monthly',mn:'Сарын үйлчилгээ',en:'Monthly retainer',hintMn:'Тогтмол дэмжлэг, зөвлөгөө сар бүр.',hintEn:'Ongoing support every month.',priceMn:'/ сар',priceEn:'/ month'},

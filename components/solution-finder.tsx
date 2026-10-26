@@ -43,9 +43,9 @@ export default function SolutionFinder({compact=false,en:language=false}:{compac
  return <section className={'solution-finder '+(compact?'finder-compact':'')} aria-labelledby="hustle-finder-title">
   <div className="solution-shell">
    {!compact&&<div className="solution-top"><Link href="/" className="solution-brand">hustle<span>✳</span>.mn</Link><Link href="/explore/">{t('Бүх үйлчилгээг үзэх','Browse all services')} <ArrowUpRight size={16}/></Link></div>}
-   <div className="finder-heading"><div className="finder-eyebrow"><Sparkles size={15}/>{t('HUSTLE SMART FINDER · BETA','HUSTLE SMART FINDER · BETA')}</div>
+   <div className="finder-heading"><div className="finder-eyebrow"><Sparkles size={15}/>{t('HUSTLE · Шийдэл хайх','HUSTLE SMART FINDER · BETA')}</div>
     <h1 id="hustle-finder-title">{t('Ямар асуудал шийдэх хэрэгтэй байна?','What are you trying to solve?')}</h1>
-    <p>{t('Үйлчилгээний нэр мэдэх шаардлагагүй. Зорилгоо өөрийн үгээр бич, бид боломжит шийдэл болон бодит нийтлэгдсэн freelancer-ийн үйлчилгээг харуулна.','No need to know the service name. Describe your challenge and explore possible solutions and real published services.')}</p>
+    <p>{t('Үйлчилгээний нэрийг мэдэхгүй байсан ч болно. Хийлгэх ажлаа тайлбарлаарай. Бид боломжит шийдэл, тохирох үйлчилгээг санал болгоно.','No need to know the service name. Describe your challenge and explore possible solutions and real published services.')}</p>
    </div>
    <div className="finder-audience" role="group" aria-label={t('Төслийн төрөл','Project context')}>
     <button type="button" aria-pressed={audience==='business'} onClick={()=>setType('business')}><Building2 size={18}/>{t('Бизнес / байгууллага','Business / organization')}</button>
@@ -54,7 +54,7 @@ export default function SolutionFinder({compact=false,en:language=false}:{compac
    <form className="finder-form" onSubmit={submit} role="search">
     <label htmlFor="hustle-need">{t('Хэрэгцээгээ тайлбарлана уу','Describe what you need')}</label>
     <textarea id="hustle-need" name="q" rows={compact?2:3} minLength={5} maxLength={1200} required value={query} onChange={e=>setQuery(e.target.value)} placeholder={t('Жишээ: Манай рестораны захиалгыг нэмэгдүүлэх хэрэгтэй. Хаанаас эхлэхээ мэдэхгүй байна.','Example: We want more restaurant bookings but do not know where to start.')}/>
-    <div className="finder-form-foot"><span><Workflow size={15}/>{t('Монгол · Latin · English · Төлбөргүй beta','Mongolian · Latin · English · Free beta')}</span><button type="submit" disabled={query.trim().length<5}>{t('Шийдэл олох','Find solutions')} <ArrowRight size={18}/></button></div>
+    <div className="finder-form-foot"><span><Workflow size={15}/>{t('Кирилл · латин галиг · англи · нээлттэй туршилт','Mongolian · Latin · English · Free beta')}</span><button type="submit" disabled={query.trim().length<5}>{t('Шийдэл олох','Find solutions')} <ArrowRight size={18}/></button></div>
    </form>
    <div className="finder-prompts" aria-label={t('Түгээмэл асуудлын жишээ','Popular challenges')}>
     {problemExamples.map(item=><button type="button" key={item.key} onClick={()=>ask(en?item.exampleEn:item.exampleMn)}>{en?item.mn===item.en?item.en:item.en:item.mn} <ArrowUpRight size={14}/></button>)}
@@ -71,11 +71,11 @@ export default function SolutionFinder({compact=false,en:language=false}:{compac
      </article>;
     })}</div>
     <div className="finder-brief">
-     <div><span className="finder-eyebrow"><ClipboardCopy size={15}/>{t('ТӨСЛИЙН ХҮСЭЛТ','PROJECT BRIEF')}</span><h3>{t('Freelancer-т ойлгомжтой шаардлага бэлдье','Turn your challenge into a clear brief')}</h3></div>
-     <div className="finder-brief-fields"><label>{t('Төсөв (сонголттой)','Budget (optional)')}<input value={budget} onChange={e=>setBudget(e.target.value.slice(0,80))} maxLength={80} placeholder={t('Жишээ: 300,000–500,000 ₮','e.g., 300,000–500,000 MNT')}/></label><label>{t('Хугацаа (сонголттой)','Timeline (optional)')}<input value={timeline} onChange={e=>setTimeline(e.target.value.slice(0,80))} maxLength={80} placeholder={t('Жишээ: 2 долоо хоног','e.g., 2 weeks')}/></label></div>
+     <div><span className="finder-eyebrow"><ClipboardCopy size={15}/>{t('ТӨСЛИЙН ХҮСЭЛТ','PROJECT BRIEF')}</span><h3>{t('Хийлгэх ажлаа тодорхойлоё','Turn your challenge into a clear brief')}</h3></div>
+     <div className="finder-brief-fields"><label>{t('Төсөв (заавал биш)','Budget (optional)')}<input value={budget} onChange={e=>setBudget(e.target.value.slice(0,80))} maxLength={80} placeholder={t('Жишээ: 300,000–500,000 ₮','e.g., 300,000–500,000 MNT')}/></label><label>{t('Хугацаа (заавал биш)','Timeline (optional)')}<input value={timeline} onChange={e=>setTimeline(e.target.value.slice(0,80))} maxLength={80} placeholder={t('Жишээ: 2 долоо хоног','e.g., 2 weeks')}/></label></div>
      <pre className="finder-brief-preview">{brief}</pre>
-     <div className="finder-brief-actions"><button type="button" onClick={()=>void copy()}><ClipboardCopy size={16}/>{copied?t('Хуулсан','Copied'):t('Хүсэлт хуулах','Copy project brief')}</button><Link href={'/explore/?q='+encodeURIComponent(submitted)}>{t('Freelancer хайх','Browse freelancers')} <ArrowUpRight size={16}/></Link><Link className="finder-project-cta" href={'/project-requests/?'+new URLSearchParams({q:submitted,audience}).toString()}>{t('Асуудлаа freelancer-үүдэд илгээх','Send a project to freelancers')} <Send size={16}/></Link></div>
-     <p className="finder-disclosure">{t('Энэ beta хувилбар нь дүрэмд суурилсан ухаалаг чиглүүлэлт юм. Генератив AI зөвлөх хараахан идэвхжээгүй; санал нь баталгаатай бизнесийн үр дүн гэсэн үг биш.','This beta uses rule-based guidance, not a connected generative AI advisor. Suggestions do not guarantee a business outcome.')}</p>
+     <div className="finder-brief-actions"><button type="button" onClick={()=>void copy()}><ClipboardCopy size={16}/>{copied?t('Хуулсан','Copied'):t('Хүсэлт хуулах','Copy project brief')}</button><Link href={'/explore/?q='+encodeURIComponent(submitted)}>{t('Мэргэжилтэн хайх','Browse freelancers')} <ArrowUpRight size={16}/></Link><Link className="finder-project-cta" href={'/project-requests/?'+new URLSearchParams({q:submitted,audience}).toString()}>{t('Асуудлаа мэргэжилтнүүдэд илгээх','Send a project to freelancers')} <Send size={16}/></Link></div>
+     <p className="finder-disclosure">{t('Туршилтын хувилбар: түлхүүр үг, ангилалд тулгуурлан санал болгоно. AI зөвлөх хараахан ажиллахгүй. Санал болгосон шийдэл нь үр дүнгийн баталгаа биш.','This beta uses rule-based guidance, not a connected generative AI advisor. Suggestions do not guarantee a business outcome.')}</p>
     </div>
    </div>}
   </div>

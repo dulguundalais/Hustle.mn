@@ -157,7 +157,7 @@ export default function SellerProfileManager(){
   {id:'bio',section:'about',mn:'Танилцуулга ('+BIO_MIN+'+ тэмдэгт)',en:'About you ('+BIO_MIN+'+ characters)',done:draft.bio.trim().length>=BIO_MIN},
   {id:'skills',section:'skills',mn:'3+ ур чадвар',en:'3+ skills',done:skills.length>=3},
   {id:'portfolio',section:'projects',mn:'3+ бүтээл',en:'3+ portfolio projects',done:items.length>=3},
-  {id:'cover',section:'photos',mn:'Cover зураг',en:'Cover photo',done:Boolean(profile?.cover_path)},
+  {id:'cover',section:'photos',mn:'Нүүр зураг',en:'Cover photo',done:Boolean(profile?.cover_path)},
   {id:'service',section:'services',mn:'Нийтлэгдсэн үйлчилгээ',en:'A published service',done:published>0},
   {id:'public',section:'publish',mn:'Профайлаа нийтэд нээх',en:'Profile set to public',done:isPublic}
  ];
@@ -167,7 +167,7 @@ export default function SellerProfileManager(){
  const sectionDone=(s:Tab)=>checks.filter(c=>c.section===s).every(c=>c.done);
  const nav:[Tab,string,string,typeof UserRound][]=[
   ['about','Танилцуулга','About',UserRound],
-  ['photos','Зураг ба cover','Photo & cover',FileImage],
+  ['photos','Зураг ба нүүр зураг','Photo & cover',FileImage],
   ['skills','Ур чадвар ба програм','Skills & tools',Wrench],
   ['projects','Бүтээлүүд','Portfolio',Layers3],
   ['services','Үйлчилгээ','Services',BriefcaseBusiness],
@@ -180,7 +180,7 @@ export default function SellerProfileManager(){
  const saveProfile=async(e?:React.FormEvent):Promise<boolean>=>{
   e?.preventDefault();if(busy||!uid)return false;
   setError('');setMessage('');
-  if(draft.display_name.trim().length<2){setError(t('Нэрээ 2-оос дээш тэмдэгтээр бичнэ үү.','Your name needs at least 2 characters.'));go('about');return false}
+  if(draft.display_name.trim().length<2){setError(t('Нэрээ дор хаяж 2 тэмдэгтээр бичнэ үү.','Your name needs at least 2 characters.'));go('about');return false}
   if(!slugOk){setError(draft.slug===''?t('Профайлаа нийтэд нээхийн тулд хаягаа сонгоно уу.','Choose your profile URL before making the profile public.'):t('Профайлын хаяг 3-60 тэмдэгт, жижиг латин үсэг, тоо, зураас байна.','Your profile URL must be 3–60 lowercase letters, numbers or dashes.'));go('publish');return false}
   setBusy(true);
   try{
@@ -263,13 +263,13 @@ export default function SellerProfileManager(){
  const shell=(body:React.ReactNode)=><div className="sp-page">{header}{body}</div>;
  if(status==='loading')return shell(<main className="v42-owner-empty" role="status"><LoaderCircle className="spin" size={25}/>{t('Профайл ачаалж байна…','Loading your profile…')}</main>);
  if(status==='guest')return shell(<main className="v42-owner-empty"><h1>{t('Профайл руу нэвтрэх','Sign in to your profile')}</h1><Link href="/login/?mode=seller">{t('Нэвтрэх','Sign in')} →</Link></main>);
- if(status==='not-seller')return shell(<main className="v42-owner-empty"><h1>{t('Freelancer профайл шаардлагатай','Freelancer profile required')}</h1><p>{t('Эхлээд Freelancer болж профайлаа үүсгээрэй.','Become a freelancer first to create your profile.')}</p><Link href="/join/seller/">{t('Freelancer болох','Become a freelancer')} →</Link></main>);
- if(status==='error'||!profile)return shell(<main className="v42-owner-empty"><h1>{t('Профайл ачаалж чадсангүй','Cannot load profile')}</h1><Link href="/seller-studio/">{t('Freelancer самбар руу буцах','Back to the freelancer dashboard')}</Link></main>);
+ if(status==='not-seller')return shell(<main className="v42-owner-empty"><h1>{t('Мэргэжилтэн профайл шаардлагатай','Freelancer profile required')}</h1><p>{t('Эхлээд Мэргэжилтэн болж профайлаа үүсгээрэй.','Become a freelancer first to create your profile.')}</p><Link href="/join/seller/">{t('Үйлчилгээ үзүүлэх','Become a freelancer')} →</Link></main>);
+ if(status==='error'||!profile)return shell(<main className="v42-owner-empty"><h1>{t('Профайл ачаалж чадсангүй','Cannot load profile')}</h1><Link href="/seller-studio/">{t('Мэргэжилтэн самбар руу буцах','Back to the freelancer dashboard')}</Link></main>);
  const statusChip=<span className={'sp-chip '+(isPublic?'is-public':'is-private')}>{isPublic?<Eye size={14} aria-hidden="true"/>:<EyeOff size={14} aria-hidden="true"/>}{isPublic?t('Нийтэд харагдаж байна','Public'):t('Хувийн горим','Private')}</span>;
  const ring=<div className="sp-ring" style={{'--p':percent} as React.CSSProperties} role="img" aria-label={t('Профайл '+percent+'% бүрдсэн','Profile '+percent+'% complete')}><span>{percent}<small>%</small></span></div>;
  return shell(<main className={'sp v42-owner'+(dirty?' has-savebar':'')}>
   <div className="sp-head">
-   <Breadcrumbs en={en} items={[{label:t('Нүүр','Home'),href:'/'},{label:t('Freelancer самбар','Freelancer dashboard'),href:'/seller-studio/'},{label:t('Миний профайл','My profile')}]}/>
+   <Breadcrumbs en={en} items={[{label:t('Нүүр','Home'),href:'/'},{label:t('Мэргэжилтэн самбар','Freelancer dashboard'),href:'/seller-studio/'},{label:t('Миний профайл','My profile')}]}/>
    <div className="sp-title">
     <div><h1>{t('Миний профайл','My profile')}</h1>{statusChip}</div>
     <div className="sp-title-actions">
@@ -301,19 +301,19 @@ export default function SellerProfileManager(){
    {!buyerView&&<section className="sp-editor" aria-labelledby="sp-editor-title">
     <div ref={editorTop} className="sp-editor-scroll"/>
     {tab==='about'&&<form className="sp-card v42-edit-fields" onSubmit={e=>{void saveProfile(e)}}>
-     <header><h2 id="sp-editor-title">{t('Танилцуулга','About you')}</h2><p>{t('Buyer таныг хэн бэ, юугаар туслах вэ гэдгийг эхний 5 секундэд ойлгох ёстой.','Buyers should understand who you are and how you help within five seconds.')}</p></header>
+     <header><h2 id="sp-editor-title">{t('Танилцуулга','About you')}</h2><p>{t('Ямар ажил хийдэг, захиалагчид хэрхэн туслахаа товч, тодорхой бичээрэй.','Buyers should understand who you are and how you help within five seconds.')}</p></header>
      <label>{t('Нэр','Display name')}<input required minLength={2} maxLength={80} value={draft.display_name} onChange={e=>setDraft(v=>({...v,display_name:e.target.value}))} placeholder={t('Жишээ: Б. Анударь','e.g. Anudari B.')}/></label>
      <label>{t('Мэргэжил','Headline')}<input maxLength={150} value={draft.headline} onChange={e=>setDraft(v=>({...v,headline:e.target.value}))} placeholder={t('Жишээ: Брэнд дизайнер · 6 жил туршлагатай','e.g. Brand designer · 6 years of experience')}/><small className="sp-count">{draft.headline.length}/150</small></label>
      <label>{t('Миний тухай','About')}<textarea rows={7} maxLength={3000} value={draft.bio} onChange={e=>setDraft(v=>({...v,bio:e.target.value}))} placeholder={t('Юу хийдэг, хэнтэй ажилладаг, ямар үр дүн гаргадаг вэ?','What you do, who you work with and the results you deliver.')}/>
       <small className={'sp-count'+(draft.bio.trim().length>=BIO_MIN?' ok':'')}>{draft.bio.trim().length<BIO_MIN?t('Дор хаяж '+BIO_MIN+' тэмдэгт · '+draft.bio.trim().length+'/'+BIO_MIN,'At least '+BIO_MIN+' characters · '+draft.bio.trim().length+'/'+BIO_MIN):draft.bio.length+'/3000'}</small></label>
     </form>}
     {tab==='photos'&&<div className="sp-card v42-photo-panel hustle-v5 sp-v5">
-     <header><h2 id="sp-editor-title">{t('Зураг ба cover','Photo & cover')}</h2><p>{t('Нүүр нь тод харагдах зураг итгэл төрүүлнэ. Cover нь таны ажлын төрлийг илэрхийлбэл сайн.','A clear face builds trust. A cover that shows your kind of work helps buyers decide.')}</p></header>
+     <header><h2 id="sp-editor-title">{t('Зураг ба нүүр зураг','Photo & cover')}</h2><p>{t('Нүүр тань тод харагдах зураг сонгоорой. Нүүр зурагтаа ажлынхаа онцлогийг харуулж болно.','A clear face builds trust. A cover that shows your kind of work helps buyers decide.')}</p></header>
      <div className="sp-subsection"><div className="v42-avatar-panel"><SellerAvatarEditor sellerId={uid} name={profile.display_name} avatarPath={profile.avatar_path} en={en} onChange={path=>updatePhotos(path,'avatar')}/></div></div>
-     <div className="sp-subsection"><h3>{t('Cover зураг','Cover photo')}</h3><SellerCoverEditor sellerId={uid} coverPath={profile.cover_path} focusY={profile.cover_focus_y} en={en} onChange={(path,y)=>updatePhotos(path,'cover',y)}/></div>
+     <div className="sp-subsection"><h3>{t('Нүүр зураг','Cover photo')}</h3><SellerCoverEditor sellerId={uid} coverPath={profile.cover_path} focusY={profile.cover_focus_y} en={en} onChange={(path,y)=>updatePhotos(path,'cover',y)}/></div>
     </div>}
     {tab==='skills'&&<div className="sp-card">
-     <header><h2 id="sp-editor-title">{t('Ур чадвар ба програм','Skills & tools')}</h2><p>{t('Buyer хайлт хийхдээ эдгээр үгээр таныг олно. Enter эсвэл таслал дарж нэмнэ.','Buyers find you by these words. Press Enter or a comma to add one.')}</p></header>
+     <header><h2 id="sp-editor-title">{t('Ур чадвар ба програм','Skills & tools')}</h2><p>{t('Ур чадвараа бичээд Enter эсвэл таслал дарж нэмээрэй.','Buyers find you by these words. Press Enter or a comma to add one.')}</p></header>
      <div className="sp-skills">
       <ul>{skills.map(s=><li key={s}>{s}<button type="button" onClick={()=>removeSkill(s)} aria-label={t('Хасах: ','Remove: ')+s}><X size={13}/></button></li>)}</ul>
       <input value={skillInput} maxLength={80} aria-label={t('Ур чадвар нэмэх','Add a skill')} placeholder={skills.length?t('Дахин нэмэх…','Add another…'):t('Жишээ: Брэндинг, Figma, SMM','e.g. Branding, Figma, SMM')}
@@ -321,11 +321,11 @@ export default function SellerProfileManager(){
        onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();addSkill(skillInput)}else if(e.key==='Backspace'&&!skillInput&&skills.length)removeSkill(skills[skills.length-1])}}
        onBlur={()=>addSkill(skillInput)}/>
      </div>
-     <small className={'sp-count'+(skills.length>=3?' ok':'')}>{t(skills.length+' ур чадвар · 3-аас дээш байхад хайлтад илүү олддог','{n} skills · 3 or more helps you show up in search').replace('{n}',String(skills.length))}</small>
+     <small className={'sp-count'+(skills.length>=3?' ok':'')}>{t(skills.length+' ур чадвар · хийж чаддаг ажлаа тодорхой бичээрэй','{n} skills · 3 or more helps you show up in search').replace('{n}',String(skills.length))}</small>
      <div className="sp-subsection v42-owner-tools"><h3>{t('Ашигладаг програм','Tools you use')}</h3><div className="hustle-v5 sp-v5 sp-tools"><SellerToolEditor sellerId={uid} en={en} onUpdated={()=>{void loadTools(uid)}}/></div></div>
     </div>}
     {tab==='projects'&&<section className="sp-card v42-project-editor">
-     <header><h2 id="sp-editor-title">{t('Бүтээлүүд','Portfolio')}</h2><p>{t('Хамгийн сайн 3–6 ажлаа оруулаарай. Эхний зураг buyer-т хамгийн түрүүнд харагдана.','Add your best 3–6 pieces. The first one is what buyers see first.')}</p></header>
+     <header><h2 id="sp-editor-title">{t('Бүтээлүүд','Portfolio')}</h2><p>{t('Хамгийн сайн 3–6 ажлаа оруулаарай. Эхний зураг захиалагчид хамгийн түрүүнд харагдана.','Add your best 3–6 pieces. The first one is what buyers see first.')}</p></header>
      <form className="sp-upload" onSubmit={e=>{void addProject(e)}}>
       <label className={'sp-drop'+(dragging?' is-drag':'')+(projectPreview?' has-file':'')}
        onDragOver={e=>{e.preventDefault();setDragging(true)}} onDragLeave={()=>setDragging(false)}
@@ -352,7 +352,7 @@ export default function SellerProfileManager(){
      <Link className="v42-save" href="/seller-studio/?tab=seller"><Plus size={16} aria-hidden="true"/>{t('Үйлчилгээ нэмэх, засах','Add or edit services')}</Link>
     </div>}
     {tab==='publish'&&<form className="sp-card v42-edit-fields" onSubmit={e=>{void saveProfile(e)}}>
-     <header><h2 id="sp-editor-title">{t('Хаяг ба нийтлэх','URL & visibility')}</h2><p>{t('Хаягаа нэг удаа сонгоод олон нийтийн сүлжээ, CV-дээ ашиглаарай.','Pick your address once and share it on social media or your CV.')}</p></header>
+     <header><h2 id="sp-editor-title">{t('Хаяг ба нийтлэх','URL & visibility')}</h2><p>{t('Профайлын холбоосоо бусадтай хуваалцах, намтартаа оруулахад ашиглаарай.','Pick your address once and share it on social media or your CV.')}</p></header>
      <label>{t('Профайлын хаяг','Profile URL')}<span className="sp-slug"><span>hustle.mn/p/</span><input value={draft.slug} onChange={e=>setDraft(v=>({...v,slug:normalizeSellerSlug(e.target.value)}))} minLength={3} maxLength={60} required={draft.public_profile} pattern="[a-z0-9][a-z0-9-]{2,59}" aria-invalid={!slugOk}/></span>
       <small className={draft.slug===''?'sp-count':validSlug?'sp-count ok':'sp-count bad'}>{draft.slug===''?t('Заавал биш — нийтэд нээхэд л хэрэгтэй','Optional — only needed to go public'):validSlug?t('Зөв хаяг','Looks good'):t('3-60 тэмдэгт: жижиг латин үсэг, тоо, зураас','3–60 characters: lowercase letters, numbers, dashes')}</small></label>
      <label className="sp-switch"><input type="checkbox" role="switch" checked={draft.public_profile} onChange={e=>setDraft(v=>({...v,public_profile:e.target.checked}))}/><span className="sp-switch-ui" aria-hidden="true"/><span><b>{t('Профайлаа нийтэд нээх','Make my profile public')}</b><small>{t('Унтраасан үед зөвхөн та харна.','When off, only you can see it.')}</small></span></label>
@@ -360,9 +360,9 @@ export default function SellerProfileManager(){
     {error&&<p className="v42-error sp-alert" role="alert">{error}</p>}
     {message&&!dirty&&<p className="v42-success sp-alert" role="status"><CheckCircle2 size={16}/>{message}</p>}
    </section>}
-   <section className="sp-preview" aria-label={t('Buyer-ийн харах профайл','Buyer-facing profile preview')}>
+   <section className="sp-preview" aria-label={t('Захиалагчийн харах профайл','Buyer-facing profile preview')}>
     <div className="sp-preview-bar">
-     <div><span className="v42-live-dot" aria-hidden="true"/><strong>{t('Шууд харагдац','Live preview')}</strong><small>{dirty?t('Хадгалаагүй өөрчлөлт харагдаж байна','Showing unsaved changes'):t('Buyer яг ингэж харна','Exactly what buyers see')}</small></div>
+     <div><span className="v42-live-dot" aria-hidden="true"/><strong>{t('Шууд харагдац','Live preview')}</strong><small>{dirty?t('Хадгалаагүй өөрчлөлт харагдаж байна','Showing unsaved changes'):t('Захиалагчид харагдах загвар','Exactly what buyers see')}</small></div>
      <div className="sp-preview-tools">
       <div className="sp-device" role="group" aria-label={t('Төхөөрөмж','Device')}>
        <button type="button" aria-pressed={device==='desktop'} onClick={()=>setDevice('desktop')} aria-label={t('Компьютер','Desktop')}><Monitor size={15}/></button>
@@ -378,18 +378,18 @@ export default function SellerProfileManager(){
   </div>
   {dirty&&<div className="sp-savebar" role="region" aria-label={t('Хадгалаагүй өөрчлөлт','Unsaved changes')}>
    <span><i aria-hidden="true"/>{t('Хадгалаагүй өөрчлөлт байна','You have unsaved changes')}</span>
-   <div><button type="button" className="sp-ghost-btn" disabled={busy} onClick={()=>{setDraft(saved);setError('')}}><RotateCcw size={15} aria-hidden="true"/>{t('Буцаах','Discard')}</button>
+   <div><button type="button" className="sp-ghost-btn" disabled={busy} onClick={()=>{setDraft(saved);setError('')}}><RotateCcw size={15} aria-hidden="true"/>{t('Өөрчлөлтийг буцаах','Discard')}</button>
     <button type="button" className="v42-save" disabled={busy} onClick={()=>{void saveProfile()}}>{busy?<LoaderCircle className="spin" size={16}/>:<Save size={16} aria-hidden="true"/>}{busy?t('Хадгалж байна…','Saving…'):t('Хадгалах','Save changes')}</button></div>
   </div>}
   {leaveTo&&<div className="sp-leave-backdrop" onPointerDown={e=>{if(e.target===e.currentTarget)setLeaveTo(null)}}>
    <div ref={leaveRef} className="sp-leave" role="alertdialog" aria-modal="true" aria-labelledby="sp-leave-title" aria-describedby="sp-leave-text"
     onKeyDown={e=>{if(e.key==='Escape')setLeaveTo(null);trapTab(e,leaveRef.current)}}>
     <h2 id="sp-leave-title">{t('Хадгалаагүй өөрчлөлт байна','You have unsaved changes')}</h2>
-    <p id="sp-leave-text">{t('Энэ хуудаснаас гарвал сүүлд хадгалсны дараах өөрчлөлт алга болно.','If you leave now, changes since your last save will be lost.')}</p>
+    <p id="sp-leave-text">{t('Гарвал хадгалаагүй өөрчлөлтүүд устна.','If you leave now, changes since your last save will be lost.')}</p>
     <div className="sp-leave-actions">
      <button type="button" autoFocus className="v42-save" disabled={busy} onClick={async()=>{const to=leaveTo;if(await saveProfile()&&to){leaving.current=true;window.location.assign(to)}else setLeaveTo(null)}}>{t('Хадгалаад гарах','Save and leave')}</button>
      <button type="button" className="sp-ghost-btn" onClick={()=>{const to=leaveTo;leaving.current=true;setLeaveTo(null);if(to)window.location.assign(to)}}>{t('Хадгалахгүй гарах','Leave without saving')}</button>
-     <button type="button" className="sp-ghost-btn" onClick={()=>setLeaveTo(null)}>{t('Үлдэх','Stay')}</button>
+     <button type="button" className="sp-ghost-btn" onClick={()=>setLeaveTo(null)}>{t('Энд үлдэх','Stay')}</button>
     </div>
    </div>
   </div>}

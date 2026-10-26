@@ -22,5 +22,5 @@ export function lastSeenLabel(lastActive:string,en:boolean,now=Date.now()):strin
  const minutes=Math.floor((now-d)/60000);
  if(minutes<2)return en?'Online':'Онлайн';
  if(minutes<60)return en?`Active ${minutes} min ago`:`${minutes} минутын өмнө идэвхтэй`;
- const hours=Math.floor(minutes/60);return hours<24?(en?`Active ${hours}h ago`:`${hours} цагийн өмнө идэвхтэй`):(en?'Last active over a day ago':'Сүүлд нэг хоногоос өмнө идэвхтэй');
+ const hours=Math.floor(minutes/60);return hours<24?(en?`Active ${hours}h ago`:`${hours} цагийн өмнө идэвхтэй`):(en?'Last active over a day ago':'Сүүлд нэг хоногоос өмнө идэвхтэй байсан');
 }

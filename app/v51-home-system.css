@@ -195,6 +195,11 @@
 .hustle-v5:not(.workspace) .signature-person-avatar{background:var(--hx-icon-bg);color:var(--hx-icon-fg)}
 .hustle-v5:not(.workspace) .signature-person-caption>span{font-size:11px;letter-spacing:.1em;color:var(--purple)}
 .hustle-v5:not(.workspace) .signature-person-caption p{font-size:14px}
+/* Names may contain long Cyrillic or Latin tokens: keep the card in its grid track. */
+.hustle-v5:not(.workspace) .signature-person,
+.hustle-v5:not(.workspace) .signature-person-caption{min-width:0}
+.hustle-v5:not(.workspace) .signature-person-caption h3,
+.hustle-v5:not(.workspace) .signature-person-caption p{overflow-wrap:anywhere}
 .hustle-v5:not(.workspace) .signature-person-caption small{font-size:12.5px}
 .hustle-v5:not(.workspace) .signature-text-link{font-size:14px}
 

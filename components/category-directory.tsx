@@ -51,14 +51,14 @@ export default function CategoryDirectory({en}:{en:boolean}){
    <h1 id="cdir-title">{t('Бүх ангилал','All categories')}</h1>
    <p>{t('Зөвлөх, технологи, санхүү, бүтээлч ажил — бизнес болон хувь хүнд хэрэгтэй мэргэжлийн үйлчилгээг нэг дороос.','Consulting, technology, finance and creative work — professional services for businesses and individuals in one place.')}</p>
    <label className="cdir-search"><Search size={19} aria-hidden="true"/><span className="sr-only">{t('Ангилал хайх','Filter categories')}</span>
-    <input value={q} onChange={e=>setQ(e.target.value)} placeholder={t('Жишээ нь: татвар, вебсайт, IELTS, chatbot','e.g. tax, website, IELTS, chatbot')}/>
+    <input value={q} onChange={e=>setQ(e.target.value)} placeholder={t('Жишээ нь: татвар, вэбсайт, IELTS, чатбот','e.g. tax, website, IELTS, chatbot')}/>
     {q&&<button type="button" onClick={()=>setQ('')} aria-label={t('Арилгах','Clear')}><X size={16}/></button>}
    </label>
    <div className="cdir-problems"><span>{t('Ямар мэргэжилтэн хэрэгтэйгээ мэдэхгүй байна уу?','Not sure who you need?')}</span>
     {problems.map(p=><Link key={p.mn} href={'/solutions/?q='+encodeURIComponent(en?p.en:p.mn)}>{en?p.en:p.mn}</Link>)}
    </div>
   </header>
-  {visible.length===0?<div className="cdir-empty"><p>{t('Тохирох ангилал олдсонгүй.','No matching category.')}</p><Link className="cdir-all" href={'/solutions/?q='+encodeURIComponent(q)}>{t('Асуудлаар нь хайх','Search by your problem')}<ArrowUpRight size={15}/></Link></div>:
+  {visible.length===0?<div className="cdir-empty"><p>{t('Тохирох ангилал олдсонгүй.','No matching category.')}</p><Link className="cdir-all" href={'/solutions/?q='+encodeURIComponent(q)}>{t('Хэрэгцээгээрээ хайх','Search by your problem')}<ArrowUpRight size={15}/></Link></div>:
   <div className="cdir-grid">
    {visible.filter(x=>x.c.id!=='legal'&&x.c.id!=='finance').slice(0,4).map(block)}
    {legalFinance.length>0&&<div id="legal-finance" className="cdir-pair">{legalFinance.map(block)}</div>}

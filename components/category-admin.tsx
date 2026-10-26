@@ -91,11 +91,11 @@ export function AdminCategorySuggestions({en,onError,onNotice}:{en:boolean;onErr
   <div className="row-between"><h2 id="v50-suggestions-title">{t('Ангиллын санал','Category suggestions')}</h2>
    <div className="v47-row">{(['pending','all'] as const).map(f=><button key={f} type="button" className={'button small'+(filter===f?'':' outline')} onClick={()=>setFilter(f)}>{f==='pending'?t('Хүлээгдэж буй','Pending'):t('Бүгд','All')}</button>)}</div>
   </div>
-  {!items.length?<p className="v47-muted">{filter==='pending'?t('Шинэ санал алга.','No pending suggestions.'):t('Санал алга.','No suggestions yet.')}</p>:
+  {!items.length?<p className="v47-muted">{filter==='pending'?t('Шалгах шинэ санал алга.','No pending suggestions.'):t('Одоогоор ангиллын санал алга.','No suggestions yet.')}</p>:
   <ul className="v47-report-list">{items.map(item=><li key={item.id} className="v47-report">
    <div className="v47-report-head"><span className={'v47-badge'+(item.status==='pending'?' v47-badge-open':item.status==='rejected'?'':' v47-badge-actioned')}>{item.status==='pending'?t('Хүлээгдэж буй','Pending'):item.status==='approved'?t('Зөвшөөрсөн','Approved'):item.status==='merged'?t('Нэгтгэсэн','Merged'):t('Татгалзсан','Declined')}</span>
     <b>{item.name_mn}{item.name_en?' / '+item.name_en:''}</b><span className="v47-muted">{new Date(item.created_at).toLocaleDateString(en?'en-US':'mn-MN')}</span></div>
-   <p>{t('Санал болгосон: ','Suggested by: ')}<b>{names[item.seller_id]||t('Freelancer','Freelancer')}</b>{item.parent_category?' · '+t('Үндсэн ангилал: ','Under: ')+categoryLabel(item.parent_category,en):''}</p>
+   <p>{t('Санал болгосон: ','Suggested by: ')}<b>{names[item.seller_id]||t('Мэргэжилтэн','Freelancer')}</b>{item.parent_category?' · '+t('Үндсэн ангилал: ','Under: ')+categoryLabel(item.parent_category,en):''}</p>
    {item.note&&<blockquote className="v47-quote">{item.note}</blockquote>}
    {item.status==='merged'&&<p className="v47-muted">{t('Нэгтгэсэн: ','Merged into: ')}{item.merged_into}</p>}
    {item.status==='pending'&&<>

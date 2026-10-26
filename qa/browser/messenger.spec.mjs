@@ -14,7 +14,7 @@ for(const width of [390,768,1440]){
   await expect(page.locator('.chat-thread-head')).toContainText('QA Seller');
   await expect(page.locator('.v25-order-context')).toContainText('Brand design QA');
   await expect(page.locator('.chat-thread-head')).toContainText('25');
-  await page.getByRole('button',{name:/Emoji сонгох|Choose emoji/}).click();
+  await page.getByRole('button',{name:/Эможи сонгох|Choose emoji/}).click();
   await expect(page.locator('.v25-emojis button')).toHaveCount(11);
   await page.locator('.v25-emojis button').first().click();
   await expect(page.locator('.v25-composer textarea')).toHaveValue('😀');

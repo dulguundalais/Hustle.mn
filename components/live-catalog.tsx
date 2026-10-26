@@ -55,8 +55,8 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
  return <section className={'shell live-catalog v39-catalog '+(homePreview?'v39-catalog-home':'v39-catalog-explore')} aria-labelledby={homePreview?'real-listings-title':undefined} aria-label={homePreview?undefined:t('Нийтлэгдсэн үйлчилгээ','Published services')}>
   {homePreview&&<div className="v39-section-head">
    <div><span className="v39-section-eyebrow"><span/>{homePreview?(en?'Services':'Үйлчилгээ'):(en?'Explore':'Бүх үйлчилгээ')}</span>
-    <h2 id="real-listings-title">{homePreview?t('Бүтээх хүнээ сонго.','Meet your next collaborator.'):t('Өөрт тохирох мэргэжилтнээ олоорой.','Find your kind of talent.')}</h2>
-    <p>{homePreview?t('Бодит үйлчилгээ. Ил тод эхлэх үнэ.','Real services. Clear starting prices.'):t('Үйлчилгээ, үнэ, хугацааг харьцуулж, тохирох мэргэжилтэнтэй холбогдоорой.','Discover services, compare starting prices and connect with professionals.')}</p>
+    <h2 id="real-listings-title">{homePreview?t('Төслөө хэрэгжүүлэх хүнээ олоорой.','Meet your next collaborator.'):t('Өөрт тохирох мэргэжилтнээ олоорой.','Find your kind of talent.')}</h2>
+    <p>{homePreview?t('Үйлчилгээ, эхлэх үнийг нэг дороос.','Real services. Clear starting prices.'):t('Үйлчилгээ, үнэ, хугацааг харьцуулж, тохирох мэргэжилтэнтэй холбогдоорой.','Discover services, compare starting prices and connect with professionals.')}</p>
    </div>
    <Link className="v39-head-link" href="/explore/">{t('Бүгдийг үзэх','View all')} <ArrowUpRight size={16}/></Link>
   </div>}
@@ -64,7 +64,7 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
   {state==='error'&&<div className="v39-empty" role="alert"><Search size={23}/><h3>{t('Үйлчилгээг ачаалж чадсангүй','Services could not be loaded')}</h3><p>{t('Холболтоо шалгаад хуудсаа шинэчлээрэй.','Check your connection and refresh this page.')}</p></div>}
   {state==='ready'&&filtered.length===0&&<div className="v39-empty"><Layers3 size={24}/>
    <h3>{services.length===0?t('Одоогоор нийтлэгдсэн үйлчилгээ алга','No published services yet'):onlySaved?t('Хадгалсан үйлчилгээ олдсонгүй','No saved services found'):t('Тохирох үйлчилгээ олдсонгүй','No services match your search')}</h3>
-   <p>{services.length===0?t('Freelancer-ууд үйлчилгээгээ нийтлэхэд энд харагдана.','Published freelancer services will appear here.'):t('Ангилал эсвэл хайлтаа өөрчлөөд үзээрэй.','Try another category or a different search.')}</p>
+   <p>{services.length===0?t('Мэргэжилтнүүд үйлчилгээгээ нийтлэхэд энд харагдана.','Published freelancer services will appear here.'):t('Ангилал эсвэл хайлтаа өөрчлөөд үзээрэй.','Try another category or a different search.')}</p>
    {/* V52: no dead ends — offer the next useful step, never invented results. */}
    <div className="v52-empty-actions">
     {(query||category!=='all'||subcategory||onlySaved)&&<Link href="/explore/" className="v39-empty-link">{t('Шүүлтүүр арилгах','Clear filters')}</Link>}
@@ -102,7 +102,7 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
       {onSave&&<button className="v39-heart" type="button" aria-pressed={savedThis} aria-label={savedThis?t('Хадгалснаас хасах','Remove saved service'):t('Үйлчилгээ хадгалах','Save service')} disabled={saveBusy.includes(s.id)||heartState==='checking'||heartState==='loading'} aria-busy={heartState==='checking'||heartState==='loading'||saveBusy.includes(s.id)} onClick={()=>heartState==='ready'?onSave(s.id):heartState==='guest'?onSignInSave?.(s.id):heartState==='error'?onRetrySave?.():undefined}><Heart size={19} fill={savedThis?'currentColor':'none'}/></button>}
      </div>
      <div className="v39-card-body">
-      <div className="v39-person-line">{profileHref?<Link className="v39-profile-link" href={profileHref} aria-label={t('Профайл үзэх: ','View seller profile: ')+s.display_name} title={t('Seller-ийн профайл үзэх','View seller profile')}>{sellerIdentity}</Link>:<span className="v39-profile-identity">{sellerIdentity}</span>}</div>
+      <div className="v39-person-line">{profileHref?<Link className="v39-profile-link" href={profileHref} aria-label={t('Профайл үзэх: ','View seller profile: ')+s.display_name} title={t('Мэргэжилтний профайл үзэх','View seller profile')}>{sellerIdentity}</Link>:<span className="v39-profile-identity">{sellerIdentity}</span>}</div>
       <div className="v39-meta-line"><span className="v39-discipline">{categoryName}</span>{hasRating&&<span className="v39-rating"><Star size={13} fill="currentColor"/>{rating.toFixed(1)}<small>({reviewCount})</small></span>}</div>
       <h3><Link href={detailHref}>{title}</Link></h3>
       <p className="v39-description">{s.description}</p>
@@ -112,7 +112,7 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
       </div>
       <div className="v39-card-actions">
        <Link href={detailHref} className="v39-primary">{t('Үйлчилгээ үзэх','View service')}<ArrowUpRight size={17}/></Link>
-       {homePreview&&<Link className="v39-contact" href={contactSellerHref(s.slug,signedIn)} aria-label={t('Freelancer-тэй холбогдох','Contact freelancer')}><MessageCircle size={17}/></Link>}
+       {homePreview&&<Link className="v39-contact" href={contactSellerHref(s.slug,signedIn)} aria-label={t('Мессеж бичих','Contact freelancer')}><MessageCircle size={17}/></Link>}
        {!homePreview&&<button type="button" className={'v39-compare-toggle '+(selected?'chosen':'')} aria-pressed={selected} disabled={!selected&&compared.length>=compareLimit} onClick={()=>toggleCompare(s.id)} aria-label={selected?t('Харьцуулалтаас хасах','Remove from comparison'):t('Харьцуулахад сонгох','Select for comparison')}>{selected?<Check size={17}/>:<Layers3 size={17}/>}</button>}
       </div>
      </div>
@@ -120,7 +120,7 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
    })}</div>
    {homePreview?<div className="v39-all-services"><Link href="/explore/">{t('Бүх үйлчилгээг харах','Explore all services')}<ArrowRight size={17}/></Link></div>:
     <>
-     {filtered.length>visibleCount&&<div className="v39-load-more"><span>{visible.length} / {filtered.length}</span><button type="button" onClick={()=>setVisibleCount(n=>n+START_COUNT)}>{t('Илүү олон үзэх','Load more')}<ArrowRight size={17}/></button></div>}
+     {filtered.length>visibleCount&&<div className="v39-load-more"><span>{visible.length} / {filtered.length}</span><button type="button" onClick={()=>setVisibleCount(n=>n+START_COUNT)}>{t('Цааш үзэх','Load more')}<ArrowRight size={17}/></button></div>}
      {compared.length>0&&<div className="v39-compare-dock" role="region" aria-label={t('Харьцуулах сонголт','Compare selection')}>
       <div><span className="v39-compare-avatars"><Layers3 size={19}/></span><div><strong>{t('Харьцуулах жагсаалт','Compare shortlist')}</strong><small>{compared.length} / {compareLimit} {t('үйлчилгээ сонгосон','services selected')}</small></div></div>
       <div className="v39-compare-dock-actions">
@@ -131,7 +131,7 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
      {showCompare&&compareReady&&<ServiceComparison en={en} services={services} ids={compared} onRemove={id=>setCompared(p=>compareSelection(p,id))} onClear={()=>{setCompared([]);setShowCompare(false)}}/>}
     </>}
    {saveError&&<p className="v39-error" role="alert">{saveError}{heartState==='error'&&onRetrySave&&<> <button type="button" className="v39-retry" onClick={onRetrySave}>{t('Дахин оролдох','Try again')}</button></>}</p>}
-   <p className="v39-market-note"><ShieldCheck size={16}/>{t('Төлбөргүй нээлттэй бета. Имэйлээ баталгаажуулсан хэрэглэгч хүсэлт илгээж болно.','Open beta, no payments. Email-verified users can request services.')}</p>
+   <p className="v39-market-note"><ShieldCheck size={16}/>{t('Нээлттэй туршилтын хувилбар. Имэйлээ баталгаажуулсан хэрэглэгч хүсэлт илгээх боломжтой.','Open beta, no payments. Email-verified users can request services.')}</p>
   </>}
  </section>;
 }
