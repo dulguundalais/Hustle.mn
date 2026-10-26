@@ -11,7 +11,7 @@ export default function PremiumFooter({en}:{en:boolean}){
  const t=(mn:string,english:string)=>en?english:mn;
  return <footer className="hustle-premium-footer">
   <div className="footer-callout shell">
-   <div><span className="footer-eyebrow">HUSTLE / YOUR NEXT PROJECT</span><h2>{t('Дараагийн санаагаа бүтээ.','Make your next move.')}</h2><p>{t('Чадвартай хүмүүс. Шинэ боломж.','Great people. Better possibilities.')}</p></div>
+   <div><span className="footer-eyebrow">{t('Дараагийн төсөл','Your next project')}</span><h2>{t('Дараагийн санаагаа бүтээ.','Make your next move.')}</h2><p>{t('Чадвартай хүмүүс. Шинэ боломж.','Great people. Better possibilities.')}</p></div>
    <div className="footer-callout-actions"><Link href="/explore/" className="footer-main-cta">{t('Үйлчилгээ хайх','Explore services')}<ArrowUpRight size={18}/></Link><Link href="/join/seller/" className="footer-outline-cta">{t('Freelancer болох','Become a freelancer')}</Link></div>
   </div>
   <div className="shell footer-columns">

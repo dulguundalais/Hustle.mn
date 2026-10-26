@@ -23,6 +23,7 @@ import '../app/smart-search.css';
 import '../app/unified-layout.css';
 import '../app/v43-premium-editorial.css';
 import '../app/v45-art-direction.css';
+import '../app/v51-home-system.css';
 // V50: Explore chips follow the professional taxonomy.
 const categoryIcons:Record<string,typeof PenTool>={ai:Bot,business:BriefcaseBusiness,marketing:Megaphone,tech:Code2,finance:Calculator,legal:Scale,research:BarChart3,creative:PenTool,commerce:Store,education:GraduationCap,wellbeing:HeartHandshake};
 const categories=CATEGORIES.map(c=>[c.id,c.mn,c.en,categoryIcons[c.id]||Sparkles] as const);
