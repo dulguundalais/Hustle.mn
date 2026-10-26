@@ -105,6 +105,7 @@ async function load(){
      setTab('buyer-home');setNotice(t('Энэ freelancer-ийн нийтийн профайл олдсонгүй. Marketplace-ээс дахин сонгоно уу.','That public freelancer profile was not found. Please select a listing again.'));
    }else if(mode==='admin'&&beta.data.role==='admin'){setTab('admin');const view=params.get('view');if(view==='members'||view==='services'||view==='orders'||view==='settings')setAdminView(view)}
    else if(mode==='buyer'&&params.get('tab')==='profile')setTab('profile');
+   else if(mode==='buyer'&&params.get('tab')==='browse')setTab('browse');
     else if((mode==='buyer'||mode==='seller')&&params.get('tab')==='messages'){setTab('messages');const peer=params.get('peer');if(peer&&/^[0-9a-f-]{36}$/.test(peer)&&peer!==user.id&&profiles.some(p=>p.id===peer))setChatPeer(peer)}
     else if(mode==='buyer'&&params.get('tab')==='orders'){setTab('orders');const id=params.get('order');if(id&&/^[0-9a-f-]{36}$/.test(id))setFocusOrder(id)}
     else if(mode==='seller'&&params.get('tab')==='seller-orders'){setTab('seller-orders');const id=params.get('order');if(id&&/^[0-9a-f-]{36}$/.test(id))setFocusOrder(id)}
@@ -121,6 +122,19 @@ useEffect(()=>{const mode=new URLSearchParams(location.search).get('mode');
  try{setEn(localStorage.getItem('hustle-language')==='en');setDark(localStorage.getItem('hustle-theme')==='dark')}catch{};load().then(()=>login?routeSignedIn():undefined).catch(fail).finally(()=>setLoading(false));const refresh=()=>{load().catch(fail)};window.addEventListener('focus',refresh);return()=>window.removeEventListener('focus',refresh);},[]);
 async function perform(fn:()=>Promise<void>,message:string){if(busy)return;setBusy(true);setError('');setNotice('');try{await fn();await load();setNotice(message)}catch(e){fail(e)}finally{setBusy(false)}}
 useEffect(()=>{if(!focusOrder||(tab!=='orders'&&tab!=='seller-orders'))return;const id=window.setTimeout(()=>document.getElementById('order-'+focusOrder)?.scrollIntoView({behavior:'smooth',block:'start'}),250);return()=>window.clearTimeout(id)},[focusOrder,tab,orders.length]);
+// V52: keep the address in step with the open tab, chat and order so refresh and shared links return here.
+useEffect(()=>{
+ if(loading||!uid||!entryApplied.current||login)return;
+ const u=new URL(window.location.href);
+ for(const k of ['tab','peer','order','view','seller','service','tier','ctx','mode'])u.searchParams.delete(k);
+ const keep=['orders','seller-orders','messages','profile','browse'];
+ if(tab==='admin'){if(adminView!=='overview')u.searchParams.set('view',adminView)}
+ else if(keep.includes(tab))u.searchParams.set('tab',tab);
+ if(tab==='messages'&&chatPeer)u.searchParams.set('peer',chatPeer);
+ if((tab==='orders'||tab==='seller-orders')&&focusOrder)u.searchParams.set('order',focusOrder);
+ const next=u.pathname+(u.searchParams.toString()?'?'+u.searchParams.toString():'')+u.hash;
+ if(next!==window.location.pathname+window.location.search+window.location.hash)window.history.replaceState(window.history.state,'',next);
+},[tab,chatPeer,adminView,focusOrder,loading,uid,login]);
 // V49: remember the dashboard in use so the next sign-in from /login/ returns to it.
 useEffect(()=>{if(login||!uid||!role||!profile)return;const w=rememberableWorkspace(entry,role,profile.is_seller===true);if(w)try{localStorage.setItem(WORKSPACE_KEY,w)}catch{}},[login,uid,role,entry,profile]);
 // V50: pending-work counts for the admin overview.
