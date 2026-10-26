@@ -2,7 +2,7 @@ import Link from 'next/link';
 import {ArrowUpRight,Compass,ShieldCheck} from 'lucide-react';
 import '../app/v20-footer.css';
 const columns=[
- {mn:'Marketplace',en:'Marketplace',links:[['/explore/','Үйлчилгээ хайх','Browse services'],['/#popular-categories','Ангиллууд','Categories'],['/#how','Хэрхэн ажилладаг','How it works'],['/about/','Бидний тухай','About Hustle']]},
+ {mn:'Marketplace',en:'Marketplace',links:[['/explore/','Үйлчилгээ хайх','Browse services'],['/categories/','Ангиллууд','Categories'],['/#how','Хэрхэн ажилладаг','How it works'],['/about/','Бидний тухай','About Hustle']]},
  {mn:'Захиалагчдад',en:'For buyers',links:[['/buyers/','Хэрхэн захиалах','How to buy'],['/explore/','Үнийн багцууд','Pricing packages'],['/buyer/','Миний захиалга','My orders'],['/faq/','Түгээмэл асуултууд','FAQ']]},
  {mn:'Freelancer-үүдэд',en:'For freelancers',links:[['/join/seller/','Freelancer болох','Start selling'],['/freelancers/','Freelancer гарын авлага','Seller guide'],['/seller-studio/','Seller Studio','Seller Studio'],['/referrals/','Түншлэлийн хөтөлбөр','Referral partners']]},
  {mn:'Мэдээлэл & Тусламж',en:'Company & help',links:[['/about/','Бидний тухай','About us'],['/contact/','Тусламж авах','Contact & support'],['/terms/','Үйлчилгээний нөхцөл','Terms of use'],['/privacy/','Нууцлалын бодлого','Privacy policy'],['/cookies/','Cookie Policy','Cookie policy']]}

@@ -3,9 +3,11 @@ import {useEffect,useMemo,useRef,useState,type FormEvent} from 'react';
 import Link from 'next/link';
 import {ArrowLeft,ArrowRight,BriefcaseBusiness,CheckCircle2,Clock3,FileText,LoaderCircle,RefreshCw,Send,ShieldCheck,Sparkles,UserRound,Users,XCircle} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
+import {CATEGORIES,normalizeCategory} from '../lib/marketplace/taxonomy';
 import {projectDraftKey,proposalDraftKey,signInWithReturn} from '../lib/marketplace/ux-flows';
 import {classifyNeed,type Audience} from '../lib/marketplace/solution-finder';
 import type {Profile,Listing} from '../lib/marketplace/types';
+import SiteHeader,{useSiteAccount} from './site-header';
 import '../app/project-matching.css';
 
 type RequestRow={id:string;buyer_id:string;title:string;brief:string;audience:Audience;category:string;budget_max:number|null;preferred_days:number|null;status:'open'|'awarded'|'cancelled';order_id:string|null;created_at:string};
@@ -15,12 +17,14 @@ type Proposal={id:string;request_id:string;seller_id:string;service_id:string;ti
 type Package={service_id:string;tier:string;price:number;delivery_days:number};
 type SendResult={id:string;invited:number;status:string};
 type ProjectNotice={id:string;recipient_id:string;request_id:string;kind:'invitation'|'proposal'|'awarded'|'cancelled';source_id:string;created_at:string;read_at:string|null};
-const categoryOptions=[['ai','AI & Automation'],['marketing','Маркетинг / Marketing'],['web','Веб & IT'],['design','Дизайн / Design'],['video','Видео / Video'],['ui','UI/UX'],['translation','Орчуулга / Translation'],['proposals','Төсөл / Planning'],['interior','Интерьер / Interior']] as const;
+// V50: the professional taxonomy (bilingual labels).
+const categoryOptions=CATEGORIES.map(c=>[c.id,c.mn+' / '+c.en] as const);
 const outcomeCategory:Record<string,string>={automation:'ai',growth:'marketing',content:'video',website:'web',brand:'design',analytics:'web',general:'ai'};
 const currency=(value:number)=>new Intl.NumberFormat('mn-MN').format(value)+' ₮';
 function reportError(err:unknown){return err instanceof Error?err.message:String((err as {message?:string})?.message||'Request failed')}
 export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
  const [en,setEn]=useState(false),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false);
+ const siteSession=useSiteAccount();
  const [user,setUser]=useState(''),[profile,setProfile]=useState<Profile|null>(null),[allowed,setAllowed]=useState(false);
  const [error,setError]=useState(''),[notice,setNotice]=useState('');
  const [requests,setRequests]=useState<RequestRow[]>([]),[invites,setInvites]=useState<Invite[]>([]),[inbox,setInbox]=useState<Inbox[]>([]);
@@ -99,7 +103,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
     const saved=JSON.parse(stored) as {title?:string;brief?:string;category?:string;audience?:Audience;budget?:string;days?:string};
     if(typeof saved.title==='string')setTitle(saved.title.slice(0,120));
     if(typeof saved.brief==='string')setBrief(saved.brief.slice(0,2000));
-    if(categoryOptions.some(([key])=>key===saved.category))setCategory(saved.category!);
+    if(normalizeCategory(saved.category)!=='all')setCategory(normalizeCategory(saved.category));
     if(saved.audience==='business'||saved.audience==='personal')setAudience(saved.audience);
     if(typeof saved.budget==='string'&&/^(|[0-9]{1,9})$/.test(saved.budget))setBudget(saved.budget);
     if(typeof saved.days==='string'&&/^(|[0-9]{1,3})$/.test(saved.days))setDays(saved.days);
@@ -185,7 +189,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
  const markNotice=async(id:string)=>{if(busy||!user)return;setBusy(true);setError('');try{const db=await marketplaceClient();const result=await db.from('project_notifications').update({read_at:new Date().toISOString()}).eq('id',id).eq('recipient_id',user).is('read_at',null);if(result.error)throw result.error;setNotifications(items=>items.map(n=>n.id===id?{...n,read_at:new Date().toISOString()}:n))}catch(err){setError(reportError(err))}finally{setBusy(false)}};
  const visibleRequests=requests.filter(r=>statusFilter==='all'||r.status===statusFilter);
  const sortedOffers=(offers:Proposal[])=>[...offers].sort((a,b)=>offerSort==='price'?a.quoted_price-b.quoted_price:offerSort==='delivery'?a.delivery_days-b.delivery_days:b.created_at.localeCompare(a.created_at));
- return <main className="project-marketplace">
+ return <><SiteHeader en={en} onToggleLanguage={()=>{const next=!en;setEn(next);try{localStorage.setItem('hustle-language',next?'en':'mn')}catch{}}} active="solutions" session={siteSession}/><main className="project-marketplace">
   <div className="project-layout">
    <header className="project-header"><div><Link href={mode==='seller'?'/seller-studio/':'/buyer/'} className="project-back"><ArrowLeft size={16}/>{t('Dashboard руу буцах','Back to dashboard')}</Link>
      <span className="project-eyebrow"><Sparkles size={14}/> HUSTLE / PROJECT MATCHING · BETA</span>
@@ -272,5 +276,5 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
    </>}
    </>}
   </div>
- </main>;
+ </main></>;
 }

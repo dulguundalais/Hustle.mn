@@ -10,17 +10,17 @@ async function loginBuyer(page){
 
 test('guest Explore login restores original search route',async({page})=>{
  await page.goto('/explore/?q=branding');
- const login=page.locator('.site-header .login-link');
+ const login=page.locator('.hx-header .hx-login');
  await expect(login).toHaveAttribute('href',/next=.*explore/);
  await login.click();
  await loginBuyer(page);
  await expect(page).toHaveURL(/\/explore\/\?q=branding$/);
- await expect(page.locator('.site-header .global-account-trigger')).toBeVisible();
+ await expect(page.locator('.hx-header .global-account-trigger')).toBeVisible();
 });
 
 test('guest project request login returns with guided-entry text',async({page})=>{
  await page.goto('/project-requests/?q=Need%20help%20building%20a%20brand%20identity%20for%20our%20company');
- await page.getByRole('link',{name:/Нэвтрэх|Sign in/}).click();
+ await page.getByRole('main').getByRole('link',{name:/Нэвтрэх|Sign in/}).click();
  await loginBuyer(page);
  await expect(page).toHaveURL(/\/project-requests\/\?q=/);
  await expect(page.locator('.project-request-form textarea')).toHaveValue(/Need help building a brand identity/);

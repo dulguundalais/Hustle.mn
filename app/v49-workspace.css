@@ -303,3 +303,66 @@
 .hustle-v5.workspace.v49 .v47-panel{border-color:var(--ws-line);border-radius:14px;background:var(--ws-surface);box-shadow:var(--ws-shadow)}
 .hustle-v5.workspace.v49 h2 .v25-unread{margin-left:8px;vertical-align:middle}
 .hustle-v5.workspace.v49 .v35-order-notice{border-color:var(--ws-line);background:var(--ws-soft)}
+/* V50: service context at the top of a chat that started from a service page. */
+.hustle-v5.workspace.v49 .v50-chat-ctx{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:12px;margin:10px 14px 0;padding:10px 10px 10px 12px;border:1px solid var(--border);border-radius:14px;background:var(--soft)}
+.hustle-v5.workspace.v49 .v50-chat-ctx-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:var(--surface);color:var(--purple)}
+.hustle-v5.workspace.v49 .v50-chat-ctx div{display:grid;min-width:0;line-height:1.3}
+.hustle-v5.workspace.v49 .v50-chat-ctx small{color:var(--sub);font-size:11.5px;font-weight:700}
+.hustle-v5.workspace.v49 .v50-chat-ctx b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.hustle-v5.workspace.v49 .v50-chat-ctx div>span{color:var(--sub);font-size:12.5px}
+.hustle-v5.workspace.v49 .v50-chat-ctx-back{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface);font-size:13px;font-weight:750;white-space:nowrap}
+.hustle-v5.workspace.v49 .v50-chat-ctx-back:hover{border-color:var(--purple);color:var(--purple)}
+.hustle-v5.workspace.v49 .v50-chat-ctx-close{display:grid;place-items:center;width:32px;height:32px;border:0;border-radius:9px;background:transparent;color:var(--sub)}
+.hustle-v5.workspace.v49 .v50-chat-ctx-close:hover{background:var(--surface)}
+@media(max-width:560px){
+ .hustle-v5.workspace.v49 .v50-chat-ctx{grid-template-columns:auto minmax(0,1fr) auto;margin:8px 10px 0}
+ .hustle-v5.workspace.v49 .v50-chat-ctx-back{grid-column:1/-1;justify-content:center}
+ .hustle-v5.workspace.v49 .v50-chat-ctx-close{grid-row:1;grid-column:3}
+}
+/* V50: step-by-step service creation and plain-language statuses. */
+.hustle-v5.workspace.v49 .v50-steps{display:flex;gap:6px;margin:4px 0 18px;padding:0;list-style:none;counter-reset:none}
+.hustle-v5.workspace.v49 .v50-steps li{flex:1;min-width:0}
+.hustle-v5.workspace.v49 .v50-steps button{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;padding:0 12px;border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--sub);font-size:13px;font-weight:750;text-align:left}
+.hustle-v5.workspace.v49 .v50-steps span{display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:var(--soft);font-size:12px;font-weight:800}
+.hustle-v5.workspace.v49 .v50-steps li.current button{border-color:var(--purple);color:var(--text);box-shadow:inset 0 0 0 1px var(--purple)}
+.hustle-v5.workspace.v49 .v50-steps li.current span{background:var(--purple);color:#fff}
+.hustle-v5.workspace.v49 .v50-steps li.done span{background:#e3f4ec;color:#11795a}
+.hustle-v5.workspace.v49 .v50-step-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.hustle-v5.workspace.v49 .v50-save-as{display:grid;gap:8px;margin:0 0 14px;padding:0;border:0}
+.hustle-v5.workspace.v49 .v50-save-as legend{margin-bottom:8px;font-weight:800;font-size:13px}
+.hustle-v5.workspace.v49 .v50-save-as label{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--border);border-radius:12px;cursor:pointer}
+.hustle-v5.workspace.v49 .v50-save-as label:has(input:checked){border-color:var(--purple);background:var(--soft)}
+.hustle-v5.workspace.v49 .v50-save-as input{margin-top:3px;accent-color:var(--purple)}
+.hustle-v5.workspace.v49 .v50-save-as b{display:block;font-size:14px}
+.hustle-v5.workspace.v49 .v50-save-as small{color:var(--sub);font-size:12.5px}
+.hustle-v5.workspace.v49 .v50-status-hint{margin:4px 0 0;color:var(--sub);font-size:12.5px}
+.hustle-v5.workspace.v49 .v50-status-hint.warn{color:#a5343d}
+.hustle-v5.workspace.v49 [hidden]{display:none!important}
+@media(max-width:640px){.hustle-v5.workspace.v49 .v50-steps button{flex-direction:column;justify-content:center;gap:4px;padding:8px 4px;text-align:center;font-size:11.5px}}
+/* V50: freelancer setup checklist and admin work queue. */
+.hustle-v5.workspace.v49 .v50-setup{margin:0 0 18px;padding:18px 20px;border:1px solid var(--border);border-radius:16px;background:var(--surface)}
+.hustle-v5.workspace.v49 .v50-setup-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.hustle-v5.workspace.v49 .v50-setup h2{margin:0;font-size:17px}
+.hustle-v5.workspace.v49 .v50-setup p{margin:4px 0 0;color:var(--sub);font-size:13px}
+.hustle-v5.workspace.v49 .v50-setup-count{padding:3px 10px;border-radius:999px;background:var(--soft);font-weight:800;font-size:13px}
+.hustle-v5.workspace.v49 .v50-setup-bar{height:6px;margin:14px 0;border-radius:999px;background:var(--soft);overflow:hidden}
+.hustle-v5.workspace.v49 .v50-setup-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#13b7d4,#2664ec)}
+.hustle-v5.workspace.v49 .v50-setup ul{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.hustle-v5.workspace.v49 .v50-setup li{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border:1px solid var(--border);border-radius:999px;font-size:13px;font-weight:700}
+.hustle-v5.workspace.v49 .v50-setup li>i{width:14px;height:14px;border-radius:50%;border:1.5px solid #9fb2bd}
+.hustle-v5.workspace.v49 .v50-setup li.done{color:var(--sub);background:var(--soft);border-color:transparent}
+.hustle-v5.workspace.v49 .v50-setup li.done svg{color:#11795a}
+.hustle-v5.workspace.v49 .v50-setup li a,.hustle-v5.workspace.v49 .v50-setup li button{padding:0;border:0;background:none;color:var(--purple);font:inherit;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+.hustle-v5.workspace.v49 .v50-admin-queue{margin:0 0 18px}
+.hustle-v5.workspace.v49 .v50-admin-queue h2{margin:0;font-size:17px}
+.hustle-v5.workspace.v49 .v50-queue-total{padding:3px 10px;border-radius:999px;background:#fdf1df;color:#835716;font-size:12.5px;font-weight:800}
+.hustle-v5.workspace.v49 .v50-queue-total.clear{background:#e3f4ec;color:#0f6a4c}
+.hustle-v5.workspace.v49 .v50-queue-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
+.hustle-v5.workspace.v49 .v50-queue-card{display:grid;gap:2px;justify-items:start;padding:16px;border:1px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text);text-align:left;transition:border-color .15s ease,transform .15s ease}
+.hustle-v5.workspace.v49 .v50-queue-card:hover{border-color:var(--purple);transform:translateY(-1px)}
+.hustle-v5.workspace.v49 .v50-queue-card strong{font-size:28px;line-height:1.1;letter-spacing:-.03em;color:var(--sub)}
+.hustle-v5.workspace.v49 .v50-queue-card.has-work strong{color:var(--text)}
+.hustle-v5.workspace.v49 .v50-queue-card.has-work{box-shadow:inset 3px 0 0 #f0a33a}
+.hustle-v5.workspace.v49 .v50-queue-card span{font-size:14px;font-weight:800}
+.hustle-v5.workspace.v49 .v50-queue-card small{color:var(--sub);font-size:12.5px}
+@media(max-width:900px){.hustle-v5.workspace.v49 .v50-queue-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}

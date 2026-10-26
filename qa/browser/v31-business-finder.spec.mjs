@@ -3,7 +3,7 @@ import {mock} from './support.mjs';
 test.beforeEach(async({page})=>mock(page));
 test('problem-first home hero submits a problem to the finder, without account',async({page})=>{
  await page.goto('/');
- await expect(page.getByRole('heading',{name:/Санаагаа хэл\./})).toBeVisible();
+ await expect(page.getByRole('heading',{name:/Асуудал бүрт/})).toBeVisible();
  await page.locator('.signature-search input[name=q]').fill('Манай рестораны захиалга бага байна');
  await page.locator('.signature-search button[type=submit]').click();
  await expect(page).toHaveURL(/\/solutions\/\?q=/);

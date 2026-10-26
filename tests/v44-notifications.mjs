@@ -21,8 +21,8 @@ test('seller sees seller inbox; buyer sees buyer inbox and role follows account'
  assert.match(ui,/isSeller\?'\/seller-studio\/\?tab=messages':'\/buyer\/\?tab=messages'/);
  assert.match(ui,/item\.source==='chat'\?chatHref:item\.href/);
  assert.match(ui,/href=\{chatHref\}/);
- assert.match(read('components/premium-marketplace.tsx'),/isSeller=\{account\.isSeller\}/);
- assert.match(read('components/workspace.tsx'),/isSeller=\{entry==='seller'\}/);
+ assert.match(read('components/premium-marketplace.tsx')+read('components/site-header.tsx'),/isSeller=\{notificationsAsSeller\?\?account\.isSeller\}/);
+ assert.match(read('components/workspace.tsx'),/notificationsAsSeller=\{entry==='seller'\}/);
 });
 test('notification interactions preserve read updates, error and accessibility feedback',()=>{
  const ui=read('components/global-notifications.tsx');

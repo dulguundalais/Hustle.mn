@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 
 const read=path=>readFileSync(path,'utf8');
-const home=read('components/premium-marketplace.tsx');
+const home=read('components/premium-marketplace.tsx')+read('components/site-header.tsx');
 const hero=read('components/signature-home.tsx');
 const discover=read('components/v19-discovery.tsx');
 const catalog=read('components/live-catalog.tsx');
@@ -11,9 +11,10 @@ const guided=read('components/guided-entry.tsx');
 const css=read('app/v45-art-direction.css');
 
 test('V45 replaces redundant copy with concise bilingual value proposition',()=>{
- assert.match(hero,/Санаагаа хэл\./);
- assert.match(hero,/Бүтээх хүнээ ол\./);
- assert.match(hero,/Your next idea/);
+ // V50: the hero headline is now the HUSTLE-COLLAB one chosen by the owner.
+ assert.match(hero,/Асуудал бүрт/);
+ assert.match(hero,/шийдэл бий\./);
+ assert.match(hero,/Every problem/);
  assert.doesNotMatch(hero,/Бизнесээ хөгжүүлэх, ажлаа автоматжуулах, санаагаа хэрэгжүүлэхэд/);
  assert.doesNotMatch(hero,/signature-problem-prompts/);
  assert.match(hero,/Кирилл · Latin · English хайлт/);

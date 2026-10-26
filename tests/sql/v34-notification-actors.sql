@@ -15,10 +15,10 @@ insert into public.profiles(id,display_name,is_seller,public_profile,accepting_p
  ('10000000-0000-4000-8000-000000000353','V34 Test Outsider',false,false,false);
 insert into public.services(id,seller_id,title,description,category,price,delivery_days,status)
 values('20000000-0000-4000-8000-000000000351','10000000-0000-4000-8000-000000000352',
-'V34 test published seller service','Synthetic published service for isolated V34 actor test','web',150000,7,'published');
+'V34 test published seller service','Synthetic published service for isolated V34 actor test','tech',150000,7,'published');
 insert into public.project_requests(id,buyer_id,title,brief,audience,category,status)
 values('30000000-0000-4000-8000-000000000351','10000000-0000-4000-8000-000000000351',
-'V34 buyer test request','V34 synthetic request for safe recipient RLS testing only','business','web','open');
+'V34 buyer test request','V34 synthetic request for safe recipient RLS testing only','business','tech','open');
 insert into public.project_invitations(id,request_id,seller_id)
 values('40000000-0000-4000-8000-000000000351','30000000-0000-4000-8000-000000000351','10000000-0000-4000-8000-000000000352');
 set local role authenticated;

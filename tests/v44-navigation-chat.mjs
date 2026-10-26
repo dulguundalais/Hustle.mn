@@ -18,10 +18,10 @@ test('seller CTA avoids login for authenticated buyer and retains slug for guest
 });
 test('desktop/mobile account navigation uses seller workspace without removing buyer mode',()=>{
  const menu=read('components/account-menu.tsx');
- const home=read('components/premium-marketplace.tsx');
+ const home=read('components/premium-marketplace.tsx')+read('components/site-header.tsx');
  assert.match(menu,/dashboardHref=account.isSeller\?'\/seller-studio\/'\:'\/buyer\/'/);
  assert.match(menu,/account.isSeller&&<Link href="\/buyer\/"/);
- assert.match(home,/account\?\.isSeller\?'\/seller-studio\/'\:'\/buyer\/'/);
+ assert.match(home,/<AccountMenu account=\{account\}/);
  assert.match(home,/signedIn=\{sessionState==='signed-in'\}/);
 });
 test('home and detail chat CTA follow signed-in session, preserve seller handoff',()=>{

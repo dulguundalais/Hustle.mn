@@ -8,6 +8,7 @@ import {services} from '../lib/marketplace/catalog';
 import {suggestLiveServices,type LiveService} from '../lib/marketplace/live-discovery';
 import GuidedEntry from './guided-entry';
 import '../app/signature-home.css';
+import '../app/v50-hero.css';
 
 type T=(mn:string,en:string)=>string;
 const topics=[
@@ -20,28 +21,35 @@ type Spotlight={id:string;title:string;title_en?:string;category:string;price:nu
 const formatPrice=(amount:number)=>new Intl.NumberFormat('mn-MN').format(amount)+' ₮';
 
 export function SignatureHero({en}:{en:boolean}){
+ // V50: the HUSTLE-COLLAB hero — centred, on a soft navy light field. Describe a need
+ // in your own words; live suggestions come only from published marketplace services.
  const [search,setSearch]=useState('');
  const [showSuggestions,setShowSuggestions]=useState(false);
  const [activeSuggestion,setActiveSuggestion]=useState(-1);
  const [publishedState,setPublishedState]=useState<'loading'|'ready'|'error'>('loading');
  const [published,setPublished]=useState<LiveService[]>([]);
+ const [exampleIndex,setExampleIndex]=useState(0);
  useEffect(()=>{let active=true;marketplaceClient().then(db=>db.rpc('marketplace_catalog')).then(r=>{if(!active)return;if(r.error)throw r.error;setPublished(Array.isArray(r.data)?r.data as LiveService[]:[]);setPublishedState('ready')}).catch(()=>{if(active)setPublishedState('error')});return()=>{active=false}},[]);
  const suggestions=useMemo(()=>suggestLiveServices(published,search,4),[published,search]);
  const t:T=(mn,english)=>en?english:mn;
- return <section className="signature-hero" aria-labelledby="signature-hero-title">
-   <div className="signature-hero-grid" aria-hidden="true"/>
-   <div className="shell signature-hero-inner">
-     <div className="signature-hero-copy">
-       <span className="signature-kicker"><span className="signature-kicker-pulse"/> {t('МОНГОЛЫН БҮТЭЭЛЧ ХҮМҮҮС · НЭГ ДОР','THE CREATIVE NETWORK · MONGOLIA')}</span>
-       <h1 id="signature-hero-title">{t('Санаагаа хэл.','Your next idea')}<br/><span>{t('Бүтээх хүнээ ол.','starts here.')}</span></h1>
-       <p>{t('Дизайн, технологи, контент — хэрэгтэй мэргэжилтнээ нэг дороос ол.','Find the right people for design, digital and everything you are building.')}</p>
-       <div className="signature-search-shell" onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node|null))setShowSuggestions(false)}}>
-        <form action="/solutions/" method="get" className="signature-search" role="search">
-         <Search size={21} aria-hidden="true"/>
+ const examples=en?['My restaurant needs more customers','Automate our Facebook orders','We need a company website','Help with our tax filing']:['Манай ресторанд үйлчлүүлэгч цөөн байна','Facebook захиалгаа автоматжуулмаар байна','Компанидаа вебсайт хийлгэмээр байна','Татварын тайлангаа зөв гаргамаар байна'];
+ // Rotate the placeholder through real example problems until the visitor types.
+ useEffect(()=>{if(search||showSuggestions)return;if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const id=window.setInterval(()=>setExampleIndex(i=>(i+1)%4),4000);return()=>window.clearInterval(id)},[search,showSuggestions]);
+ return <section className="signature-hero hx-hero" aria-labelledby="signature-hero-title">
+   <div className="hx-hero-frame">
+    <span className="hx-hero-light" aria-hidden="true"/>
+    <span className="hx-hero-grain" aria-hidden="true"/>
+    <div className="shell signature-hero-inner hx-hero-inner">
+       <p className="hx-hero-badge"><span>Smart Finder</span>{t('Асуудлаа бичээд шийдлээ ол','Describe a problem, get a solution')}</p>
+       <h1 id="signature-hero-title" className="hx-hero-title"><span>{t('Асуудал бүрт','Every problem')}</span> <span>{t('шийдэл бий.','has a solution.')}</span></h1>
+       <p className="hx-hero-sub">{t('Хийлгэх ажил байгаа ч хэнд хандахаа мэдэхгүй байна уу? Асуудлаа өөрийн үгээр бичээрэй — Hustle тохирох шийдэл, мэргэжилтнийг санал болгоно.','Have work to get done but not sure who to ask? Describe it in your own words — Hustle suggests the right solution and the professionals for it.')}</p>
+       <div className="signature-search-shell hx-hero-search" onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node|null))setShowSuggestions(false)}}>
+        <form action="/solutions/" method="get" className="signature-search hx-searchbar" role="search">
+         <Search size={22} aria-hidden="true" className="hx-searchbar-icon"/>
          <input name="q" role="combobox" aria-label={t('Асуудлаа тайлбарлах','Describe your challenge')}
           aria-autocomplete="list" aria-haspopup="listbox" aria-expanded={showSuggestions&&search.trim().length>1&&publishedState==='ready'}
           aria-controls="hero-search-suggestions" aria-activedescendant={activeSuggestion>=0&&showSuggestions&&suggestions[activeSuggestion]?'hero-search-option-'+activeSuggestion:undefined}
-          value={search} onChange={e=>{setSearch(e.target.value);setShowSuggestions(true);setActiveSuggestion(-1)}}
+          value={search} maxLength={300} autoComplete="off" onChange={e=>{setSearch(e.target.value);setShowSuggestions(true);setActiveSuggestion(-1)}}
           onFocus={()=>setShowSuggestions(true)}
           onKeyDown={e=>{
            if(e.key==='Escape'){setShowSuggestions(false);setActiveSuggestion(-1)}
@@ -49,30 +57,18 @@ export function SignatureHero({en}:{en:boolean}){
            else if(e.key==='ArrowUp'&&suggestions.length){e.preventDefault();setShowSuggestions(true);setActiveSuggestion(i=>i<0?suggestions.length-1:(i-1+suggestions.length)%suggestions.length)}
            else if(e.key==='Enter'&&showSuggestions&&activeSuggestion>=0&&suggestions[activeSuggestion]){e.preventDefault();window.location.assign('/listing/?id='+encodeURIComponent(suggestions[activeSuggestion].id))}
           }}
-          placeholder={t('Танд ямар ажил хэрэгтэй вэ?','What are you looking to create?')}/>
-         <button type="submit"><span>{t('Хайх','Search')}</span><ArrowUpRight size={19}/></button>
+          placeholder={examples[exampleIndex]+'…'}/>
+         <button type="submit" className="hx-searchbar-go"><span>{t('Шийдэл олох','Find solutions')}</span><ArrowRight size={18} aria-hidden="true"/></button>
         </form>
-        {showSuggestions&&search.trim().length>1&&publishedState==='ready'&&<div className="signature-search-suggestions" id="hero-search-suggestions" role="listbox" aria-label={t('Нийтлэгдсэн үйлчилгээний санал','Published service suggestions')}>
-          {suggestions.map((item,i)=><Link id={'hero-search-option-'+i} role="option" aria-selected={activeSuggestion===i} className={activeSuggestion===i?'active':''} key={item.id} href={'/listing/?id='+encodeURIComponent(item.id)}><Search size={15}/>{en&&item.title_en?item.title_en:item.title}<span>{t('Бодит','Live')}</span></Link>)}
-          {suggestions.length===0&&<p className="signature-search-no-match">{t('Энэ хайлтаар нийтлэгдсэн үйлчилгээ хараахан алга. Асуудлаа тайлбарлаж хүсэлт илгээж болно.','No published service matches yet. Describe your goal to find a solution.')}</p>}
-          <Link className="signature-search-all" href={'/explore/?q='+encodeURIComponent(search)}>{t('Бодит үйлчилгээ хайх','Search published services')}<ArrowRight size={15}/></Link>
+        {showSuggestions&&search.trim().length>1&&publishedState==='ready'&&<div className="signature-search-suggestions hx-suggest" id="hero-search-suggestions" role="listbox" aria-label={t('Нийтлэгдсэн үйлчилгээний санал','Published service suggestions')}>
+          {suggestions.map((item,i)=><Link id={'hero-search-option-'+i} role="option" aria-selected={activeSuggestion===i} className={activeSuggestion===i?'active':''} key={item.id} href={'/listing/?id='+encodeURIComponent(item.id)}><Search size={15} aria-hidden="true"/>{en&&item.title_en?item.title_en:item.title}<span>{t('Бодит','Live')}</span></Link>)}
+          {suggestions.length===0&&<p className="signature-search-no-match">{t('Энэ хайлтаар нийтлэгдсэн үйлчилгээ хараахан алга. "Шийдэл олох" дээр дарж асуудлаа тайлбарлаарай.','No published service matches yet. Press “Find solutions” to describe your goal.')}</p>}
+          <Link className="signature-search-all" href={'/explore/?q='+encodeURIComponent(search)}>{t('Бодит үйлчилгээ хайх','Search published services')}<ArrowRight size={15} aria-hidden="true"/></Link>
         </div>}
        </div>
-       <GuidedEntry en={en}/>
-       <div className="signature-search-subline"><Sparkles size={14}/>{t('Кирилл · Latin · English хайлт','Search in Mongolian, Latin or English')}</div>
-     </div>
-     <div className="signature-orbit" aria-label={t('Бүтээлч ур чадварыг дүрсэлсэн график','Abstract constellation of creative disciplines')}>
-       <div className="signature-orbit-halo"/>
-       <div className="signature-orbit-ring ring-one"/>
-       <div className="signature-orbit-ring ring-two"/>
-       
-       <div className="signature-orbit-center"><span className="signature-orbit-symbol">h<span>✳</span></span><small>CREATIVE BY NATURE</small></div>
-       <Link className="signature-orbit-chip chip-design" href="/explore/?category=design"><span className="signature-orbit-icon"><PenTool size={20}/></span><span>BRAND<br/><strong>IDENTITY</strong></span><ArrowUpRight size={15}/></Link>
-       <Link className="signature-orbit-chip chip-digital" href="/explore/?category=web"><span className="signature-orbit-icon"><Code2 size={20}/></span><span>DIGITAL<br/><strong>EXPERIENCES</strong></span><ArrowUpRight size={15}/></Link>
-       
-       <i className="signature-orbit-star star-a"/><i className="signature-orbit-star star-b"/><i className="signature-orbit-star star-c"/><i className="signature-orbit-star star-d"/>
-       <div className="signature-orbit-side-label">INDEPENDENT TALENT / MONGOLIA</div>
-     </div>
+       <div className="hx-hero-guided"><GuidedEntry en={en}/></div>
+       <div className="signature-search-subline hx-hero-subline"><Sparkles size={14} aria-hidden="true"/>{t('Кирилл · Latin · English хайлт','Search in Mongolian, Latin or English')}</div>
+    </div>
    </div>
  </section>;
 }

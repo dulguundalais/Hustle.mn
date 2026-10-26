@@ -10,6 +10,8 @@ import ServiceComparison,{compareSelection,compareLimit} from './service-compari
 import '../app/live-catalog.css';
 import '../app/v39-creative-cards.css';
 import '../app/v41-home-card-readability.css';
+import '../app/v50-categories.css';
+import {categoryLabel,legacyCategory,serviceTypeById,subcategoryLabel} from '../lib/marketplace/taxonomy';
 
 // The marketplace_catalog RPC is the sole source: published services from real sellers only.
 const START_COUNT=12;
@@ -21,14 +23,11 @@ export function contactSellerHref(slug:string,signedIn=false):string {
 export function visibleServices<T>(items:T[],homePreview:boolean,count=START_COUNT):T[]{
  return items.slice(0,homePreview?HOME_COUNT:Math.max(START_COUNT,count));
 }
-const categoryNames:Record<string,[string,string]>={
- design:['Дизайн','Design'],video:['Видео','Video'],translation:['Орчуулга','Translation'],
- marketing:['Маркетинг','Marketing'],web:['Веб & IT','Web & IT'],interior:['Интерьер','Interior'],
- ui:['UI / UX','UI / UX'],ai:['AI & Автоматжуулалт','AI & Automation'],proposals:['Төсөл','Planning']
-};
-type Props={en:boolean;signedIn?:boolean;query?:string;category?:string;sort?:LiveSort;onlySaved?:boolean;saved?:string[];
+// V50: names come from the shared taxonomy (pre-V50 ids still resolve).
+const coverClass=(category:string)=>legacyCategory(category)?.category||category;
+type Props={en:boolean;signedIn?:boolean;query?:string;category?:string;subcategory?:string;sort?:LiveSort;onlySaved?:boolean;saved?:string[];
  onSave?:(id:string)=>void;canSave?:boolean;saveBusy?:string[];saveError?:string;onSignInSave?:()=>void;homePreview?:boolean};
-export default function LiveCatalog({en,signedIn=false,query='',category='all',sort='featured',onlySaved=false,saved=[],onSave,canSave=false,saveBusy=[],saveError='',onSignInSave,homePreview=false}:Props){
+export default function LiveCatalog({en,signedIn=false,query='',category='all',subcategory='',sort='featured',onlySaved=false,saved=[],onSave,canSave=false,saveBusy=[],saveError='',onSignInSave,homePreview=false}:Props){
  const [services,setServices]=useState<LiveService[]>([]);
  const [state,setState]=useState<'loading'|'ready'|'error'>('loading');
  const [compared,setCompared]=useState<string[]>([]);
@@ -45,8 +44,8 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
   }).catch(()=>{if(alive)setState('error')});
   return()=>{alive=false};
  },[]);
- useEffect(()=>{setVisibleCount(START_COUNT)},[query,category,sort,onlySaved]);
- const filtered=useMemo(()=>filterLiveServices(services,{query,category,sort,onlySaved,saved}),[services,query,category,sort,onlySaved,saved]);
+ useEffect(()=>{setVisibleCount(START_COUNT)},[query,category,subcategory,sort,onlySaved]);
+ const filtered=useMemo(()=>filterLiveServices(services,{query,category,subcategory,sort,onlySaved,saved}),[services,query,category,subcategory,sort,onlySaved,saved]);
  const visible=visibleServices(filtered,homePreview,visibleCount);
  const compareReady=compared.length>=2;
  const toggleCompare=(id:string)=>setCompared(current=>compareSelection(current,id));
@@ -82,13 +81,13 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
     const selected=compared.includes(s.id);
     const detailHref='/listing/?id='+encodeURIComponent(s.id);
     const title=en&&s.title_en?s.title_en:s.title;
-    const categoryName=categoryNames[s.category]?.[en?1:0]||s.category;
+    const categoryName=subcategoryLabel(s.category,s.subcategory,en)||categoryLabel(s.category,en);const priceSuffix=s.service_type&&s.service_type!=='fixed'?' '+(en?serviceTypeById(s.service_type).priceEn:serviceTypeById(s.service_type).priceMn):'';
     const avatar=(s.display_name.trim().charAt(0)||'H').toLocaleUpperCase();
     const avatarSrc=typeof s.avatar_path==='string'&&/^[a-f0-9-]{36}\/[a-f0-9-]{36}\.(jpg|png|webp)$/.test(s.avatar_path)?'/api/portfolio-image?path='+encodeURIComponent(s.avatar_path):null;
     const profileHref=isValidSellerSlug(s.slug||'')?'/p/'+encodeURIComponent(s.slug):null;
-    const sellerIdentity=<><span className={'v39-person-avatar v39-avatar-'+s.category} aria-hidden="true">{avatarSrc?<img className="v41-card-avatar-img" src={avatarSrc} alt="" width={54} height={54} loading="lazy" decoding="async"/>:avatar}</span><div className="v39-person-name"><strong>{s.display_name}</strong><span>{s.headline||categoryName}</span></div></>;
+    const sellerIdentity=<><span className={'v39-person-avatar v39-avatar-'+coverClass(s.category)} aria-hidden="true">{avatarSrc?<img className="v41-card-avatar-img" src={avatarSrc} alt="" width={54} height={54} loading="lazy" decoding="async"/>:avatar}</span><div className="v39-person-name"><strong>{s.display_name}</strong><span>{s.headline||categoryName}</span></div></>;
     return <article key={s.id} className="v39-talent-card">
-     <div className={'v39-card-cover v39-cover-'+s.category}>
+     <div className={'v39-card-cover v39-cover-'+coverClass(s.category)}>
       <span className="v39-cover-text">hustle<span>✳</span></span>
       <span className="v39-cover-accent" aria-hidden="true"/>
       {onSave&&<button className="v39-heart" type="button" aria-pressed={savedThis} aria-label={savedThis?t('Хадгалснаас хасах','Remove saved service'):t('Үйлчилгээ хадгалах','Save service')} disabled={saveBusy.includes(s.id)} onClick={()=>canSave?onSave(s.id):onSignInSave?.()}><Heart size={19} fill={savedThis?'currentColor':'none'}/></button>}
@@ -99,7 +98,7 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
       <h3><Link href={detailHref}>{title}</Link></h3>
       <p className="v39-description">{s.description}</p>
       <div className="v39-card-bottom">
-       <div className="v39-price"><small>{t('Эхлэх үнэ','Starting at')}</small><strong>{money(minPrice)}</strong></div>
+       <div className="v39-price"><small>{t('Эхлэх үнэ','Starting at')}</small><strong>{money(minPrice)}{priceSuffix&&s.service_type!=='custom'&&<em className="v50-price-unit">{priceSuffix}</em>}</strong></div>
        <div className="v39-delivery"><Clock3 size={15}/>{delivery} {t('хоног','days')}</div>
       </div>
       <div className="v39-card-actions">

@@ -36,7 +36,7 @@ for(const width of [390,1440]){
  test('notification bell works across homepage and dashboard at '+width,async({page})=>{
   await page.setViewportSize({width,height:850});
   await signIn(page);
-  await page.locator('.site-header .wordmark').click();
+  await page.locator('.hx-header .hx-brand').click();
   const trigger=page.locator('.global-notice-trigger');
   await expect(trigger).toBeVisible();
   await expect(page.locator('.global-notice-count')).toHaveText('3');

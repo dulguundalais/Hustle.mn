@@ -3,13 +3,13 @@ import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 
 const file=(name)=>readFileSync(name,'utf8');
-const home=file('components/premium-marketplace.tsx');
+const home=file('components/premium-marketplace.tsx')+file('components/site-header.tsx');
 const workspace=file('components/workspace.tsx');
 const matching=file('components/project-matching.tsx');
 
 test('canonical beta integration keeps homepage bell and chat confirmation together',()=>{
  assert.match(home,/GlobalNotifications/);
- assert.match(workspace,/GlobalNotifications/);
+ assert.match(workspace,/<SiteHeader /);
  assert.match(workspace,/stageChatFile\(file\)/);
  assert.match(workspace,/pendingChatFile/);
  assert.match(workspace,/setPendingChatFile\(null\)/);
