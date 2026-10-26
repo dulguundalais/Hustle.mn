@@ -29,8 +29,9 @@ test('seller can upload replace or remove real images, bounded and inspected for
  assert.match(editor,/upsert:false/);
  assert.match(editor,/\.eq\('id',sellerId\)/);
  assert.match(editor,/\.eq\('is_seller',true\)/);
- assert.match(read('components/workspace.tsx'),/SellerAvatarEditor/);
- assert.match(read('components/workspace.tsx'),/setProfile\(old=>old\?\{\.\.\.old,avatar_path:path\}/);
+ // V52: avatar editing lives in Profile Studio; the dashboard links there instead of duplicating it.
+ assert.match(read('components/seller-profile-manager.tsx'),/<SellerAvatarEditor/);
+ assert.match(read('components/workspace.tsx'),/href="\/my-profile\/"/);
 });
 
 test('same seller portrait appears in Home, Explore and service details, with letter fallback',()=>{

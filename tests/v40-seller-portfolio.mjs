@@ -45,7 +45,8 @@ test('no fabricated skills, portfolios or testimonials when seller has no data',
 });
 test('tool icon selection is persisted on current seller account with RLS; public projection is opt-in only',()=>{
  const ui=read('components/seller-tool-editor.tsx');
- const ws=read('components/workspace.tsx');
+ // V52: the tool picker lives only in Profile Studio (one place for the seller profile).
+ const ws=read('components/seller-profile-manager.tsx');
  const sql=read('supabase/migrations/20261024052715_v40_seller_tools.sql');
  assert.match(ui,/\.from\('seller_tools'\)/);
  assert.match(ui,/\.update\(\{icon_key:icon\}\)/);
@@ -53,7 +54,7 @@ test('tool icon selection is persisted on current seller account with RLS; publi
  assert.match(ui,/CREATIVE_TOOL_MAX/);
  assert.match(ui,/aria-pressed=\{choice.icon_key===option.key\}/);
  assert.match(ws,/<SellerToolEditor/);
- assert.match(ws,/name="skills"/);
+ assert.match(ws,/skills:draft\.skills/);
  assert.match(sql,/enable row level security/);
  assert.match(sql,/seller_id=\(select auth.uid\(\)\)/);
  assert.match(sql,/p.public_profile and p.is_seller and a.enabled/);

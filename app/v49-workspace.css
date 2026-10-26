@@ -373,3 +373,6 @@
 .hustle-v5.workspace.v49 .v52-become-seller b{display:block;font-size:14px}
 .hustle-v5.workspace.v49 .v52-become-seller small{color:var(--sub);font-size:13px}
 @media(max-width:560px){.hustle-v5.workspace.v49 .v52-become-seller{flex-direction:column;align-items:flex-start}}
+.hustle-v5.workspace.v49 .v50-setup li em{margin-left:2px;padding:1px 7px;border-radius:999px;background:#fdf1df;color:#835716;font-style:normal;font-size:11px;font-weight:800}
+.hustle-v5.workspace.v49 .v52-setup-note{margin:12px 0 0!important;font-size:12.5px!important}
+.hustle-v5.workspace.v49 .v52-profile .v42-workspace-profile-cta{margin-bottom:18px}
