@@ -410,3 +410,4 @@
 .hustle-v5.workspace.v49 .v52-history-head small{color:var(--sub);font-size:12px}
 .hustle-v5.workspace.v49 .v52-history p{margin:6px 0 0;font-size:13.5px;line-height:1.55;color:var(--text);white-space:pre-line}
 .hustle-v5.workspace.v49 .v52-next-step+.v23-order-brief{margin-top:10px}
+.hustle-v5.workspace.v49 .v52-empty-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}

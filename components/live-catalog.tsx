@@ -65,7 +65,13 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
   {state==='ready'&&filtered.length===0&&<div className="v39-empty"><Layers3 size={24}/>
    <h3>{services.length===0?t('Одоогоор нийтлэгдсэн үйлчилгээ алга','No published services yet'):onlySaved?t('Хадгалсан үйлчилгээ олдсонгүй','No saved services found'):t('Тохирох үйлчилгээ олдсонгүй','No services match your search')}</h3>
    <p>{services.length===0?t('Freelancer-ууд үйлчилгээгээ нийтлэхэд энд харагдана.','Published freelancer services will appear here.'):t('Ангилал эсвэл хайлтаа өөрчлөөд үзээрэй.','Try another category or a different search.')}</p>
-   <Link href="/explore/" className="v39-empty-link">{t('Үйлчилгээ хайх','Browse services')} <ArrowUpRight size={16}/></Link>
+   {/* V52: no dead ends — offer the next useful step, never invented results. */}
+   <div className="v52-empty-actions">
+    {(query||category!=='all'||subcategory||onlySaved)&&<Link href="/explore/" className="v39-empty-link">{t('Шүүлтүүр арилгах','Clear filters')}</Link>}
+    <Link href="/categories/" className="v39-empty-link">{t('Бүх ангилал','Browse all categories')} <ArrowUpRight size={16}/></Link>
+    <Link href={'/solutions/'+(query?'?q='+encodeURIComponent(query):'')} className="v39-empty-link">{t('Асуудлаа тайлбарлах','Describe your problem')} <ArrowUpRight size={16}/></Link>
+    <Link href={'/project-requests/'+(query?'?q='+encodeURIComponent(query):'')} className="v39-empty-link">{t('Төслийн хүсэлт илгээх','Post a project request')} <ArrowUpRight size={16}/></Link>
+   </div>
   </div>}
   {state==='ready'&&filtered.length>0&&<>
    <div className="v39-results-bar">
