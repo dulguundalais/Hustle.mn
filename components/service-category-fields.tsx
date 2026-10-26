@@ -19,7 +19,7 @@ export default function ServiceCategoryFields({en,uid,editing,onError,onNotice,o
  const [subcategory,setSubcategory]=useState<string>(editing?.subcategory||legacy?.subcategory||'');
  const [type,setType]=useState<ServiceType>((SERVICE_TYPES.find(x=>x.id===editing?.service_type)?.id)||'fixed');
  // V52: the package editor relabels its fields for the chosen pricing model.
- useEffect(()=>{onTypeChange?.(type)},[type]);// eslint-disable-line react-hooks/exhaustive-deps
+ useEffect(()=>{onTypeChange?.(type)},[type]);
  const [suggesting,setSuggesting]=useState(false);
  const [suggestion,setSuggestion]=useState({name:'',nameEn:'',note:''});
  const [sending,setSending]=useState(false);
