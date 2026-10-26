@@ -1,4 +1,5 @@
 'use client';
+import {trapTab} from '../lib/marketplace/focus-trap';
 import {useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import Link from 'next/link';
 import {ArrowUpRight,BriefcaseBusiness,Check,CheckCircle2,Eye,EyeOff,FileImage,Globe2,Layers3,LoaderCircle,Maximize2,Minimize2,Monitor,Pencil,Plus,RotateCcw,Save,Smartphone,Trash2,UploadCloud,UserRound,Wrench,X} from 'lucide-react';
@@ -382,7 +383,7 @@ export default function SellerProfileManager(){
   </div>}
   {leaveTo&&<div className="sp-leave-backdrop" onPointerDown={e=>{if(e.target===e.currentTarget)setLeaveTo(null)}}>
    <div ref={leaveRef} className="sp-leave" role="alertdialog" aria-modal="true" aria-labelledby="sp-leave-title" aria-describedby="sp-leave-text"
-    onKeyDown={e=>{if(e.key==='Escape')setLeaveTo(null);if(e.key==='Tab'){const f=[...(leaveRef.current?.querySelectorAll<HTMLElement>('button')||[])];if(!f.length)return;const first=f[0],last=f[f.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}}}>
+    onKeyDown={e=>{if(e.key==='Escape')setLeaveTo(null);trapTab(e,leaveRef.current)}}>
     <h2 id="sp-leave-title">{t('Хадгалаагүй өөрчлөлт байна','You have unsaved changes')}</h2>
     <p id="sp-leave-text">{t('Энэ хуудаснаас гарвал сүүлд хадгалсны дараах өөрчлөлт алга болно.','If you leave now, changes since your last save will be lost.')}</p>
     <div className="sp-leave-actions">

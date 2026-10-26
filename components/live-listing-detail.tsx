@@ -7,6 +7,7 @@ import type {LiveService} from '../lib/marketplace/live-discovery';
 import {sellerContactHref} from '../lib/marketplace/contact-routing';
 import {signInWithReturn} from '../lib/marketplace/ux-flows';
 import {ensureBuyerProfile} from '../lib/marketplace/buyer-profile';
+import {trapTab} from '../lib/marketplace/focus-trap';
 import {friendlyError} from '../lib/marketplace/friendly-errors';
 import {categoryLabel,legacyCategory,normalizeCategory,serviceTypeById,subcategoryLabel} from '../lib/marketplace/taxonomy';
 import SiteHeader,{Breadcrumbs,useSiteAccount} from './site-header';
@@ -35,6 +36,7 @@ export default function LiveListingDetail(){
  const [sentKind,setSentKind]=useState<'order'|'quote'>('order');
  const briefRef=useRef<HTMLTextAreaElement>(null);
  const opener=useRef<HTMLButtonElement>(null);
+ const drawerRef=useRef<HTMLElement>(null);
  const session=useSiteAccount();
  const t=(mn:string,english:string)=>en?english:mn;
  useEffect(()=>{
@@ -81,9 +83,11 @@ export default function LiveListingDetail(){
  useEffect(()=>{
   if(drawer==='closed')return;
   const prev=document.body.style.overflow;document.body.style.overflow='hidden';
-  const esc=(e:KeyboardEvent)=>{if(e.key==='Escape')closeDrawer()};
+  // V52: Tab and Shift+Tab stay inside the drawer while it is open.
+  const esc=(e:KeyboardEvent)=>{if(e.key==='Escape')closeDrawer();else trapTab(e,drawerRef.current)};
   document.addEventListener('keydown',esc);
   if(drawer==='form')requestAnimationFrame(()=>briefRef.current?.focus());
+  else if(drawer!=='sending')requestAnimationFrame(()=>{const d=drawerRef.current;if(d&&!d.contains(document.activeElement))d.querySelector<HTMLElement>('.v50-drawer-body a[href],.v50-drawer-body button,.v50-drawer-close')?.focus()});
   return()=>{document.body.style.overflow=prev;document.removeEventListener('keydown',esc)};
  },[drawer]);
  const options=(listing?.packages||[]).filter(p=>p.price>0);
@@ -180,7 +184,7 @@ export default function LiveListingDetail(){
  </main>
  {drawer!=='closed'&&listing&&chosen&&<div className="v50-drawer-root">
   <button type="button" className="v50-drawer-backdrop" aria-label={t('Хаах','Close')} tabIndex={-1} onClick={closeDrawer}/>
-  <section className="v50-drawer" role="dialog" aria-modal="true" aria-labelledby="v50-drawer-title">
+  <section ref={drawerRef} className="v50-drawer" role="dialog" aria-modal="true" aria-labelledby="v50-drawer-title">
    <header className="v50-drawer-head">
     <h2 id="v50-drawer-title">{drawer==='sent'?(sentKind==='quote'?t('Хүсэлт илгээгдлээ','Request sent'):t('Захиалга илгээгдлээ','Order sent')):isQuote?t('Үнийн санал хүсэх','Request a quote'):t('Захиалга илгээх','Send an order')}</h2>
     <button type="button" className="v50-drawer-close" onClick={closeDrawer} aria-label={t('Хаах','Close')} disabled={drawer==='sending'}><X size={20}/></button>
