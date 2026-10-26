@@ -8,6 +8,7 @@ import {projectDraftKey,proposalDraftKey,signInWithReturn} from '../lib/marketpl
 import {classifyNeed,type Audience} from '../lib/marketplace/solution-finder';
 import type {Profile,Listing} from '../lib/marketplace/types';
 import SiteHeader,{useSiteAccount} from './site-header';
+import {ensureBuyerProfile} from '../lib/marketplace/buyer-profile';
 import '../app/project-matching.css';
 
 type RequestRow={id:string;buyer_id:string;title:string;brief:string;audience:Audience;category:string;budget_max:number|null;preferred_days:number|null;status:'open'|'awarded'|'cancelled';order_id:string|null;created_at:string};
@@ -48,7 +49,11 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
    db.from('profiles').select('*').eq('id',current.id).maybeSingle()
   ]);
   if(beta.error)throw beta.error;if(pr.error)throw pr.error;
-  const approved=Boolean(beta.data);setAllowed(approved);setProfile(pr.data as Profile|null);
+  const approved=Boolean(beta.data);setAllowed(approved);
+  let own=pr.data as Profile|null;
+  // V52: a buyer posting a project gets the same minimal private profile as an order would.
+  if(approved&&!own&&mode==='buyer'){const made=await ensureBuyerProfile(db,current);if(made){const again=await db.from('profiles').select('*').eq('id',current.id).maybeSingle();own=(again.data as Profile|null)||({...made,headline:'',bio:'',slug:null,public_profile:false} as unknown as Profile)}}
+  setProfile(own);
   if(!approved){setLoading(false);return}
   const notify=await db.from('project_notifications').select('id,recipient_id,request_id,kind,source_id,created_at,read_at').eq('recipient_id',current.id).order('created_at',{ascending:false}).limit(60);
   if(notify.error){if(['42P01','PGRST205','PGRST116'].includes(notify.error.code||'')){setNotificationsReady(false);setNotifications([])}else throw notify.error}
@@ -83,6 +88,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
   setSignInHref(signInWithReturn(location.pathname+location.search,mode));
   const prompt=(q.get('q')||'').slice(0,2000);
   if(prompt){setBrief(prompt);setTitle(prompt.slice(0,100));setCategory(outcomeCategory[classifyNeed(prompt).key]||'ai')}
+  const askedCategory=normalizeCategory(q.get('category'));if(askedCategory!=='all')setCategory(askedCategory);
   const suggested=q.get('audience');if(suggested==='personal'||suggested==='business')setAudience(suggested);
   const budgetValue=Number((q.get('budget')||'').replace(/[^0-9]/g,''));if(budgetValue>=1000&&budgetValue<=100000000)setBudget(String(budgetValue));
   void refresh().catch(err=>{setError(reportError(err));setLoading(false)});

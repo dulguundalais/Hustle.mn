@@ -6,6 +6,7 @@ import {marketplaceClient} from '../lib/marketplace/client';
 import type {LiveService} from '../lib/marketplace/live-discovery';
 import {sellerContactHref} from '../lib/marketplace/contact-routing';
 import {signInWithReturn} from '../lib/marketplace/ux-flows';
+import {ensureBuyerProfile} from '../lib/marketplace/buyer-profile';
 import {categoryLabel,legacyCategory,normalizeCategory,serviceTypeById,subcategoryLabel} from '../lib/marketplace/taxonomy';
 import SiteHeader,{Breadcrumbs,useSiteAccount} from './site-header';
 import '../app/live-listing.css';
@@ -115,7 +116,8 @@ export default function LiveListingDetail(){
    const service=((svc.data||[]) as {id:string;seller_id:string;title:string;status:string}[]).find(s=>s.id===listing.id);
    if(!service||service.status!=='published'){setOrderError({text:t('Энэ үйлчилгээ одоогоор захиалга авахгүй байна.','This service is not taking orders right now.')});setDrawer('form');return}
    if(service.seller_id===user.id){setOrderError({text:t('Энэ таны өөрийн үйлчилгээ тул захиалах боломжгүй.','This is your own service, so you cannot order it.')});setDrawer('form');return}
-   if(!((own.data||[]) as {id:string}[]).some(p=>p.id===user.id)){setOrderError({text:t('Захиалга илгээхийн өмнө нэр, профайлаа үүсгэнэ үү.','Create your profile before sending an order.'),href:'/buyer/?tab=profile',link:t('Профайл үүсгэх','Create profile')});setDrawer('form');return}
+   // V52: a first-time buyer gets a minimal private profile instead of a profile form.
+   if(!((own.data||[]) as {id:string}[]).some(p=>p.id===user.id)&&!(await ensureBuyerProfile(db,user))){setOrderError({text:t('Таны аккаунтыг бэлдэж чадсангүй. Дахин оролдоно уу.','We could not prepare your account. Please try again.')});setDrawer('form');return}
    const r=await db.from('orders').insert({service_id:service.id,buyer_id:user.id,seller_id:service.seller_id,service_title:service.title,quoted_price:chosen.price,package_name:chosen.tier,brief:text}).select('id').single();
    if(r.error)throw r.error;
    setOrderId(String((r.data as {id?:string}|null)?.id||''));
