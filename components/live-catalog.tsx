@@ -26,8 +26,11 @@ export function visibleServices<T>(items:T[],homePreview:boolean,count=START_COU
 // V50: names come from the shared taxonomy (pre-V50 ids still resolve).
 const coverClass=(category:string)=>legacyCategory(category)?.category||category;
 type Props={en:boolean;signedIn?:boolean;query?:string;category?:string;subcategory?:string;sort?:LiveSort;onlySaved?:boolean;saved?:string[];
- onSave?:(id:string)=>void;canSave?:boolean;saveBusy?:string[];saveError?:string;onSignInSave?:()=>void;homePreview?:boolean};
-export default function LiveCatalog({en,signedIn=false,query='',category='all',subcategory='',sort='featured',onlySaved=false,saved=[],onSave,canSave=false,saveBusy=[],saveError='',onSignInSave,homePreview=false}:Props){
+ onSave?:(id:string)=>void;canSave?:boolean;saveBusy?:string[];saveError?:string;onSignInSave?:(id?:string)=>void;homePreview?:boolean;
+ /** V52: guest | checking | loading | ready | error — a signed-in person is never sent to login while their list loads. */
+ saveState?:'checking'|'guest'|'loading'|'ready'|'error';onRetrySave?:()=>void};
+export default function LiveCatalog({en,signedIn=false,query='',category='all',subcategory='',sort='featured',onlySaved=false,saved=[],onSave,canSave=false,saveBusy=[],saveError='',onSignInSave,homePreview=false,saveState,onRetrySave}:Props){
+ const heartState=saveState||(canSave?'ready':'guest');
  const [services,setServices]=useState<LiveService[]>([]);
  const [state,setState]=useState<'loading'|'ready'|'error'>('loading');
  const [compared,setCompared]=useState<string[]>([]);
@@ -62,7 +65,13 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
   {state==='ready'&&filtered.length===0&&<div className="v39-empty"><Layers3 size={24}/>
    <h3>{services.length===0?t('Одоогоор нийтлэгдсэн үйлчилгээ алга','No published services yet'):onlySaved?t('Хадгалсан үйлчилгээ олдсонгүй','No saved services found'):t('Тохирох үйлчилгээ олдсонгүй','No services match your search')}</h3>
    <p>{services.length===0?t('Freelancer-ууд үйлчилгээгээ нийтлэхэд энд харагдана.','Published freelancer services will appear here.'):t('Ангилал эсвэл хайлтаа өөрчлөөд үзээрэй.','Try another category or a different search.')}</p>
-   <Link href="/explore/" className="v39-empty-link">{t('Үйлчилгээ хайх','Browse services')} <ArrowUpRight size={16}/></Link>
+   {/* V52: no dead ends — offer the next useful step, never invented results. */}
+   <div className="v52-empty-actions">
+    {(query||category!=='all'||subcategory||onlySaved)&&<Link href="/explore/" className="v39-empty-link">{t('Шүүлтүүр арилгах','Clear filters')}</Link>}
+    <Link href="/categories/" className="v39-empty-link">{t('Бүх ангилал','Browse all categories')} <ArrowUpRight size={16}/></Link>
+    <Link href={'/solutions/'+(query?'?q='+encodeURIComponent(query):'')} className="v39-empty-link">{t('Асуудлаа тайлбарлах','Describe your problem')} <ArrowUpRight size={16}/></Link>
+    <Link href={'/project-requests/'+(query?'?q='+encodeURIComponent(query):'')} className="v39-empty-link">{t('Төслийн хүсэлт илгээх','Post a project request')} <ArrowUpRight size={16}/></Link>
+   </div>
   </div>}
   {state==='ready'&&filtered.length>0&&<>
    <div className="v39-results-bar">
@@ -90,7 +99,7 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
      <div className={'v39-card-cover v39-cover-'+coverClass(s.category)}>
       <span className="v39-cover-text">hustle<span>✳</span></span>
       <span className="v39-cover-accent" aria-hidden="true"/>
-      {onSave&&<button className="v39-heart" type="button" aria-pressed={savedThis} aria-label={savedThis?t('Хадгалснаас хасах','Remove saved service'):t('Үйлчилгээ хадгалах','Save service')} disabled={saveBusy.includes(s.id)} onClick={()=>canSave?onSave(s.id):onSignInSave?.()}><Heart size={19} fill={savedThis?'currentColor':'none'}/></button>}
+      {onSave&&<button className="v39-heart" type="button" aria-pressed={savedThis} aria-label={savedThis?t('Хадгалснаас хасах','Remove saved service'):t('Үйлчилгээ хадгалах','Save service')} disabled={saveBusy.includes(s.id)||heartState==='checking'||heartState==='loading'} aria-busy={heartState==='checking'||heartState==='loading'||saveBusy.includes(s.id)} onClick={()=>heartState==='ready'?onSave(s.id):heartState==='guest'?onSignInSave?.(s.id):heartState==='error'?onRetrySave?.():undefined}><Heart size={19} fill={savedThis?'currentColor':'none'}/></button>}
      </div>
      <div className="v39-card-body">
       <div className="v39-person-line">{profileHref?<Link className="v39-profile-link" href={profileHref} aria-label={t('Профайл үзэх: ','View seller profile: ')+s.display_name} title={t('Seller-ийн профайл үзэх','View seller profile')}>{sellerIdentity}</Link>:<span className="v39-profile-identity">{sellerIdentity}</span>}</div>
@@ -121,7 +130,7 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
      </div>}
      {showCompare&&compareReady&&<ServiceComparison en={en} services={services} ids={compared} onRemove={id=>setCompared(p=>compareSelection(p,id))} onClear={()=>{setCompared([]);setShowCompare(false)}}/>}
     </>}
-   {saveError&&<p className="v39-error" role="alert">{saveError}</p>}
+   {saveError&&<p className="v39-error" role="alert">{saveError}{heartState==='error'&&onRetrySave&&<> <button type="button" className="v39-retry" onClick={onRetrySave}>{t('Дахин оролдох','Try again')}</button></>}</p>}
    <p className="v39-market-note"><ShieldCheck size={16}/>{t('Төлбөргүй нээлттэй бета. Имэйлээ баталгаажуулсан хэрэглэгч хүсэлт илгээж болно.','Open beta, no payments. Email-verified users can request services.')}</p>
   </>}
  </section>;

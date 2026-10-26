@@ -29,12 +29,16 @@ export function combineNotices(project:ProjectEvent[],order:OrderEvent[],message
  for(const e of project){
   if(!projects[e.kind])continue;
   const [titleMn,titleEn,href]=projects[e.kind];
-  seen.set('project:'+e.id,{key:'project:'+e.id,id:e.id,source:'project',kind:e.kind,createdAt:e.created_at,read:Boolean(e.read_at),titleMn,titleEn,href,count:1});
+  // V52: deep link to the exact request.
+  const link=href+(href.includes('?')?'&':'?')+'request='+encodeURIComponent(e.request_id);
+  seen.set('project:'+e.id,{key:'project:'+e.id,id:e.id,source:'project',kind:e.kind,createdAt:e.created_at,read:Boolean(e.read_at),titleMn,titleEn,href:link,count:1});
  }
  for(const e of order){
   if(!orders[e.kind])continue;
   const [titleMn,titleEn,href]=orders[e.kind];
-  seen.set('order:'+e.id,{key:'order:'+e.id,id:e.id,source:'order',kind:e.kind,createdAt:e.created_at,read:Boolean(e.read_at),titleMn,titleEn,href,count:1});
+  // V52: deep link to the exact order.
+  const link=href+(href.includes('?')?'&':'?')+'order='+encodeURIComponent(e.order_id);
+  seen.set('order:'+e.id,{key:'order:'+e.id,id:e.id,source:'order',kind:e.kind,createdAt:e.created_at,read:Boolean(e.read_at),titleMn,titleEn,href:link,count:1});
  }
  const chatUnread=messages.filter(m=>!m.read_at).length;
  for(const e of messages){

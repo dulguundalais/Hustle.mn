@@ -19,7 +19,7 @@ test('notification bell remains recipient scoped with realtime and polling fallb
 test('seller sees seller inbox; buyer sees buyer inbox and role follows account',()=>{
  const ui=read('components/global-notifications.tsx');
  assert.match(ui,/isSeller\?'\/seller-studio\/\?tab=messages':'\/buyer\/\?tab=messages'/);
- assert.match(ui,/item\.source==='chat'\?chatHref:item\.href/);
+ assert.match(ui,/item\.source==='chat'\?chatHref\+'&peer='\+encodeURIComponent\(item\.id\):item\.href/);
  assert.match(ui,/href=\{chatHref\}/);
  assert.match(read('components/premium-marketplace.tsx')+read('components/site-header.tsx'),/isSeller=\{notificationsAsSeller\?\?account\.isSeller\}/);
  assert.match(read('components/workspace.tsx'),/notificationsAsSeller=\{entry==='seller'\}/);

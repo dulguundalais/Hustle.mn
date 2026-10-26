@@ -141,7 +141,7 @@ export default function GlobalNotifications({userId,en,isSeller=false}:{userId:s
     <div className="global-notice-list">{inbox.items.map(item=><div className={'global-notice-item'+(!item.read?' unread':'')} key={item.key}>
      <div className="global-notice-symbol">{item.source==='chat'?<MessageCircle size={17}/>:item.source==='order'?<PackageCheck size={17}/>:<FileText size={17}/>}</div>
      <div className="global-notice-info">
-      <Link href={item.source==='chat'?chatHref:item.href} onClick={()=>{setOpen(false);if(item.source!=='chat')void markRead(item)}}>{en?item.titleEn:item.titleMn}{item.count>1?' ('+item.count+')':''}<ChevronRight size={13}/></Link>
+      <Link href={item.source==='chat'?chatHref+'&peer='+encodeURIComponent(item.id):item.href} onClick={()=>{setOpen(false);if(item.source!=='chat')void markRead(item)}}>{en?item.titleEn:item.titleMn}{item.count>1?' ('+item.count+')':''}<ChevronRight size={13}/></Link>
       <small>{new Date(item.createdAt).toLocaleDateString(en?'en-US':'mn-MN')}</small>
      </div>
      {!item.read&&item.source!=='chat'&&<button className="global-notice-read" type="button" disabled={busy} onClick={()=>void markRead(item)} aria-label={t('Уншсан болгох','Mark read')}><Check size={15}/></button>}

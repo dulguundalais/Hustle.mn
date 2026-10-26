@@ -54,3 +54,7 @@
  .hustle-v5.hx-header .hx-brand{font-size:27px}
 }
 @media(max-width:420px){.hustle-v5.hx-header .hx-icon.locale{min-width:36px;padding:0 4px}}
+/* V52: signed-in header (language, theme, notifications, account, menu) fits 320–400px phones */
+@media(max-width:400px){.hustle-v5.hx-header .hx-header-inner{gap:8px}.hustle-v5.hx-header .hx-actions{gap:2px}.hustle-v5.hx-header .hx-brand{font-size:24px}.hustle-v5.hx-header .hx-brand span{font-size:22px}.hustle-v5.hx-header .hx-icon{min-width:38px;padding:0 5px}.hustle-v5.hx-header .hx-icon.locale{min-width:34px;padding:0 3px}.hustle-v5.hx-header .hx-icon.locale svg{display:none}}
+@media(max-width:340px){.hustle-v5.hx-header .hx-brand small{display:none}}
+@media(max-width:900px){.hx-crumbs a{display:inline-flex;align-items:center;min-height:28px}}

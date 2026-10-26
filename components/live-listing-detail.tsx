@@ -6,6 +6,9 @@ import {marketplaceClient} from '../lib/marketplace/client';
 import type {LiveService} from '../lib/marketplace/live-discovery';
 import {sellerContactHref} from '../lib/marketplace/contact-routing';
 import {signInWithReturn} from '../lib/marketplace/ux-flows';
+import {ensureBuyerProfile} from '../lib/marketplace/buyer-profile';
+import {trapTab} from '../lib/marketplace/focus-trap';
+import {friendlyError} from '../lib/marketplace/friendly-errors';
 import {categoryLabel,legacyCategory,normalizeCategory,serviceTypeById,subcategoryLabel} from '../lib/marketplace/taxonomy';
 import SiteHeader,{Breadcrumbs,useSiteAccount} from './site-header';
 import '../app/live-listing.css';
@@ -30,8 +33,10 @@ export default function LiveListingDetail(){
  const [orderError,setOrderError]=useState<{text:string;href?:string;link?:string}|null>(null);
  const [orderId,setOrderId]=useState('');
  const [reopen,setReopen]=useState(false);
+ const [sentKind,setSentKind]=useState<'order'|'quote'>('order');
  const briefRef=useRef<HTMLTextAreaElement>(null);
  const opener=useRef<HTMLButtonElement>(null);
+ const drawerRef=useRef<HTMLElement>(null);
  const session=useSiteAccount();
  const t=(mn:string,english:string)=>en?english:mn;
  useEffect(()=>{
@@ -78,9 +83,11 @@ export default function LiveListingDetail(){
  useEffect(()=>{
   if(drawer==='closed')return;
   const prev=document.body.style.overflow;document.body.style.overflow='hidden';
-  const esc=(e:KeyboardEvent)=>{if(e.key==='Escape')closeDrawer()};
+  // V52: Tab and Shift+Tab stay inside the drawer while it is open.
+  const esc=(e:KeyboardEvent)=>{if(e.key==='Escape')closeDrawer();else trapTab(e,drawerRef.current)};
   document.addEventListener('keydown',esc);
   if(drawer==='form')requestAnimationFrame(()=>briefRef.current?.focus());
+  else if(drawer!=='sending')requestAnimationFrame(()=>{const d=drawerRef.current;if(d&&!d.contains(document.activeElement))d.querySelector<HTMLElement>('.v50-drawer-body a[href],.v50-drawer-body button,.v50-drawer-close')?.focus()});
   return()=>{document.body.style.overflow=prev;document.removeEventListener('keydown',esc)};
  },[drawer]);
  const options=(listing?.packages||[]).filter(p=>p.price>0);
@@ -97,6 +104,11 @@ export default function LiveListingDetail(){
   setOrderError(null);
   requestAnimationFrame(()=>opener.current?.focus());
  }
+ // V52: how the service is sold decides the call to action. Custom projects ask for a quote in chat;
+ // hourly, monthly and mentoring keep packages but show their unit.
+ const kind=listing?serviceTypeById(listing.service_type):null;
+ const isQuote=kind?.id==='custom';
+ const unit=kind&&kind.id!=='fixed'&&kind.id!=='custom'?(en?kind.priceEn:kind.priceMn):'';
  async function sendOrder(e:React.FormEvent){
   e.preventDefault();
   if(!listing||!chosen||drawer==='sending')return;
@@ -106,7 +118,7 @@ export default function LiveListingDetail(){
   try{
    const db=await marketplaceClient();
    const {data:{user}}=await db.auth.getUser();
-   if(!user){window.location.assign(guestOrderHref);return}
+   if(!user){setOrderError({text:t('Нэвтрэлтийн хугацаа дууссан байна. Дахин нэвтэрсний дараа энэ хуудас руу буцна.','Your session has expired. After signing in again you will return here.'),href:guestOrderHref,link:t('Нэвтрэх','Sign in')});setDrawer('form');return}
    const [svc,own]=await Promise.all([
     db.from('services').select('id,seller_id,title,status').eq('id',listing.id),
     db.from('profiles').select('id').eq('id',user.id)
@@ -115,13 +127,19 @@ export default function LiveListingDetail(){
    const service=((svc.data||[]) as {id:string;seller_id:string;title:string;status:string}[]).find(s=>s.id===listing.id);
    if(!service||service.status!=='published'){setOrderError({text:t('Энэ үйлчилгээ одоогоор захиалга авахгүй байна.','This service is not taking orders right now.')});setDrawer('form');return}
    if(service.seller_id===user.id){setOrderError({text:t('Энэ таны өөрийн үйлчилгээ тул захиалах боломжгүй.','This is your own service, so you cannot order it.')});setDrawer('form');return}
-   if(!((own.data||[]) as {id:string}[]).some(p=>p.id===user.id)){setOrderError({text:t('Захиалга илгээхийн өмнө нэр, профайлаа үүсгэнэ үү.','Create your profile before sending an order.'),href:'/buyer/?tab=profile',link:t('Профайл үүсгэх','Create profile')});setDrawer('form');return}
+   // V52: a first-time buyer gets a minimal private profile instead of a profile form.
+   if(!((own.data||[]) as {id:string}[]).some(p=>p.id===user.id)&&!(await ensureBuyerProfile(db,user))){setOrderError({text:t('Таны аккаунтыг бэлдэж чадсангүй. Дахин оролдоно уу.','We could not prepare your account. Please try again.')});setDrawer('form');return}
+   if(isQuote){
+    const m=await db.from('messages').insert({sender_id:user.id,recipient_id:service.seller_id,body:t('Үнийн санал хүсье','Quote request')+': '+service.title+'\n\n'+text});
+    if(m.error)throw m.error;
+    setSentKind('quote');setBrief('');setDrawer('sent');return;
+   }
    const r=await db.from('orders').insert({service_id:service.id,buyer_id:user.id,seller_id:service.seller_id,service_title:service.title,quoted_price:chosen.price,package_name:chosen.tier,brief:text}).select('id').single();
    if(r.error)throw r.error;
-   setOrderId(String((r.data as {id?:string}|null)?.id||''));
+   setSentKind('order');setOrderId(String((r.data as {id?:string}|null)?.id||''));
    setBrief('');setDrawer('sent');
-  }catch{
-   setOrderError({text:t('Захиалга илгээж чадсангүй. Дахин оролдоно уу.','Could not send the order. Please try again.')});setDrawer('form');
+  }catch(err){
+   setOrderError({text:friendlyError(err,en)});setDrawer('form');
   }
  }
  const catId=listing?(legacyCategory(listing.category)?.category||listing.category):'';
@@ -132,7 +150,6 @@ export default function LiveListingDetail(){
   ...(listing&&normalizeCategory(catId)!=='all'?[{label:categoryLabel(catId,en),href:'/explore/?category='+catId}]:[{label:t('Үйлчилгээ','Services'),href:'/explore/'}]),
   ...(listing&&subLabel?[{label:subLabel,href:'/explore/?category='+catId+'&sub='+encodeURIComponent(subId)}]:[]),
   {label:title||t('Үйлчилгээ','Service')}];
- const type=listing?serviceTypeById(listing.service_type):null;
  return <div className="v50-listing-page">
  <SiteHeader en={en} onToggleLanguage={()=>setEn(v=>!v)} active="services" session={session}/>
  <main className="v28-detail-page v39-detail-page">
@@ -150,15 +167,15 @@ export default function LiveListingDetail(){
       {listing.tags&&listing.tags.length>0&&<ul className="v50-detail-tags">{listing.tags.map(x=><li key={x}>{x}</li>)}</ul>}
       <a className="v50-profile-link" href={'/p/'+encodeURIComponent(listing.slug)+'/'}>{t('Freelancer-ийн профайл үзэх','View the freelancer’s profile')} ↗</a>
     </article>
-    <aside className="v28-detail-offer"><p>{t('Багцаа сонгоно уу','Choose a package')}</p>
+    <aside className="v28-detail-offer"><p>{isQuote?t('Жишиг багцууд — эцсийн үнийг тохиролцоно','Example packages — the final price is agreed with you'):t('Багцаа сонгоно уу','Choose a package')}</p>
       {options.length>0&&<div className="v28-detail-tiers">{(['Basic','Standard','Premium'] as const).map(option=><button key={option} type="button" aria-pressed={tier===option} disabled={!options.some(p=>p.tier===option)} onClick={()=>setTier(option)}>{option}</button>)}</div>}
-      <div className="v28-detail-price">{money(price)}{type&&type.id!=='fixed'&&<small className="v50-price-unit">{en?type.priceEn:type.priceMn}</small>}</div>
+      <div className="v28-detail-price">{isQuote&&<small className="v50-price-from">{t('Эхлэх үнэ','From')}</small>}{money(price)}{unit&&<small className="v50-price-unit">{unit}</small>}</div>
       <div className="v28-detail-spec"><span>{chosen?.delivery_days??listing.delivery_days} {t('хоног','days')}</span><span>{chosen?.revisions??listing.revisions} {t('засвар','revisions')}</span></div>
       {chosen?.summary&&<p>{chosen.summary}</p>}
       {chosen?.includes?.length>0&&<ul>{chosen.includes.map((item,i)=><li key={i}>✓ {item}</li>)}</ul>}
       {valid&&(signedIn
-       ?<button ref={opener} type="button" className="v28-detail-primary" onClick={()=>{setOrderError(null);setDrawer('form')}}><Send size={16} aria-hidden="true"/>{t('Захиалга илгээх','Send an order')}</button>
-       :<Link className="v28-detail-primary" href={guestOrderHref}><Send size={16} aria-hidden="true"/>{t('Захиалга илгээх','Send an order')}</Link>)}
+       ?<button ref={opener} type="button" className="v28-detail-primary" onClick={()=>{setOrderError(null);setDrawer('form')}}><Send size={16} aria-hidden="true"/>{isQuote?t('Үнийн санал хүсэх','Request a quote'):t('Захиалга илгээх','Send an order')}</button>
+       :<Link className="v28-detail-primary" href={guestOrderHref}><Send size={16} aria-hidden="true"/>{isQuote?t('Үнийн санал хүсэх','Request a quote'):t('Захиалга илгээх','Send an order')}</Link>)}
       {listing.slug&&<Link className="v28-detail-secondary" href={contactHref}><MessageCircle size={16} aria-hidden="true"/>{t('Мессеж бичих','Message')}</Link>}
       <p className="v50-offer-note"><ShieldCheck size={15} aria-hidden="true"/>{t('Бета: захиалга бол хүсэлт. Төлбөр Hustle-ээр дамжихгүй.','Beta: an order is a request. No payment goes through Hustle.')}</p>
     </aside>
@@ -167,33 +184,39 @@ export default function LiveListingDetail(){
  </main>
  {drawer!=='closed'&&listing&&chosen&&<div className="v50-drawer-root">
   <button type="button" className="v50-drawer-backdrop" aria-label={t('Хаах','Close')} tabIndex={-1} onClick={closeDrawer}/>
-  <section className="v50-drawer" role="dialog" aria-modal="true" aria-labelledby="v50-drawer-title">
+  <section ref={drawerRef} className="v50-drawer" role="dialog" aria-modal="true" aria-labelledby="v50-drawer-title">
    <header className="v50-drawer-head">
-    <h2 id="v50-drawer-title">{drawer==='sent'?t('Захиалга илгээгдлээ','Order sent'):t('Захиалга илгээх','Send an order')}</h2>
+    <h2 id="v50-drawer-title">{drawer==='sent'?(sentKind==='quote'?t('Хүсэлт илгээгдлээ','Request sent'):t('Захиалга илгээгдлээ','Order sent')):isQuote?t('Үнийн санал хүсэх','Request a quote'):t('Захиалга илгээх','Send an order')}</h2>
     <button type="button" className="v50-drawer-close" onClick={closeDrawer} aria-label={t('Хаах','Close')} disabled={drawer==='sending'}><X size={20}/></button>
    </header>
-   {drawer==='sent'?<div className="v50-drawer-body v50-sent" role="status">
+   {drawer==='sent'&&sentKind==='quote'?<div className="v50-drawer-body v50-sent" role="status">
+     <span className="v50-sent-icon" aria-hidden="true"><CheckCircle2 size={34}/></span>
+     <p className="v50-sent-lead">{t(listing.display_name+'-д үнийн санал хүссэн мессеж очлоо.','Your quote request reached '+listing.display_name+'.')}</p>
+     <ol className="v50-next"><li><MessageCircle size={15} aria-hidden="true"/>{t('Freelancer чатаар асууж, үнийн санал илгээнэ.','The freelancer will reply in chat with questions and a price.')}</li><li><Clock size={15} aria-hidden="true"/>{t('Үнээ тохиролцсоны дараа ажил эхэлнэ. Төлбөр Hustle-ээр дамжихгүй.','Work starts once you agree on the price. No payment goes through Hustle.')}</li></ol>
+     <div className="v50-drawer-actions"><Link className="v50-btn primary" href={contactHref}>{t('Чат руу очих','Open the chat')}</Link><button type="button" className="v50-btn" onClick={closeDrawer}>{t('Үйлчилгээ рүү буцах','Back to the service')}</button></div>
+    </div>
+   :drawer==='sent'?<div className="v50-drawer-body v50-sent" role="status">
      <span className="v50-sent-icon" aria-hidden="true"><CheckCircle2 size={34}/></span>
      <p className="v50-sent-lead">{t(listing.display_name+'-д таны хүсэлт очлоо.','Your request has reached '+listing.display_name+'.')}</p>
-     <dl className="v50-summary"><div><dt>{t('Үйлчилгээ','Service')}</dt><dd>{title}</dd></div><div><dt>{t('Багц','Package')}</dt><dd>{chosen.tier} · {money(chosen.price)}</dd></div><div><dt>{t('Хугацаа','Delivery')}</dt><dd>{chosen.delivery_days} {t('хоног','days')}</dd></div>{orderId&&<div><dt>{t('Дугаар','Reference')}</dt><dd>#{orderId.slice(0,8)}</dd></div>}</dl>
+     <dl className="v50-summary"><div><dt>{t('Үйлчилгээ','Service')}</dt><dd>{title}</dd></div><div><dt>Freelancer</dt><dd>{listing.display_name}</dd></div><div><dt>{t('Төлөв','Status')}</dt><dd>{t('Шинэ хүсэлт — freelancer-ийн хариуг хүлээж байна','Requested — waiting for the freelancer')}</dd></div><div><dt>{t('Багц','Package')}</dt><dd>{chosen.tier} · {money(chosen.price)}{unit?' '+unit:''}</dd></div><div><dt>{t('Хугацаа','Delivery')}</dt><dd>{chosen.delivery_days} {t('хоног','days')}</dd></div>{orderId&&<div><dt>{t('Дугаар','Reference')}</dt><dd>#{orderId.slice(0,8)}</dd></div>}</dl>
      <ol className="v50-next"><li><Clock size={15} aria-hidden="true"/>{t('Freelancer хүсэлтийг зөвшөөрсний дараа ажил эхэлнэ.','Work starts once the freelancer accepts.')}</li><li><MessageCircle size={15} aria-hidden="true"/>{t('Нарийн мэдээллээ чатаар тохиролцоорой.','Agree on the details in chat.')}</li></ol>
-     <div className="v50-drawer-actions"><Link className="v50-btn primary" href="/buyer/?tab=orders">{t('Захиалгаа харах','View my order')}</Link><Link className="v50-btn" href={contactHref}>{t('Мессеж бичих','Message')}</Link></div>
+     <div className="v50-drawer-actions"><Link className="v50-btn primary" href={'/buyer/?tab=orders'+(orderId?'&order='+encodeURIComponent(orderId):'')}>{t('Захиалгаа харах','View my order')}</Link><Link className="v50-btn" href={contactHref}>{t('Мессеж бичих','Message')}</Link></div>
     </div>
    :<form className="v50-drawer-body" onSubmit={e=>{void sendOrder(e)}} noValidate>
      <div className="v50-order-service"><b>{title}</b><span>{listing.display_name}</span></div>
-     <fieldset className="v50-tier-pick"><legend>{t('Багц','Package')}</legend>
+     {!isQuote&&<fieldset className="v50-tier-pick"><legend>{t('Багц','Package')}</legend>
       {options.map(p=><label key={p.tier} className={tier===p.tier?'selected':''}><input type="radio" name="tier" value={p.tier} checked={tier===p.tier} onChange={()=>isTier(p.tier)&&setTier(p.tier)}/>
-       <span><b>{p.tier}</b><small>{p.delivery_days} {t('хоног','days')} · {p.revisions} {t('засвар','revisions')}</small></span><em>{money(p.price)}</em>{tier===p.tier&&<Check size={16} aria-hidden="true"/>}</label>)}
-     </fieldset>
-     <label className="v50-brief">{t('Юу хийлгэх вэ?','What do you need?')}
+       <span><b>{p.tier}</b><small>{p.delivery_days} {t('хоног','days')} · {p.revisions} {t('засвар','revisions')}</small></span><em>{money(p.price)}{unit&&<small className="v50-unit"> {unit}</small>}</em>{tier===p.tier&&<Check size={16} aria-hidden="true"/>}</label>)}
+     </fieldset>}
+     <label className="v50-brief">{isQuote?t('Төслөө тайлбарлана уу','Describe your project'):t('Юу хийлгэх вэ?','What do you need?')}
       <textarea ref={briefRef} name="brief" rows={6} maxLength={3000} value={brief} onChange={e=>setBrief(e.target.value)} aria-invalid={Boolean(orderError)&&brief.trim().length<BRIEF_MIN} aria-describedby="v50-brief-hint"
        placeholder={t('Жишээ: Кофе шопынхоо лого, өнгө, фонт хэрэгтэй. Одоо байгаа брэндийн материал байхгүй. 2 долоо хоногт амжуулах хэрэгтэй.','e.g. We need a logo, colours and fonts for our coffee shop. No existing brand assets. Needed within two weeks.')}/>
       <small id="v50-brief-hint" className={brief.trim().length>=BRIEF_MIN?'ok':''}>{brief.trim().length<BRIEF_MIN?t('Дор хаяж '+BRIEF_MIN+' тэмдэгт · ','At least '+BRIEF_MIN+' characters · ')+brief.trim().length+'/'+BRIEF_MIN:t('Сайн байна — зорилго, хугацаа, жишээгээ дурдвал бүр сайн.','Good — goals, deadline and examples help even more.')}</small>
      </label>
      {orderError&&<p className="v50-order-error" role="alert">{orderError.text}{orderError.href&&<> <Link href={orderError.href}>{orderError.link}</Link></>}</p>}
      <div className="v50-drawer-foot">
-      <div className="v50-total"><span>{t('Нийт','Total')}</span><b>{money(chosen.price)}</b><small>{t('Төлбөр авахгүй — бета','No payment taken — beta')}</small></div>
-      <button type="submit" className="v50-btn primary" disabled={drawer==='sending'}>{drawer==='sending'?<LoaderCircle className="spin" size={16}/>:<Send size={16} aria-hidden="true"/>}{drawer==='sending'?t('Илгээж байна…','Sending…'):t('Захиалга илгээх','Send order')}</button>
+      <div className="v50-total"><span>{isQuote?t('Жишиг эхлэх үнэ','Example starting price'):t('Нийт','Total')}</span><b>{money(chosen.price)}{unit&&<small className="v50-unit"> {unit}</small>}</b><small>{t('Төлбөр авахгүй — бета','No payment taken — beta')}</small></div>
+      <button type="submit" className="v50-btn primary" disabled={drawer==='sending'}>{drawer==='sending'?<LoaderCircle className="spin" size={16}/>:<Send size={16} aria-hidden="true"/>}{drawer==='sending'?t('Илгээж байна…','Sending…'):isQuote?t('Хүсэлт илгээх','Send request'):t('Захиалга илгээх','Send order')}</button>
      </div>
     </form>}
   </section>

@@ -1,4 +1,5 @@
 'use client';
+import {trapTab} from '../lib/marketplace/focus-trap';
 import {useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import Link from 'next/link';
 import {ArrowUpRight,BriefcaseBusiness,Check,CheckCircle2,Eye,EyeOff,FileImage,Globe2,Layers3,LoaderCircle,Maximize2,Minimize2,Monitor,Pencil,Plus,RotateCcw,Save,Smartphone,Trash2,UploadCloud,UserRound,Wrench,X} from 'lucide-react';
@@ -45,6 +46,10 @@ export default function SellerProfileManager(){
  const [projectPreview,setProjectPreview]=useState<string|null>(null);
  const [dragging,setDragging]=useState(false);
  const [confirmRemove,setConfirmRemove]=useState('');
+ const [signRound,setSignRound]=useState(0);
+ const [leaveTo,setLeaveTo]=useState<string|null>(null);
+ const leaveRef=useRef<HTMLDivElement>(null);
+ const leaving=useRef(false);
  const portfolioFile=useRef<HTMLInputElement>(null);
  const editorTop=useRef<HTMLDivElement>(null);
  const session=useSiteAccount();
@@ -101,7 +106,13 @@ export default function SellerProfileManager(){
    if(alive)setPhotoUrls({avatar,cover});
   })();
   return()=>{alive=false};
- },[profile?.avatar_path,profile?.cover_path]);
+ },[profile?.avatar_path,profile?.cover_path,signRound]);
+ // V52: private images use 10-minute signed URLs; re-sign them before they expire in long sessions.
+ useEffect(()=>{
+  if(status!=='ready'||!uid)return;
+  const id=window.setInterval(()=>{setSignRound(n=>n+1);void loadItems(uid).catch(()=>{})},8*60*1000);
+  return()=>window.clearInterval(id);
+ },[status,uid]);
  useEffect(()=>{try{localStorage.setItem('hustle-language',en?'en':'mn');document.documentElement.lang=en?'en':'mn'}catch{}},[en]);
  // Object URL for the project the seller is about to upload.
  useEffect(()=>{
@@ -114,11 +125,27 @@ export default function SellerProfileManager(){
  // Warn before leaving with unsaved text.
  useEffect(()=>{
   if(!dirty)return;
-  const warn=(e:BeforeUnloadEvent)=>{e.preventDefault();e.returnValue=''};
+  const warn=(e:BeforeUnloadEvent)=>{if(leaving.current)return;e.preventDefault();e.returnValue=''};
   window.addEventListener('beforeunload',warn);
   return()=>window.removeEventListener('beforeunload',warn);
  },[dirty]);
+ // V52: in-app links (header, breadcrumbs) skip beforeunload, so ask before leaving with unsaved text.
+ useEffect(()=>{
+  if(!dirty)return;
+  const onClick=(e:MouseEvent)=>{
+   if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+   const a=(e.target as Element|null)?.closest?.('a[href]') as HTMLAnchorElement|null;
+   if(!a||a.target==='_blank'||a.hasAttribute('download'))return;
+   const url=new URL(a.href,location.href);
+   if(url.origin!==location.origin||(url.pathname===location.pathname&&url.search===location.search))return;
+   e.preventDefault();e.stopPropagation();setLeaveTo(url.pathname+url.search+url.hash);
+  };
+  document.addEventListener('click',onClick,true);
+  return()=>document.removeEventListener('click',onClick,true);
+ },[dirty]);
  const validSlug=isValidSellerSlug(draft.slug);
+ // V52: a private draft may be saved without a URL; the URL is required only to go public.
+ const slugOk=draft.slug===''?!draft.public_profile:validSlug;
  const publicSlug=profile?.slug&&isValidSellerSlug(profile.slug)?profile.slug:null;
  const isPublic=Boolean(profile?.public_profile&&publicSlug);
  const url=publicSlug?'/p/'+encodeURIComponent(publicSlug)+'/':'';
@@ -150,23 +177,25 @@ export default function SellerProfileManager(){
   setTab(s);setBuyerView(false);setMobilePane('edit');setError('');setMessage('');setConfirmRemove('');
   requestAnimationFrame(()=>editorTop.current?.scrollIntoView({block:'nearest',behavior:'smooth'}));
  };
- const saveProfile=async(e?:React.FormEvent)=>{
-  e?.preventDefault();if(busy||!uid)return;
+ const saveProfile=async(e?:React.FormEvent):Promise<boolean>=>{
+  e?.preventDefault();if(busy||!uid)return false;
   setError('');setMessage('');
-  if(draft.display_name.trim().length<2){setError(t('Нэрээ 2-оос дээш тэмдэгтээр бичнэ үү.','Your name needs at least 2 characters.'));go('about');return}
-  if(!validSlug){setError(t('Профайлын хаяг 3-60 тэмдэгт, жижиг латин үсэг, тоо, зураас байна.','Your profile URL must be 3–60 lowercase letters, numbers or dashes.'));go('publish');return}
+  if(draft.display_name.trim().length<2){setError(t('Нэрээ 2-оос дээш тэмдэгтээр бичнэ үү.','Your name needs at least 2 characters.'));go('about');return false}
+  if(!slugOk){setError(draft.slug===''?t('Профайлаа нийтэд нээхийн тулд хаягаа сонгоно уу.','Choose your profile URL before making the profile public.'):t('Профайлын хаяг 3-60 тэмдэгт, жижиг латин үсэг, тоо, зураас байна.','Your profile URL must be 3–60 lowercase letters, numbers or dashes.'));go('publish');return false}
   setBusy(true);
   try{
    const db=await marketplaceClient();
    const {data:{user}}=await db.auth.getUser();
    if(user?.id!==uid)throw Error('Account changed');
-   const payload={display_name:draft.display_name.trim().slice(0,80),headline:draft.headline.trim().slice(0,150),bio:draft.bio.trim().slice(0,3000),skills:draft.skills.trim().slice(0,400),slug:draft.slug,public_profile:draft.public_profile};
+   const payload={display_name:draft.display_name.trim().slice(0,80),headline:draft.headline.trim().slice(0,150),bio:draft.bio.trim().slice(0,3000),skills:draft.skills.trim().slice(0,400),slug:draft.slug||null,public_profile:draft.public_profile};
    const response=await db.from('profiles').update(payload).eq('id',uid).eq('is_seller',true).select('*').single();
    if(response.error||!response.data)throw response.error||Error('No profile response');
    syncProfile(response.data as Profile);
    setMessage(t('Өөрчлөлт хадгалагдлаа.','Changes saved.'));
+   return true;
   }catch{setError(t('Хадгалж чадсангүй. Профайлын хаяг өөр хүнд бүртгэгдсэн эсэхийг шалгаарай.','Unable to save. That profile URL may already be taken.'))}
   finally{setBusy(false)}
+  return false;
  };
  const updatePhotos=(path:string|null,kind:'avatar'|'cover',focusY=50)=>{
   setProfile(prev=>prev?{...prev,...(kind==='avatar'?{avatar_path:path}:{cover_path:path,cover_focus_y:focusY})}:prev);
@@ -324,8 +353,8 @@ export default function SellerProfileManager(){
     </div>}
     {tab==='publish'&&<form className="sp-card v42-edit-fields" onSubmit={e=>{void saveProfile(e)}}>
      <header><h2 id="sp-editor-title">{t('Хаяг ба нийтлэх','URL & visibility')}</h2><p>{t('Хаягаа нэг удаа сонгоод олон нийтийн сүлжээ, CV-дээ ашиглаарай.','Pick your address once and share it on social media or your CV.')}</p></header>
-     <label>{t('Профайлын хаяг','Profile URL')}<span className="sp-slug"><span>hustle.mn/p/</span><input value={draft.slug} onChange={e=>setDraft(v=>({...v,slug:normalizeSellerSlug(e.target.value)}))} minLength={3} maxLength={60} required pattern="[a-z0-9][a-z0-9-]{2,59}" aria-invalid={!validSlug}/></span>
-      <small className={validSlug?'sp-count ok':'sp-count bad'}>{validSlug?t('Зөв хаяг','Looks good'):t('3-60 тэмдэгт: жижиг латин үсэг, тоо, зураас','3–60 characters: lowercase letters, numbers, dashes')}</small></label>
+     <label>{t('Профайлын хаяг','Profile URL')}<span className="sp-slug"><span>hustle.mn/p/</span><input value={draft.slug} onChange={e=>setDraft(v=>({...v,slug:normalizeSellerSlug(e.target.value)}))} minLength={3} maxLength={60} required={draft.public_profile} pattern="[a-z0-9][a-z0-9-]{2,59}" aria-invalid={!slugOk}/></span>
+      <small className={draft.slug===''?'sp-count':validSlug?'sp-count ok':'sp-count bad'}>{draft.slug===''?t('Заавал биш — нийтэд нээхэд л хэрэгтэй','Optional — only needed to go public'):validSlug?t('Зөв хаяг','Looks good'):t('3-60 тэмдэгт: жижиг латин үсэг, тоо, зураас','3–60 characters: lowercase letters, numbers, dashes')}</small></label>
      <label className="sp-switch"><input type="checkbox" role="switch" checked={draft.public_profile} onChange={e=>setDraft(v=>({...v,public_profile:e.target.checked}))}/><span className="sp-switch-ui" aria-hidden="true"/><span><b>{t('Профайлаа нийтэд нээх','Make my profile public')}</b><small>{t('Унтраасан үед зөвхөн та харна.','When off, only you can see it.')}</small></span></label>
     </form>}
     {error&&<p className="v42-error sp-alert" role="alert">{error}</p>}
@@ -351,6 +380,18 @@ export default function SellerProfileManager(){
    <span><i aria-hidden="true"/>{t('Хадгалаагүй өөрчлөлт байна','You have unsaved changes')}</span>
    <div><button type="button" className="sp-ghost-btn" disabled={busy} onClick={()=>{setDraft(saved);setError('')}}><RotateCcw size={15} aria-hidden="true"/>{t('Буцаах','Discard')}</button>
     <button type="button" className="v42-save" disabled={busy} onClick={()=>{void saveProfile()}}>{busy?<LoaderCircle className="spin" size={16}/>:<Save size={16} aria-hidden="true"/>}{busy?t('Хадгалж байна…','Saving…'):t('Хадгалах','Save changes')}</button></div>
+  </div>}
+  {leaveTo&&<div className="sp-leave-backdrop" onPointerDown={e=>{if(e.target===e.currentTarget)setLeaveTo(null)}}>
+   <div ref={leaveRef} className="sp-leave" role="alertdialog" aria-modal="true" aria-labelledby="sp-leave-title" aria-describedby="sp-leave-text"
+    onKeyDown={e=>{if(e.key==='Escape')setLeaveTo(null);trapTab(e,leaveRef.current)}}>
+    <h2 id="sp-leave-title">{t('Хадгалаагүй өөрчлөлт байна','You have unsaved changes')}</h2>
+    <p id="sp-leave-text">{t('Энэ хуудаснаас гарвал сүүлд хадгалсны дараах өөрчлөлт алга болно.','If you leave now, changes since your last save will be lost.')}</p>
+    <div className="sp-leave-actions">
+     <button type="button" autoFocus className="v42-save" disabled={busy} onClick={async()=>{const to=leaveTo;if(await saveProfile()&&to){leaving.current=true;window.location.assign(to)}else setLeaveTo(null)}}>{t('Хадгалаад гарах','Save and leave')}</button>
+     <button type="button" className="sp-ghost-btn" onClick={()=>{const to=leaveTo;leaving.current=true;setLeaveTo(null);if(to)window.location.assign(to)}}>{t('Хадгалахгүй гарах','Leave without saving')}</button>
+     <button type="button" className="sp-ghost-btn" onClick={()=>setLeaveTo(null)}>{t('Үлдэх','Stay')}</button>
+    </div>
+   </div>
   </div>}
  </main>);
 }

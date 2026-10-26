@@ -1,5 +1,5 @@
 'use client';
-import {useEffect,useState} from 'react';
+import {useEffect,useRef,useState} from 'react';
 import Link from 'next/link';
 import type {User} from '@supabase/supabase-js';
 import {ArrowUpRight,Globe,Menu,Moon,Sun,X} from 'lucide-react';
@@ -94,6 +94,9 @@ export default function SiteHeader({en,onToggleLanguage,dark,onToggleTheme,activ
  const [loginHref,setLoginHref]=useState('/login/?mode=buyer');
  const t=(mn:string,english:string)=>en?english:mn;
  useEffect(()=>{if(location.pathname!=='/')setLoginHref(signInWithReturn(location.pathname+location.search,'buyer'))},[]);
+ // V52: the mobile menu closes on Escape and returns focus to its button.
+ const burger=useRef<HTMLButtonElement>(null);
+ useEffect(()=>{if(!menu)return;const esc=(e:KeyboardEvent)=>{if(e.key==='Escape'){setMenu(false);burger.current?.focus()}};document.addEventListener('keydown',esc);return()=>document.removeEventListener('keydown',esc)},[menu]);
  const {sessionState,account,signingOut,signOut}=session;
  const links:[Exclude<SiteSection,null>,string,string,string][]=[
   ['services','/explore/','Үйлчилгээ','Services'],
@@ -103,7 +106,7 @@ export default function SiteHeader({en,onToggleLanguage,dark,onToggleTheme,activ
  return <header className={'hustle-v5 hx-header'+(dark?' hx-night':'')}>
   <div className="shell hx-header-inner">
    <Link className="hx-brand" href="/" aria-label="Hustle.mn">hustle<span>✳</span><small>mn</small></Link>
-   <nav className={'hx-nav'+(menu?' open':'')} aria-label={t('Үндсэн цэс','Main navigation')}>
+   <nav id="hx-main-nav" className={'hx-nav'+(menu?' open':'')} aria-label={t('Үндсэн цэс','Main navigation')}>
     {links.map(([id,href,mn,english])=><Link key={id} href={href} aria-current={active===id?'page':undefined} onClick={()=>setMenu(false)}>{t(mn,english)}</Link>)}
     {sessionState==='signed-in'&&account&&<Link className="mobile-auth-nav" href={account.isSeller?'/seller-studio/':'/buyer/'} onClick={()=>setMenu(false)}>{t('Миний самбар','My dashboard')}</Link>}
     {sessionState==='guest'&&<div className="hx-nav-auth"><Link href={loginHref}>{t('Нэвтрэх','Log in')}</Link><Link href="/join/seller/" className="hx-nav-cta">{t('Freelancer болох','Become a freelancer')}</Link></div>}
@@ -115,7 +118,7 @@ export default function SiteHeader({en,onToggleLanguage,dark,onToggleTheme,activ
     {sessionState==='signed-in'&&account?<AccountMenu account={account} en={en} signingOut={signingOut} onSignOut={async()=>{const ok=await signOut();setMenu(false);onSignedOut?.(ok)}}/>
      :sessionState==='guest'?<><Link href={loginHref} className="hx-login">{t('Нэвтрэх','Log in')}</Link><Link href="/join/seller/" className="hx-cta">{t('Freelancer болох','Become a freelancer')}<ArrowUpRight size={15} aria-hidden="true"/></Link></>
      :<span className="hx-checking" role="status" aria-label={t('Нэвтрэлтийн төлөв шалгаж байна','Checking sign-in status')}/>}
-    <button type="button" className="hx-icon hx-burger" aria-expanded={menu} aria-label={t('Цэс','Menu')} onClick={()=>setMenu(v=>!v)}>{menu?<X size={20}/>:<Menu size={20}/>}</button>
+    <button type="button" ref={burger} className="hx-icon hx-burger" aria-controls="hx-main-nav" aria-expanded={menu} aria-label={t('Цэс','Menu')} onClick={()=>setMenu(v=>!v)}>{menu?<X size={20}/>:<Menu size={20}/>}</button>
    </div>
   </div>
  </header>;

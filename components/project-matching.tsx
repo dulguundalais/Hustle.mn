@@ -8,6 +8,7 @@ import {projectDraftKey,proposalDraftKey,signInWithReturn} from '../lib/marketpl
 import {classifyNeed,type Audience} from '../lib/marketplace/solution-finder';
 import type {Profile,Listing} from '../lib/marketplace/types';
 import SiteHeader,{useSiteAccount} from './site-header';
+import {ensureBuyerProfile} from '../lib/marketplace/buyer-profile';
 import '../app/project-matching.css';
 
 type RequestRow={id:string;buyer_id:string;title:string;brief:string;audience:Audience;category:string;budget_max:number|null;preferred_days:number|null;status:'open'|'awarded'|'cancelled';order_id:string|null;created_at:string};
@@ -37,6 +38,10 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
  const [statusFilter,setStatusFilter]=useState('all'),[offerSort,setOfferSort]=useState('newest');
  const [draftReadyFor,setDraftReadyFor]=useState(''),[signInHref,setSignInHref]=useState('/login/?mode=buyer');
  const draftOwner=useRef('');
+ // V52: a notification link (?request=) scrolls to and highlights that request.
+ const [focusRequest,setFocusRequest]=useState('');
+ useEffect(()=>{const id=new URLSearchParams(location.search).get('request');if(id&&/^[0-9a-f-]{36}$/i.test(id))setFocusRequest(id)},[]);
+ useEffect(()=>{if(!focusRequest||loading)return;const tm=window.setTimeout(()=>document.getElementById('request-'+focusRequest)?.scrollIntoView({behavior:'smooth',block:'start'}),200);return()=>window.clearTimeout(tm)},[focusRequest,loading]);
  const t=(mn:string,eng:string)=>en?eng:mn;
  const refresh=async()=>{
   const db=await marketplaceClient();
@@ -48,7 +53,11 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
    db.from('profiles').select('*').eq('id',current.id).maybeSingle()
   ]);
   if(beta.error)throw beta.error;if(pr.error)throw pr.error;
-  const approved=Boolean(beta.data);setAllowed(approved);setProfile(pr.data as Profile|null);
+  const approved=Boolean(beta.data);setAllowed(approved);
+  let own=pr.data as Profile|null;
+  // V52: a buyer posting a project gets the same minimal private profile as an order would.
+  if(approved&&!own&&mode==='buyer'){const made=await ensureBuyerProfile(db,current);if(made){const again=await db.from('profiles').select('*').eq('id',current.id).maybeSingle();own=(again.data as Profile|null)||({...made,headline:'',bio:'',slug:null,public_profile:false} as unknown as Profile)}}
+  setProfile(own);
   if(!approved){setLoading(false);return}
   const notify=await db.from('project_notifications').select('id,recipient_id,request_id,kind,source_id,created_at,read_at').eq('recipient_id',current.id).order('created_at',{ascending:false}).limit(60);
   if(notify.error){if(['42P01','PGRST205','PGRST116'].includes(notify.error.code||'')){setNotificationsReady(false);setNotifications([])}else throw notify.error}
@@ -83,6 +92,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
   setSignInHref(signInWithReturn(location.pathname+location.search,mode));
   const prompt=(q.get('q')||'').slice(0,2000);
   if(prompt){setBrief(prompt);setTitle(prompt.slice(0,100));setCategory(outcomeCategory[classifyNeed(prompt).key]||'ai')}
+  const askedCategory=normalizeCategory(q.get('category'));if(askedCategory!=='all')setCategory(askedCategory);
   const suggested=q.get('audience');if(suggested==='personal'||suggested==='business')setAudience(suggested);
   const budgetValue=Number((q.get('budget')||'').replace(/[^0-9]/g,''));if(budgetValue>=1000&&budgetValue<=100000000)setBudget(String(budgetValue));
   void refresh().catch(err=>{setError(reportError(err));setLoading(false)});
@@ -206,7 +216,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
    <>
     <section className="project-panel project-notifications" aria-label={t('Төслийн мэдэгдлүүд','Project notifications')}>
      <div className="project-inbox-heading"><div><span className="project-step">PROJECT / NOTIFICATIONS</span><h2>{t('Мэдэгдлүүд','Notifications')}{unreadCount>0&&<span className="project-notification-count">{unreadCount}</span>}</h2></div></div>
-     {!notificationsReady?<p className="project-muted">{t('Beta мэдээллийн сангийн V34 шинэчлэлт хүлээгдэж байна.','V34 beta database migration is pending.')}</p>:
+     {!notificationsReady?<p className="project-muted">{t('Төслийн хүсэлт түр ачаалагдсангүй. Хэсэг хугацааны дараа дахин оролдоно уу.','Project requests are not available right now. Please try again later.')}</p>:
       notifications.length===0?<p className="project-muted">{t('Одоогоор мэдэгдэл алга.','No notifications yet.')}</p>:
       <div className="project-notification-list">{notifications.map(n=><div className={'project-notification '+(!n.read_at?'unread':'')} key={n.id}><div><strong>{notificationLabel(n.kind)}</strong><small>{new Date(n.created_at).toLocaleString(en?'en-US':'mn-MN')}</small></div>{!n.read_at&&<button type="button" disabled={busy} onClick={()=>void markNotice(n.id)}>{t('Уншсан','Mark read')}</button>}</div>)}</div>}
     </section>
@@ -235,7 +245,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
      {visibleRequests.length===0?<p className="project-muted">{t('Одоогоор хүсэлт алга.','No requests yet.')}</p>:visibleRequests.map(req=>{
       const offers=proposals.filter(p=>p.request_id===req.id);
       const sentCount=invites.filter(i=>i.request_id===req.id).length;
-      return <article className="project-item" key={req.id}>
+      return <article className={'project-item'+(focusRequest===req.id?' is-focus':'')} key={req.id} id={'request-'+req.id}>
        <div className="project-item-heading"><div><span className="project-chip">{req.category.toUpperCase()} · {req.audience}</span><h3>{req.title}</h3></div><span className="project-chip">{req.status}</span></div>
        <p>{req.brief}</p><small>{t('Хүргэсэн','Invited')}: {sentCount} · {t('Ирсэн санал','Proposals')}: {offers.length}</small>
        {sortedOffers(offers).map(offer=>{
@@ -256,7 +266,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
      {inbox.length===0?<div className="project-empty"><p>{t('Одоогоор төслийн хүсэлт алга. Нийтлэгдсэн үйлчилгээтэй, төсөл авах горим асаалттай үед тохирох хүсэлт ирнэ.','No invitations yet. Publish your services and enable availability to receive matching requests.')}</p><Link className="project-outline" href="/seller-studio/">{t('Үйлчилгээ удирдах','Manage services')}<ArrowRight size={16}/></Link></div>:
      inbox.map(inv=>{
       const offered=proposals.find(p=>p.request_id===inv.request_id);
-      return <article key={inv.id} className="project-item"><div className="project-item-heading"><div><span className="project-chip">{inv.category.toUpperCase()} · {inv.audience}</span><h3>{inv.title}</h3></div><span className="project-chip">{inv.invite_status}</span></div>
+      return <article key={inv.id} id={'request-'+inv.request_id} className={'project-item'+(focusRequest===inv.request_id?' is-focus':'')}><div className="project-item-heading"><div><span className="project-chip">{inv.category.toUpperCase()} · {inv.audience}</span><h3>{inv.title}</h3></div><span className="project-chip">{inv.invite_status}</span></div>
        <p>{inv.brief}</p><small>{inv.budget_max?currency(inv.budget_max):t('Төсөв тохиролцоно','Budget negotiable')} · {inv.preferred_days?inv.preferred_days+' '+t('хоног','days'):t('Хугацаа тохиролцоно','Timeline negotiable')}</small>
        {inv.invite_status==='declined'?<p className="project-muted">{t('Та урилгаас татгалзсан.','You declined this invitation.')}</p>:offered?.status==='pending'?<div className="project-proposal-management"><p className="project-ok"><CheckCircle2 size={16}/>{t('Санал илгээгдсэн','Proposal submitted')} — {currency(offered.quoted_price)}</p><div className="project-actions"><button type="button" disabled={busy} onClick={()=>openProposal(inv,offered)}>{t('Санал засах','Edit proposal')}</button><button type="button" className="project-quiet" disabled={busy} onClick={()=>withdrawProposal(offered)}><XCircle size={15}/>{t('Санал татах','Withdraw')}</button></div></div>:offered?.status==='withdrawn'?<div className="project-proposal-management"><p className="project-muted">{t('Энэ саналаа татсан. Хүсэлт нээлттэй байгаа үед дахин санал өгч болно.','Proposal withdrawn. You may submit again while the project is open.')}</p><button type="button" className="project-outline" disabled={busy} onClick={()=>openProposal(inv,offered)}>{t('Дахин санал илгээх','Send again')}</button></div>:offered?<p className="project-ok">{t('Саналын төлөв','Proposal status')}: {offered.status}</p>:<div className="project-actions"><button disabled={busy} type="button" onClick={()=>openProposal(inv)}>{t('Санал илгээх','Send a proposal')}</button><button className="project-quiet" disabled={busy} onClick={()=>void action(async()=>{const db=await marketplaceClient();const r=await db.rpc('decline_project_invitation',{p_invitation_id:inv.id});if(r.error)throw r.error},t('Хүсэлтийг татгалзлаа.','Invitation declined.'))}>{t('Татгалзах','Decline')}</button></div>}
       </article>;

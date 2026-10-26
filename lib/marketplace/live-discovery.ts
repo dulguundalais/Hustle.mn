@@ -1,5 +1,5 @@
 import {normalizeSearch,searchTokens,typoClose} from './smart-search';
-import {serviceSearchTerms} from './taxonomy';
+import {legacyCategory,serviceSearchTerms} from './taxonomy';
 
 // Only published, opt-in marketplace_catalog RPC records are accepted here.
 // Never mix editorial sample services into the buyer discovery index.
@@ -78,7 +78,8 @@ export function liveServicePrice(service:LiveService):number {
 export function filterLiveServices<T extends LiveService>(items:T[],filters:LiveFilters):T[] {
  const hasQuery=searchTokens(filters.query).length>0;
  const scored=items
-  .filter(s=>(filters.category==='all'||s.category===filters.category)&&(!filters.subcategory||s.subcategory===filters.subcategory)&&(!filters.onlySaved||filters.saved.includes(s.id)))
+  // V52: rows saved under pre-V50 ids still match their new category and subcategory.
+  .filter(s=>{const legacy=legacyCategory(s.category);const cat=legacy?.category||s.category;const sub=s.subcategory||legacy?.subcategory||'';return (filters.category==='all'||cat===filters.category||s.category===filters.category)&&(!filters.subcategory||sub===filters.subcategory)&&(!filters.onlySaved||filters.saved.includes(s.id))})
   .map((s,i)=>({s,i,score:hasQuery?liveSearchScore(s,filters.query):0}))
   .filter(row=>!hasQuery||row.score>=0);
  if(filters.sort==='featured'){

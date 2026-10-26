@@ -35,6 +35,6 @@ export default function ServiceComparison({services,ids,onRemove,onClear,en}:{se
     </article>
    })}
   </div></div>
-  <p className="v37-disclaimer">{t('Хаалттай бета: харуулж буй үнэ нь мэдээллийн зориулалттай, бодит төлбөр авахгүй.','Closed beta: shown prices are informational; no payments are collected.')}</p>
+  <p className="v37-disclaimer">{t('Нээлттэй бета: харуулж буй үнэ нь мэдээллийн зориулалттай, бодит төлбөр авахгүй.','Open beta: shown prices are informational; no payments are collected.')}</p>
  </section>;
 }
