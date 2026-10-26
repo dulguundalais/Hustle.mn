@@ -38,6 +38,7 @@ const KNOWN:Record<string,Pair>={
  'You have started many new conversations today. Please try again tomorrow.':['Өнөөдөр олон шинэ яриа эхлүүлсэн байна. Маргааш дахин оролдоно уу.','You have started many new conversations today. Please try again tomorrow.']
 };
 const BY_CODE:Record<string,Pair>={
+ 'email_not_confirmed':['Имэйлээ баталгаажуулаагүй байна. Inbox болон Spam хавтсаа шалгаад баталгаажуулах холбоосыг нээнэ үү.','Your email is not confirmed. Check Inbox and Spam for the confirmation link.'],
  'invalid_credentials':['Имэйл эсвэл нууц үг буруу байна.','The e-mail or password is incorrect.'],
  'user_already_exists':['Энэ имэйлээр аккаунт бүртгэлтэй байна. Нэвтэрнэ үү.','An account already exists for this e-mail. Please sign in.'],
  'email_exists':['Энэ имэйлээр аккаунт бүртгэлтэй байна. Нэвтэрнэ үү.','An account already exists for this e-mail. Please sign in.'],
@@ -61,6 +62,7 @@ export function friendlyError(error:unknown,en:boolean):string{
  const code=typeof e?.code==='string'?e.code:'';
  if(message&&KNOWN[message])return pick(KNOWN[message]);
  if(code&&BY_CODE[code])return pick(BY_CODE[code]);
+ if(/email not confirmed/i.test(message))return pick(BY_CODE.email_not_confirmed);
  if(/invalid login credentials/i.test(message))return pick(BY_CODE.invalid_credentials);
  if(/jwt expired|session.*(missing|expired)/i.test(message))return pick(BY_CODE.session_not_found);
  if(/failed to fetch|networkerror|load failed|network request failed/i.test(message)||e?.name==='TypeError'&&!code)

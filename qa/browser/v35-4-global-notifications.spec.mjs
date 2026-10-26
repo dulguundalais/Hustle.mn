@@ -59,7 +59,7 @@ for(const width of [390,1440]){
 test('project notification routes to buyer project requests',async({page})=>{
  await signIn(page);
  await page.locator('.global-notice-trigger').click();
- await page.locator('.global-notice-item a[href="/project-requests/"]').click();
+ await page.locator('.global-notice-item a[href^="/project-requests/"]').click();
  await expect(page).toHaveURL(/\/project-requests\//);
  await expect(page.locator('.project-marketplace')).toBeVisible();
 });
