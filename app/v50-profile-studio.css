@@ -283,3 +283,5 @@
 .sp .sp-leave h2{margin:0 0 8px;font-size:19px;font-weight:800;letter-spacing:-.02em}
 .sp .sp-leave p{margin:0 0 18px;color:var(--muted);font-size:14.5px;line-height:1.55}
 .sp .sp-leave-actions{display:grid;gap:8px}
+/* V52: the "next step" text button keeps a usable touch target */
+.sp-next{display:inline-flex;align-items:center;min-height:28px}
