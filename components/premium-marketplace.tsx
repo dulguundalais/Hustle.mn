@@ -40,7 +40,9 @@ const [exploreOpen,setExploreOpen]=useState(false),[exploreActive,setExploreActi
 const [exploreLoad,setExploreLoad]=useState<'loading'|'ready'|'error'>('loading');
 const [en,setEn]=useState(false),[dark,setDark]=useState(false),[ready,setReady]=useState(false),[query,setQuery]=useState(''),[cat,setCat]=useState('all'),[sub,setSub]=useState(''),[sort,setSort]=useState('featured'),[onlySaved,setOnlySaved]=useState(false),[notice,setNotice]=useState('');
 const t=(mn:string,english:string)=>en?english:mn;
-useEffect(()=>{try{setEn(localStorage.getItem('hustle-language')==='en');setDark(localStorage.getItem('hustle-theme')==='dark');const s=JSON.parse(localStorage.getItem('hustle-saved')||'[]');if(Array.isArray(s))setSampleSaved(s.filter(x=>typeof x==='string'&&!/^[0-9a-f-]{36}$/i.test(x)));}catch{}const p=new URLSearchParams(location.search);setQuery(p.get('q')||'');setCat(normalizeCategory(p.get('category')));setSub(p.get('sub')||'');setOnlySaved(p.get('saved')==='1');setReady(true)},[]);
+useEffect(()=>{try{setEn(localStorage.getItem('hustle-language')==='en');setDark(localStorage.getItem('hustle-theme')==='dark');const s=JSON.parse(localStorage.getItem('hustle-saved')||'[]');if(Array.isArray(s))setSampleSaved(s.filter(x=>typeof x==='string'&&!/^[0-9a-f-]{36}$/i.test(x)));}catch{}const p=new URLSearchParams(location.search);setQuery(p.get('q')||'');setCat(normalizeCategory(p.get('category')));setSub(p.get('sub')||'');setOnlySaved(p.get('saved')==='1');const so=p.get('sort');if(so==='low'||so==='high')setSort(so);setReady(true)},[]);
+// V52: Back/Forward between categories restores the filters instead of leaving them stale.
+useEffect(()=>{const pop=()=>{const p=new URLSearchParams(location.search);setQuery(p.get('q')||'');setCat(normalizeCategory(p.get('category')));setSub(p.get('sub')||'');setOnlySaved(p.get('saved')==='1');const so=p.get('sort');setSort(so==='low'||so==='high'?so:'featured')};window.addEventListener('popstate',pop);return()=>window.removeEventListener('popstate',pop)},[]);
 useEffect(()=>{if(!ready)return;document.documentElement.lang=en?'en':'mn';try{localStorage.setItem('hustle-language',en?'en':'mn');localStorage.setItem('hustle-theme',dark?'dark':'light');localStorage.setItem('hustle-saved',JSON.stringify(sampleSaved))}catch{}},[en,dark,sampleSaved,ready]);
 useEffect(()=>{
  if(view!=='explore')return;
@@ -64,10 +66,18 @@ useEffect(()=>{
   else u.searchParams.delete('category');
   if(cat!=='all'&&sub)u.searchParams.set('sub',sub);
   else u.searchParams.delete('sub');
-  window.history.replaceState(window.history.state,'',u.pathname+u.search+u.hash);
+  // V52: saved-only and sort are part of a shareable, refresh-safe Explore URL too.
+  if(onlySaved)u.searchParams.set('saved','1');else u.searchParams.delete('saved');
+  if(sort!=='featured')u.searchParams.set('sort',sort);else u.searchParams.delete('sort');
+  const next=u.pathname+u.search+u.hash;
+  if(next===location.pathname+location.search+location.hash)return;
+  // A new category is a new place (Back returns to the previous one); typing only replaces.
+  const prevCat=normalizeCategory(new URLSearchParams(location.search).get('category'));
+  if(prevCat!==cat)window.history.pushState(window.history.state,'',next);
+  else window.history.replaceState(window.history.state,'',next);
  },250);
  return()=>clearTimeout(timer);
-},[ready,view,query,cat,sub]);
+},[ready,view,query,cat,sub,onlySaved,sort]);
 const exploreSuggestions=useMemo(()=>suggestLiveServices(exploreListings,query,5),[exploreListings,query]);
 const filtered=useMemo(()=>services.filter(s=>matchesService(s,query)),[query]);
 const [heroQuery,setHeroQuery]=useState('');

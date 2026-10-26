@@ -72,3 +72,13 @@ test('package editor labels follow the pricing model the freelancer picked',()=>
  assert.match(w,/onTypeChange=\{setServiceKind\}/);
  assert.match(w,/serviceType=\{serviceKind\}/);
 });
+
+test('Explore keeps search, category, saved-only and sort in the URL; Back restores filters',()=>{
+ const m=read('components/premium-marketplace.tsx');
+ assert.match(m,/if\(onlySaved\)u\.searchParams\.set\('saved','1'\)/);
+ assert.match(m,/if\(sort!=='featured'\)u\.searchParams\.set\('sort',sort\)/);
+ assert.match(m,/if\(prevCat!==cat\)window\.history\.pushState/,'a new category is a history entry');
+ assert.match(m,/else window\.history\.replaceState/,'typing does not flood history');
+ assert.match(m,/window\.addEventListener\('popstate',pop\)/);
+ assert.match(m,/\},\[ready,view,query,cat,sub,onlySaved,sort\]\);/);
+});
