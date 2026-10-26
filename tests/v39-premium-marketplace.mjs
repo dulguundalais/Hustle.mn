@@ -31,7 +31,7 @@ test('no fabricated portraits, reviews, earnings, hourly prices or portfolios',(
 });
 test('Favorites, compare and buyer request flow are unchanged',()=>{
  assert.match(catalog,/onSave\(s\.id\)/);
- assert.match(catalog,/onSignInSave\?\.\(\)/);
+ assert.match(catalog,/onSignInSave\?\.\(s\.id\)/);
  assert.match(catalog,/compareSelection/);
  assert.match(catalog,/ServiceComparison/);
  assert.match(catalog,/contactSellerHref\(s\.slug,signedIn\)/);

@@ -73,3 +73,24 @@ test('workspace, order drawer and project requests provision buyers instead of a
  assert.doesNotMatch(cb,/new URL\('\/beta'/);
  assert.match(cb,/safePostLoginPath\(url\.searchParams\.get\('next'\)\)/);
 });
+
+test('saved services: guest heart remembers the service, signed-in loading never redirects to login',()=>{
+ const src=read('lib/marketplace/use-saved-services.ts');
+ const stubbed="const marketplaceClient=null,ensureBuyerProfile=null,useCallback=f=>f,useEffect=()=>{},useRef=()=>({}),useState=v=>[v,()=>{}];\n"+src.replace(/^import .*$/mg,'').replace("'use client';",'');
+ const js=ts.transpileModule(stubbed,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+ const mod={exports:{}};new Function('exports','module',js)(mod.exports,mod);
+ const id='20000000-0000-4000-8000-000000000001',now=5_000_000;
+ assert.equal(mod.exports.readPendingSave(JSON.stringify({id,at:now}),now+1000),id);
+ assert.equal(mod.exports.readPendingSave(JSON.stringify({id,at:now}),now+25*3600_000),null,'expires after a day');
+ assert.equal(mod.exports.readPendingSave(JSON.stringify({id:'not-a-uuid',at:now}),now),null);
+ assert.equal(mod.exports.readPendingSave('{bad json',now),null);
+ assert.match(src,/if\(wanted&&!list\.includes\(wanted\)\)/,'no duplicate insert');
+ assert.match(src,/code==='23505'/,'a duplicate row counts as saved');
+ const catalog=read('components/live-catalog.tsx');
+ assert.match(catalog,/heartState==='ready'\?onSave\(s\.id\):heartState==='guest'\?onSignInSave\?\.\(s\.id\)/);
+ assert.match(catalog,/disabled=\{saveBusy\.includes\(s\.id\)\|\|heartState==='checking'\|\|heartState==='loading'\}/);
+ const page=read('components/premium-marketplace.tsx');
+ assert.match(page,/rememberPendingSave\(id\)/);
+ assert.match(page,/saveState=\{favorites\.status\}/);
+ assert.match(page,/favorites\.justSaved/);
+});

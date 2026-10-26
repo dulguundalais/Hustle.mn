@@ -289,3 +289,5 @@
 @media(prefers-reduced-motion:reduce){
  .hustle-v5:not(.workspace) :is(.business-solution-card,.business-solution-card::after,.business-solution-main-cta,.v39-primary,.signature-cta-button,.footer-main-cta){transition:none}
 }
+.hustle-v5:not(.workspace) .v39-retry{padding:0;border:0;background:none;color:var(--purple);font:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.hustle-v5:not(.workspace) .v39-heart[aria-busy=true]{opacity:.55;cursor:progress}
