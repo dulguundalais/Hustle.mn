@@ -7,7 +7,7 @@ insert into auth.users(id,email,email_confirmed_at) values
  ('10000000-0000-4000-8000-000000000454','v35-pending@example.test',now());
 insert into public.beta_allowlist(email,role,enabled) values
  ('v35-buyer@example.test','member',true),('v35-seller@example.test','member',true),
- ('v35-outsider@example.test','member',true);
+ ('v35-outsider@example.test','member',true) on conflict(email) do update set role=excluded.role,enabled=excluded.enabled;
 insert into public.profiles(id,display_name,is_seller,public_profile,accepting_projects) values
  ('10000000-0000-4000-8000-000000000451','V35 Buyer',false,false,false),
  ('10000000-0000-4000-8000-000000000452','V35 Seller',true,true,true),
