@@ -216,7 +216,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
    <>
     <section className="project-panel project-notifications" aria-label={t('Төслийн мэдэгдлүүд','Project notifications')}>
      <div className="project-inbox-heading"><div><span className="project-step">PROJECT / NOTIFICATIONS</span><h2>{t('Мэдэгдлүүд','Notifications')}{unreadCount>0&&<span className="project-notification-count">{unreadCount}</span>}</h2></div></div>
-     {!notificationsReady?<p className="project-muted">{t('Beta мэдээллийн сангийн V34 шинэчлэлт хүлээгдэж байна.','V34 beta database migration is pending.')}</p>:
+     {!notificationsReady?<p className="project-muted">{t('Төслийн хүсэлт түр ачаалагдсангүй. Хэсэг хугацааны дараа дахин оролдоно уу.','Project requests are not available right now. Please try again later.')}</p>:
       notifications.length===0?<p className="project-muted">{t('Одоогоор мэдэгдэл алга.','No notifications yet.')}</p>:
       <div className="project-notification-list">{notifications.map(n=><div className={'project-notification '+(!n.read_at?'unread':'')} key={n.id}><div><strong>{notificationLabel(n.kind)}</strong><small>{new Date(n.created_at).toLocaleString(en?'en-US':'mn-MN')}</small></div>{!n.read_at&&<button type="button" disabled={busy} onClick={()=>void markNotice(n.id)}>{t('Уншсан','Mark read')}</button>}</div>)}</div>}
     </section>

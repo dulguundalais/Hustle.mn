@@ -1,5 +1,6 @@
 'use client';
 import {useEffect,useRef,useState,type FormEvent} from 'react';
+import {friendlyError} from '../lib/marketplace/friendly-errors';
 import Link from 'next/link';
 import {ArrowLeft,ArrowRight,BadgeCheck,Building2,Check,CheckCircle2,Eye,EyeOff,Inbox,Info,LockKeyhole,Mail,MessageCircle,Package,ShieldCheck,UserRound} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
@@ -20,7 +21,7 @@ export default function PremiumAuth({
 }:Props){
  const [showPassword,setShowPassword]=useState(false);
  const [buyerAudience,setBuyerAudience]=useState<'personal'|'business'>('personal');
- useEffect(()=>{const selected=new URLSearchParams(location.search).get('audience')||localStorage.getItem('hustle-buyer-audience');if(selected==='personal'||selected==='business')setBuyerAudience(selected)},[]);
+ useEffect(()=>{const selected=new URLSearchParams(location.search).get('audience')||localStorage.getItem('hustle-buyer-audience');if(selected==='personal'||selected==='business')setBuyerAudience(selected);if(new URLSearchParams(location.search).get('reset')==='1')setResetMode(true)},[]);
  const chooseBuyerAudience=(next:'personal'|'business')=>{setBuyerAudience(next);try{localStorage.setItem('hustle-buyer-audience',next)}catch{}};
  const [resetMode,setResetMode]=useState(false);
  const [resetBusy,setResetBusy]=useState(false);
@@ -45,7 +46,7 @@ export default function PremiumAuth({
      });
      if(result.error)throw result.error;
      setResetMessage(t('Хэрэв энэ хаягт бүртгэл байгаа бөгөөд имэйл хүргэлт тохируулагдсан бол сэргээх холбоос хүсэгдлээ. Имэйл хүрснийг баталгаажуулах боломжгүй.','If an account exists and email delivery is configured, a recovery link has been requested. Delivery is not guaranteed.'));
-   }catch(error){setResetError(error instanceof Error?error.message:t('Хүсэлт амжилтгүй боллоо.','Request failed.'))}
+   }catch(error){setResetError(friendlyError(error,en))}
    finally{setResetBusy(false)}
  }
  const isAdmin=entry==='admin';

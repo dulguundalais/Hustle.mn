@@ -33,8 +33,8 @@ test('invalid reset link never allows changing a password',async({page})=>{
  await mock(page);
  await page.goto('/auth/reset/');
  await expect(page.locator('#reset-pass')).toHaveCount(0);
- await expect(page.getByRole('button',{name:'Update password'})).toHaveCount(0);
- await expect(page.getByRole('heading',{name:'Choose a new password.'})).toBeVisible();
+ await expect(page.getByRole('button',{name:/Update password|Нууц үг шинэчлэх/})).toHaveCount(0);
+ await expect(page.getByRole('heading',{name:/Choose a new password\.|Шинэ нууц үгээ сонгоно уу\./})).toBeVisible();
 });
 
 test('blocked member does not gain access to a private dashboard',async({page})=>{

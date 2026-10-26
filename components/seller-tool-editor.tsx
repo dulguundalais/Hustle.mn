@@ -41,7 +41,7 @@ export default function SellerToolEditor({sellerId,en,onUpdated}:{sellerId:strin
    if(error)throw error;
    setSaved(((data||[]) as Choice[]).filter(v=>Boolean(creativeToolFor(v.tool_key))));
    setStatus('ready');
-  }).catch(()=>{if(alive){setStatus('error');setMessage(t('Хэрэгслийг ачаалах боломжгүй байна. V40 beta migration-ийг шалгана уу.','Could not load tools. Check the V40 beta migration.'))}});
+  }).catch(()=>{if(alive){setStatus('error');setMessage(t('Хэрэгслийн жагсаалт түр ачаалагдсангүй. Дахин оролдоно уу.','Could not load your tools right now. Please try again.'))}});
   return()=>{alive=false};
  },[sellerId,en]);
  const filtered=useMemo(()=>CREATIVE_TOOLS.filter(tool=>tool.name.toLowerCase().includes(search.trim().toLowerCase())),[search]);
