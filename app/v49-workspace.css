@@ -376,3 +376,12 @@
 .hustle-v5.workspace.v49 .v50-setup li em{margin-left:2px;padding:1px 7px;border-radius:999px;background:#fdf1df;color:#835716;font-style:normal;font-size:11px;font-weight:800}
 .hustle-v5.workspace.v49 .v52-setup-note{margin:12px 0 0!important;font-size:12.5px!important}
 .hustle-v5.workspace.v49 .v52-profile .v42-workspace-profile-cta{margin-bottom:18px}
+/* V52: every order says whose turn it is. */
+.hustle-v5.workspace.v49 .v52-next-step{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:12px 0 0;padding:10px 12px;border-radius:12px;background:var(--soft);font-size:13.5px;line-height:1.45;color:var(--text)}
+.hustle-v5.workspace.v49 .v52-next-step b{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--sub)}
+.hustle-v5.workspace.v49 .v52-next-step.who-you{background:#fff6e5;box-shadow:inset 3px 0 0 #f0a33a}
+.hustle-v5.workspace.v49 .v52-next-step.who-you b{color:#8a5a12}
+.hustle-v5.workspace.v49.night .v52-next-step.who-you{background:#3a2a10}
+.hustle-v5.workspace.v49 .order-card.is-focus{box-shadow:0 0 0 2px var(--purple),0 18px 40px rgb(28 62 168/.15)}
+.hustle-v5.workspace.v49 .v52-notice-open{display:grid;gap:2px;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.hustle-v5.workspace.v49 .v52-notice-open:hover b{color:var(--purple);text-decoration:underline;text-underline-offset:3px}
