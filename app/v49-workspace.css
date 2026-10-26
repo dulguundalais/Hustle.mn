@@ -1,0 +1,305 @@
+/* V49 workspace: navy control rail, calm canvas, compact work surfaces, redesigned messenger.
+   Everything is scoped to .hustle-v5.workspace.v49 so public pages keep their own styles. */
+.hustle-v5.workspace.v49{
+  --ws-canvas:#f3f6fb;--ws-surface:#ffffff;--ws-soft:#eef3fb;--ws-line:#e2e8f2;--ws-line-strong:#cfd8e6;
+  --ws-text:#0f1a30;--ws-sub:#5b6882;--ws-faint:#8a96ab;--ws-accent:#2664ec;--ws-accent-hover:#1d55d6;--ws-accent-soft:#e9f0ff;
+  --ws-rail:#0f2152;--ws-rail-2:#0b1a42;--ws-rail-text:#e7eeff;--ws-rail-sub:#a9b9de;--ws-rail-line:#ffffff1c;
+  --ws-amber:#a1600a;--ws-amber-soft:#fff3dc;--ws-blue:#1f57d6;--ws-blue-soft:#e6eeff;--ws-violet:#6b46c9;--ws-violet-soft:#f0eaff;
+  --ws-green:#13784f;--ws-green-soft:#e1f5ec;--ws-grey:#64708a;--ws-grey-soft:#eef1f6;--ws-red:#b4233b;
+  --ws-shadow:0 1px 2px #0f1a300d,0 4px 14px #0f1a300a;
+  --ws-bubble-mine:#2664ec;--ws-bubble-theirs:#ffffff;
+  background:var(--ws-canvas);color:var(--ws-text)
+}
+.hustle-v5.workspace.v49.night{
+  --ws-canvas:#0a1122;--ws-surface:#111b30;--ws-soft:#16223b;--ws-line:#22314e;--ws-line-strong:#30425f;
+  --ws-text:#eef2fb;--ws-sub:#9aa8c2;--ws-faint:#73829e;--ws-accent:#4d86ff;--ws-accent-hover:#6b9bff;--ws-accent-soft:#18284a;
+  --ws-rail:#0d1d47;--ws-rail-2:#0a1636;
+  --ws-amber:#f2b552;--ws-amber-soft:#3a2a10;--ws-blue:#8fb3ff;--ws-blue-soft:#172a52;--ws-violet:#bda4ff;--ws-violet-soft:#2a2050;
+  --ws-green:#5fd3a2;--ws-green-soft:#0f3328;--ws-grey:#a3aec4;--ws-grey-soft:#1d2840;--ws-red:#ff8a9d;
+  --ws-shadow:0 1px 2px #0000004d,0 6px 18px #00000033;
+  --ws-bubble-theirs:#18243d
+}
+.hustle-v5.workspace.v49 .site-header{height:64px;background:var(--ws-surface);border-bottom:1px solid var(--ws-line)}
+
+/* Layout */
+.hustle-v5.workspace.v49 .workspace-layout{display:grid;grid-template-columns:252px minmax(0,1fr);gap:28px;align-items:start;padding-top:24px;padding-bottom:56px;text-align:left}
+.hustle-v5.workspace.v49 .workspace-main{min-width:0}
+
+/* Navy rail */
+.hustle-v5.workspace.v49 .v49-rail{position:sticky;top:20px;display:flex;flex-direction:column;gap:18px;padding:18px 14px 16px;border:0;border-radius:18px;
+  background:linear-gradient(180deg,var(--ws-rail) 0%,var(--ws-rail-2) 100%);color:var(--ws-rail-text);box-shadow:0 18px 40px #0b1a4224;max-height:calc(100vh - 40px);overflow:auto}
+.hustle-v5.workspace.v49 .v49-identity{display:flex;align-items:center;gap:11px;padding:2px 6px}
+.hustle-v5.workspace.v49 .v49-avatar{display:grid;place-items:center;width:40px;height:40px;flex-shrink:0;border-radius:12px;background:#ffffff1f;color:#fff;font-size:14px;font-weight:800;letter-spacing:.3px}
+.hustle-v5.workspace.v49 .v49-identity b{display:block;font-size:14.5px;line-height:1.3;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
+.hustle-v5.workspace.v49 .v49-identity small{display:block;font-size:12px;color:var(--ws-rail-sub);letter-spacing:0;text-transform:none}
+.hustle-v5.workspace.v49 .v49-switch{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3px;padding:3px;border-radius:11px;background:#00000033}
+.hustle-v5.workspace.v49 .v49-switch a{display:flex;align-items:center;justify-content:center;gap:5px;min-height:34px;padding:0 6px;border-radius:8px;color:var(--ws-rail-sub);font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;transition:background-color .15s,color .15s}
+.hustle-v5.workspace.v49 .v49-switch a:hover{color:#fff;background:#ffffff12}
+.hustle-v5.workspace.v49 .v49-switch a[aria-current=page]{background:#fff;color:var(--ws-rail)}
+.hustle-v5.workspace.v49 .v49-switch a svg{flex-shrink:0}
+.hustle-v5.workspace.v49 .v49-nav{display:grid;gap:2px}
+.hustle-v5.workspace.v49 .v49-nav button,.hustle-v5.workspace.v49 .v49-links a{display:flex;align-items:center;gap:11px;width:100%;min-height:40px;margin:0;padding:0 10px;border:0;border-radius:10px;background:transparent;color:var(--ws-rail-text);font:inherit;font-size:14px;font-weight:600;text-align:left;text-decoration:none;cursor:pointer;transition:background-color .15s}
+.hustle-v5.workspace.v49 .v49-nav button svg,.hustle-v5.workspace.v49 .v49-links a svg{flex-shrink:0;opacity:.85}
+.hustle-v5.workspace.v49 .v49-nav button:hover,.hustle-v5.workspace.v49 .v49-links a:hover{background:#ffffff14}
+.hustle-v5.workspace.v49 .v49-nav button.selected{background:#ffffff24;color:#fff;box-shadow:inset 3px 0 0 #8fb3ff}
+.hustle-v5.workspace.v49 .v49-nav button small{margin-left:auto;min-width:22px;height:20px;padding:0 6px;display:grid;place-items:center;border-radius:999px;background:#ffffff1f;color:#fff;font-size:11.5px;font-weight:700}
+.hustle-v5.workspace.v49 .v49-nav button small.v25-unread{background:#ff5d73;color:#fff}
+.hustle-v5.workspace.v49 .v49-links{display:grid;gap:2px;padding-top:12px;border-top:1px solid var(--ws-rail-line)}
+.hustle-v5.workspace.v49 .v49-links>span{padding:0 10px 4px;font-size:12px;color:var(--ws-rail-sub)}
+.hustle-v5.workspace.v49 .v49-links a{min-height:36px;font-size:13.5px;color:var(--ws-rail-sub)}
+.hustle-v5.workspace.v49 .v49-links a:hover{color:#fff}
+.hustle-v5.workspace.v49 .v49-links .v49-out{margin-left:auto;opacity:.6}
+.hustle-v5.workspace.v49 .v49-beta{display:flex;gap:8px;align-items:flex-start;margin:auto 0 0;padding:12px 10px 2px;border-top:1px solid var(--ws-rail-line);font-size:12px;line-height:1.5;color:var(--ws-rail-sub)}
+.hustle-v5.workspace.v49 .v49-beta svg{flex-shrink:0;margin-top:2px}
+.hustle-v5.workspace.v49 .v49-rail a:focus-visible,.hustle-v5.workspace.v49 .v49-rail button:focus-visible{outline:2px solid #8fb3ff;outline-offset:2px}
+
+/* Page heading */
+.hustle-v5.workspace.v49 .workspace-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin:4px 0 22px;padding:0;border:0}
+.hustle-v5.workspace.v49 .workspace-heading h1{margin:0;font-size:27px;line-height:1.2;letter-spacing:-.7px;font-weight:800;color:var(--ws-text)}
+.hustle-v5.workspace.v49 .v49-sub{margin:6px 0 0;font-size:14px;color:var(--ws-sub)}
+.hustle-v5.workspace.v49 .v49-refresh{display:inline-flex;align-items:center;gap:7px;min-height:36px;padding:0 12px;border:1px solid var(--ws-line);border-radius:9px;background:var(--ws-surface);color:var(--ws-sub);font-size:13px;font-weight:600}
+.hustle-v5.workspace.v49 .v49-refresh:hover{color:var(--ws-text);border-color:var(--ws-line-strong)}
+
+/* Surfaces */
+.hustle-v5.workspace.v49 .workspace-panel{margin:0 0 18px;padding:20px 22px;border:1px solid var(--ws-line);border-radius:14px;background:var(--ws-surface);box-shadow:var(--ws-shadow)}
+.hustle-v5.workspace.v49 .workspace-main h2{margin:0 0 14px;font-size:17px;line-height:1.35;letter-spacing:-.2px;font-weight:750;color:var(--ws-text)}
+.hustle-v5.workspace.v49 .row-between{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.hustle-v5.workspace.v49 .row-between h2{margin:0}
+.hustle-v5.workspace.v49 .button{border-radius:9px}
+.hustle-v5.workspace.v49 .button.small{min-height:34px;padding:0 13px;font-size:13px}
+
+/* Needs attention */
+.hustle-v5.workspace.v49 .v49-attention{margin:0 0 18px;padding:18px 20px;border:1px solid var(--ws-line);border-left:4px solid var(--ws-accent);border-radius:14px;background:var(--ws-surface);box-shadow:var(--ws-shadow)}
+.hustle-v5.workspace.v49 .v49-attention h2{margin:0 0 10px;font-size:15px}
+.hustle-v5.workspace.v49 .v49-attention ul{list-style:none;margin:0;padding:0;display:grid}
+.hustle-v5.workspace.v49 .v49-attention li{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--ws-line)}
+.hustle-v5.workspace.v49 .v49-attention li:first-child{border-top:0;padding-top:4px}
+.hustle-v5.workspace.v49 .v49-attention li b{display:block;font-size:14px;line-height:1.35}
+.hustle-v5.workspace.v49 .v49-attention li small{display:block;font-size:13px;color:var(--ws-sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hustle-v5.workspace.v49 .v49-attention-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--ws-violet-soft);color:var(--ws-violet)}
+.hustle-v5.workspace.v49 .v49-attention-icon.is-message{background:var(--ws-blue-soft);color:var(--ws-blue)}
+.hustle-v5.workspace.v49 .v49-calm{display:flex;align-items:center;gap:9px;margin:0;font-size:14px;color:var(--ws-sub)}
+.hustle-v5.workspace.v49 .v49-calm svg{color:var(--ws-green)}
+
+/* Stats */
+.hustle-v5.workspace.v49 .stats-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:0 0 18px}
+.hustle-v5.workspace.v49 .stats-row>div{position:relative;display:grid;gap:2px;padding:16px 18px;border:1px solid var(--ws-line);border-radius:14px;background:var(--ws-surface);box-shadow:var(--ws-shadow)}
+.hustle-v5.workspace.v49 .stats-row small{font-size:13px;color:var(--ws-sub)}
+.hustle-v5.workspace.v49 .stats-row strong{font-size:26px;line-height:1.15;font-weight:800;letter-spacing:-.6px;font-variant-numeric:tabular-nums;color:var(--ws-text)}
+.hustle-v5.workspace.v49 .v49-stat-icon{position:absolute;top:14px;right:14px;display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--ws-soft);color:var(--ws-accent)}
+
+/* Overview columns */
+.hustle-v5.workspace.v49 .v49-columns{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,1fr);gap:18px;align-items:start}
+.hustle-v5.workspace.v49 .v49-columns .workspace-panel{margin:0}
+.hustle-v5.workspace.v49 .v49-rows{list-style:none;margin:0;padding:0;display:grid}
+.hustle-v5.workspace.v49 .v49-rows li+li{border-top:1px solid var(--ws-line)}
+.hustle-v5.workspace.v49 .v49-rows button{display:grid;grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"main status amount" "progress progress progress";gap:6px 14px;align-items:center;width:100%;padding:12px 6px;border:0;border-radius:10px;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.hustle-v5.workspace.v49 .v49-rows button:hover{background:var(--ws-soft)}
+.hustle-v5.workspace.v49 .v49-row-main{grid-area:main;min-width:0}
+.hustle-v5.workspace.v49 .v49-row-main b{display:block;font-size:14.5px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hustle-v5.workspace.v49 .v49-row-main small{display:block;font-size:12.5px;color:var(--ws-sub)}
+.hustle-v5.workspace.v49 .v49-rows .status{grid-area:status}
+.hustle-v5.workspace.v49 .v49-row-amount{grid-area:amount;font-size:14px;font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hustle-v5.workspace.v49 .v49-progress{grid-area:progress;height:4px;border-radius:4px;background:var(--ws-soft);overflow:hidden}
+.hustle-v5.workspace.v49 .v49-progress i{display:block;height:100%;border-radius:4px;background:var(--ws-accent)}
+.hustle-v5.workspace.v49 .v49-quick .role-actions{display:grid;gap:8px;margin:0}
+.hustle-v5.workspace.v49 .v49-quick-item{display:grid;grid-template-columns:36px 1fr;grid-template-rows:auto auto;column-gap:12px;align-items:center;width:100%;padding:10px;border:1px solid var(--ws-line);border-radius:12px;background:var(--ws-surface);color:var(--ws-text);font:inherit;text-align:left;text-decoration:none;cursor:pointer;transition:border-color .15s,background-color .15s}
+.hustle-v5.workspace.v49 .v49-quick-item:hover{border-color:var(--ws-accent);background:var(--ws-accent-soft)}
+.hustle-v5.workspace.v49 .v49-quick-item>span{grid-row:1/3;display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--ws-soft);color:var(--ws-accent)}
+.hustle-v5.workspace.v49 .v49-quick-item b{font-size:14px;line-height:1.3}
+.hustle-v5.workspace.v49 .v49-quick-item small{font-size:12.5px;color:var(--ws-sub);line-height:1.35}
+
+/* Status pills (shared) */
+.hustle-v5.workspace.v49 .status{display:inline-flex;align-items:center;gap:6px;width:max-content;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;line-height:1.5;white-space:nowrap;background:var(--ws-grey-soft);color:var(--ws-grey)}
+.hustle-v5.workspace.v49 .status::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.hustle-v5.workspace.v49 .status-requested,.hustle-v5.workspace.v49 .status-pending{background:var(--ws-amber-soft);color:var(--ws-amber)}
+.hustle-v5.workspace.v49 .status-accepted,.hustle-v5.workspace.v49 .status-in_progress{background:var(--ws-blue-soft);color:var(--ws-blue)}
+.hustle-v5.workspace.v49 .status-delivered{background:var(--ws-violet-soft);color:var(--ws-violet)}
+.hustle-v5.workspace.v49 .status-completed,.hustle-v5.workspace.v49 .status-published{background:var(--ws-green-soft);color:var(--ws-green)}
+
+/* Order cards (orders tabs) */
+.hustle-v5.workspace.v49 .order-card{margin:0 0 14px;padding:18px 20px;border:1px solid var(--ws-line);border-radius:14px;background:var(--ws-surface);box-shadow:var(--ws-shadow)}
+.hustle-v5.workspace.v49 .v23-order-top{margin-bottom:10px}
+.hustle-v5.workspace.v49 .v23-order-top small{font-size:12px;color:var(--ws-faint);font-variant-numeric:tabular-nums}
+.hustle-v5.workspace.v49 .v23-order-heading{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:14px}
+.hustle-v5.workspace.v49 .v23-order-heading h3{margin:0;font-size:18px;line-height:1.3;letter-spacing:-.3px}
+.hustle-v5.workspace.v49 .v23-order-context{margin:4px 0 0;font-size:13px;color:var(--ws-sub)}
+.hustle-v5.workspace.v49 .v23-order-price{text-align:right}
+.hustle-v5.workspace.v49 .v23-order-price strong{display:block;font-size:20px;font-weight:800;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
+.hustle-v5.workspace.v49 .v23-order-price small{font-size:12px;color:var(--ws-faint)}
+.hustle-v5.workspace.v49 .order-timeline{display:grid;grid-template-columns:repeat(5,1fr);margin:0 0 14px;padding:0;list-style:none;background:none;border:0;gap:0}
+.hustle-v5.workspace.v49 .order-timeline li{position:relative;display:grid;justify-items:center;gap:6px;padding:0;text-align:center;color:var(--ws-faint);font-size:12px}
+.hustle-v5.workspace.v49 .order-timeline li::before{content:"";position:absolute;top:11px;left:-50%;right:50%;height:2px;background:var(--ws-line)}
+.hustle-v5.workspace.v49 .order-timeline li:first-child::before{display:none}
+.hustle-v5.workspace.v49 .order-timeline li.complete::before,.hustle-v5.workspace.v49 .order-timeline li.current::before{background:var(--ws-accent)}
+.hustle-v5.workspace.v49 .order-timeline span{position:relative;z-index:1;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:2px solid var(--ws-line-strong);background:var(--ws-surface);font-size:11px;font-weight:800;color:var(--ws-faint)}
+.hustle-v5.workspace.v49 .order-timeline li.complete span{border-color:var(--ws-accent);background:var(--ws-accent);color:#fff}
+.hustle-v5.workspace.v49 .order-timeline li.current span{border-color:var(--ws-accent);color:var(--ws-accent);box-shadow:0 0 0 4px var(--ws-accent-soft)}
+.hustle-v5.workspace.v49 .order-timeline li.current small{color:var(--ws-text);font-weight:700}
+.hustle-v5.workspace.v49 .order-timeline small{font-size:12px;line-height:1.3}
+.hustle-v5.workspace.v49 .v23-order-brief,.hustle-v5.workspace.v49 .delivery-note{margin:0 0 12px;padding:12px 14px;border:0;border-radius:10px;background:var(--ws-soft)}
+.hustle-v5.workspace.v49 .v23-order-brief strong,.hustle-v5.workspace.v49 .delivery-note b{display:block;margin-bottom:2px;font-size:12.5px;color:var(--ws-sub);font-weight:700}
+.hustle-v5.workspace.v49 .v23-order-brief p,.hustle-v5.workspace.v49 .delivery-note p{margin:0;font-size:14px;line-height:1.55}
+.hustle-v5.workspace.v49 .order-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin-top:6px}
+.hustle-v5.workspace.v49 .order-actions form{display:grid;gap:8px;flex:1 1 100%;margin-top:6px}
+.hustle-v5.workspace.v49 .order-actions textarea{min-height:84px}
+
+/* Seller studio */
+.hustle-v5.workspace.v49 .service-list{display:grid;margin:0 0 18px;border:1px solid var(--ws-line);border-radius:14px;background:var(--ws-surface);box-shadow:var(--ws-shadow);overflow:hidden}
+.hustle-v5.workspace.v49 .service-list>div{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;border:0;border-top:1px solid var(--ws-line);margin:0}
+.hustle-v5.workspace.v49 .service-list>div:first-child{border-top:0}
+.hustle-v5.workspace.v49 .service-list h3{margin:6px 0 2px;font-size:15px;line-height:1.35}
+.hustle-v5.workspace.v49 .service-list small{font-size:12.5px;color:var(--ws-sub)}
+.hustle-v5.workspace.v49 .role-actions{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.hustle-v5.workspace.v49 .role-actions .button{min-height:40px;font-size:13.5px}
+
+/* Messenger */
+.hustle-v5.workspace.v49 .v49-chat{display:grid;grid-template-columns:320px minmax(0,1fr);gap:0;width:100%;max-width:none;margin:0;height:min(760px,calc(100vh - 170px));min-height:520px;border:1px solid var(--ws-line);border-radius:16px;background:var(--ws-surface);box-shadow:var(--ws-shadow);overflow:hidden}
+.hustle-v5.workspace.v49 .v49-chat .chat-peers{display:flex;flex-direction:column;min-height:0;max-height:none;overflow:hidden;margin:0;padding:0;border:0;border-right:1px solid var(--ws-line);border-radius:0;background:var(--ws-surface)}
+.hustle-v5.workspace.v49 .v49-chat .chat-peers h2{display:flex;align-items:center;gap:8px;margin:0;padding:18px 18px 12px;font-size:16px}
+.hustle-v5.workspace.v49 .v49-peer-list{flex:1;min-height:0;overflow:auto;padding:0 8px 8px}
+.hustle-v5.workspace.v49 .v49-peer-list button{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:11px;align-items:center;width:100%;margin:0 0 2px;padding:10px;border:0;border-radius:12px;background:transparent;color:var(--ws-text);font:inherit;text-align:left;cursor:pointer}
+.hustle-v5.workspace.v49 .v49-peer-list button:hover{background:var(--ws-soft)}
+.hustle-v5.workspace.v49 .v49-peer-list button.active{background:var(--ws-accent-soft)}
+.hustle-v5.workspace.v49 .v49-chat .avatar{position:relative;display:grid;place-items:center;width:42px;height:42px;flex-shrink:0;border-radius:50%;background:var(--ws-soft);color:var(--ws-accent);font-size:13px;font-weight:800}
+.hustle-v5.workspace.v49 .v49-online{position:absolute;right:0;bottom:1px;width:11px;height:11px;border-radius:50%;background:#22b07d;box-shadow:0 0 0 2px var(--ws-surface)}
+.hustle-v5.workspace.v49 .v49-peer-text{display:grid;gap:1px;min-width:0}
+.hustle-v5.workspace.v49 .v49-peer-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.hustle-v5.workspace.v49 .v49-peer-top .v25-peer-name{font-size:14px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hustle-v5.workspace.v49 .v49-peer-top time{flex-shrink:0;font-size:11.5px;color:var(--ws-faint);font-variant-numeric:tabular-nums}
+.hustle-v5.workspace.v49 .v49-peer-last{font-size:13px;color:var(--ws-sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hustle-v5.workspace.v49 .v49-peer-list button.unread .v25-peer-name,.hustle-v5.workspace.v49 .v49-peer-list button.unread .v49-peer-last{color:var(--ws-text);font-weight:700}
+.hustle-v5.workspace.v49 .v49-chat .v25-unread{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--ws-accent);color:#fff;font-size:11.5px;font-weight:800;line-height:1}
+.hustle-v5.workspace.v49 .v49-peer-empty{margin:8px 10px;font-size:13px;color:var(--ws-sub)}
+.hustle-v5.workspace.v49 .v49-toggle{display:flex;align-items:center;gap:10px;margin:0;padding:12px 18px;border-top:1px solid var(--ws-line);font-size:13px;font-weight:500;color:var(--ws-sub);cursor:pointer;flex-direction:row}
+.hustle-v5.workspace.v49 .v49-toggle input{position:absolute;opacity:0;width:1px;height:1px}
+.hustle-v5.workspace.v49 .v49-toggle-track{position:relative;width:34px;height:20px;flex-shrink:0;border-radius:999px;background:var(--ws-line-strong);transition:background-color .15s}
+.hustle-v5.workspace.v49 .v49-toggle-track::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px #0003;transition:transform .15s}
+.hustle-v5.workspace.v49 .v49-toggle input:checked+.v49-toggle-track{background:var(--ws-accent)}
+.hustle-v5.workspace.v49 .v49-toggle input:checked+.v49-toggle-track::after{transform:translateX(14px)}
+.hustle-v5.workspace.v49 .v49-toggle input:focus-visible+.v49-toggle-track{outline:2px solid var(--ws-accent);outline-offset:2px}
+
+.hustle-v5.workspace.v49 .v49-chat .chat-thread{display:flex;flex-direction:column;min-width:0;min-height:0;margin:0;border:0;border-radius:0;background:var(--ws-canvas)}
+.hustle-v5.workspace.v49 .v49-chat .chat-thread-head{position:relative;display:flex;flex-direction:row;text-align:left;align-items:center;flex-wrap:wrap;gap:12px;padding:12px 18px;border-bottom:1px solid var(--ws-line);background:var(--ws-surface)}
+.hustle-v5.workspace.v49 .v49-back{display:none;place-items:center;width:36px;height:36px;margin-left:-8px;border:0;border-radius:10px;background:transparent;color:var(--ws-text);cursor:pointer}
+.hustle-v5.workspace.v49 .v49-head-text{flex:1;min-width:0;display:grid}
+.hustle-v5.workspace.v49 .v49-head-text b{font-size:15px;line-height:1.3}
+.hustle-v5.workspace.v49 .v49-head-text small{font-size:12.5px;color:var(--ws-sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hustle-v5.workspace.v49 .chat-thread-head .v47-safety{margin:0;gap:0}
+.hustle-v5.workspace.v49 .chat-thread-head .v47-safety-buttons{gap:4px}
+.hustle-v5.workspace.v49 .chat-thread-head .v47-link{min-height:32px;padding:0 10px;border-color:var(--ws-line);border-radius:8px;font-size:12.5px}
+.hustle-v5.workspace.v49 .chat-thread-head .v47-panel{position:absolute;z-index:5;top:calc(100% + 6px);right:12px;width:min(420px,calc(100% - 24px));box-shadow:0 18px 40px #0f1a3026}
+.hustle-v5.workspace.v49 .v25-order-context{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:9px 18px;border:0;border-bottom:1px solid var(--ws-line);background:var(--ws-soft);font-size:13px}
+.hustle-v5.workspace.v49 .v25-order-context strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hustle-v5.workspace.v49 .v25-order-context span{flex-shrink:0;color:var(--ws-sub)}
+.hustle-v5.workspace.v49 .v49-chat .chat-messages{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:4px;margin:0;padding:18px 20px;background:transparent;border:0;max-height:none}
+.hustle-v5.workspace.v49 .v49-day{display:flex;justify-content:center;align-self:stretch;margin:12px 0 8px}
+.hustle-v5.workspace.v49 .v49-day span{padding:3px 12px;border-radius:999px;background:var(--ws-surface);border:1px solid var(--ws-line);font-size:12px;font-weight:600;color:var(--ws-sub)}
+.hustle-v5.workspace.v49 .v49-chat .chat-bubble{display:grid;gap:4px;max-width:min(560px,78%);margin:0;padding:9px 13px 7px;border:0;border-radius:16px;font-size:14.5px;line-height:1.5;box-shadow:none}
+.hustle-v5.workspace.v49 .v49-chat .chat-bubble.theirs{align-self:flex-start;background:var(--ws-bubble-theirs);color:var(--ws-text);border:1px solid var(--ws-line);border-bottom-left-radius:5px}
+.hustle-v5.workspace.v49 .v49-chat .chat-bubble.mine{align-self:flex-end;background:var(--ws-bubble-mine);color:#fff;border-bottom-right-radius:5px}
+.hustle-v5.workspace.v49 .v49-chat .chat-bubble p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.hustle-v5.workspace.v49 .v49-chat .chat-bubble small{display:flex;align-items:center;justify-content:flex-end;gap:4px;font-size:11px;line-height:1;opacity:.7}
+.hustle-v5.workspace.v49 .v49-chat .chat-bubble.mine small{color:#e6eeff;opacity:.85}
+.hustle-v5.workspace.v49 .v49-chat .v25-attachment{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;width:100%;margin:2px 0;padding:8px 10px;border:1px solid var(--ws-line);border-radius:10px;background:var(--ws-soft);color:var(--ws-text);font:inherit;font-size:13px;text-align:left;cursor:pointer}
+.hustle-v5.workspace.v49 .v49-chat .chat-bubble.mine .v25-attachment{border-color:#ffffff40;background:#ffffff1f;color:#fff}
+.hustle-v5.workspace.v49 .v49-chat .v25-attachment span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hustle-v5.workspace.v49 .v49-chat .v25-preview{grid-column:1/-1;width:100%;max-height:240px;object-fit:cover;border-radius:8px}
+.hustle-v5.workspace.v49 .v49-chat .chat-messages>.button{align-self:center;margin:0 0 8px}
+.hustle-v5.workspace.v49 .v49-chat .chat-messages>.inline-note{align-self:center;margin:auto;color:var(--ws-sub)}
+
+.hustle-v5.workspace.v49 .v49-chat .v25-composer{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"draft draft" "emoji emoji" "tools form";gap:6px 8px;align-items:end;margin:0;padding:10px 14px 12px;border:0;border-top:1px solid var(--ws-line);background:var(--ws-surface)}
+.hustle-v5.workspace.v49 .v49-chat .v25-tools{grid-area:tools;display:flex;align-items:center;gap:2px;margin:0;padding:0 0 3px;border:0;background:none}
+.hustle-v5.workspace.v49 .v49-chat .v25-attach,.hustle-v5.workspace.v49 .v49-chat .v25-icon{display:grid;place-items:center;width:38px;height:38px;margin:0;padding:0;border:0;border-radius:10px;background:transparent;color:var(--ws-sub);cursor:pointer}
+.hustle-v5.workspace.v49 .v49-chat .v25-attach:hover,.hustle-v5.workspace.v49 .v49-chat .v25-icon:hover{background:var(--ws-soft);color:var(--ws-accent)}
+.hustle-v5.workspace.v49 .v49-chat .v25-attachment-draft{grid-area:draft}
+.hustle-v5.workspace.v49 .v49-chat .v25-emojis{grid-area:emoji;display:flex;flex-wrap:wrap;gap:4px;margin:0;padding:6px;border:1px solid var(--ws-line);border-radius:12px;background:var(--ws-surface)}
+.hustle-v5.workspace.v49 .v49-chat .v25-emojis button{width:36px;height:36px;border:0;border-radius:8px;background:transparent;font-size:19px;cursor:pointer}
+.hustle-v5.workspace.v49 .v49-chat .v25-emojis button:hover{background:var(--ws-soft)}
+.hustle-v5.workspace.v49 .v49-chat .chat-compose{grid-area:form;display:flex;flex-direction:row;align-items:flex-end;gap:8px;margin:0;padding:0;border:0}
+.hustle-v5.workspace.v49 .v49-chat .chat-compose label{flex:1;display:block;margin:0;font-size:0}
+.hustle-v5.workspace.v49 .v49-chat .chat-compose textarea{display:block;width:100%;height:44px;min-height:44px;max-height:160px;margin:0;padding:11px 14px;border:1px solid var(--ws-line);border-radius:12px;background:var(--ws-canvas);color:var(--ws-text);font:inherit;font-size:14.5px;line-height:1.45;resize:none}
+.hustle-v5.workspace.v49 .v49-chat .chat-compose textarea:focus{outline:0;border-color:var(--ws-accent);box-shadow:0 0 0 3px var(--ws-accent-soft)}
+.hustle-v5.workspace.v49 .v49-chat .chat-compose .button{min-height:44px;padding:0 16px;border-radius:12px;gap:7px}
+.hustle-v5.workspace.v49 .v49-chat .v47-blocked{border-top:1px solid var(--ws-line);background:var(--ws-soft)}
+.hustle-v5.workspace.v49 .v49-chat .chat-thread>.empty{margin:auto;padding:24px;text-align:center;color:var(--ws-sub);border:0;background:none}
+.hustle-v5.workspace.v49 .v49-chat .chat-thread>.empty h3{margin:12px 0 4px;font-size:16px;color:var(--ws-text)}
+.hustle-v5.workspace.v49 .v49-chat .chat-thread>.empty p{margin:0 auto;max-width:34ch;font-size:13.5px}
+.hustle-v5.workspace.v49 .v49-chat .chat-thread>.empty svg{color:var(--ws-accent);opacity:.7}
+
+/* Messages and empty states elsewhere */
+.hustle-v5.workspace.v49 .workspace-message{max-width:none;margin:16px 0 0;border-radius:10px}
+.hustle-v5.workspace.v49 .role-empty{display:grid;justify-items:start;gap:8px;padding:6px 0;color:var(--ws-sub)}
+
+/* Tablet: the rail becomes a top bar */
+@media (max-width:1000px){
+  .hustle-v5.workspace.v49 .workspace-layout{grid-template-columns:minmax(0,1fr);gap:16px;padding-top:14px}
+  .hustle-v5.workspace.v49 .v49-rail{min-width:0}
+  .hustle-v5.workspace.v49 .v49-switch{min-width:0}
+  .hustle-v5.workspace.v49 .v49-rail{position:static;flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:12px;border-radius:14px;max-height:none;overflow:visible}
+  .hustle-v5.workspace.v49 .v49-identity{order:1}
+  .hustle-v5.workspace.v49 .v49-identity small{display:none}
+  .hustle-v5.workspace.v49 .v49-switch{order:2;margin-left:auto}
+  .hustle-v5.workspace.v49 .v49-nav{order:3;flex:1 1 100%;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+  .hustle-v5.workspace.v49 .v49-nav::-webkit-scrollbar{display:none}
+  .hustle-v5.workspace.v49 .v49-nav button{width:auto;flex-shrink:0;white-space:nowrap}
+  .hustle-v5.workspace.v49 .v49-nav button.selected{box-shadow:inset 0 -3px 0 #8fb3ff}
+  .hustle-v5.workspace.v49 .v49-links,.hustle-v5.workspace.v49 .v49-beta{display:none}
+  .hustle-v5.workspace.v49 .v49-columns{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .hustle-v5.workspace.v49 .v49-chat{grid-template-columns:1fr;height:auto;min-height:0}
+  .hustle-v5.workspace.v49 .v49-chat .v49-peer-list{flex:none;overflow:visible}
+  .hustle-v5.workspace.v49 .v49-tab-messages .workspace-heading{display:none}
+  /* An open conversation fills the screen under the site header, like a phone messenger. */
+  .hustle-v5.workspace.v49 .v49-chat.has-peer{position:fixed;z-index:30;top:var(--ws-header,64px);left:0;right:0;bottom:0;width:auto;height:auto;border:0;border-radius:0;box-shadow:none}
+  .hustle-v5.workspace.v49 .v49-chat .chat-peers{border-right:0}
+  .hustle-v5.workspace.v49 .v49-chat.has-peer .chat-peers{display:none}
+  .hustle-v5.workspace.v49 .v49-chat:not(.has-peer) .chat-thread{display:none}
+  .hustle-v5.workspace.v49 .v49-back{display:grid}
+  .hustle-v5.workspace.v49 .chat-thread-head .v47-safety{flex:1 1 100%}
+  .hustle-v5.workspace.v49 .v49-chat .chat-bubble{max-width:86%}
+}
+@media (max-width:600px){
+  .hustle-v5.workspace.v49 .site-header{height:58px}
+  .hustle-v5.workspace.v49 .workspace-heading{margin-bottom:16px}
+  .hustle-v5.workspace.v49 .workspace-heading h1{font-size:23px}
+  .hustle-v5.workspace.v49 .v49-refresh{width:36px;padding:0;justify-content:center;gap:0}
+  .hustle-v5.workspace.v49 .v49-refresh-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .hustle-v5.workspace.v49 .v49-identity{display:none}
+  .hustle-v5.workspace.v49{--ws-header:58px}
+  .hustle-v5.workspace.v49 .v49-switch{order:3;flex:1 1 100%;margin:0}
+  .hustle-v5.workspace.v49 .v49-nav{order:4}
+  .hustle-v5.workspace.v49 .stats-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .hustle-v5.workspace.v49 .stats-row>div{padding:12px}
+  .hustle-v5.workspace.v49 .stats-row strong{font-size:22px}
+  .hustle-v5.workspace.v49 .v49-stat-icon{display:none}
+  .hustle-v5.workspace.v49 .workspace-panel{padding:16px}
+  .hustle-v5.workspace.v49 .v49-attention li{grid-template-columns:30px minmax(0,1fr);}
+  .hustle-v5.workspace.v49 .v49-attention li .button{grid-column:2;justify-self:start}
+  .hustle-v5.workspace.v49 .v49-rows button{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"main amount" "status status" "progress progress"}
+  .hustle-v5.workspace.v49 .v23-order-heading{flex-direction:column;gap:6px}
+  .hustle-v5.workspace.v49 .v23-order-price{text-align:left}
+  .hustle-v5.workspace.v49 .order-timeline small{font-size:10.5px}
+  .hustle-v5.workspace.v49 .v49-chat .chat-compose .button{width:44px;padding:0;justify-content:center;font-size:0;gap:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .hustle-v5.workspace.v49 *{transition:none!important}
+}
+.hustle-v5.workspace.v49 .v49-switch a svg{display:none}
+.hustle-v5.workspace.v49 .role-actions .button{font-weight:650}
+.hustle-v5.workspace.v49 .v49-chat .chat-compose textarea::placeholder{font-weight:400;color:var(--ws-faint)}
+.hustle-v5.workspace.v49 .v49-chat .chat-compose textarea{font-weight:400}
+/* Admin views */
+.hustle-v5.workspace.v49 .workspace-main>h2{margin:0 0 12px;font-size:17px}
+.hustle-v5.workspace.v49 .order-grid{display:grid;gap:14px}
+.hustle-v5.workspace.v49 .order-grid .order-card{margin:0}
+.hustle-v5.workspace.v49 .table-scroll{overflow-x:auto}
+.hustle-v5.workspace.v49 .workspace-panel table{width:100%;border-collapse:collapse;font-size:13.5px}
+.hustle-v5.workspace.v49 .workspace-panel th{padding:8px 10px;border-bottom:1px solid var(--ws-line);text-align:left;font-size:12.5px;font-weight:650;color:var(--ws-sub)}
+.hustle-v5.workspace.v49 .workspace-panel td{padding:10px;border-bottom:1px solid var(--ws-line)}
+.hustle-v5.workspace.v49 .workspace-panel tr:last-child td{border-bottom:0}
+.hustle-v5.workspace.v49 .workspace-panel .service-list{box-shadow:none}
+.hustle-v5.workspace.v49 .v47-panel{border-color:var(--ws-line);border-radius:14px;background:var(--ws-surface);box-shadow:var(--ws-shadow)}
+.hustle-v5.workspace.v49 h2 .v25-unread{margin-left:8px;vertical-align:middle}
+.hustle-v5.workspace.v49 .v35-order-notice{border-color:var(--ws-line);background:var(--ws-soft)}

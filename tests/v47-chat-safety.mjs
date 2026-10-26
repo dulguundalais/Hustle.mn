@@ -49,7 +49,7 @@ test('workspace wires block, report, blocked composer, admin queue and friendly 
   assert.match(w, /const safety=chatSafetyMessage\(e,en\);if\(safety\)\{setError\(safety\);return;\}/);
   assert.match(w, /<ChatSafetyActions uid=\{uid\} peerId=\{chatPeer\}/);
   assert.match(w, /chatBlocks\.blocked\.includes\(chatPeer\)\?<BlockedComposer/);
-  assert.match(w, /tab==='admin'&&role==='admin'&&<><AdminChatReports/);
+  assert.match(w, /{adminView==='overview'&&<>[\s\S]*?<AdminChatReports en={en}/);
   assert.match(ui, /db\.from\('user_blocks'\)\.insert\(\{blocker_id: uid, blocked_id: peer\}\)/);
   assert.match(ui, /db\.rpc\('admin_message_reports', \{p_status: filter\}\)/);
   assert.match(ui, /db\.rpc\('manage_beta', \{target_email: report\.reported_email, target_role: 'member', target_enabled: false\}\)/);

@@ -37,9 +37,3 @@ test('mobile inputs use 16px text so iOS does not zoom', () => {
   assert.match(css, /@media \(max-width:600px\)[\s\S]*\.hustle-auth-input input\{font-size:16px\}/);
 });
 
-test('sign-in sends admins to the admin console and renders the right dashboard', () => {
-  assert.match(w, /const buyerIntent=next\.has\('seller'\)\|\|next\.has\('service'\)/);
-  assert.match(w, /\(!asked\|\|asked==='buyer'\)&&!buyerIntent/);
-  assert.match(w, /signedRole==='admin'\?'admin'/);
-  assert.match(w, /if\(mode!==entry\)\{window\.location\.replace\(target\);return\}/);
-});

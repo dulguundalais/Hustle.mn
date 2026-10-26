@@ -51,11 +51,11 @@ useEffect(()=>{
   setAccount({id:user.id,name:fallback,isSeller:false});
   try{
    // Profile is a presentation detail; auth persists even when this lookup is unavailable.
-   const result=await db.from('profiles').select('id,display_name,is_seller').eq('id',user.id).limit(1);
+   const [result,beta]=await Promise.all([db.from('profiles').select('id,display_name,is_seller').eq('id',user.id).limit(1),Promise.resolve(db.from('beta_allowlist').select('role').eq('email',(user.email||'').toLowerCase()).eq('enabled',true).maybeSingle()).catch(()=>({data:null}))]);
    if(!active||version!==generation||result.error)return;
    const profile=result.data?.[0];
    setAccount(current=>current?.id===user.id?{
-    id:user.id,name:profile?.display_name?.trim()||fallback,isSeller:profile?.is_seller===true
+    id:user.id,name:profile?.display_name?.trim()||fallback,isSeller:profile?.is_seller===true,isAdmin:(beta.data as {role?:string}|null)?.role==='admin'
    }:current);
   }catch{/* Continue with the signed-in email-local-part fallback. */}
  };
