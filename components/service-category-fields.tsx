@@ -1,5 +1,5 @@
 'use client';
-import {useState} from 'react';
+import {useEffect,useState} from 'react';
 import {Lightbulb,ShieldCheck,X} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
 import {CATEGORIES,SERVICE_TYPES,categoryById,normalizeCategory,legacyCategory,type ServiceType} from '../lib/marketplace/taxonomy';
@@ -9,8 +9,8 @@ type Editing={category?:string;subcategory?:string|null;service_type?:string|nul
 /* V50: sellers choose from the fixed taxonomy (main category → subcategory),
    pick how the service is sold, add a few tags, and can suggest a missing
    category for admin review. Suggestions never become public on their own. */
-export default function ServiceCategoryFields({en,uid,editing,onError,onNotice}:{
- en:boolean;uid:string;editing:Editing;onError:(e:unknown)=>void;onNotice:(m:string)=>void
+export default function ServiceCategoryFields({en,uid,editing,onError,onNotice,onTypeChange}:{
+ en:boolean;uid:string;editing:Editing;onError:(e:unknown)=>void;onNotice:(m:string)=>void;onTypeChange?:(type:ServiceType)=>void
 }){
  const t=(mn:string,eng:string)=>en?eng:mn;
  const legacy=editing?.category?legacyCategory(editing.category):undefined;
@@ -18,6 +18,8 @@ export default function ServiceCategoryFields({en,uid,editing,onError,onNotice}:
  const [category,setCategory]=useState<string>(startCategory);
  const [subcategory,setSubcategory]=useState<string>(editing?.subcategory||legacy?.subcategory||'');
  const [type,setType]=useState<ServiceType>((SERVICE_TYPES.find(x=>x.id===editing?.service_type)?.id)||'fixed');
+ // V52: the package editor relabels its fields for the chosen pricing model.
+ useEffect(()=>{onTypeChange?.(type)},[type]);// eslint-disable-line react-hooks/exhaustive-deps
  const [suggesting,setSuggesting]=useState(false);
  const [suggestion,setSuggestion]=useState({name:'',nameEn:'',note:''});
  const [sending,setSending]=useState(false);

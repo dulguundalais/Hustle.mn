@@ -61,3 +61,14 @@ test('orders show the next step and messaging pages per conversation',()=>{
  assert.match(d,/isQuote=kind\?\.id==='custom'/,'custom pricing asks for a quote instead of a fixed order');
  assert.match(d,/'\/buyer\/\?tab=orders'\+\(orderId\?'&order='\+encodeURIComponent\(orderId\):''\)/);
 });
+
+test('package editor labels follow the pricing model the freelancer picked',()=>{
+ const pk=read('components/service-packages.tsx');
+ assert.match(pk,/serviceTypeById\(serviceType\|\|/);
+ assert.match(pk,/t\('Жишиг эхлэх үнэ \(₮\)','Example starting price \(MNT\)'\)/);
+ assert.match(pk,/<label>\{priceLabel\}<input type="number"/);
+ assert.match(read('components/service-category-fields.tsx'),/useEffect\(\(\)=>\{onTypeChange\?\.\(type\)\},\[type\]\)/);
+ const w=read('components/workspace.tsx');
+ assert.match(w,/onTypeChange=\{setServiceKind\}/);
+ assert.match(w,/serviceType=\{serviceKind\}/);
+});
