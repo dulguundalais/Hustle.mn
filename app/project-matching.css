@@ -35,3 +35,4 @@
 .project-proposal-management>.project-ok{margin:0}
 .project-proposal-management .project-actions{margin-top:0;flex-wrap:wrap}
 .project-proposal-management .project-actions>button:first-child{background:#003366;color:#fff;border:0;border-radius:10px;padding:11px 15px;cursor:pointer;font-weight:800}
+.project-item.is-focus{box-shadow:0 0 0 2px #2b5cde,0 18px 40px rgb(28 62 168/.15)}

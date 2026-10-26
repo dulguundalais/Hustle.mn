@@ -31,9 +31,9 @@ test('unified bell groups chat threads without losing unread message totals',()=
 });
 test('notifications link to intended role dashboards and retain read state',()=>{
  const found=combineNotices(project,order,[]);
- assert.equal(found.items.find(n=>n.kind==='proposal').href,'/project-requests/');
- assert.equal(found.items.find(n=>n.kind==='invitation').href,'/seller-requests/');
- assert.equal(found.items.find(n=>n.kind==='delivered').href,'/buyer/?tab=orders');
+ assert.equal(found.items.find(n=>n.kind==='proposal').href,'/project-requests/?request=r1');
+ assert.equal(found.items.find(n=>n.kind==='invitation').href,'/seller-requests/?request=r2');
+ assert.equal(found.items.find(n=>n.kind==='delivered').href,'/buyer/?tab=orders&order=order1');
  assert.equal(found.items.find(n=>n.kind==='invitation').read,true);
  assert.equal(badgeCount(0),'0');
  assert.equal(badgeCount(199),'99+');

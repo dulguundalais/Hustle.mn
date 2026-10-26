@@ -38,6 +38,10 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
  const [statusFilter,setStatusFilter]=useState('all'),[offerSort,setOfferSort]=useState('newest');
  const [draftReadyFor,setDraftReadyFor]=useState(''),[signInHref,setSignInHref]=useState('/login/?mode=buyer');
  const draftOwner=useRef('');
+ // V52: a notification link (?request=) scrolls to and highlights that request.
+ const [focusRequest,setFocusRequest]=useState('');
+ useEffect(()=>{const id=new URLSearchParams(location.search).get('request');if(id&&/^[0-9a-f-]{36}$/i.test(id))setFocusRequest(id)},[]);
+ useEffect(()=>{if(!focusRequest||loading)return;const tm=window.setTimeout(()=>document.getElementById('request-'+focusRequest)?.scrollIntoView({behavior:'smooth',block:'start'}),200);return()=>window.clearTimeout(tm)},[focusRequest,loading]);
  const t=(mn:string,eng:string)=>en?eng:mn;
  const refresh=async()=>{
   const db=await marketplaceClient();
@@ -241,7 +245,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
      {visibleRequests.length===0?<p className="project-muted">{t('Одоогоор хүсэлт алга.','No requests yet.')}</p>:visibleRequests.map(req=>{
       const offers=proposals.filter(p=>p.request_id===req.id);
       const sentCount=invites.filter(i=>i.request_id===req.id).length;
-      return <article className="project-item" key={req.id}>
+      return <article className={'project-item'+(focusRequest===req.id?' is-focus':'')} key={req.id} id={'request-'+req.id}>
        <div className="project-item-heading"><div><span className="project-chip">{req.category.toUpperCase()} · {req.audience}</span><h3>{req.title}</h3></div><span className="project-chip">{req.status}</span></div>
        <p>{req.brief}</p><small>{t('Хүргэсэн','Invited')}: {sentCount} · {t('Ирсэн санал','Proposals')}: {offers.length}</small>
        {sortedOffers(offers).map(offer=>{
@@ -262,7 +266,7 @@ export default function ProjectMatching({mode}:{mode:'buyer'|'seller'}){
      {inbox.length===0?<div className="project-empty"><p>{t('Одоогоор төслийн хүсэлт алга. Нийтлэгдсэн үйлчилгээтэй, төсөл авах горим асаалттай үед тохирох хүсэлт ирнэ.','No invitations yet. Publish your services and enable availability to receive matching requests.')}</p><Link className="project-outline" href="/seller-studio/">{t('Үйлчилгээ удирдах','Manage services')}<ArrowRight size={16}/></Link></div>:
      inbox.map(inv=>{
       const offered=proposals.find(p=>p.request_id===inv.request_id);
-      return <article key={inv.id} className="project-item"><div className="project-item-heading"><div><span className="project-chip">{inv.category.toUpperCase()} · {inv.audience}</span><h3>{inv.title}</h3></div><span className="project-chip">{inv.invite_status}</span></div>
+      return <article key={inv.id} id={'request-'+inv.request_id} className={'project-item'+(focusRequest===inv.request_id?' is-focus':'')}><div className="project-item-heading"><div><span className="project-chip">{inv.category.toUpperCase()} · {inv.audience}</span><h3>{inv.title}</h3></div><span className="project-chip">{inv.invite_status}</span></div>
        <p>{inv.brief}</p><small>{inv.budget_max?currency(inv.budget_max):t('Төсөв тохиролцоно','Budget negotiable')} · {inv.preferred_days?inv.preferred_days+' '+t('хоног','days'):t('Хугацаа тохиролцоно','Timeline negotiable')}</small>
        {inv.invite_status==='declined'?<p className="project-muted">{t('Та урилгаас татгалзсан.','You declined this invitation.')}</p>:offered?.status==='pending'?<div className="project-proposal-management"><p className="project-ok"><CheckCircle2 size={16}/>{t('Санал илгээгдсэн','Proposal submitted')} — {currency(offered.quoted_price)}</p><div className="project-actions"><button type="button" disabled={busy} onClick={()=>openProposal(inv,offered)}>{t('Санал засах','Edit proposal')}</button><button type="button" className="project-quiet" disabled={busy} onClick={()=>withdrawProposal(offered)}><XCircle size={15}/>{t('Санал татах','Withdraw')}</button></div></div>:offered?.status==='withdrawn'?<div className="project-proposal-management"><p className="project-muted">{t('Энэ саналаа татсан. Хүсэлт нээлттэй байгаа үед дахин санал өгч болно.','Proposal withdrawn. You may submit again while the project is open.')}</p><button type="button" className="project-outline" disabled={busy} onClick={()=>openProposal(inv,offered)}>{t('Дахин санал илгээх','Send again')}</button></div>:offered?<p className="project-ok">{t('Саналын төлөв','Proposal status')}: {offered.status}</p>:<div className="project-actions"><button disabled={busy} type="button" onClick={()=>openProposal(inv)}>{t('Санал илгээх','Send a proposal')}</button><button className="project-quiet" disabled={busy} onClick={()=>void action(async()=>{const db=await marketplaceClient();const r=await db.rpc('decline_project_invitation',{p_invitation_id:inv.id});if(r.error)throw r.error},t('Хүсэлтийг татгалзлаа.','Invitation declined.'))}>{t('Татгалзах','Decline')}</button></div>}
       </article>;

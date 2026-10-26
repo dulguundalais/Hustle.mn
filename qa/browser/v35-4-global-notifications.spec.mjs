@@ -43,14 +43,14 @@ for(const width of [390,1440]){
   await trigger.click();
   await expect(page.locator('#global-notice-panel')).toBeVisible();
   await expect(page.locator('.global-notice-item')).toHaveCount(3);
-  await expect(page.locator('.global-notice-item a[href="/buyer/?tab=messages"]')).toBeVisible();
+  await expect(page.locator('.global-notice-item a[href^="/buyer/?tab=messages"]')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.locator('#global-notice-panel')).toHaveCount(0);
   await expect(trigger).toBeFocused();
   await trigger.click();
   await page.getByRole('button',{name:/Mark alerts read|Бүгдийг уншсан/}).click();
   await expect(page.locator('.global-notice-count')).toHaveText('1');
-  await page.locator('.global-notice-item a[href="/buyer/?tab=messages"]').click();
+  await page.locator('.global-notice-item a[href^="/buyer/?tab=messages"]').click();
   await expect(page).toHaveURL(/\/buyer\/\?tab=messages/);
   await expect(page.locator('.v25-messenger')).toBeVisible();
   await expect(page.locator('.global-notice-trigger')).toBeVisible();

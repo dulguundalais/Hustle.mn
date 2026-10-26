@@ -53,5 +53,5 @@ test('V44: seller account routes header, account menu and chat notifications to 
  await expect(page.locator('.mobile-auth-nav')).toHaveAttribute('href','/seller-studio/');
  await mobileMenu.click();
  await page.locator('.global-notice-trigger').click();
- await expect(page.locator('.global-notice-item a[href="/seller-studio/?tab=messages"]')).toBeVisible();
+ await expect(page.locator('.global-notice-item a[href^="/seller-studio/?tab=messages"]')).toBeVisible();
 });
