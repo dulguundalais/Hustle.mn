@@ -146,7 +146,7 @@ export default function GlobalNotifications({userId,en,isSeller=false}:{userId:s
      </div>
      {!item.read&&item.source!=='chat'&&<button className="global-notice-read" type="button" disabled={busy} onClick={()=>void markRead(item)} aria-label={t('Уншсан болгох','Mark read')}><Check size={15}/></button>}
     </div>)}</div>}
-   {inbox.chatUnread>0&&<p className="global-notice-hint">{t('Чатыг нээхэд зурвас уншсанд тооцогдоно.','Chat messages are marked read when you open the conversation.')}</p>}
+   {inbox.chatUnread>0&&<p className="global-notice-hint">{t('Харилцан яриаг нээхэд мессежүүдийг уншсанд тооцно.','Chat messages are marked read when you open the conversation.')}</p>}
    <div className="global-notice-footer"><Link href={chatHref} onClick={()=>setOpen(false)}><MessageCircle size={15}/>{t('Мессежүүд','Messages')}</Link><Link href="/project-requests/" onClick={()=>setOpen(false)}>{t('Төслүүд','Projects')}<ChevronRight size={15}/></Link></div>
   </div>}
  </div>;

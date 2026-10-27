@@ -11,7 +11,7 @@ test('business buyer sees inline solutions immediately after one goal click',asy
  await d.locator('.guided-goal').filter({hasText:'AI & процесс автоматжуулах'}).click();
  await expect(d.locator('.guided-result-card')).toHaveCount(3);
  await expect(d.locator('.guided-modal-body h2')).toContainText('автоматжуулах');
- await expect(d.locator('.guided-match-status')).toContainText('нийтлэгдсэн freelancer');
+ await expect(d.locator('.guided-match-status')).toContainText('Одоогоор тохирох үйлчилгээ алга');
  await d.locator('.guided-optional-toggle').click();
  await expect(d.locator('.guided-optional-content')).toBeVisible();
  await d.locator('.guided-optional-content input').first().fill('500,000 ₮');

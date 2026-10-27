@@ -45,7 +45,7 @@ export default function PremiumAuth({
        redirectTo:location.origin+'/auth/reset/'
      });
      if(result.error)throw result.error;
-     setResetMessage(t('Хэрэв энэ хаягт бүртгэл байгаа бөгөөд имэйл хүргэлт тохируулагдсан бол сэргээх холбоос хүсэгдлээ. Имэйл хүрснийг баталгаажуулах боломжгүй.','If an account exists and email delivery is configured, a recovery link has been requested. Delivery is not guaranteed.'));
+     setResetMessage(t('Хэрэв энэ имэйлээр бүртгэлтэй бол нууц үг сэргээх холбоос ирнэ. Ирсэн имэйл болон Спам хавтсаа шалгаарай.','If an account exists and email delivery is configured, a recovery link has been requested. Delivery is not guaranteed.'));
    }catch(error){setResetError(friendlyError(error,en))}
    finally{setResetBusy(false)}
  }
@@ -53,20 +53,20 @@ export default function PremiumAuth({
  const forSeller=entryMode==='seller';
  const title=isAdmin?t('Админ нэвтрэлт','Admin sign in'):
   resetMode?t('Нууц үг сэргээх','Reset your password'):
-  register?forSeller?t('Freelancer-ээр нэгдэх','Join as a freelancer'):t('Hustle-д нэгдэх','Create your account'):
+  register?forSeller?t('Мэргэжилтнээр бүртгүүлэх','Join as a freelancer'):t('Hustle-д нэгдэх','Create your account'):
   t('Эргэн тавтай морил','Welcome back');
  const lead=resetMode?t('Имэйлээ оруулаад нууц үг сэргээх холбоос хүсээрэй.','Enter your email to request a password reset link.'):
   isAdmin?t('Зөвхөн эрх бүхий админ нэвтэрнэ.','For authorized administrators only.'):
   register?forSeller?t('Үйлчилгээгээ багц болгон нийтэлж, захиалга аваарай.','Publish your services as packages and start taking orders.'):t('Имэйлээ баталгаажуулмагц шууд ашиглаж эхэлнэ.','Confirm your email and you are ready to go.'):
   t('Төсөл, захиалга, мессежээ үргэлжлүүлээрэй.','Pick up your projects, orders and messages.');
  const benefits:[typeof Package,string,string][]=forSeller?[
-   [Package,t('Багцаа өөрөө тогтооно','Set your own packages'),t('Үнэ, хугацаа, засварын тоогоо гурван түвшинд тохируулна.','Choose price, delivery time and revisions across three tiers.')],
+   [Package,t('Багцын нөхцөлөө өөрөө сонгоно','Set your own packages'),t('Үнэ, хугацаа, засварын тоогоо гурван түвшинд тохируулна.','Choose price, delivery time and revisions across three tiers.')],
    [Inbox,t('Захиалга, мессеж нэг дор','Orders and messages together'),t('Ирсэн захиалга, яриагаа нэг самбараас удирдана.','Handle incoming orders and conversations from one dashboard.')],
-   [BadgeCheck,t('Бодит үнэлгээ','Reviews that count'),t('Дууссан захиалга бүрийн үнэлгээ профайлд тань үлдэнэ.','Every completed order can leave a review on your profile.')]
+   [BadgeCheck,t('Бодит үнэлгээ','Reviews that count'),t('Дууссан захиалгын үнэлгээ таны профайлд харагдана.','Every completed order can leave a review on your profile.')]
  ]:[
    [Package,t('Үнэ нь тодорхой багц','Clear package pricing'),t('Үнэ, хугацаа, засварын тоог захиалахаас өмнө харна.','See price, delivery time and revisions before you order.')],
-   [BadgeCheck,t('Баталгаат үнэлгээ','Verified reviews'),t('Зөвхөн ажлаа дуусгасан захиалагч үнэлгээ үлдээнэ.','Only clients with a completed order can leave a review.')],
-   [MessageCircle,t('Мэргэжилтэнтэй шууд','Talk to the expert directly'),t('Чатлаж, файлаа нэг дор солилцоно.','Chat and share files in one place.')]
+   [BadgeCheck,t('Захиалгаар баталгаажсан үнэлгээ','Verified reviews'),t('Зөвхөн ажлаа дуусгасан захиалагч үнэлгээ үлдээнэ.','Only clients with a completed order can leave a review.')],
+   [MessageCircle,t('Мэргэжилтэнтэй шууд харилцах','Talk to the expert directly'),t('Чатлаж, файлаа нэг дор солилцоно.','Chat and share files in one place.')]
  ];
  const cooldown=emailCooldown>59?Math.ceil(emailCooldown/60)+t(' мин',' min'):emailCooldown+t(' сек','s');
  const passwordReady=password.length>=8;
@@ -103,7 +103,7 @@ export default function PremiumAuth({
      <div className="hustle-auth-input"><Mail size={18} aria-hidden="true"/><input id="hustle-auth-email" name="email" type="email" autoComplete="email" inputMode="email" placeholder="you@example.com" required value={email} onChange={e=>onEmailChange(e.target.value)}/></div>
      <div className="hustle-auth-label-row"><label htmlFor="hustle-auth-password">{t('Нууц үг','Password')}</label>{!register&&<button className="hustle-auth-link" type="button" onClick={openRecovery}>{t('Нууц үгээ мартсан уу?','Forgot password?')}</button>}</div>
      <div className="hustle-auth-input"><LockKeyhole size={18} aria-hidden="true"/><input id="hustle-auth-password" name="password" type={showPassword?'text':'password'} autoComplete={register?'new-password':'current-password'} minLength={8} required aria-describedby={register?'hustle-auth-password-hint':undefined} value={password} onChange={e=>onPasswordChange(e.target.value)}/><button type="button" className="hustle-auth-visibility" onClick={()=>setShowPassword(v=>!v)} aria-label={showPassword?t('Нууц үгийг нуух','Hide password'):t('Нууц үгийг харах','Show password')} aria-pressed={showPassword}>{showPassword?<EyeOff size={18}/>:<Eye size={18}/>}</button></div>
-     {register&&<p id="hustle-auth-password-hint" className={'hustle-auth-hint'+(passwordReady?' is-met':'')}><Check size={14} aria-hidden="true"/>{t('Доод тал нь 8 тэмдэгт','At least 8 characters')}</p>}
+     {register&&<p id="hustle-auth-password-hint" className={'hustle-auth-hint'+(passwordReady?' is-met':'')}><Check size={14} aria-hidden="true"/>{t('Дор хаяж 8 тэмдэгт','At least 8 characters')}</p>}
      <button className="hustle-auth-submit" disabled={busy||(register&&emailCooldown>0)} type="submit">{busy?t('Шалгаж байна…','Please wait…'):register?t('Бүртгэл үүсгэх','Create account'):t('Нэвтрэх','Sign in')}<ArrowRight size={18} aria-hidden="true"/></button>
    </form>}
    {feedback&&<div ref={feedbackRef} className={'hustle-auth-feedback '+(error||resetError?'is-error':'is-success')} role={error||resetError?'alert':'status'}>

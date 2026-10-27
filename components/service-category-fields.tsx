@@ -46,7 +46,7 @@ export default function ServiceCategoryFields({en,uid,editing,onError,onNotice,o
    </label>
    <label>{t('Дэд ангилал','Subcategory')}
     <select name="subcategory" required value={subcategory} onChange={e=>setSubcategory(e.target.value)} disabled={!current}>
-     <option value="" disabled>{current?t('Сонгох','Choose'):t('Эхлээд үндсэн ангилал','Choose a main category first')}</option>
+     <option value="" disabled>{current?t('Сонгох','Choose'):t('Эхлээд үндсэн ангиллаа сонгоно уу','Choose a main category first')}</option>
      {current?.subcategories.map(s=><option key={s.id} value={s.id}>{en?s.en:s.mn}</option>)}
     </select>
    </label>
@@ -69,7 +69,7 @@ export default function ServiceCategoryFields({en,uid,editing,onError,onNotice,o
     <input type="radio" name="service_type" value={s.id} checked={type===s.id} onChange={()=>setType(s.id)}/>
     <b>{en?s.en:s.mn}</b><small>{en?s.hintEn:s.hintMn}</small>
    </label>)}</div>
-   {type!=='fixed'&&<p className="v50-type-note">{t('Basic багцын үнэ нь ','The Basic package price is shown as ')}<b>{en?'price '+serviceTypeSuffix(type,true):'үнэ '+serviceTypeSuffix(type,false)}</b>{t(' гэж харагдана. Төлбөр Hustle-ээр дамжихгүй.',' . Payments do not go through Hustle.')}</p>}
+   {type!=='fixed'&&<p className="v50-type-note">{t('Суурь багцын үнэ нь ','The Basic package price is shown as ')}<b>{en?'price '+serviceTypeSuffix(type,true):'үнэ '+serviceTypeSuffix(type,false)}</b>{t(' гэж харагдана. Төлбөр Hustle-ээр дамжихгүй.',' . Payments do not go through Hustle.')}</p>}
   </fieldset>
   <label>{t('Ур чадвар, түлхүүр үг (таслалаар, 8 хүртэл)','Skills and tags (comma separated, up to 8)')}
    <input name="tags" defaultValue={(editing?.tags||[]).join(', ')} maxLength={240} placeholder={t('Жишээ нь: n8n, Messenger, CRM','e.g. n8n, Messenger, CRM')}/>

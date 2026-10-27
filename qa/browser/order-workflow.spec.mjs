@@ -18,7 +18,7 @@ test('Buyer chooses Premium, Seller delivers, Buyer completes and publishes veri
   await mockOrderFlow(seller,state,'seller');
   await buyer.goto('/listing/?id='+serviceId);
   await expect(buyer.getByRole('heading',{name:'Professional brand identity'})).toBeVisible();
-  await buyer.locator('.v28-detail-tiers button',{hasText:'Premium'}).click();
+  await buyer.locator('.v28-detail-tiers button',{hasText:/Дээд|Premium/}).click();
   await expect(buyer.locator('.v28-detail-price')).toContainText('350,000');
   // Guest presses the one primary CTA, signs in and lands back on the same service with the drawer open.
   await buyer.locator('.v28-detail-primary').click();
@@ -43,7 +43,7 @@ test('Buyer chooses Premium, Seller delivers, Buyer completes and publishes veri
   await expect(seller.locator('.order-card .status-requested')).toBeVisible();
   await seller.getByRole('button',{name:/Зөвшөөрөх|Accept/}).click();
   await expect(seller.locator('.order-card .status-accepted')).toBeVisible();
-  await seller.getByRole('button',{name:/Ажил эхлэх|Start work/}).click();
+  await seller.getByRole('button',{name:/Ажил эхлүүлэх|Start work/}).click();
   await expect(seller.locator('.order-card .status-in_progress')).toBeVisible();
   await seller.locator('textarea[name="note"]').fill('Final logo and full brand guidelines are delivered in the agreed private project folder.');
   await seller.getByRole('button',{name:/Хүлээлгэн өгөх|Deliver work/}).click();
@@ -54,7 +54,7 @@ test('Buyer chooses Premium, Seller delivers, Buyer completes and publishes veri
   await expect(buyer.locator('.workspace-main')).toBeVisible();
   await buyer.getByRole('button',{name:/Миний захиалга|My orders/}).first().click();
   await expect(buyer.locator('.order-card .status-delivered')).toBeVisible();
-  await buyer.getByRole('button',{name:/Хүлээн авч дуусгах|Accept delivery/}).click();
+  await buyer.getByRole('button',{name:/Ажлыг хүлээн авах|Accept delivery/}).click();
   await expect(buyer.locator('.order-card .status-completed')).toBeVisible();
   await buyer.locator('.review-composer textarea').fill('Excellent brand identity and clear communication from the freelancer.');
   await buyer.getByRole('button',{name:/Үнэлгээ нийтлэх|Publish review/}).click();
@@ -88,7 +88,7 @@ for(const width of [390,768]){
   await mockOrderFlow(page,makeOrderState(),'buyer');
   await page.goto('/listing/?id='+serviceId);
   await expect(page.locator('.v28-detail-offer')).toBeVisible();
-  await page.locator('.v28-detail-tiers button',{hasText:'Standard'}).click();
+  await page.locator('.v28-detail-tiers button',{hasText:/Стандарт|Standard/}).click();
   await expect(page.locator('.v28-detail-price')).toContainText('220,000');
   await expect(page.locator('.v28-detail-primary')).toHaveAttribute('href',/tier%3DStandard/);
   const scrollWidth=await page.evaluate(()=>document.documentElement.scrollWidth);

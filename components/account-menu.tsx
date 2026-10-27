@@ -28,21 +28,21 @@ export default function AccountMenu({account,en,onSignOut,signingOut}:{
  },[open]);
  return <div className="global-account-menu" ref={root}>
   <button type="button" ref={trigger} className={'global-account-trigger'+(open?' expanded':'')} aria-haspopup="true" aria-expanded={open}
-   aria-controls="global-account-panel" aria-label={t('Аккаунтын цэс: ','Account menu: ')+account.name}
+   aria-controls="global-account-panel" aria-label={t('Хэрэглэгчийн цэс: ','Account menu: ')+account.name}
    onClick={()=>setOpen(value=>!value)} disabled={signingOut}>
    <span className="global-account-avatar" aria-hidden="true">{initial}</span>
    <span className="global-account-name">{account.name}</span>
    <ChevronDown className="global-account-chevron" size={15} aria-hidden="true"/>
   </button>
-  {open&&<div id="global-account-panel" className="global-account-panel" role="group" aria-label={t('Аккаунтын тохиргоо','Account options')}>
+  {open&&<div id="global-account-panel" className="global-account-panel" role="group" aria-label={t('Хэрэглэгчийн тохиргоо','Account options')}>
    <div className="global-account-heading">
     <span className="global-account-avatar heading-avatar" aria-hidden="true">{initial}</span>
-    <div><strong title={account.name}>{account.name}</strong><small>{t('Нэвтэрсэн аккаунт','Signed in')}</small></div>
+    <div><strong title={account.name}>{account.name}</strong><small>{t('Нэвтэрсэн хэрэглэгч','Signed in')}</small></div>
    </div>
    <div className="global-account-links">
-    <Link href={dashboardHref} onClick={()=>setOpen(false)}><LayoutDashboard size={17}/>{account.isSeller?t('Миний студи','Seller dashboard'):t('Миний dashboard','My dashboard')}</Link>
-    {account.isSeller&&<Link href="/buyer/" onClick={()=>setOpen(false)}><LayoutDashboard size={17}/>{t('Buyer горим','Buyer dashboard')}</Link>}
-    <Link href="/seller-studio/" onClick={()=>setOpen(false)}><BriefcaseBusiness size={17}/>{account.isSeller?t('Seller Studio','Seller Studio'):t('Seller болох','Become a seller')}</Link>
+    <Link href={dashboardHref} onClick={()=>setOpen(false)}><LayoutDashboard size={17}/>{account.isSeller?t('Мэргэжилтний самбар','Seller dashboard'):t('Миний самбар','My dashboard')}</Link>
+    {account.isSeller&&<Link href="/buyer/" onClick={()=>setOpen(false)}><LayoutDashboard size={17}/>{t('Захиалагчийн самбар','Buyer dashboard')}</Link>}
+    <Link href="/seller-studio/" onClick={()=>setOpen(false)}><BriefcaseBusiness size={17}/>{account.isSeller?t('Мэргэжилтний самбар','Seller Studio'):t('Үйлчилгээ үзүүлэх','Become a seller')}</Link>
     {account.isAdmin&&<Link href="/admin/" onClick={()=>setOpen(false)}><Settings2 size={17}/>{t('Админ төв','Admin console')}</Link>}
     <Link href={account.isSeller?'/my-profile/':'/buyer/?tab=profile'} onClick={()=>setOpen(false)}><UserRound size={17}/>{t('Профайл','Profile')}</Link>
    </div>

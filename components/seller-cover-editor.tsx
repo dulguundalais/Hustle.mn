@@ -64,7 +64,7 @@ export default function SellerCoverEditor({sellerId,coverPath,focusY=50,en,onCha
    try{const signed=await db.storage.from('portfolio').createSignedUrl(committed,600);if(signed.data?.signedUrl)setUrl(signed.data.signedUrl)}catch{}
   }catch{
    if(nextPath){try{(await marketplaceClient()).storage.from('portfolio').remove([nextPath])}catch{}}
-   setMessage(t('Cover зураг хадгалж чадсангүй. Дахин оролдоно уу.','Could not save your cover. Please try again.'));
+   setMessage(t('Нүүр зураг хадгалж чадсангүй. Дахин оролдоно уу.','Could not save your cover. Please try again.'));
   }finally{setBusy(false);if(input.current)input.current.value=''}
  };
  const saveFocus=async()=>{
@@ -87,17 +87,17 @@ export default function SellerCoverEditor({sellerId,coverPath,focusY=50,en,onCha
    if(updated.error||updated.data?.cover_path!==null)throw updated.error||new Error('Delete failed');
    const previous=coverPath;onChange(null,50);onUpdated?.();setUrl(null);setFocus(50);
    if(previous.startsWith(sellerId+'/'))void db.storage.from('portfolio').remove([previous]);
-  }catch{setMessage(t('Cover зураг устгаж чадсангүй.','Could not remove this cover.'))}
+  }catch{setMessage(t('Нүүр зураг устгаж чадсангүй.','Could not remove this cover.'))}
   finally{setBusy(false)}
  };
- return <section className="v42-cover-editor" aria-label={t('Профайлын cover зураг','Profile cover photo')}>
+ return <section className="v42-cover-editor" aria-label={t('Профайлын нүүр зураг','Profile cover photo')}>
   <div className="v42-cover-stage">
-   {url?<img src={url} alt={t('Миний cover зураг','My cover photo')} style={{objectPosition:'center '+focus+'%'}}/>:<div className="v42-cover-default"><span>hustle✳</span></div>}
-   <span className="v42-cover-note">COVER / 1600 × 500</span>
+   {url?<img src={url} alt={t('Миний нүүр зураг','My cover photo')} style={{objectPosition:'center '+focus+'%'}}/>:<div className="v42-cover-default"><span>hustle✳</span></div>}
+   <span className="v42-cover-note">{t('НҮҮР ЗУРАГ / 1600 × 500','COVER / 1600 × 500')}</span>
   </div>
   <div className="v42-cover-control">
-   <div><strong>{t('Cover зураг','Cover photo')}</strong><p>{t('Өргөн зураг сонгоорой. Зөвхөн нийтэд нээсэн профайл дээр харагдана.','Use a landscape photo. It is public only when you publish your profile.')}</p></div>
-   <input ref={input} className="v42-hidden-file" aria-label={t('Cover зураг сонгох','Choose cover photo')} type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={e=>{void upload(e.currentTarget.files?.[0])}}/>
+   <div><strong>{t('Нүүр зураг','Cover photo')}</strong><p>{t('Өргөн зураг сонгоорой. Зөвхөн нийтэд нээсэн профайл дээр харагдана.','Use a landscape photo. It is public only when you publish your profile.')}</p></div>
+   <input ref={input} className="v42-hidden-file" aria-label={t('Нүүр зураг сонгох','Choose cover photo')} type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={e=>{void upload(e.currentTarget.files?.[0])}}/>
    <div className="v42-cover-buttons"><button type="button" disabled={busy} onClick={()=>input.current?.click()}><ImagePlus size={17}/>{url?t('Зураг солих','Replace cover'):t('Зураг оруулах','Upload cover')}</button>
    {coverPath&&<button type="button" disabled={busy} onClick={()=>{void remove()}}><Trash2 size={17}/>{t('Устгах','Remove')}</button>}</div>
   </div>

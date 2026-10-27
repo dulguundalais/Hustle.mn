@@ -99,11 +99,11 @@ export function ChatSafetyActions({uid, peerId, peerName, lastPeerMessageId, isB
       <div className="v47-safety-buttons">
         {isBlocked
           ? <button type="button" className="v47-link" disabled={busy}
-              onClick={() => void run(() => onUnblock(peerId), t('Блокийг цуцаллаа.', 'Unblocked.'))}>
-              <ShieldCheck size={15} aria-hidden="true" />{t('Блок цуцлах', 'Unblock')}
+              onClick={() => void run(() => onUnblock(peerId), t('Хоригийг цуцаллаа.', 'Unblocked.'))}>
+              <ShieldCheck size={15} aria-hidden="true" />{t('Хориг цуцлах', 'Unblock')}
             </button>
           : <button type="button" className="v47-link" aria-expanded={confirmBlock} onClick={() => { setConfirmBlock(v => !v); setReporting(false); }}>
-              <Ban size={15} aria-hidden="true" />{t('Блоклох', 'Block')}
+              <Ban size={15} aria-hidden="true" />{t('Хориглох', 'Block')}
             </button>}
         <button type="button" className="v47-link v47-link-danger" aria-expanded={reporting} onClick={() => { setReporting(v => !v); setConfirmBlock(false); }}>
           <Flag size={15} aria-hidden="true" />{t('Гомдол гаргах', 'Report')}
@@ -111,13 +111,13 @@ export function ChatSafetyActions({uid, peerId, peerName, lastPeerMessageId, isB
       </div>
 
       {confirmBlock && !isBlocked && (
-        <div className="v47-panel" role="region" aria-label={t('Блоклох', 'Block')}>
-          <p><strong>{t(peerName + '-г блоклох уу?', 'Block ' + peerName + '?')}</strong></p>
+        <div className="v47-panel" role="region" aria-label={t('Хориглох', 'Block')}>
+          <p><strong>{t('Харилцахыг хориглох уу: ' + peerName + '?', 'Block ' + peerName + '?')}</strong></p>
           <p className="v47-muted">{t('Та хоёр бие биедээ мессеж илгээх боломжгүй болно. Өмнөх яриа хадгалагдана. Тухайн хэрэглэгчид мэдэгдэхгүй.', 'Neither of you will be able to send new messages. Earlier messages stay. They will not be notified.')}</p>
           <div className="v47-row">
             <button type="button" className="button small" disabled={busy}
-              onClick={() => void run(async () => { await onBlock(peerId); setConfirmBlock(false); }, t('Хэрэглэгчийг блоклолоо.', 'Blocked.'))}>
-              {t('Блоклох', 'Block')}
+              onClick={() => void run(async () => { await onBlock(peerId); setConfirmBlock(false); }, t('Энэ хэрэглэгчтэй харилцахыг хориглолоо.', 'Blocked.'))}>
+              {t('Хориглох', 'Block')}
             </button>
             <button type="button" className="button outline small" onClick={() => setConfirmBlock(false)}>{t('Болих', 'Cancel')}</button>
           </div>
@@ -128,7 +128,7 @@ export function ChatSafetyActions({uid, peerId, peerName, lastPeerMessageId, isB
         <form className="v47-panel" aria-label={t('Гомдол гаргах', 'Report')}
           onSubmit={event => { event.preventDefault(); void run(sendReport, t('Гомдлыг хүлээн авлаа. Админ хянаж үзнэ.', 'Report sent. An admin will review it.')); }}>
           <div className="v47-panel-head">
-            <strong>{t(peerName + '-ийн талаар гомдол', 'Report ' + peerName)}</strong>
+            <strong>{t('Гомдол гаргах: ' + peerName, 'Report ' + peerName)}</strong>
             <button type="button" className="v47-icon" aria-label={t('Хаах', 'Close')} onClick={() => setReporting(false)}><X size={16} /></button>
           </div>
           <fieldset className="v47-reasons">
@@ -147,8 +147,8 @@ export function ChatSafetyActions({uid, peerId, peerName, lastPeerMessageId, isB
           <div className="v47-row">
             <button type="submit" className="button small" disabled={busy}>{t('Илгээх', 'Send report')}</button>
             {!isBlocked && <button type="button" className="button outline small" disabled={busy}
-              onClick={() => void run(async () => { await sendReport(); await onBlock(peerId); }, t('Гомдол илгээж, блокололоо.', 'Reported and blocked.'))}>
-              {t('Илгээгээд блоклох', 'Report and block')}
+              onClick={() => void run(async () => { await sendReport(); await onBlock(peerId); }, t('Гомдлыг илгээж, харилцахыг хориглолоо.', 'Reported and blocked.'))}>
+              {t('Илгээж, хориглох', 'Report and block')}
             </button>}
           </div>
         </form>
@@ -163,8 +163,8 @@ export function BlockedComposer({en, busy, onUnblock}: {en: boolean; busy?: bool
   return (
     <div className="v47-blocked" role="status">
       <Ban size={18} aria-hidden="true" />
-      <span>{t('Та энэ хэрэглэгчийг блоклосон тул мессеж илгээх боломжгүй.', 'You blocked this person, so messages are turned off.')}</span>
-      <button type="button" className="button outline small" disabled={busy} onClick={onUnblock}>{t('Блок цуцлах', 'Unblock')}</button>
+      <span>{t('Та энэ хэрэглэгчтэй харилцахыг хориглосон байна.', 'You blocked this person, so messages are turned off.')}</span>
+      <button type="button" className="button outline small" disabled={busy} onClick={onUnblock}>{t('Хориг цуцлах', 'Unblock')}</button>
     </div>
   );
 }
@@ -216,7 +216,7 @@ export function AdminChatReports({en, onError, onNotice}: {en: boolean; onError:
   }
 
   const reasonLabel = (value: ReportReason) => { const r = REASONS.find(([key]) => key === value); return r ? (en ? r[2] : r[1]) : value; };
-  const statusLabel = (value: AdminReport['status']) => value === 'open' ? t('Нээлттэй', 'Open') : value === 'actioned' ? t('Арга хэмжээ авсан', 'Actioned') : t('Хэрэгсэхгүй', 'Dismissed');
+  const statusLabel = (value: AdminReport['status']) => value === 'open' ? t('Шийдвэрлээгүй', 'Open') : value === 'actioned' ? t('Арга хэмжээ авсан', 'Actioned') : t('Хэрэгсэхгүй болгох', 'Dismissed');
 
   return (
     <section className="workspace-panel v47-admin">
@@ -225,7 +225,7 @@ export function AdminChatReports({en, onError, onNotice}: {en: boolean; onError:
         <div className="v47-row">
           {(['open', 'all'] as const).map(value => (
             <button key={value} type="button" className={'button small' + (filter === value ? '' : ' outline')} aria-pressed={filter === value} onClick={() => setFilter(value)}>
-              {value === 'open' ? t('Нээлттэй', 'Open') : t('Бүгд', 'All')}
+              {value === 'open' ? t('Шийдвэрлээгүй', 'Open') : t('Бүгд', 'All')}
             </button>
           ))}
         </div>
@@ -240,8 +240,8 @@ export function AdminChatReports({en, onError, onNotice}: {en: boolean; onError:
                   <strong>{reasonLabel(report.reason)}</strong>
                   <small className="v47-muted">{new Date(report.created_at).toLocaleString(en ? 'en-US' : 'mn-MN')}</small>
                 </div>
-                <p>{t('Гомдол гаргагч', 'Reported by')}: <b>{report.reporter_name}</b> · {t('Хэн', 'About')}: <b>{report.reported_name}</b>
-                  {report.reported_open_reports > 1 && <span className="v47-warn"> · {report.reported_open_reports} {t('нээлттэй гомдол', 'open reports')}</span>}</p>
+                <p>{t('Гомдол гаргагч', 'Reported by')}: <b>{report.reporter_name}</b> · {t('Холбогдох хэрэглэгч', 'About')}: <b>{report.reported_name}</b>
+                  {report.reported_open_reports > 1 && <span className="v47-warn"> · {report.reported_open_reports} {t('шийдвэрлээгүй гомдол', 'open reports')}</span>}</p>
                 {report.message_body && <blockquote className="v47-quote">{report.message_body}</blockquote>}
                 {report.details && <p className="v47-muted">{report.details}</p>}
                 {report.status === 'open' ? (
@@ -250,10 +250,10 @@ export function AdminChatReports({en, onError, onNotice}: {en: boolean; onError:
                       <input value={notes[report.id] || ''} maxLength={1000} onChange={event => setNotes(n => ({...n, [report.id]: event.target.value}))} />
                     </label>
                     <div className="v47-row">
-                      <button type="button" className="button outline small" disabled={!!busy} onClick={() => void resolve(report, 'dismissed')}>{t('Хэрэгсэхгүй', 'Dismiss')}</button>
-                      <button type="button" className="button small" disabled={!!busy} onClick={() => void resolve(report, 'actioned')}>{t('Шийдвэрлэсэн', 'Mark actioned')}</button>
+                      <button type="button" className="button outline small" disabled={!!busy} onClick={() => void resolve(report, 'dismissed')}>{t('Хэрэгсэхгүй болгох', 'Dismiss')}</button>
+                      <button type="button" className="button small" disabled={!!busy} onClick={() => void resolve(report, 'actioned')}>{t('Шийдвэрлэснээр тэмдэглэх', 'Mark actioned')}</button>
                       <button type="button" className="button small v47-danger" disabled={!!busy || !report.reported_email}
-                        onClick={() => { if (window.confirm(t(report.reported_name + '-ийн эрхийг хаах уу?', 'Disable access for ' + report.reported_name + '?'))) void resolve(report, 'actioned', true); }}>
+                        onClick={() => { if (window.confirm(t('Дараах хэрэглэгчийн эрхийг хаах уу: ' + report.reported_name + '?', 'Disable access for ' + report.reported_name + '?'))) void resolve(report, 'actioned', true); }}>
                         {t('Эрхийг хаах', 'Disable account')}
                       </button>
                     </div>

@@ -21,32 +21,32 @@ const solutions:Record<OutcomeKey,Outcome>={
  content:{key:'content',mn:'Контент ба сурталчилгаа хөгжүүлэх',en:'Improve content and promotion',mnWhy:'Агуулгын зорилго, сувгаа эхэлж тодорхойлбол илүү үр дүнтэй.',enWhy:'Start with clear audiences and content goals.',solutions:[
  {id:'reels',mn:'Reels, видео үйлдвэрлэл',en:'Reels & video production',whyMn:'Тогтмол чанартай богино видео.',whyEn:'Consistent quality short-form video.',categories:['creative','ai']},
  {id:'social',mn:'Сошиал контентын төлөвлөгөө',en:'Social content plan',whyMn:'Нэг удаагийн пост биш, зорилготой цуврал контент.',whyEn:'An intentional series instead of one-off posts.',categories:['marketing','creative']},
- {id:'creative',mn:'AI-assisted бүтээлч контент',en:'AI-assisted creative assets',whyMn:'Хүний хяналттай үйлдвэрлэлийг илүү хурдан болгох.',whyEn:'Speed production with human quality control.',categories:['ai','creative']}
+ {id:'creative',mn:'AI ашиглан контент бүтээх',en:'AI-assisted creative assets',whyMn:'Хүний хяналттайгаар контентоо хурдан бэлдэх.',whyEn:'Speed production with human quality control.',categories:['ai','creative']}
  ]},
  automation:{key:'automation',mn:'Ажлын процессыг автоматжуулах',en:'Automate manual work',mnWhy:'Эхлээд давтагддаг ажлаа тодорхойлж, хэрэгсэл болон өгөгдлийн хамгаалалтаа сонгоорой.',enWhy:'Map the repetitive task, integrations and data safeguards first.',solutions:[
  {id:'workflow',mn:'Workflow automation (n8n / Make)',en:'Workflow automation (n8n / Make)',whyMn:'Гар ажиллагаатай давтагддаг алхмуудыг нэгтгэх.',whyEn:'Connect repetitive steps and systems.',categories:['ai','tech']},
  {id:'bot',mn:'AI chatbot ба CRM холболт',en:'AI chatbot & CRM integration',whyMn:'Хүсэлт хүлээн авах, ангилах, хариу өгөхөд туслах.',whyEn:'Support intake, categorization and replies.',categories:['ai','tech']},
  {id:'dashboard',mn:'Автомат тайлан ба аналитик',en:'Automated reports & analytics',whyMn:'Гүйцэтгэлийн мэдээллийг тогтмол нэгтгэх.',whyEn:'Bring performance data together on schedule.',categories:['tech','business']}
  ]},
- website:{key:'website',mn:'Цахим үйлчилгээ ба веб хөгжүүлэлт',en:'Build digital experiences',mnWhy:'Зорилго, шаардлагатай функц, арчлалтын хэрэгцээг хамтад нь тодорхойл.',enWhy:'Define goals, required features and ongoing maintenance.',solutions:[
- {id:'site',mn:'Бизнесийн вебсайт / landing page',en:'Business website / landing page',whyMn:'Үйлчилгээ, үнэ, холбогдох сувгийг ил тод болгох.',whyEn:'Show offerings, pricing and next steps.',categories:['tech']},
+ website:{key:'website',mn:'Цахим үйлчилгээ, вэб хөгжүүлэлт',en:'Build digital experiences',mnWhy:'Зорилго, хэрэгтэй боломжууд, цаашдын арчилгааг хамтад нь тодорхойлоорой.',enWhy:'Define goals, required features and ongoing maintenance.',solutions:[
+ {id:'site',mn:'Бизнесийн вэбсайт, танилцуулга хуудас',en:'Business website / landing page',whyMn:'Үйлчилгээ, үнэ, холбогдох сувгийг ил тод болгох.',whyEn:'Show offerings, pricing and next steps.',categories:['tech']},
  {id:'ui',mn:'UI/UX дизайн ба хэрэглэгчийн урсгал',en:'UI/UX design & journeys',whyMn:'Хэрэглэгчийн үйлдлийг энгийн, ойлгомжтой болгох.',whyEn:'Make interactions clearer and easier.',categories:['tech']},
- {id:'maint',mn:'Веб арчилгаа ба интеграц',en:'Site care & integrations',whyMn:'Нийтлэсний дараа найдвартай ажиллуулах.',whyEn:'Keep things reliable after launch.',categories:['tech','ai']}
+ {id:'maint',mn:'Вэб арчилгаа, системийн холболт',en:'Site care & integrations',whyMn:'Нийтлэсний дараа найдвартай ажиллуулах.',whyEn:'Keep things reliable after launch.',categories:['tech','ai']}
  ]},
  brand:{key:'brand',mn:'Брэнд ба харагдах байдал',en:'Improve brand identity',mnWhy:'Зорилтот хэрэглэгч болон брэндийн гол ялгарал дээрээ тулгуурлан бүтээ.',enWhy:'Anchor your creative work in your audience and positioning.',solutions:[
- {id:'identity',mn:'Лого ба брэндийн систем',en:'Logo & brand system',whyMn:'Нэг мөр харагдах дүр төрх.',whyEn:'Create a consistent identity.',categories:['creative']},
- {id:'visual',mn:'Маркетингийн визуал контент',en:'Marketing visuals',whyMn:'Нэг загварын хэлээр харилцах.',whyEn:'Keep campaign visuals consistent.',categories:['creative']},
+ {id:'identity',mn:'Лого ба брэндийн систем',en:'Logo & brand system',whyMn:'Брэндийн нэгдсэн өнгө төрх.',whyEn:'Create a consistent identity.',categories:['creative']},
+ {id:'visual',mn:'Маркетингийн зураг, дүрслэл',en:'Marketing visuals',whyMn:'Брэндийн нэгдсэн загвараар контент бэлдэх.',whyEn:'Keep campaign visuals consistent.',categories:['creative']},
  {id:'brandweb',mn:'Брэндэд тохирсон веб хуудас',en:'Brand-led website',whyMn:'Онлайнаар итгэл төрүүлэх.',whyEn:'Build trust online.',categories:['tech']}
  ]},
  analytics:{key:'analytics',mn:'Өгөгдөл ба тайлангаа сайжруулах',en:'Make better use of data',mnWhy:'Хэмжих үзүүлэлтээ шийдэх асуудалтайгаа холбож сонго.',enWhy:'Choose metrics around the decisions you need to make.',solutions:[
- {id:'report',mn:'Борлуулалтын dashboard',en:'Sales dashboard',whyMn:'Хамгийн чухал KPI-уудаа нэг газраас харах.',whyEn:'Bring your most important KPIs together.',categories:['tech','business']},
+ {id:'report',mn:'Борлуулалтын тайлангийн самбар',en:'Sales dashboard',whyMn:'Гүйцэтгэлийн гол үзүүлэлтүүдээ нэг дор харах.',whyEn:'Bring your most important KPIs together.',categories:['tech','business']},
  {id:'integrate',mn:'Өгөгдөл цэвэрлэх ба нэгтгэх',en:'Data cleanup & integrations',whyMn:'Тархай өгөгдлийг найдвартай болгох.',whyEn:'Make fragmented data reliable.',categories:['tech','ai']},
  {id:'insights',mn:'Бизнесийн шинжилгээ',en:'Business analysis',whyMn:'Үр дүнгээсээ дараагийн шийдвэрээ гаргах.',whyEn:'Turn performance into better decisions.',categories:['business','marketing']}
  ]},
  startup:{key:'startup',mn:'Бизнес, компани эхлүүлэх',en:'Start a business',mnWhy:'Төлөвлөгөө, бүртгэл, санхүү, брэндээ зэрэгцүүлж бэлдэх нь эрсдэлийг бууруулна.',enWhy:'Plan, register, set up finances and brand together to reduce risk.',solutions:[
  {id:'plan',mn:'Бизнес төлөвлөгөө ба стратеги',en:'Business plan & strategy',whyMn:'Зах зээл, санхүүгийн тооцоогоо эхэлж тодорхойлох.',whyEn:'Clarify the market and the numbers first.',categories:['business']},
- {id:'register',mn:'Компани бүртгэл ба гэрээ',en:'Company registration & contracts',whyMn:'Баталгаажсан хуульчаар эрх зүйн суурийг тавих.',whyEn:'Set a sound legal footing with a verified lawyer.',categories:['legal']},
- {id:'books',mn:'Нягтлан ба татварын тохиргоо',en:'Accounting & tax setup',whyMn:'Эхний өдрөөс бүртгэл, татвараа зөв хөтлөх.',whyEn:'Keep books and taxes right from day one.',categories:['finance']},
+ {id:'register',mn:'Компанийн бүртгэл, гэрээ',en:'Company registration & contracts',whyMn:'Баталгаажсан хуульчаар эрх зүйн суурийг тавих.',whyEn:'Set a sound legal footing with a verified lawyer.',categories:['legal']},
+ {id:'books',mn:'Нягтлан бодох бүртгэл, татвар',en:'Accounting & tax setup',whyMn:'Эхний өдрөөс бүртгэл, татвараа зөв хөтлөх.',whyEn:'Keep books and taxes right from day one.',categories:['finance']},
  {id:'launch',mn:'Брэнд ба маркетинг',en:'Brand & launch marketing',whyMn:'Анхны хэрэглэгчдээ татах.',whyEn:'Reach your first customers.',categories:['creative','marketing']}
  ]},
  finance:{key:'finance',mn:'Санхүү, татвараа цэгцлэх',en:'Get finances and tax in order',mnWhy:'Бүртгэл, тайлан, мөнгөн урсгалаа нэг дор харж шийдвэр гаргах.',enWhy:'See books, reports and cash flow together before deciding.',solutions:[
@@ -60,14 +60,14 @@ const solutions:Record<OutcomeKey,Outcome>={
  {id:'compliance',mn:'Зөвшөөрөл ба нийцэл',en:'Permits & compliance',whyMn:'Тусгай зөвшөөрөл, шаардлагаа хангах.',whyEn:'Meet licensing and regulatory requirements.',categories:['legal','business']}
  ]},
  learning:{key:'learning',mn:'Сурах, ур чадвараа хөгжүүлэх',en:'Learn a new skill',mnWhy:'Зорилгодоо тохирсон багш, ментороо сонгоорой.',enWhy:'Choose a tutor or mentor who fits your goal.',solutions:[
- {id:'tutor',mn:'Хувийн хичээл, хэлний сургалт',en:'Private lessons & language tutoring',whyMn:'Хурдацдаа тохирсон ганцаарчилсан хичээл.',whyEn:'One-to-one lessons at your pace.',categories:['education']},
- {id:'mentor',mn:'Карьерын ментор',en:'Career mentoring',whyMn:'Туршлагатай хүнээс зөвлөгөө авах.',whyEn:'Guidance from someone experienced.',categories:['education']},
+ {id:'tutor',mn:'Ганцаарчилсан хичээл, хэлний сургалт',en:'Private lessons & language tutoring',whyMn:'Хурдацдаа тохирсон ганцаарчилсан хичээл.',whyEn:'One-to-one lessons at your pace.',categories:['education']},
+ {id:'mentor',mn:'Ажил мэргэжлийн зөвлөх',en:'Career mentoring',whyMn:'Туршлагатай хүнээс зөвлөгөө авах.',whyEn:'Guidance from someone experienced.',categories:['education']},
  {id:'team',mn:'Байгууллагын сургалт',en:'Team training',whyMn:'Багийнхаа ур чадварыг нэг дор дээшлүүлэх.',whyEn:'Upskill the whole team.',categories:['education','business']}
  ]},
  wellbeing:{key:'wellbeing',mn:'Сэтгэл зүйн дэмжлэг',en:'Psychological support',mnWhy:'Нууцлалтай уулзалтыг зөвхөн баталгаажсан мэргэжилтэнтэй хийнэ. Амь насанд аюултай яаралтай үед 103 руу залгана уу.',enWhy:'Private sessions only with verified professionals. In a life-threatening emergency in Mongolia, call 103.',solutions:[
  {id:'consult',mn:'Сэтгэл зүйн зөвлөгөө',en:'Psychological consultation',whyMn:'Мэргэжлийн, нууцлалтай яриа.',whyEn:'A private, professional conversation.',categories:['wellbeing']},
  {id:'stress',mn:'Стресс удирдах',en:'Stress management',whyMn:'Өдөр тутмын ачааллаа зохицуулах арга.',whyEn:'Ways to handle everyday pressure.',categories:['wellbeing']},
- {id:'workplace',mn:'Ажлын байрны сайн сайхан',en:'Workplace wellbeing',whyMn:'Багийнхаа сэтгэл зүйн уур амьсгалыг сайжруулах.',whyEn:'Improve your team’s wellbeing.',categories:['wellbeing','education']}
+ {id:'workplace',mn:'Ажлын байрны сэтгэл зүй',en:'Workplace wellbeing',whyMn:'Багийнхаа сэтгэл зүйн уур амьсгалыг сайжруулах.',whyEn:'Improve your team’s wellbeing.',categories:['wellbeing','education']}
  ]},
  general:{key:'general',mn:'Төслийн хэрэгцээг тодорхойлох',en:'Define the project',mnWhy:'Зорилго, одоогийн нөхцөл, хүсэж буй үр дүнгээ тайлбарлахад хангалттай.',enWhy:'Describe your goal, current situation and intended result.',solutions:[
  {id:'consult',mn:'Төслийн зөвлөгөө ба төлөвлөлт',en:'Project planning',whyMn:'Төслийн эхний шаардлагыг тодорхойлох.',whyEn:'Clarify project requirements.',categories:['business']},
@@ -92,7 +92,7 @@ export const problemExamples=[
  {key:'growth' as const,mn:'Борлуулалт, захиалгаа нэмэгдүүлэх',en:'Grow sales and bookings',exampleMn:'Манай рестораны захиалга бага байна',exampleEn:'We want more restaurant bookings'},
  {key:'automation' as const,mn:'Давтагддаг ажлаа автоматжуулах',en:'Automate routine work',exampleMn:'Facebook захиалгыг автоматаар бүртгэмээр байна',exampleEn:'Automate incoming Facebook orders'},
  {key:'content' as const,mn:'Контент ба сошиалаа хөгжүүлэх',en:'Improve social content',exampleMn:'Дэлгүүртээ Reels хийлгэмээр байна',exampleEn:'I need better Reels for my store'},
- {key:'website' as const,mn:'Вебсайт, онлайн үйлчилгээ эхлүүлэх',en:'Launch a digital product',exampleMn:'Манай компанид вэбсайт хэрэгтэй',exampleEn:'Our company needs a website'}
+ {key:'website' as const,mn:'Вэбсайт, онлайн үйлчилгээ эхлүүлэх',en:'Launch a digital product',exampleMn:'Манай компанид вэбсайт хэрэгтэй',exampleEn:'Our company needs a website'}
 ];
 export function classifyNeed(input:string):Outcome{
  const clean=input.trim().slice(0,1200);
@@ -110,5 +110,5 @@ export function buildProjectBrief(input:string,audience:Audience,language:'mn'|'
  const outcome=classifyNeed(goal);
  const ideas=outcome.solutions.map(x=>language==='mn'?x.mn:x.en).join(', ');
  if(language==='en')return ['PROJECT BRIEF','Context: '+(audience==='business'?'Business':'Personal'),'Goal: '+(goal||'To be confirmed'),'Possible approaches (to discuss): '+ideas,'Budget: '+(budget?.trim()||'To be discussed'),'Timeline: '+(timeline?.trim()||'To be discussed'),'Deliverables, access permissions and success criteria: To be agreed with the freelancer.'].join('\n');
- return ['ТӨСЛИЙН ХҮСЭЛТ','Хэрэглэгч: '+(audience==='business'?'Байгууллага / бизнес':'Хувь хүн'),'Зорилго: '+(goal||'Тодруулах'),'Ярилцах боломжтой шийдлүүд: '+ideas,'Төсөв: '+(budget?.trim()||'Тохиролцоно'),'Хугацаа: '+(timeline?.trim()||'Тохиролцоно'),'Хүлээлгэн өгөх үр дүн, өгөгдөлд хандах эрх ба амжилтын хэмжүүрийг freelancer-тэй тохиролцоно.'].join('\n');
+ return ['ТӨСЛИЙН ХҮСЭЛТ','Хэрэглэгч: '+(audience==='business'?'Байгууллага / бизнес':'Хувь хүн'),'Зорилго: '+(goal||'Тодруулах'),'Хэлэлцэх боломжит шийдлүүд: '+ideas,'Төсөв: '+(budget?.trim()||'Тохиролцоно'),'Хугацаа: '+(timeline?.trim()||'Тохиролцоно'),'Хүлээлгэн өгөх үр дүн, өгөгдөлд хандах эрх ба амжилтын хэмжүүрийг мэргэжилтэнтэй тохиролцоно.'].join('\n');
 }

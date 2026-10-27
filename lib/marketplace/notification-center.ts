@@ -14,9 +14,9 @@ const projects:Record<string,[string,string,string]>={
 };
 const orders:Record<string,[string,string,string]>={
  requested:['Шинэ захиалга','New order received','/seller-studio/?tab=seller-orders'],
- accepted:['Захиалга зөвшөөрөгдлөө','Order accepted','/buyer/?tab=orders'],
+ accepted:['Захиалгыг хүлээн авлаа','Order accepted','/buyer/?tab=orders'],
  in_progress:['Захиалгын ажил эхэллээ','Order in progress','/buyer/?tab=orders'],
- delivered:['Ажил хүлээлгэн өглөө','Work delivered','/buyer/?tab=orders'],
+ delivered:['Шалгах ажил ирлээ','Work delivered','/buyer/?tab=orders'],
  completed:['Захиалга дууслаа','Order completed','/seller-studio/?tab=seller-orders'],
  rejected:['Захиалгаас татгалзлаа','Order rejected','/buyer/?tab=orders'],
  cancelled:['Захиалга цуцлагдлаа','Order cancelled','/seller-studio/?tab=seller-orders'],
@@ -49,7 +49,7 @@ export function combineNotices(project:ProjectEvent[],order:OrderEvent[],message
    current.count++;
    if(e.created_at>current.createdAt)current.createdAt=e.created_at;
   }else{
-   seen.set(key,{key,id:e.sender_id,source:'chat',kind:'message',createdAt:e.created_at,read:false,titleMn:'Шинэ чат мессеж',titleEn:'New chat messages',href:'/buyer/?tab=messages',count:1});
+   seen.set(key,{key,id:e.sender_id,source:'chat',kind:'message',createdAt:e.created_at,read:false,titleMn:'Шинэ мессеж',titleEn:'New chat messages',href:'/buyer/?tab=messages',count:1});
   }
  }
  const items=Array.from(seen.values()).sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,40);

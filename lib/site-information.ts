@@ -8,11 +8,11 @@ export const informationPages:Record<string,InfoPage>={
       "en": "ABOUT HUSTLE"
     },
     "title": {
-      "mn": "Ур чадвар боломжтой уулзах газар.",
+      "mn": "Ур чадвар, боломжийг холбох газар.",
       "en": "A home for ambitious talent."
     },
     "subtitle": {
-      "mn": "Hustle.mn бол Монголын бүтээлч, дижитал үйлчилгээ үзүүлэгчид болон төсөл хэрэгжүүлэх хүмүүст зориулсан marketplace.",
+      "mn": "Hustle.mn бол Монголын бүтээлч, дижитал үйлчилгээ үзүүлэгчид болон төсөл хэрэгжүүлэх хүмүүст зориулсан үйлчилгээний платформ.",
       "en": "Hustle.mn is a services marketplace connecting independent creatives and digital professionals with people building meaningful projects."
     },
     "sections": [
@@ -42,11 +42,11 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Захиалагч бодит, нийтлэгдсэн үйлчилгээ хайж, freelancer-ийн мэдээлэлтэй танилцаж, Basic / Standard / Premium багцыг харьцуулж, чат эхлүүлэх боломжтой.",
+            "mn": "Захиалагч бодит, нийтлэгдсэн үйлчилгээ хайж, мэргэжилтний мэдээлэлтэй танилцаж, Суурь / Стандарт / Дээд багцыг харьцуулж, чат эхлүүлэх боломжтой.",
             "en": "Buyers can explore published listings, review freelancer profiles, compare Basic / Standard / Premium packages and start a conversation."
           },
           {
-            "mn": "Freelancer өөрийн профайл, portfolio, үйлчилгээ болон үнийн багцаа удирдаж, захиалгын хүсэлт, хүргэлт, засварын явцыг хянадаг.",
+            "mn": "Мэргэжилтэн өөрийн профайл, бүтээлүүд, үйлчилгээ болон үнийн багцаа удирдаж, захиалгын хүсэлт, хүргэлт, засварын явцыг хянадаг.",
             "en": "Freelancers can maintain a profile, portfolio and service packages and manage requests, delivery and revision workflows."
           }
         ],
@@ -64,7 +64,7 @@ export const informationPages:Record<string,InfoPage>={
             "en": "Hustle.mn is in open beta. New users can access their workspace after email verification without manual approval."
           },
           {
-            "mn": "Одоогоор бодит мөнгөн төлбөр, escrow санхүүгийн хамгаалалт, банк болон QPay холболт ажиллахгүй. Дэлгэцэд харагдах үнэ, referral урамшуулал нь туршилтын мэдээлэл бөгөөд төлбөр нэхэмжилсэн гэсэн үг биш.",
+            "mn": "Одоогоор бодит мөнгөн төлбөр, эскроу санхүүгийн хамгаалалт, банк болон QPay холболт ажиллахгүй. Дэлгэцэд харагдах үнэ, урилгын урамшуулал нь туршилтын мэдээлэл бөгөөд төлбөр нэхэмжилсэн гэсэн үг биш.",
             "en": "Real payments, escrow, bank and QPay integrations are not active. Prices and referral rewards shown in beta are informational/test values, not payment demands or payouts."
           }
         ],
@@ -78,7 +78,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Хуурамч рейтинг, баталгаагүй захиалгын тоо, үл хэрэгжсэн хамгаалалтыг бодит мэт харуулахгүй. Нийтэд харагдах freelancer мэдээлэл нь зөвшөөрөгдсөн профайлаас гарна.",
+            "mn": "Хуурамч рейтинг, баталгаагүй захиалгын тоо, үл хэрэгжсэн хамгаалалтыг бодит мэт харуулахгүй. Нийтэд харагдах мэргэжилтэн мэдээлэл нь зөвшөөрөгдсөн профайлаас гарна.",
             "en": "We do not present invented ratings, order volumes or unreleased financial protections as facts. Public freelancer discovery depends on opted-in profiles."
           },
           {
@@ -113,7 +113,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Hustle.mn нь бие даасан мэргэжилтэн (Seller) болон үйлчилгээ захиалагч (Buyer)-ийг холбох технологийн орчин юм. Платформ өөрөө freelancer-ийн гүйцэтгэх ажлын чанар, үр дүнг автоматаар баталгаажуулахгүй.",
+            "mn": "Hustle.mn нь бие даасан мэргэжилтэн (Мэргэжилтэн) болон үйлчилгээ захиалагч (Захиалагч)-ийг холбох технологийн орчин юм. Платформ өөрөө мэргэжилтний гүйцэтгэх ажлын чанар, үр дүнг автоматаар баталгаажуулахгүй.",
             "en": "Hustle.mn provides a digital environment to connect independent service providers (Sellers) with Buyers. The platform does not automatically warrant a freelancer's work or results."
           },
           {
@@ -131,11 +131,11 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Хэрэглэгч өөрийн хянадаг имэйлээр бүртгүүлж, баталгаажуулалтыг гүйцэтгэх ёстой. Шинэ хэрэглэгч имэйлээ баталгаажуулмагц энгийн гишүүний эрх автоматаар олгогдоно. Аюулгүй байдлын үүднээс аккаунтын хандалтыг хязгаарлаж болно.",
+            "mn": "Хэрэглэгч өөрийн хянадаг имэйлээр бүртгүүлж, баталгаажуулалтыг гүйцэтгэх ёстой. Шинэ хэрэглэгч имэйлээ баталгаажуулмагц энгийн гишүүний эрх автоматаар олгогдоно. Аюулгүй байдлын үүднээс бүртгэлийн хандалтыг хязгаарлаж болно.",
             "en": "Users must register with an email address they control and complete required verification. Verified new accounts receive standard member access automatically; accounts can be restricted for safety."
           },
           {
-            "mn": "Нэвтрэх мэдээллээ хамгаалах, өөрийн аккаунтад хийгдсэн үйлдлийг хянах үүрэг хэрэглэгчид байна. Нэг хүн buyer болон freelancer горимыг ашиглаж болно; admin эрхийг зөвхөн эрх бүхий этгээд олгоно.",
+            "mn": "Нэвтрэх мэдээллээ хамгаалах, өөрийн бүртгэлд хийгдсэн үйлдлийг хянах үүрэг хэрэглэгчид байна. Нэг хүн захиалагч болон мэргэжилтэн горимыг ашиглаж болно; админ эрхийг зөвхөн эрх бүхий этгээд олгоно.",
             "en": "Users are responsible for safeguarding credentials and activity in their accounts. One account may act as Buyer and Seller; administrator privileges are assigned separately."
           }
         ],
@@ -149,11 +149,11 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Freelancer өөрийн нэр, туршлага, portfolio болон үйлчилгээний мэдээллийг үнэн зөв оруулах ёстой. Бусдын бүтээл, оюуны өмчийг зөвшөөрөлгүй ашиглаж болохгүй.",
+            "mn": "Мэргэжилтэн өөрийн нэр, туршлага, бүтээлүүд болон үйлчилгээний мэдээллийг үнэн зөв оруулах ёстой. Бусдын бүтээл, оюуны өмчийг зөвшөөрөлгүй ашиглаж болохгүй.",
             "en": "Sellers should provide accurate profile, experience, portfolio and listing information, and must not upload work they have no right to use."
           },
           {
-            "mn": "Үйлчилгээ Basic, Standard, Premium багцаар ялгарч болох бөгөөд тус бүрийн үнэ, хугацаа, засвар, багтсан ажлыг тодорхой танилцуулна. Нийтлэх хүсэлтийг admin хянаж болно.",
+            "mn": "Үйлчилгээ Суурь, Стандарт, Дээд багцаар ялгарч болох бөгөөд тус бүрийн үнэ, хугацаа, засвар, багтсан ажлыг тодорхой танилцуулна. Нийтлэх хүсэлтийг админ хянаж болно.",
             "en": "Services may offer Basic, Standard and Premium tiers with stated price, delivery period, revisions and inclusions. Listing publication may be subject to moderation."
           }
         ],
@@ -167,11 +167,11 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Buyer захиалгын хүсэлтэд ажлын шаардлагаа тодорхой бичнэ. Seller хүсэлтийг хүлээн авах, гүйцэтгэх, хүлээлгэн өгөх төлөвт шилжүүлнэ. Хүргэлт ба засварын тэмдэглэл нь тухайн захиалгын бүртгэлийн нэг хэсэг болно.",
+            "mn": "Захиалагч захиалгын хүсэлтэд ажлын шаардлагаа тодорхой бичнэ. Мэргэжилтэн хүсэлтийг хүлээн авах, гүйцэтгэх, хүлээлгэн өгөх төлөвт шилжүүлнэ. Хүргэлт ба засварын тэмдэглэл нь тухайн захиалгын бүртгэлийн нэг хэсэг болно.",
             "en": "Buyers should describe their requirements clearly. Sellers move requests through acceptance, progress and delivery; delivery and revision notes form part of the order record."
           },
           {
-            "mn": "Захиалга үүсэх үеийн сонгосон багцын үнэ, хугацаа, засварын хязгаар нь тухайн хүсэлтийн snapshot болно. Багцын дараагийн өөрчлөлт өмнөх захиалгын snapshot-ыг автоматаар өөрчлөхгүй.",
+            "mn": "Захиалга үүсэх үеийн сонгосон багцын үнэ, хугацаа, засварын хязгаар нь тухайн хүсэлтийн хадгалсан нөхцөл болно. Багцын дараагийн өөрчлөлт өмнөх захиалгын хадгалсан нөхцөлийг автоматаар өөрчлөхгүй.",
             "en": "Selected package price, delivery time and revision limits are recorded as an order snapshot. Subsequent listing changes do not automatically rewrite existing orders."
           }
         ],
@@ -180,16 +180,16 @@ export const informationPages:Record<string,InfoPage>={
       {
         "id": "payments",
         "title": {
-          "mn": "5. Төлбөр, комисс, escrow",
+          "mn": "5. Төлбөр, шимтгэл, эскроу",
           "en": "5. Payments, commission and escrow"
         },
         "paragraphs": [
           {
-            "mn": "Нээлттэй бета туршилтад платформ бодит мөнгө хүлээн авахгүй, төлбөр шилжүүлэхгүй, escrow данс ажиллуулахгүй. Дэлгэцэд харагдах MNT үнэ болон 10% платформын комиссын дүрэм нь санхүүгийн гүйлгээ биш.",
+            "mn": "Нээлттэй бета туршилтад платформ бодит мөнгө хүлээн авахгүй, төлбөр шилжүүлэхгүй, эскроу данс ажиллуулахгүй. Дэлгэцэд харагдах төгрөгийн үнэ болон 10% платформын шимтгэлийн дүрэм нь санхүүгийн гүйлгээ биш.",
             "en": "During open beta the platform does not collect or remit real money and does not operate escrow. MNT prices and the configurable 10% platform commission are not evidence of an actual transaction."
           },
           {
-            "mn": "Ирээдүйн төлбөр, буцаан олголт, escrow болон татварын дүрмийг бодит үйлчилгээ эхлэхээс өмнө тусад нь нийтэлж, эрх зүйн шаардлагаар нягтална.",
+            "mn": "Ирээдүйн төлбөр, буцаан олголт, эскроу болон татварын дүрмийг бодит үйлчилгээ эхлэхээс өмнө тусад нь нийтэлж, эрх зүйн шаардлагаар нягтална.",
             "en": "Payment, refund, escrow and tax policies for any future paid service will need separate publication and legal review before activation."
           }
         ],
@@ -207,7 +207,7 @@ export const informationPages:Record<string,InfoPage>={
             "en": "Users may upload material they own or are licensed to use. Uploading content does not automatically transfer ownership of that content to Hustle.mn."
           },
           {
-            "mn": "Buyer болон Seller хооронд ажлын эцсийн файлын ашиглах эрх, шилжүүлэх нөхцөл, лиценз зэрэг асуудлыг ажлын эхэнд бичгээр тохиролцох нь зүйтэй. Бета хувилбар зохиогчийн эрхийг автоматаар шилжүүлэх механизм агуулаагүй.",
+            "mn": "Захиалагч болон Мэргэжилтэн хооронд ажлын эцсийн файлын ашиглах эрх, шилжүүлэх нөхцөл, лиценз зэрэг асуудлыг ажлын эхэнд бичгээр тохиролцох нь зүйтэй. Бета хувилбар зохиогчийн эрхийг автоматаар шилжүүлэх механизм агуулаагүй.",
             "en": "Buyers and Sellers should explicitly agree on final deliverable licensing, usage and ownership. The beta does not automatically execute an intellectual-property transfer."
           }
         ],
@@ -243,7 +243,7 @@ export const informationPages:Record<string,InfoPage>={
             "en": "Listings may be declined or hidden, and access restricted, where content is unlawful, misleading, rights-infringing or threatens beta safety."
           },
           {
-            "mn": "Акаунтын болон зарын хяналт автомат болон админ үйл ажиллагаанаас хамаарах бөгөөд бүрэн, тасралтгүй хяналтыг амлахгүй.",
+            "mn": "Бүртгэлийн болон зарын хяналт автомат болон админ үйл ажиллагаанаас хамаарах бөгөөд бүрэн, тасралтгүй хяналтыг амлахгүй.",
             "en": "Moderation may involve product safeguards and manual administration; it is not a promise of constant or exhaustive review."
           }
         ],
@@ -257,7 +257,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Бета хувилбарт функц нэмэгдэх, өөрчлөгдөх, түр хугацаанд ажиллахгүй болох боломжтой. Бодит санхүүгийн амлалт, тогтмол uptime болон захиалга биелэх баталгаагүй.",
+            "mn": "Бета хувилбарт функц нэмэгдэх, өөрчлөгдөх, түр хугацаанд ажиллахгүй болох боломжтой. Бодит санхүүгийн амлалт, тогтмол тасралтгүй ажиллагаа болон захиалга биелэх баталгаагүй.",
             "en": "Features may change or be unavailable during beta. The platform does not promise financial settlement, uninterrupted uptime or the performance of a specific seller."
           }
         ],
@@ -271,11 +271,11 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Buyer болон Seller эхлээд захиалгын чат, хүргэлт, revisions бүртгэлд тулгуурлан харилцан ойлголцохыг эрмэлзэнэ. Шаардлагатай бол админд зөрчлийг мэдэгдэнэ.",
+            "mn": "Захиалагч болон Мэргэжилтэн эхлээд захиалгын чат, хүргэлт, засварын бүртгэлд тулгуурлан харилцан ойлголцохыг эрмэлзэнэ. Шаардлагатай бол админд зөрчлийг мэдэгдэнэ.",
             "en": "Buyers and Sellers should first use order messages, delivery records and revision notes to clarify disagreements. Material concerns can be raised with the beta administrator."
           },
           {
-            "mn": "Одоогийн платформ санхүүгийн escrow арбитр, албан ёсны төлбөр буцаалтын систем ажиллуулахгүй.",
+            "mn": "Одоогийн платформ санхүүгийн эскроу арбитр, албан ёсны төлбөр буцаалтын систем ажиллуулахгүй.",
             "en": "The current platform does not provide financial escrow arbitration or a payment-refund mechanism."
           }
         ],
@@ -289,7 +289,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Хувийн мэдээлэлтэй холбоотой тайлбарыг Privacy Policy хэсгээс уншина уу. Нийтэд харагдах профайл нь freelancer-ийн сонгосон зөвшөөрлөөс хамаарна.",
+            "mn": "Хувийн мэдээлэлтэй холбоотой тайлбарыг Нууцлалын бодлого хэсгээс уншина уу. Нийтэд харагдах профайл нь мэргэжилтний сонгосон зөвшөөрлөөс хамаарна.",
             "en": "See the Privacy Policy for information about personal data. Public seller visibility depends on the freelancer's opt-in settings."
           }
         ],
@@ -352,7 +352,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Имэйл, баталгаажуулалтын төлөв, хэрэглэгчийн ID болон нэвтрэлтийн session; таны оруулсан нэр, танилцуулга, portfolio, үйлчилгээний мэдээлэл; захиалгын шаардлага, мессеж, хүргэлтийн файлын холбоос ба төлөв; referral/админ аудитын бичлэг зэрэг өгөгдөл хадгалагдаж болно.",
+            "mn": "Имэйл, баталгаажуулалтын төлөв, хэрэглэгчийн ID болон нэвтрэлтийн төлөв; таны оруулсан нэр, танилцуулга, бүтээлүүд, үйлчилгээний мэдээлэл; захиалгын шаардлага, мессеж, хүргэлтийн файлын холбоос ба төлөв; урилгын/админ аудитын бичлэг зэрэг өгөгдөл хадгалагдаж болно.",
             "en": "Data may include email, verification state, user identifiers and session details; profile names, descriptions, portfolios and listings; order briefs, messages, deliverable references and status; referral and administrative audit records."
           },
           {
@@ -370,7 +370,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Бүртгэл баталгаажуулах, нээлттэй бета гишүүний эрх болон хандалтын хязгаарлалт шалгах, freelancer-үүдийг хайлтад харуулах, чат/захиалга ажиллуулах, аюулгүй байдал хамгаалах, алдаа шалгах, үйлчилгээний чанарыг сайжруулахад ашиглана.",
+            "mn": "Бүртгэл баталгаажуулах, нээлттэй бета гишүүний эрх болон хандалтын хязгаарлалт шалгах, мэргэжилтнүүдийг хайлтад харуулах, чат/захиалга ажиллуулах, аюулгүй байдал хамгаалах, алдаа шалгах, үйлчилгээний чанарыг сайжруулахад ашиглана.",
             "en": "Information supports account verification, open-beta member access checks, opted-in freelancer discovery, messaging and order functionality, safety, troubleshooting and product improvement."
           }
         ],
@@ -384,11 +384,11 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Freelancer public profile сонголтыг идэвхжүүлээгүй үед хувийн portfolio, танилцуулгыг нээлттэй каталогоор харуулахгүй байхаар зохион байгуулсан. Нийтлэх зөвшөөрөлтэй seller-ийн нэр, танилцуулга болон нийтлэгдсэн үйлчилгээ каталогт орж болно.",
+            "mn": "Мэргэжилтэн «Профайлаа нийтэд нээх» сонголтыг идэвхжүүлээгүй үед хувийн бүтээлүүд, танилцуулгыг нээлттэй каталогоор харуулахгүй байхаар зохион байгуулсан. Нийтлэх зөвшөөрөлтэй мэргэжилтний нэр, танилцуулга болон нийтлэгдсэн үйлчилгээ каталогт орж болно.",
             "en": "Freelancer public discovery is designed to depend on explicit profile opt-in. When enabled, profile name, headline and published listing details may become visible in the marketplace."
           },
           {
-            "mn": "Мессеж, захиалгын шаардлага болон хүргэлтийн мэдээлэл нь холбогдох buyer/seller болон эрх бүхий админд хязгаарлагдахаар хамгаалагдана.",
+            "mn": "Мессеж, захиалгын шаардлага болон хүргэлтийн мэдээлэл нь холбогдох захиалагч/мэргэжилтэн болон эрх бүхий админд хязгаарлагдахаар хамгаалагдана.",
             "en": "Messages, order briefs and delivery records are intended to be accessible only to participants and properly authorized administrators."
           }
         ],
@@ -402,7 +402,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Одоогийн систем Supabase-ийг authentication, database, storage-д; Cloudflare-ийг preview веб хүргэлтэд ашигладаг. Supabase төсөл Сингапур бүсэд байрлах тул мэдээлэл Монгол Улсаас гадна боловсруулагдах боломжтой.",
+            "mn": "Одоогийн систем нэвтрэлт, өгөгдлийн сан, файл хадгалахад Supabase, туршилтын сайтыг ажиллуулахад Cloudflare ашигладаг. Supabase төсөл Сингапур бүсэд байрлах тул мэдээлэл Монгол Улсаас гадна боловсруулагдах боломжтой.",
             "en": "The current system uses Supabase for authentication, database and storage and Cloudflare for preview delivery. The Supabase project is hosted in Singapore, so data may be processed outside Mongolia."
           },
           {
@@ -415,12 +415,12 @@ export const informationPages:Record<string,InfoPage>={
       {
         "id": "cookies",
         "title": {
-          "mn": "6. Cookies ба төхөөрөмжийн тохиргоо",
+          "mn": "6. Күүки ба төхөөрөмжийн тохиргоо",
           "en": "6. Cookies and local preferences"
         },
         "paragraphs": [
           {
-            "mn": "Нэвтрэлтийн session-ийг хадгалах cookie болон төхөөрөмжид үлдэх хэлний сонголт, theme, хадгалсан үйлчилгээ зэрэг browser өгөгдөл хэрэглэгдэж болно. Дэлгэрэнгүйг Cookie Policy хэсгээс уншина уу.",
+            "mn": "Нэвтрэлтийн төлөвийг хадгалах күүки болон хэл, өнгөний горим, хадгалсан үйлчилгээ зэрэг хөтчид үлдэх мэдээллийг ашиглаж болно. Дэлгэрэнгүйг «Күүки ашиглах бодлого» хэсгээс уншина уу.",
             "en": "The application may use session cookies and locally stored preferences such as language, theme and saved services. See the Cookie Policy for further detail."
           }
         ],
@@ -434,7 +434,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Бета хувилбарын бүх өгөгдөлд хамаарах эцсийн хадгалах хугацааны хүснэгт одоогоор нийтлэгдээгүй. Эцсийн бодлогод төрөл тус бүрийн хугацаа, устгах болон backup-аас цэвэрлэх явцыг тогтоож нийтэлнэ.",
+            "mn": "Бета хувилбарын бүх өгөгдөлд хамаарах эцсийн хадгалах хугацааны хүснэгт одоогоор нийтлэгдээгүй. Эцсийн бодлогод төрөл тус бүрийн хугацаа, устгах болон нөөц хуулбараас цэвэрлэх явцыг тогтоож нийтэлнэ.",
             "en": "A finalized per-category retention schedule has not yet been published for beta data. The approved policy must specify retention periods and deletion/backup handling."
           },
           {
@@ -466,11 +466,11 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Өөрийн профайлын мэдээллийг засах, public sharing сонголтоо өөрчлөх боломжийг бүтээгдэхүүнээр олгодог. Мэдээлэлд хандах, засварлах, устгуулах зэрэг нэмэлт хүсэлтийн албан ёсны сувгийг оператор эцэслэн тогтооно.",
+            "mn": "Өөрийн профайлын мэдээллийг засах, нийтэд харуулах сонголтоо өөрчлөх боломжийг бүтээгдэхүүнээр олгодог. Мэдээлэлд хандах, засварлах, устгуулах зэрэг нэмэлт хүсэлтийн албан ёсны сувгийг оператор эцэслэн тогтооно.",
             "en": "Users can edit profile information and change public-profile visibility in the product. The operator must finalize a verified contact channel and process for further access, correction and deletion requests."
           },
           {
-            "mn": "Нэвтрэх боломжгүй үед хэрэглэгч албан ёсны beta админтай өмнө тохиролцсон сувгаар холбогдоно; энэ сайт баталгаажаагүй email хаягийг дэмжлэгийн хаяг мэт нийтлэхгүй.",
+            "mn": "Нэвтрэх боломжгүй үед хэрэглэгч туршилтын хувилбарын админтай өмнө тохиролцсон сувгаар холбогдоно; энэ сайт баталгаажаагүй имэйл хаягийг дэмжлэгийн хаяг мэт нийтлэхгүй.",
             "en": "If sign-in is unavailable, contact the existing beta administrator through a previously verified channel; this website will not invent an unverified support email."
           }
         ],
@@ -484,7 +484,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Бета хувилбар нь ердийн freelancer үйлчилгээ ба төсөлд зориулагдсан. Насны шаардлага, эцэг эхийн зөвшөөрлийн журмыг оператор тусад нь баталгаажуулж нийтэлнэ.",
+            "mn": "Бета хувилбар нь бие даасан мэргэжилтний үйлчилгээ, төсөлд зориулагдсан. Насны шаардлага, эцэг эхийн зөвшөөрлийн журмыг оператор тусад нь баталгаажуулж нийтэлнэ.",
             "en": "The beta is designed for freelance services and projects. Any minimum age and parental-consent requirements need operator and legal review before final publication."
           }
         ],
@@ -508,7 +508,7 @@ export const informationPages:Record<string,InfoPage>={
   },
   "cookies": {
     "label": {
-      "mn": "COOKIE POLICY",
+      "mn": "КҮҮКИ АШИГЛАХ БОДЛОГО",
       "en": "COOKIE POLICY"
     },
     "title": {
@@ -516,7 +516,7 @@ export const informationPages:Record<string,InfoPage>={
       "en": "A clearer view of browser storage."
     },
     "subtitle": {
-      "mn": "Нэвтрэлт болон таны сонголтыг хадгалахад хэрэглэж болох cookies, local storage-ийн тухай.",
+      "mn": "Нэвтрэлт болон таны сонголтыг хадгалахад ашигладаг күүки, хөтчийн дотоод хадгалалтын тухай.",
       "en": "How cookies and browser storage support sign-in and preferences."
     },
     "review": true,
@@ -524,12 +524,12 @@ export const informationPages:Record<string,InfoPage>={
       {
         "id": "necessary",
         "title": {
-          "mn": "1. Нэвтрэлтийн session",
+          "mn": "1. Нэвтрэлтийн төлөв",
           "en": "1. Necessary session data"
         },
         "paragraphs": [
           {
-            "mn": "Нэвтрэлтийн cookie/session өгөгдөл нь аккаунт баталгаажуулах болон хэрэглэгчийн ажлын орчинд хандахад хэрэгтэй. Browser-д cookie хаахад нэвтрэлт саатаж болно.",
+            "mn": "Нэвтрэлтийн күүки нь бүртгэлийг баталгаажуулж, хэрэглэгчийн ажлын орчинд нэвтрэхэд хэрэгтэй. Хөтчийн тохиргоонд күүкиг хоригловол нэвтрэх боломжгүй болж болзошгүй.",
             "en": "Session cookies support sign-in and authenticated workspaces. Blocking necessary cookies may prevent access."
           }
         ],
@@ -543,7 +543,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Вебийн одоогийн код хэлний сонголт, dark/light theme болон хадгалсан жишиг үйлчилгээг localStorage-д хадгалж болно.",
+            "mn": "Сайт хэлний сонголт, цайвар эсвэл бараан горим, хадгалсан жишиг үйлчилгээг хөтчийн дотоод хадгалалтад хадгалж болно.",
             "en": "Current website code may store selected language, dark/light theme and saved sample services in browser localStorage."
           }
         ],
@@ -557,7 +557,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Аналитик/сурталчилгааны бүх үйлчилгээний аудит хараахан бүрэн хийгдээгүй тул гуравдагч этгээдийн tracking огт байхгүй гэж батлахгүй. Ийм үйлчилгээ нэмэхэд бодлого болон шаардлагатай зөвшөөрлийн механизмыг шинэчилнэ.",
+            "mn": "Аналитик/сурталчилгааны бүх үйлчилгээний аудит хараахан бүрэн хийгдээгүй тул гуравдагч этгээдийн хэрэглээг мөрдөх технологи огт байхгүй гэж батлахгүй. Ийм үйлчилгээ нэмэхэд бодлого болон шаардлагатай зөвшөөрлийн механизмыг шинэчилнэ.",
             "en": "A full inventory of analytics/marketing technologies has not been completed, so this draft does not make an absolute 'no tracking' claim. Any future integrations require an updated notice and any necessary consent controls."
           }
         ],
@@ -571,7 +571,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Хөтчийн тохиргоогоор cookie болон хадгалсан өгөгдөл арилгаж болно. Энэ нь гарч нэвтрэх, хэл/theme сонголт дахин анхны байдалд очих зэрэг үр дагавартай байж болно.",
+            "mn": "Хөтчийн тохиргооноос күүки болон хадгалсан мэдээллийг устгаж болно. Ингэснээр бүртгэлээс гарч, хэл болон өнгөний горим анхны тохиргоонд шилжиж болзошгүй.",
             "en": "Browsers allow you to clear cookies and stored data. Doing so may sign you out or reset language and theme preferences."
           }
         ],
@@ -601,11 +601,11 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Нүүр хуудасны хайлт эсвэл ангиллаас эхэл. Кирилл, латин галиг эсвэл англи үгээр хайж, нийтлэгдсэн үйлчилгээний нэр, тайлбар, seller-ийг харьцуул.",
+            "mn": "Нүүр хуудасны хайлт эсвэл ангиллаас эхэл. Кирилл, латин галиг эсвэл англи үгээр хайж, нийтлэгдсэн үйлчилгээний нэр, тайлбар, мэргэжилтнийг харьцуул.",
             "en": "Start with the homepage search or categories. Search using Mongolian, romanized Mongolian or English, then compare published service descriptions and sellers."
           },
           {
-            "mn": "Жишиг/demo картууд нь бодит freelancer-ийн захиалга биш. Зөвхөн бодит нийтлэгдсэн зар дээр холбогдох боломжтой.",
+            "mn": "Жишиг/demo картууд нь бодит мэргэжилтний захиалга биш. Зөвхөн бодит нийтлэгдсэн зар дээр холбогдох боломжтой.",
             "en": "Illustrative sample cards are not live seller offers. Contact actions are intended for real published listings."
           }
         ],
@@ -614,16 +614,16 @@ export const informationPages:Record<string,InfoPage>={
       {
         "id": "packages",
         "title": {
-          "mn": "2. Basic / Standard / Premium",
+          "mn": "2. Суурь / Стандарт / Дээд",
           "en": "2. Compare packages"
         },
         "paragraphs": [
           {
-            "mn": "Багцын үнэ (₮), delivery days, revisions, багтсан ажлуудыг харьцуул. Илүү үнэтэй багц бүх төслийн хувьд заавал илүү тохиромжтой гэсэн үг биш.",
+            "mn": "Багцын үнэ (₮), гүйцэтгэх хугацаа, засварын тоо, багтах ажлыг харьцуулаарай. Илүү үнэтэй багц таны төсөлд заавал илүү тохирно гэсэн үг биш.",
             "en": "Compare each tier's MNT price, delivery days, revision count and deliverables. A higher-priced package is not necessarily the best fit."
           },
           {
-            "mn": "Захиалга үүсэхэд сонгосон багцын нөхцөл snapshot байдлаар хадгалагдана.",
+            "mn": "Захиалга үүсэхэд сонгосон багцын нөхцөл тухайн захиалгад хадгалагдана.",
             "en": "Selected package details are recorded as an order snapshot when a request is created."
           }
         ],
@@ -637,11 +637,11 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Contact Seller товчийг дарахад нэвтрээгүй бол бүртгүүлэх/нэвтрэх хуудас гарна. Нэвтэрсний дараа сонгосон freelancer-ийн чат руу шилжих урсгалтай.",
+            "mn": "Үйлчилгээний хуудасны “Мессеж бичих” товчийг дараарай. Нэвтрээгүй бол эхлээд нэвтэрнэ. Дараа нь сонгосон мэргэжилтэнтэйгээ чатлах боломжтой.",
             "en": "Use Contact Seller to start a conversation. If not signed in, you are guided through login/sign-up with the selected seller carried forward."
           },
           {
-            "mn": "Имэйл нь баталгаажсан, идэвхтэй аккаунт шаардлагатай. Өөрийн seller үйлчилгээ дээр өөртэйгөө чат эхлүүлэх боломжгүй.",
+            "mn": "Имэйл нь баталгаажсан, идэвхтэй бүртгэл шаардлагатай. Өөрийн мэргэжилтэн үйлчилгээ дээр өөртэйгөө чат эхлүүлэх боломжгүй.",
             "en": "An active, verified account is required. You cannot start a conversation with your own listing."
           }
         ],
@@ -669,11 +669,11 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "My Orders хэсэгт Requested → Accepted → In progress → Delivered → Completed төлөвүүд харагдана. Buyer шаардлагатай нөхцөлд засвар хүсэх эсвэл хүргэлтийг зөвшөөрөх боломжтой.",
+            "mn": "“Миний захиалга” хэсэгт Шинэ хүсэлт → Зөвшөөрсөн → Гүйцэтгэж байна → Хүлээлгэн өгсөн → Дууссан гэсэн явц харагдана. Ажлыг шалгаад хүлээн авах эсвэл багцын нөхцөлийн дагуу засвар хүсээрэй.",
             "en": "Track Requested → Accepted → In progress → Delivered → Completed in My Orders. Buyers can request eligible revisions or approve delivery."
           },
           {
-            "mn": "Засварын хүсэлтийн тоо тухайн багцын revision limit-аар хязгаарлагдана. Бета хувилбарт мөнгөн төлбөр шилжихгүй.",
+            "mn": "Засвар хүсэх тоо сонгосон багцын хязгаараас хэтрэхгүй. Туршилтын хугацаанд төлбөр Hustle-ээр дамжихгүй.",
             "en": "Revisions are limited by the selected package. No real money moves in the beta."
           }
         ],
@@ -683,7 +683,7 @@ export const informationPages:Record<string,InfoPage>={
   },
   "freelancers": {
     "label": {
-      "mn": "FREELANCER-ИЙН ГАРЫН АВЛАГА",
+      "mn": "МЭРГЭЖИЛТНИЙ ГАРЫН АВЛАГА",
       "en": "FREELANCER GUIDE"
     },
     "title": {
@@ -698,12 +698,12 @@ export const informationPages:Record<string,InfoPage>={
       {
         "id": "join",
         "title": {
-          "mn": "1. Freelancer болох",
+          "mn": "1. Үйлчилгээ үзүүлэх",
           "en": "1. Join as a freelancer"
         },
         "paragraphs": [
           {
-            "mn": "Нэг аккаунтаар Buyer/Seller хоёр горимыг ашиглаж болно. Имэйлээ баталгаажуулаад Seller Studio-д профайлаа тохируулна. Үйлчилгээ нийтлэхэд хяналт үйлчилнэ.",
+            "mn": "Нэг бүртгэлээр захиалагч, мэргэжилтний хоёр самбарыг ашиглаж болно. Имэйлээ баталгаажуулаад мэргэжилтний самбараас профайлаа бүрдүүлээрэй. Үйлчилгээг админ хянасны дараа нийтэлнэ.",
             "en": "You can use Buyer and Seller modes with one verified account. Set up your seller profile in Seller Studio; published services remain subject to moderation."
           }
         ],
@@ -712,16 +712,16 @@ export const informationPages:Record<string,InfoPage>={
       {
         "id": "profile",
         "title": {
-          "mn": "2. Профайл ба Portfolio",
+          "mn": "2. Профайл ба Бүтээлийн",
           "en": "2. Profile and portfolio"
         },
         "paragraphs": [
           {
-            "mn": "Товч, үнэн зөв headline, хийж чаддаг ажил, туршлага, portfolio жишээг нэм. Slug нь жижиг латин үсэг, тоо, зураастай 3–60 тэмдэгт байна.",
+            "mn": "Мэргэжил, туршлага, хийж чаддаг ажлаа товч танилцуулж, бүтээлийн жишээгээ нэмээрэй. Профайлын хаяг 3–60 тэмдэгттэй, жижиг латин үсэг, тоо, зураас агуулна.",
             "en": "Add a clear headline, specialty, relevant experience and portfolio examples. Public profile slugs use 3–60 lowercase Latin letters, digits or hyphens."
           },
           {
-            "mn": "Public profile сонголтыг зөвхөн нийтэд харуулахыг хүссэн үедээ идэвхжүүл. Зөвшөөрөлгүй бусдын бүтээл ашиглахгүй.",
+            "mn": "Профайлаа бусдад харуулахыг хүсвэл “Профайлаа нийтэд нээх” сонголтыг идэвхжүүлээрэй. Бусдын бүтээлийг зөвшөөрөлгүй ашиглаж болохгүй.",
             "en": "Enable public sharing only when you intend to appear in discovery. Use portfolio work you have permission to share."
           }
         ],
@@ -735,11 +735,11 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Үйлчилгээний нэр, ангилал, тайлбарыг товч бөгөөд хэмжигдэхүйц бич. Basic, Standard, Premium багц тус бүрд өөрийн үнэ, гүйцэтгэх хоног, засварын тоо, багтсан ажлуудаа бүрэн бөглө.",
+            "mn": "Үйлчилгээний нэр, ангилал, тайлбарыг товч бөгөөд хэмжигдэхүйц бич. Суурь, Стандарт, Дээд багц тус бүрд өөрийн үнэ, гүйцэтгэх хоног, засварын тоо, багтсан ажлуудаа бүрэн бөглө.",
             "en": "Give each service a clear title, category and scoped description. Define an authored price, delivery window, revision limit and inclusions for Basic, Standard and Premium."
           },
           {
-            "mn": "Үнэ Basic ≤ Standard ≤ Premium байна. Хуучин үйлчилгээний Standard/Premium үнийг систем зохиохгүй; та өөрөө бөглөнө. Draft хадгалах эсвэл хяналтад илгээх сонголттой.",
+            "mn": "Суурь багцын үнэ Стандартаас, Стандартын үнэ Дээд багцаас их байж болохгүй. Багц бүрийн үнийг өөрөө бөглөнө. Ноорог хадгалах эсвэл хянуулахаар илгээх боломжтой.",
             "en": "Prices must follow Basic ≤ Standard ≤ Premium. Standard and Premium for older services are not fabricated; you set them. Save as Draft or submit for moderation."
           }
         ],
@@ -753,7 +753,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Нийтлэх хүсэлт admin-ийн хяналтад орж болно. Зөвшөөрөгдөж published болсон, public sharing идэвхтэй зар л нээлттэй marketplace дээр харагдана.",
+            "mn": "Үйлчилгээг админ хянаж нийтэлнэ. Үйлчилгээ нийтлэгдсэн, профайл нийтэд нээлттэй үед үйлчилгээний жагсаалтад харагдана.",
             "en": "Listings may require moderation. Published listings tied to public opted-in seller profiles are shown in discovery."
           }
         ],
@@ -767,7 +767,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Хүсэлт ирэхэд дэлгэрэнгүй шаардлага ба сонгосон багцыг шалга. Хүлээн авч, ажлаа эхлүүлэн, хүргэлтийн тэмдэглэл/материалаа байршуулж захиалгыг Delivered болгоно.",
+            "mn": "Шинэ хүсэлтийн шаардлага, сонгосон багцыг шалгаарай. Хүсэлтийг хүлээн авч, ажлаа эхлүүлнэ. Дуусмагц тайлбар, материалаа хавсаргаад “Хүлээлгэн өгөх” товчийг дараарай.",
             "en": "Review the brief and recorded package before accepting. Start work, provide deliverables and a delivery note, then mark the order Delivered."
           },
           {
@@ -803,7 +803,7 @@ export const informationPages:Record<string,InfoPage>={
       "en": "Grow the community together."
     },
     "subtitle": {
-      "mn": "Freelancer-үүдийг танилцуулах түншлэлийн туршилтын бүтэц.",
+      "mn": "Мэргэжилтнүүдийг танилцуулах түншлэлийн туршилтын бүтэц.",
       "en": "An overview of the beta referral partner model."
     },
     "sections": [
@@ -815,7 +815,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Мэргэжилтнүүдийг платформд танилцуулах, зөв хэрэглэгчдэд үйлчилгээний боломж хүргэх зорилготой. Түншийн бүртгэл ба verification нь админы хяналтад хамаарна.",
+            "mn": "Мэргэжилтнүүдийг Hustle-д урьж, үйлчилгээг нь шинэ захиалагчдад таниулах зорилготой. Түншийн бүртгэл, баталгаажуулалтыг админ хянана.",
             "en": "The program introduces qualified freelancers and helps more buyers discover services. Partner enrollment and verification are administered manually."
           }
         ],
@@ -829,11 +829,11 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Төлөвлөсөн дүрмээр стандарт түнш 1%, идэвхтэй түнш 2%; платформын үндсэн шимтгэл 10%, referral attribution цонх 30 хоног. Эдгээр нь өөрчлөгдөж болох бета тохиргоо юм.",
+            "mn": "Туршилтын үндсэн тохиргоо: түншийн урамшуулал 1%, идэвхтэй түншийнх 2%, платформын шимтгэл 10%, урилга бүртгүүлэх хугацаа 30 хоног. Эдгээр тохиргоо өөрчлөгдөж болно.",
             "en": "Current configurable beta rules propose 1% standard partner, 2% active partner, a 10% platform commission and a 30-day attribution window. They may change."
           },
           {
-            "mn": "Энэ бол бодит мөнгөн урамшуулал авах эрх, төлбөр төлөгдөх баталгаа биш. Одоогоор төлбөр болон cash reward олголт идэвхгүй.",
+            "mn": "Туршилтын тооцоолол нь мөнгөн урамшуулал авах эрх, төлбөрийн баталгаа болохгүй. Одоогоор мөнгөн урамшуулал олгохгүй.",
             "en": "These figures do not create a right to payment. No real partner cash reward is disbursed during beta."
           }
         ],
@@ -847,7 +847,7 @@ export const informationPages:Record<string,InfoPage>={
         },
         "paragraphs": [
           {
-            "mn": "Бета эрхтэй аккаунтаараа нэвтэрч түншлэлийн хэсгийг үзнэ. Түншийн эрх/баталгаажуулалтыг админ шийдвэрлэнэ. Бусдын аккаунт, захиалгын мэдээлэлд хандах эрх олгохгүй.",
+            "mn": "Бета эрхтэй бүртгэлээрээ нэвтэрч түншлэлийн хэсгийг үзнэ. Түншийн эрх/баталгаажуулалтыг админ шийдвэрлэнэ. Бусдын бүртгэл, захиалгын мэдээлэлд хандах эрх олгохгүй.",
             "en": "Approved beta users can review referral information in their workspace. Partner status requires administrator review and does not provide access to unrelated accounts or orders."
           }
         ],
@@ -869,17 +869,17 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
           "en": "Who can sign up?"
         },
         "a": {
-          "mn": "Hustle.mn нээлттэй бета туршилттай. Хэн ч бүртгүүлж болно; имэйлээ баталгаажуулсны дараа admin approval шаардлагагүй.",
+          "mn": "Hustle.mn нээлттэй туршилтын хувилбартай. Хэн ч бүртгүүлж, имэйлээ баталгаажуулаад ашиглаж болно. Админы зөвшөөрөл шаардахгүй.",
           "en": "Hustle.mn is in open beta. Anyone may sign up; email verification unlocks standard access without manual approval."
         }
       },
       {
         "q": {
-          "mn": "Аккаунтын хандалт идэвхгүй байвал яах вэ?",
+          "mn": "Бүртгэлийн хандалт идэвхгүй байвал яах вэ?",
           "en": "What if my account access is unavailable?"
         },
         "a": {
-          "mn": "Имэйлээ баталгаажуулсныхаа дараа нэвтэрч, эрхээ дахин шалгана уу. Хандалт идэвхгүй хэвээр байвал аккаунт хязгаарлагдсан эсэхийг админаас лавлана уу.",
+          "mn": "Имэйлээ баталгаажуулсныхаа дараа нэвтэрч, эрхээ дахин шалгана уу. Хандалт идэвхгүй хэвээр байвал бүртгэл хязгаарлагдсан эсэхийг админаас лавлана уу.",
           "en": "After verifying your email, sign in and check access again. If you are still blocked, contact the administrator to review possible account restrictions."
         }
       },
@@ -889,7 +889,7 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
           "en": "What if I never receive a confirmation email?"
         },
         "a": {
-          "mn": "Inbox/Spam шалга. Хэрэв өмнө бүртгэлтэй бол дахин Sign up хийхийн оронд Sign in ашигла. Хүсэлт амжилттай болсон нь email хүрсэн гэсэн баталгаа биш; шинэ имэйлд хүргэлтгүй бол SMTP тохиргоог админ шалгах хэрэгтэй.",
+          "mn": "Ирсэн имэйл болон Спам хавтсаа шалгаарай. Өмнө бүртгүүлсэн бол “Нэвтрэх” сонголтыг ашиглаарай. Имэйл ирэхгүй хэвээр байвал админтай холбогдоорой.",
           "en": "Check Inbox and Spam. If already registered, use Sign in rather than signing up again. An accepted send request does not guarantee delivery; admins should check SMTP for new-email delivery issues."
         }
       },
@@ -899,17 +899,17 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
           "en": "I forgot my password. What now?"
         },
         "a": {
-          "mn": "Sign in → Forgot password хэсэгт орж сэргээх холбоос хүснэ. Имэйл хүргэх үйлчилгээ тохируулагдсан байх шаардлагатай.",
+          "mn": "Нэвтрэх хуудсан дээрх “Нууц үгээ мартсан уу?” холбоосоор орж сэргээх холбоос хүсээрэй.",
           "en": "Use Sign in → Forgot password to request a reset link. Delivery depends on email configuration."
         }
       },
       {
         "q": {
-          "mn": "Нэг аккаунтаар freelancer ба buyer байж болох уу?",
+          "mn": "Нэг бүртгэлээр мэргэжилтэн ба захиалагч байж болох уу?",
           "en": "Can I be both Buyer and Seller?"
         },
         "a": {
-          "mn": "Тийм. Нэг аккаунтаас Buyer Dashboard болон Seller Studio руу шилжиж болно. Харин өөрийн зар дээр өөртэйгөө чат эхлүүлэх боломжгүй.",
+          "mn": "Тийм. Нэг бүртгэлээс захиалагч, мэргэжилтний самбар руу шилжиж болно. Өөртэйгөө чатлах, өөрийн үйлчилгээг захиалах боломжгүй.",
           "en": "Yes. One account can use Buyer Dashboard and Seller Studio. It cannot start a buyer conversation with its own listing."
         }
       }
@@ -923,11 +923,11 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
     "items": [
       {
         "q": {
-          "mn": "Basic, Standard, Premium гэж юу вэ?",
+          "mn": "Суурь, Стандарт, Дээд багц юугаараа ялгаатай вэ?",
           "en": "What are Basic, Standard and Premium?"
         },
         "a": {
-          "mn": "Freelancer-ийн тодорхойлдог гурван сонголт. Тус бүр өөр үнэ, хугацаа, засварын тоо, багтсан ажлуудтай.",
+          "mn": "Мэргэжилтний тодорхойлдог гурван сонголт. Тус бүр өөр үнэ, хугацаа, засварын тоо, багтсан ажлуудтай.",
           "en": "Three seller-authored offer tiers, each with its own price, delivery timeline, revision limit and inclusions."
         }
       },
@@ -937,7 +937,7 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
           "en": "Are all listed designs real services?"
         },
         "a": {
-          "mn": "Үгүй. Зарим карт загварын жишиг өгөгдөл байж болно. Бодит үйлчилгээ Real Freelancer Listings хэсэгт нийтлэгдсэн бөгөөд Contact Seller үйлдэлтэй.",
+          "mn": "Жишиг гэж тэмдэглэсэн картууд нь загвар танилцуулах зориулалттай. Захиалга өгөхдөө нийтлэгдсэн үйлчилгээний хуудаснаас багцаа сонгоорой.",
           "en": "No. Some visual cards are demo concepts. Actual services appear in the live published marketplace and support Contact Seller."
         }
       },
@@ -953,11 +953,11 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
       },
       {
         "q": {
-          "mn": "Freelancer зар хэрхэн нийтлэх вэ?",
+          "mn": "Мэргэжилтэн зар хэрхэн нийтлэх вэ?",
           "en": "How do freelancers publish?"
         },
         "a": {
-          "mn": "Seller Studio-д профайл, гурван багцаа бөглөж, Draft хадгалах эсвэл Pending review болгож админд илгээнэ. Public profile идэвхтэй байх шаардлагатай.",
+          "mn": "Мэргэжилтний самбарт профайл, үйлчилгээ, гурван багцаа бөглөөрэй. Ноорог хадгалах эсвэл админд хянуулахаар илгээж болно. Профайлаа нийтэд нээсэн байх шаардлагатай.",
           "en": "Configure the seller profile and three tiers in Seller Studio. Save a draft or submit for review. Public discovery also requires seller opt-in."
         }
       }
@@ -971,11 +971,11 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
     "items": [
       {
         "q": {
-          "mn": "Freelancer-тэй яаж холбогдох вэ?",
+          "mn": "Мэргэжилтэнтэй яаж холбогдох вэ?",
           "en": "How do I contact a freelancer?"
         },
         "a": {
-          "mn": "Бодит нийтлэгдсэн үйлчилгээний Contact Seller товчийг дарж, шаардлагатай бол нэвтэрнэ. Дараа нь тухайн freelancer-ийн мессеж хэсэг рүү орох урсгалтай.",
+          "mn": "Нийтлэгдсэн үйлчилгээний хуудаснаас “Мессеж бичих” товчийг дараарай. Нэвтрээгүй бол нэвтэрсний дараа тухайн мэргэжилтний чат нээгдэнэ.",
           "en": "Choose Contact Seller on a published listing. Sign in if required and continue to the selected seller's conversation."
         }
       },
@@ -985,7 +985,7 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
           "en": "What are the order stages?"
         },
         "a": {
-          "mn": "Requested, Accepted, In progress, Delivered, Completed гэсэн үндсэн төлөвтэй. Зарим хүсэлтийг цуцлах, татгалзах, засвар хүсэх боломжтой.",
+          "mn": "Шинэ хүсэлт, Зөвшөөрсөн, Гүйцэтгэж байна, Хүлээлгэн өгсөн, Дууссан гэсэн үндсэн төлөвтэй. Явцаас нь хамаарч хүсэлтийг цуцлах, татгалзах, засвар хүсэх боломжтой.",
           "en": "Core stages include Requested, Accepted, In progress, Delivered and Completed, with supported cancel/reject/revision paths."
         }
       },
@@ -995,7 +995,7 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
           "en": "How many revisions can I request?"
         },
         "a": {
-          "mn": "Сонгосон багцын revision limit-аар хязгаарлагдана. Засвар хүсэлтдээ шаардлагыг тодорхой бичээрэй.",
+          "mn": "Сонгосон багцад заасан тоогоор засвар хүсэж болно. Юуг хэрхэн засуулахыг тодорхой бичээрэй.",
           "en": "Requests are limited by the selected package's revision allowance. Be specific about the change required."
         }
       },
@@ -1005,7 +1005,7 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
           "en": "Do I pay real money during beta?"
         },
         "a": {
-          "mn": "Үгүй. Одоогийн нээлттэй бета хувилбарт банк, QPay, escrow болон төлбөрийн гүйлгээ идэвхгүй. Үнэ нь захиалгын туршилтын мэдээлэл.",
+          "mn": "Үгүй. Одоогийн нээлттэй бета хувилбарт банк, QPay, эскроу болон төлбөрийн гүйлгээ идэвхгүй. Үнэ нь захиалгын туршилтын мэдээлэл.",
           "en": "No. Banking, QPay, escrow and real money transactions are not active in the current open beta. Displayed prices support order testing."
         }
       }
@@ -1023,17 +1023,17 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
           "en": "Are my messages public?"
         },
         "a": {
-          "mn": "Мессеж ба захиалгыг зөвхөн оролцогч талууд болон зөвшөөрөгдсөн админд хязгаарлах RLS болон server authorization ашигладаг. Эмзэг нууц мэдээлэл илгээхгүй байхыг зөвлөе.",
+          "mn": "Мессеж, захиалгын мэдээллийг зөвхөн холбогдох талууд болон эрх бүхий админ харах боломжтой байхаар хамгаалсан. Нууц үг, төлбөрийн нууц мэдээллээ чатаар бүү илгээгээрэй.",
           "en": "Messages and orders use row-level security and authorization intended to limit access to participants and approved administrators. Avoid sending sensitive secrets."
         }
       },
       {
         "q": {
-          "mn": "Миний freelancer профайл нийтэд харагдах уу?",
+          "mn": "Миний мэргэжилтний профайл нийтэд харагдах уу?",
           "en": "Is my seller profile public?"
         },
         "a": {
-          "mn": "Нийтэд харагдах тохиргоо нь public profile сонголт, slug болон нийтлэгдсэн үйлчилгээтэй холбоотой. Хүсээгүй бол public sharing-ийг идэвхжүүлэх шаардлагагүй.",
+          "mn": "“Профайлаа нийтэд нээх” тохиргоо, профайлын хаяг, нийтлэгдсэн үйлчилгээнээс хамаарна. Профайлаа нийтэд харуулахыг хүсэхгүй бол уг тохиргоог идэвхжүүлэх шаардлагагүй.",
           "en": "Visibility depends on public-profile opt-in, a valid slug and published services. You do not have to enable public sharing."
         }
       },
@@ -1057,11 +1057,11 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
     "items": [
       {
         "q": {
-          "mn": "Referral 1%, 2% нь бодит мөнгө үү?",
+          "mn": "Түншийн 1%, 2%-ийн урамшууллыг мөнгөөр олгох уу?",
           "en": "Are the 1% and 2% referral rewards paid?"
         },
         "a": {
-          "mn": "Одоогоор үгүй. Энэ нь тохиргоотой бета тооцооллын загвар. Бодит payout эхлэх үед тусгай нөхцөл гаргах шаардлагатай.",
+          "mn": "Одоогоор олгохгүй. Эдгээр хувь нь туршилтын тооцооллын тохиргоо юм. Мөнгөн урамшуулал олгож эхлэхээс өмнө нөхцөлийг тусад нь нийтэлнэ.",
           "en": "Not yet. These are configurable beta calculations. Real payouts would require a separate approved policy and payment system."
         }
       },
@@ -1071,17 +1071,17 @@ export const helpTopics:{group:Localized;items:{q:Localized;a:Localized}[]}[]=[
           "en": "Is an official support email available?"
         },
         "a": {
-          "mn": "Одоогоор албан ёсны support имэйл баталгаажаагүй тул зохиомол хаяг нийтлэхгүй. Платформын админтай өмнө ашиглаж байсан баталгаатай сувгаар холбогдоно.",
+          "mn": "Албан ёсны тусламжийн имэйл хараахан нийтлэгдээгүй байна. Админтай өмнө ашиглаж байсан баталгаатай сувгаараа холбогдоорой.",
           "en": "No verified official support mailbox has been published. Contact the platform administrator through an existing trusted channel."
         }
       },
       {
         "q": {
-          "mn": "Төлбөр ба escrow хэзээ нээгдэх вэ?",
+          "mn": "Төлбөр ба эскроу хэзээ нээгдэх вэ?",
           "en": "When will payments and escrow launch?"
         },
         "a": {
-          "mn": "Баталгаажсан хугацаа зарлаагүй. Одоогоор эдгээр нь roadmap-д байгаа бөгөөд бета хувилбарт ажиллахгүй.",
+          "mn": "Эхлэх хугацаа хараахан зарлаагүй. Эдгээр боломж хөгжүүлэлтийн төлөвлөгөөнд байгаа бөгөөд туршилтын хувилбарт ажиллахгүй.",
           "en": "No confirmed launch date has been announced. These are roadmap features and are not active in beta."
         }
       }

@@ -90,6 +90,7 @@ type HeaderProps={
 /** V50: the one header used on every public page. Logo, three destinations,
  *  then notifications + account (or sign in + become a freelancer) on the right. */
 export default function SiteHeader({en,onToggleLanguage,dark,onToggleTheme,active=null,notificationsAsSeller,session,onSignedOut}:HeaderProps){
+ useEffect(()=>{document.documentElement.lang=en?'en':'mn'},[en]);
  const [menu,setMenu]=useState(false);
  const [loginHref,setLoginHref]=useState('/login/?mode=buyer');
  const t=(mn:string,english:string)=>en?english:mn;
@@ -109,14 +110,14 @@ export default function SiteHeader({en,onToggleLanguage,dark,onToggleTheme,activ
    <nav id="hx-main-nav" className={'hx-nav'+(menu?' open':'')} aria-label={t('Үндсэн цэс','Main navigation')}>
     {links.map(([id,href,mn,english])=><Link key={id} href={href} aria-current={active===id?'page':undefined} onClick={()=>setMenu(false)}>{t(mn,english)}</Link>)}
     {sessionState==='signed-in'&&account&&<Link className="mobile-auth-nav" href={account.isSeller?'/seller-studio/':'/buyer/'} onClick={()=>setMenu(false)}>{t('Миний самбар','My dashboard')}</Link>}
-    {sessionState==='guest'&&<div className="hx-nav-auth"><Link href={loginHref}>{t('Нэвтрэх','Log in')}</Link><Link href="/join/seller/" className="hx-nav-cta">{t('Freelancer болох','Become a freelancer')}</Link></div>}
+    {sessionState==='guest'&&<div className="hx-nav-auth"><Link href={loginHref}>{t('Нэвтрэх','Log in')}</Link><Link href="/join/seller/" className="hx-nav-cta">{t('Үйлчилгээ үзүүлэх','Become a freelancer')}</Link></div>}
    </nav>
    <div className="hx-actions">
     <button type="button" className="hx-icon locale" onClick={onToggleLanguage} aria-label={t('Англи хэл сонгох','Switch to Mongolian')}><Globe size={16} aria-hidden="true"/>{en?'EN':'MN'}</button>
     {onToggleTheme&&<button type="button" className="hx-icon" onClick={onToggleTheme} aria-label={t('Өнгөний горим солих','Toggle color theme')}>{dark?<Sun size={18}/>:<Moon size={18}/>}</button>}
     {sessionState==='signed-in'&&account&&<GlobalNotifications key={account.id} userId={account.id} en={en} isSeller={notificationsAsSeller??account.isSeller}/>}
     {sessionState==='signed-in'&&account?<AccountMenu account={account} en={en} signingOut={signingOut} onSignOut={async()=>{const ok=await signOut();setMenu(false);onSignedOut?.(ok)}}/>
-     :sessionState==='guest'?<><Link href={loginHref} className="hx-login">{t('Нэвтрэх','Log in')}</Link><Link href="/join/seller/" className="hx-cta">{t('Freelancer болох','Become a freelancer')}<ArrowUpRight size={15} aria-hidden="true"/></Link></>
+     :sessionState==='guest'?<><Link href={loginHref} className="hx-login">{t('Нэвтрэх','Log in')}</Link><Link href="/join/seller/" className="hx-cta">{t('Үйлчилгээ үзүүлэх','Become a freelancer')}<ArrowUpRight size={15} aria-hidden="true"/></Link></>
      :<span className="hx-checking" role="status" aria-label={t('Нэвтрэлтийн төлөв шалгаж байна','Checking sign-in status')}/>}
     <button type="button" ref={burger} className="hx-icon hx-burger" aria-controls="hx-main-nav" aria-expanded={menu} aria-label={t('Цэс','Menu')} onClick={()=>setMenu(v=>!v)}>{menu?<X size={20}/>:<Menu size={20}/>}</button>
    </div>

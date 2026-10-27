@@ -24,9 +24,9 @@ export default function SellerProfilePreview({draft,avatarUrl,coverUrl,coverFocu
  const initial=Array.from(draft.display_name.trim())[0]?.toLocaleUpperCase()||'H';
  const live=services.filter(s=>s.status==='published');
  const Ghost=({to,children}:{to:PreviewSection;children:React.ReactNode})=><button type="button" className="spv-ghost" onClick={()=>onJump(to)}><Plus size={15} aria-hidden="true"/>{children}</button>;
- return <article className={'spv spv-'+device} aria-label={t('Buyer-ийн харах профайл','Profile as buyers see it')}>
+ return <article className={'spv spv-'+device} aria-label={t('Захиалагчийн харах профайл','Profile as buyers see it')}>
   <div className="spv-cover">
-   {coverUrl?<img src={coverUrl} alt="" style={{objectPosition:'center '+coverFocusY+'%'}}/>:<button type="button" className="spv-cover-empty" onClick={()=>onJump('photos')}><ImagePlus size={17} aria-hidden="true"/>{t('Cover зураг нэмэх','Add a cover photo')}</button>}
+   {coverUrl?<img src={coverUrl} alt="" style={{objectPosition:'center '+coverFocusY+'%'}}/>:<button type="button" className="spv-cover-empty" onClick={()=>onJump('photos')}><ImagePlus size={17} aria-hidden="true"/>{t('Нүүр зураг нэмэх','Add a cover photo')}</button>}
   </div>
   <header className="spv-id">
    <button type="button" className={'spv-avatar'+(avatarUrl?'':' is-empty')} onClick={()=>onJump('photos')} aria-label={t('Профайл зураг засах','Edit profile photo')}>{avatarUrl?<img src={avatarUrl} alt=""/>:<span>{initial}</span>}</button>

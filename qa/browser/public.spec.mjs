@@ -18,9 +18,9 @@ test('published service is a compact seller card, and tier prices live on servic
  await expect(card.getByRole('link',{name:/QA Seller/})).toHaveAttribute('href','/p/qa-seller/');
  await card.locator('.v39-primary').click();
  await expect(page.locator('.v28-detail-price')).toContainText('100,000');
- await page.getByRole('button',{name:'Standard',exact:true}).click();
+ await page.getByRole('button',{name:/^(Стандарт|Standard)$/}).click();
  await expect(page.locator('.v28-detail-price')).toContainText('200,000');
- await page.getByRole('button',{name:'Premium',exact:true}).click();
+ await page.getByRole('button',{name:/^(Дээд|Premium)$/}).click();
  await expect(page.locator('.v28-detail-price')).toContainText('350,000');
  await page.screenshot({path:'test-results/v40-marketplace-and-detail.png',fullPage:true});
 });

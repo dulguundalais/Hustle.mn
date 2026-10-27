@@ -13,6 +13,7 @@ export default function ResetPassword(){
  // V52: the page follows the site language like every other screen.
  const [en,setEn]=useState(false);
  const t=(mn:string,english:string)=>en?english:mn;
+ useEffect(()=>{document.documentElement.lang=en?'en':'mn'},[en]);
  useEffect(()=>{try{setEn(localStorage.getItem('hustle-language')==='en')}catch{}},[]);
  useEffect(()=>{
    let active=true;
@@ -35,7 +36,7 @@ export default function ResetPassword(){
  },[]);
  async function save(e:FormEvent<HTMLFormElement>){
    e.preventDefault();if(!ready||busy)return;
-   if(password.length<8||password!==repeat){setError(t('Нууц үг хоёулаа ижил, дор хаяж 8 тэмдэгттэй байх ёстой.','Passwords must match and contain at least 8 characters.'));return}
+   if(password.length<8||password!==repeat){setError(t('Нууц үгээ хоёр талбарт ижил оруулна уу. Дор хаяж 8 тэмдэгттэй байна.','Passwords must match and contain at least 8 characters.'));return}
    setBusy(true);setError('');
    try{
      const db=await marketplaceClient();
@@ -49,7 +50,7 @@ export default function ResetPassword(){
  }
  return <main className="hustle-auth-scene"><section className="hustle-auth-panel">
    <div className="hustle-auth-brand"><span className="hustle-auth-mark">H<span>✳</span></span>Hustle<span className="hustle-auth-dot">.mn</span></div>
-   <div className="hustle-auth-intro"><span className="hustle-auth-eyebrow">{t('НУУЦ ҮГ СЭРГЭЭХ','ACCOUNT RECOVERY')}</span><h1>{t('Шинэ нууц үгээ сонгоно уу.','Choose a new password.')}</h1><p>{t('Hustle аккаунтаа дор хаяж 8 тэмдэгттэй нууц үгээр хамгаална уу.','Secure your Hustle account with a password of at least 8 characters.')}</p></div>
+   <div className="hustle-auth-intro"><span className="hustle-auth-eyebrow">{t('НУУЦ ҮГ СЭРГЭЭХ','ACCOUNT RECOVERY')}</span><h1>{t('Шинэ нууц үгээ сонгоно уу.','Choose a new password.')}</h1><p>{t('Hustle бүртгэлээ дор хаяж 8 тэмдэгттэй нууц үгээр хамгаална уу.','Secure your Hustle account with a password of at least 8 characters.')}</p></div>
    {loading?<p role="status">{t('Сэргээх холбоосыг шалгаж байна…','Checking recovery link…')}</p>:ready?<form className="hustle-auth-form" onSubmit={save}>
      <label htmlFor="reset-pass">{t('Шинэ нууц үг','New password')}</label><div className="hustle-auth-input"><LockKeyhole size={18}/><input id="reset-pass" type={visible?'text':'password'} autoComplete="new-password" minLength={8} required value={password} onChange={e=>setPassword(e.target.value)}/><button type="button" className="hustle-auth-visibility" onClick={()=>setVisible(v=>!v)} aria-label={visible?t('Нууц үг нуух','Hide password'):t('Нууц үг харах','Show password')}>{visible?<EyeOff size={18}/>:<Eye size={18}/>}</button></div>
      <label htmlFor="reset-repeat">{t('Шинэ нууц үгээ давтах','Confirm new password')}</label><div className="hustle-auth-input"><ShieldCheck size={18}/><input id="reset-repeat" type={visible?'text':'password'} autoComplete="new-password" minLength={8} required value={repeat} onChange={e=>setRepeat(e.target.value)}/></div>
