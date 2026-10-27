@@ -1,2 +1,3 @@
-import Marketplace from "../../components/marketplace";
-export default function Page(){return <Marketplace/>;}
+import LegacyRedirect from '../../components/legacy-redirect';
+export const metadata={robots:{index:false,follow:false}};
+export default function Page(){return <LegacyRedirect to="/"/>}

@@ -1,0 +1,161 @@
+/**
+ * V32.3 — Restore Hustle's original wide 1400px spatial system.
+ * The .shell element is the single source of page gutters and max width.
+ * Sections may have different full-bleed backgrounds, but their *contents*
+ * always begin and end at the same grid lines, including seller/partner banners.
+ *
+ * Keep this after earlier V19/V23 CSS imports. Scope to marketplace so that
+ * auth, standalone public profile and workspace styles remain unchanged.
+ */
+.hustle-v5 {
+  --hustle-content-max: 1400px;
+  --hustle-page-gutter: clamp(20px, 3.7vw, 48px);
+  --hustle-grid-gap: clamp(16px, 2vw, 28px);
+}
+
+.hustle-v5 .shell,
+.hustle-v5 .business-solutions-inner,
+.hustle-v5 .hustle-premium-footer .shell {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--hustle-content-max);
+  margin-inline: auto;
+  padding-inline: var(--hustle-page-gutter);
+}
+
+/* A content-aligned section must never introduce its own smaller max-width. */
+.hustle-v5 .business-solutions-inner {
+  max-width: var(--hustle-content-max);
+}
+
+.hustle-v5 main,
+.hustle-v5 main > section,
+.hustle-v5 .signature-hero-copy,
+.hustle-v5 .business-intro > div,
+.hustle-v5 .business-solution-card,
+.hustle-v5 .signature-section-heading > div {
+  min-width: 0;
+}
+
+/* Allow longer bilingual copy to grow vertically rather than spill out of
+ * a rigid hero height or push the next section off the shared grid. */
+@media (min-width: 1051px) {
+  .hustle-v5 .signature-hero-inner {
+    grid-template-columns: minmax(0, 1.18fr) minmax(0, .82fr);
+    align-items: center;
+    gap: var(--hustle-grid-gap);
+    min-height: 0;
+    padding-block: clamp(68px, 6.5vw, 96px);
+  }
+  .hustle-v5 .signature-orbit {
+    width: 100%;
+    min-width: 0;
+    height: clamp(340px, 34vw, 470px);
+  }
+}
+
+/* At laptop/tablet widths the illustrative 3D composition yields to content.
+ * Both hero and business section still use the exact same outer grid. */
+@media (min-width: 751px) and (max-width: 1050px) {
+  .hustle-v5 .signature-hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+    padding-block: 62px;
+  }
+  .hustle-v5 .signature-orbit { display: none; }
+  .hustle-v5 .business-intro {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 22px;
+  }
+}
+
+.hustle-v5 .business-solution-grid {
+  width: 100%;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 1.25vw, 18px);
+}
+.hustle-v5 .business-solution-card { overflow-wrap: anywhere; }
+.hustle-v5 .business-intro > div { flex: 1 1 auto; }
+.hustle-v5 .business-next-cell { min-width: 0; }
+.hustle-v5 .business-next-strip { flex-wrap: wrap; }
+
+/* Allow the business solutions area to grow naturally with text and cards. */
+.hustle-v5 .business-solutions-section {
+  height: auto;
+  min-height: 0;
+}
+.hustle-v5 .business-solution-main-cta {
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
+@media (min-width: 701px) and (max-width: 1080px) {
+  .hustle-v5 .business-solution-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 750px) {
+  .hustle-v5 .signature-hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+    padding-block: clamp(45px, 7vw, 65px);
+  }
+  .hustle-v5 .signature-orbit { display: none; }
+  .hustle-v5 .business-intro {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+  }
+  .hustle-v5 .signature-search,
+  .hustle-v5 .signature-search-suggestions { width: 100%; max-width: 100%; }
+}
+@media (max-width: 700px) {
+  .hustle-v5 .business-solution-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 420px) {
+  .hustle-v5 .signature-hero h1 {
+    overflow-wrap: normal;
+    hyphens: auto;
+    letter-spacing: -1.4px;
+  }
+  .hustle-v5 .signature-search {
+    gap: 7px;
+    padding-left: 9px;
+  }
+  .hustle-v5 .signature-search button {
+    padding-inline: 9px;
+    gap: 5px;
+  }
+}
+
+/* The seller CTA is itself a colored, rounded `.shell` card. Unlike other
+ * sections, its background begins at the OUTER shell edge; without this inset
+ * it extends one 48px gutter beyond the Hero text and Partner card.
+ * Inset ONLY the banner surface so its outside boundaries meet the shared
+ * content edges. Preserve its original card shape and internal padding.
+ */
+.hustle-v5 .signature-seller-band.shell {
+  width: calc(100% - (2 * var(--hustle-page-gutter)));
+  max-width: calc(var(--hustle-content-max) - (2 * var(--hustle-page-gutter)));
+  margin-inline: auto !important;
+}
+
+/* The partner surface already sits inside an ordinary padded shell. Keep it
+ * full content-width instead of imposing a second independent max-width.
+ */
+.hustle-v5 .signature-partner-inner {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Explicitly keep one line of alignment through the premium footer. */
+.hustle-v5 .hustle-premium-footer .footer-columns,
+.hustle-v5 .hustle-premium-footer .footer-bottom,
+.hustle-v5 .hustle-premium-footer .footer-callout {
+  max-width: var(--hustle-content-max);
+}

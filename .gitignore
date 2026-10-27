@@ -8,3 +8,8 @@ node_modules
 .preview-build/
 out/
 *.tsbuildinfo
+
+supabase/.temp/
+test-results*/
+playwright-report/
+qa-local.config.mjs

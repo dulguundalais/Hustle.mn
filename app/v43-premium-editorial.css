@@ -1,0 +1,90 @@
+/* V43 editorial polish — non-destructive presentation layer.
+ * Apply only to the Hustle V5 shell; no auth, ordering, or marketplace logic changes.
+ * Colors use current theme tokens; hero remains intentionally navy in both themes.
+ */
+.hustle-v5 .signature-hero{
+  background:radial-gradient(ellipse at 77% 29%,rgba(57,125,193,.28),transparent 42%),
+    radial-gradient(ellipse at 6% 90%,rgba(12,103,127,.20),transparent 42%),
+    linear-gradient(118deg,#061626 0%,#082a4d 59%,#061a30 100%);
+}
+.hustle-v5 .signature-hero-inner{gap:clamp(28px,4vw,72px);min-height:620px}
+.hustle-v5 .signature-hero-copy{min-width:0}
+.hustle-v5 .signature-kicker{letter-spacing:.13em;line-height:1.55}
+.hustle-v5 .signature-hero h1{
+  max-width:820px;letter-spacing:-.055em;text-wrap:balance;
+  font-size:clamp(46px,5.25vw,82px);line-height:1.075;
+}
+.hustle-v5 .signature-hero-copy>p{max-width:600px;line-height:1.75}
+.hustle-v5 .signature-search-shell{position:relative;max-width:680px}
+.hustle-v5 .signature-search{
+  max-width:none;min-height:70px;border-radius:18px;
+  background:rgba(6,22,41,.92);border-color:rgba(161,202,235,.42);
+  box-shadow:0 18px 48px rgba(0,10,25,.27),inset 0 1px rgba(255,255,255,.07);
+}
+.hustle-v5 .signature-search:focus-within{
+  border-color:#72d7eb;box-shadow:0 0 0 3px rgba(76,211,236,.20),0 18px 48px rgba(0,10,25,.3);
+}
+.hustle-v5 .signature-search input{font-size:15px;line-height:1.5;min-width:0}
+.hustle-v5 .signature-search button{
+  min-height:50px;padding:12px 20px;border-radius:12px;
+  transition:background .18s ease,transform .18s ease;
+}
+.hustle-v5 .signature-search button:hover{background:#76e8f3;transform:translateY(-1px)}
+.hustle-v5 .signature-search-subline{line-height:1.65;color:#b9d8e9}
+.hustle-v5 .signature-orbit-center{
+  box-shadow:0 28px 96px rgba(0,8,26,.53),inset 0 0 48px rgba(103,206,238,.18);
+}
+.hustle-v5 .signature-orbit-chip{border-color:rgba(130,205,242,.55);box-shadow:0 15px 36px rgba(0,8,26,.36)}
+.hustle-v5 .v19-category-card{
+  border-radius:22px;min-height:190px;box-shadow:0 4px 18px rgba(14,38,73,.035);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.hustle-v5 .v19-category-card:hover{
+  transform:translateY(-3px);box-shadow:0 18px 38px rgba(14,38,73,.10);
+  border-color:color-mix(in srgb,var(--purple) 36%,var(--border));
+}
+.hustle-v5 .v19-category-title{font-size:clamp(17px,1.5vw,21px);line-height:1.35;letter-spacing:-.025em}
+.hustle-v5 .v19-category-icon{border-radius:16px;width:58px;height:58px}
+.hustle-v5 .v39-talent-card{border-radius:24px}
+.hustle-v5 .v39-talent-card:focus-within{
+  border-color:var(--purple);box-shadow:0 0 0 3px color-mix(in srgb,var(--purple) 14%,transparent);
+}
+.hustle-v5 .v39-talent-card h3{letter-spacing:-.032em;text-wrap:pretty}
+.hustle-v5 .v39-description{line-height:1.65}
+.hustle-v5 .v39-primary{border-radius:13px;font-size:14px;font-weight:800}
+.hustle-v5 .v39-primary:focus-visible,.hustle-v5 .v19-category-card:focus-visible,
+.hustle-v5 .signature-orbit-chip:focus-visible{
+  outline:3px solid #42d4ec;outline-offset:3px;
+}
+.hustle-v5 .signature-step{border-radius:22px}
+.hustle-v5 .signature-section-heading h2{letter-spacing:-.045em;text-wrap:balance}
+.hustle-v5 .v19-heading h2,.hustle-v5 .v19-featured-intro h2{letter-spacing:-.045em;text-wrap:balance}
+@media(max-width:1100px){
+  .hustle-v5 .signature-hero-inner{gap:24px}
+  .hustle-v5 .signature-hero h1{font-size:clamp(42px,5.3vw,68px)}
+}
+@media(max-width:760px){
+  .hustle-v5 .signature-hero-inner{min-height:0;padding-top:56px;padding-bottom:52px}
+  .hustle-v5 .signature-hero h1{font-size:clamp(39px,9vw,60px);letter-spacing:-.045em}
+  .hustle-v5 .signature-search{min-height:64px;margin-top:24px}
+  .hustle-v5 .v19-category-card{min-height:164px}
+}
+@media(max-width:480px){
+  .hustle-v5 .signature-hero-inner{padding-top:44px;padding-bottom:44px}
+  .hustle-v5 .signature-hero-copy>p{font-size:15px;line-height:1.7}
+  .hustle-v5 .signature-search{display:flex;flex-wrap:wrap;gap:8px;padding:12px;min-height:0}
+  .hustle-v5 .signature-search>svg{flex:0 0 21px}
+  .hustle-v5 .signature-search input{font-size:16px;flex:1 1 calc(100% - 48px);height:43px}
+  .hustle-v5 .signature-search button{width:100%;min-height:48px}
+  .hustle-v5 .signature-search-subline{font-size:12px}
+  .hustle-v5 .v19-category-card{min-height:156px;padding:17px}
+  .hustle-v5 .v19-category-icon{width:48px;height:48px}
+  .hustle-v5 .v19-category-title{font-size:16px}
+  .hustle-v5 .v39-card-grid{gap:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .hustle-v5 .signature-search button,
+  .hustle-v5 .v19-category-card{transition:none}
+  .hustle-v5 .signature-search button:hover,
+  .hustle-v5 .v19-category-card:hover{transform:none}
+}
