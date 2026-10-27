@@ -1,0 +1,38 @@
+/* V47 chat safety: block / report actions, blocked composer, admin report queue. */
+.v47-safety { display: grid; gap: 10px; margin-top: 6px; }
+.v47-safety-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+.v47-link { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 10px; border: 1px solid var(--border); border-radius: 7px; background: transparent; color: var(--text); font-size: 12px; font-weight: 600; cursor: pointer; }
+.v47-link:hover { background: var(--soft); }
+.v47-link:focus-visible, .v47-icon:focus-visible { outline: 3px solid var(--purple); outline-offset: 2px; }
+.v47-link-danger { color: #b4233b; }
+.night .v47-link-danger { color: #ff8a9d; }
+.v47-panel { display: grid; gap: 10px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.v47-panel p { margin: 0; }
+.v47-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.v47-panel-head h2 { margin: 0; }
+.v47-icon { display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 7px; background: transparent; color: var(--text); cursor: pointer; }
+.v47-muted { color: var(--sub); font-size: 13px; }
+.v47-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.v47-row .button { margin: 0; width: auto; }
+.v47-reasons { display: grid; gap: 6px; margin: 0; padding: 0; border: 0; }
+.v47-reasons label, .v47-check { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+.v47-field { display: grid; gap: 6px; font-size: 13px; font-weight: 600; }
+.v47-field textarea, .v47-field input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--paper); color: var(--text); font: inherit; font-weight: 400; }
+.v47-blocked { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 14px 16px; border-top: 1px solid var(--border); background: var(--soft); font-size: 13px; }
+.v47-blocked span { flex: 1; min-width: 180px; }
+.v47-blocked .button { margin: 0; width: auto; }
+.v47-report-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; }
+.v47-report { display: grid; gap: 8px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; }
+.v47-report p { margin: 0; font-size: 13px; }
+.v47-report-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.v47-quote { margin: 0; padding: 10px 12px; border-left: 3px solid var(--purple); background: var(--soft); border-radius: 0 8px 8px 0; font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.v47-badge { padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--soft); color: var(--text); }
+.v47-badge-open { background: #fff1d1; color: #7a4f00; }
+.v47-badge-actioned { background: #dcf3e8; color: #10694e; }
+.v47-warn { color: #b4233b; font-weight: 700; }
+.night .v47-warn { color: #ff8a9d; }
+.button.v47-danger { background: #b4233b; }
+.button.v47-danger:hover { background: #8f1a2e; }
+@media (max-width: 640px) {
+  .v47-row .button { flex: 1; }
+}

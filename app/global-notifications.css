@@ -1,0 +1,47 @@
+/* V35.4 global notification bell — shared by public header and dashboard. */
+.hustle-v5 .global-notifications{position:relative;display:flex;align-items:center;z-index:25;flex:none}
+.hustle-v5 .global-notice-trigger{position:relative;display:grid;place-items:center;width:40px;height:40px;border:1px solid transparent;border-radius:11px;background:transparent;color:var(--text);cursor:pointer}
+.hustle-v5 .global-notice-trigger:hover,.hustle-v5 .global-notice-trigger.expanded{background:var(--soft);border-color:var(--border)}
+.hustle-v5 .global-notice-count{position:absolute;top:-3px;right:-6px;min-width:18px;height:18px;padding:0 4px;display:grid;place-items:center;border-radius:12px;border:2px solid var(--surface);background:#d83c56;color:#fff;font-size:10px;font-weight:800;line-height:1}
+.hustle-v5 .global-notice-panel{position:absolute;right:0;top:calc(100% + 12px);width:350px;max-width:min(350px,calc(100vw - 24px));max-height:min(580px,75vh);display:flex;flex-direction:column;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 20px 60px #051f3a29;overflow:hidden;isolation:isolate}
+.hustle-v5 .global-notice-heading{display:flex;align-items:center;justify-content:space-between;padding:15px 16px 11px;gap:12px}
+.hustle-v5 .global-notice-heading strong{font-size:15px;font-weight:850}
+.hustle-v5 .global-notice-heading button{border:0;background:transparent;color:var(--sub);padding:7px;border-radius:8px;display:grid;place-items:center}
+.hustle-v5 .global-notice-heading button:hover{background:var(--soft)}
+.hustle-v5 .global-notice-summary{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:0 16px 12px;font-size:11px;color:var(--sub)}
+.hustle-v5 .global-notice-summary button{background:none;border:0;color:var(--purple);font-size:11px;font-weight:800;padding:4px;cursor:pointer}
+.hustle-v5 .global-notice-summary button:disabled{opacity:.45;cursor:wait}
+.hustle-v5 .global-notice-list{overflow-y:auto;overscroll-behavior:contain;flex:1;min-height:0;border-top:1px solid var(--border)}
+.hustle-v5 .global-notice-item{display:flex;gap:10px;align-items:flex-start;padding:13px 13px;border-bottom:1px solid var(--border)}
+.hustle-v5 .global-notice-item.unread{background:var(--soft)}
+.hustle-v5 .global-notice-symbol{display:grid;place-items:center;flex:none;width:31px;height:31px;border-radius:9px;background:var(--surface);color:var(--purple)}
+.hustle-v5 .global-notice-info{flex:1;min-width:0;display:grid;gap:5px}
+.hustle-v5 .global-notice-info a{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:750;line-height:1.5;overflow-wrap:anywhere;color:var(--text);text-decoration:none}
+.hustle-v5 .global-notice-info a:hover{color:var(--purple)}
+.hustle-v5 .global-notice-info small{color:var(--sub);font-size:10px}
+.hustle-v5 .global-notice-read{flex:none;width:29px;height:29px;border:0;border-radius:8px;background:transparent;color:var(--sub);display:grid;place-items:center}
+.hustle-v5 .global-notice-read:hover{background:var(--surface);color:var(--purple)}
+.hustle-v5 .global-notice-read:disabled{opacity:.5;cursor:wait}
+.hustle-v5 .global-notice-empty{display:grid;justify-items:center;gap:7px;color:var(--sub);padding:28px 16px;font-size:12px;text-align:center}
+.hustle-v5 .global-notice-error{margin:4px 12px 10px;padding:8px;border-radius:8px;background:#d83c5612;color:#d83c56;font-size:11px}
+.hustle-v5 .global-notice-hint{padding:9px 14px;margin:0;color:var(--sub);font-size:10px;line-height:1.5}
+.hustle-v5 .global-notice-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;gap:14px;border-top:1px solid var(--border)}
+.hustle-v5 .global-notice-footer a{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--purple);font-weight:750;text-decoration:none}
+@media(max-width:800px){.hustle-v5 .global-notice-trigger{width:37px;height:37px}.hustle-v5 .global-notice-panel{right:-49px;top:calc(100% + 17px)}}
+@media(max-width:480px){.hustle-v5 .global-notice-panel{right:-46px;width:min(340px,calc(100vw - 24px))}.hustle-v5.workspace .global-notice-panel{right:-36px}}
+@media(prefers-reduced-motion:reduce){.hustle-v5 .global-notice-trigger{transition:none}}
+
+/* V44: readable interactive controls and clearer loading feedback. */
+.hustle-v5 .global-notice-heading button,.hustle-v5 .global-notice-read{min-height:36px;min-width:36px;cursor:pointer}
+.hustle-v5 .global-notice-heading button:disabled{opacity:.5;cursor:wait}
+.hustle-v5 .global-notice-read:focus-visible,.hustle-v5 .global-notice-heading button:focus-visible,.hustle-v5 .global-notice-info a:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.hustle-v5 .global-notice-info a{font-size:13px;line-height:1.6}
+.hustle-v5 .global-notice-info small{font-size:11px;line-height:1.5}
+.hustle-v5 .global-notice-refreshing{animation:global-notice-spin 1s linear infinite}
+@keyframes global-notice-spin{to{transform:rotate(360deg)}}
+@media(max-width:480px){
+ .hustle-v5 .global-notice-item{padding:14px 12px;gap:12px}
+ .hustle-v5 .global-notice-info a{font-size:13px}
+ .hustle-v5 .global-notice-footer a{min-height:36px}
+}
+@media(prefers-reduced-motion:reduce){.hustle-v5 .global-notice-refreshing{animation:none}}

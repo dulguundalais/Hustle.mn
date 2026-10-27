@@ -1,0 +1,10 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import ts from 'typescript';
+import {readFileSync} from 'node:fs';
+const src=readFileSync(new URL('../lib/marketplace/seller-slug.ts',import.meta.url),'utf8');
+const js=ts.transpileModule(src,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+const {normalizeSellerSlug,isValidSellerSlug}=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
+test('normalizes Latin and Mongolian names for profile URLs',()=>{assert.equal(normalizeSellerSlug(' Test Freelancer '),'test-freelancer');assert.equal(normalizeSellerSlug('Тест Фрилансер'),'test-frilanser');assert.equal(normalizeSellerSlug('test_freelancer'),'test-freelancer');});
+test('exactly matches database slug check',()=>{for(const s of ['test-freelancer','abc','a--b'])assert.ok(isValidSellerSlug(s));for(const s of ['','ab','Test Freelancer','тест','a'.repeat(61)])assert.equal(isValidSellerSlug(s),false);});
+test('profile UI validates and exposes readable constraint errors',()=>{const ui=readFileSync(new URL('../components/workspace.tsx',import.meta.url),'utf8');assert.match(ui,/normalizeSellerSlug\(String\(f.get\('slug'\)/);assert.match(ui,/r.error.code==='23514'/);assert.match(ui,/r.error.code==='23505'/);});

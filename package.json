@@ -1,0 +1,34 @@
+{
+  "name": "hustle-mn",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "node scripts/build.mjs",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "build:preview": "node scripts/build-preview.mjs",
+    "test": "node --test tests/*.mjs",
+    "lint": "eslint components/interactive-stage.tsx components/premium-marketplace.tsx components/account-menu.tsx components/workspace.tsx lib/marketplace functions app/login app/workspace app/api/config"
+  },
+  "dependencies": {
+    "next": "15.5.27",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "lucide-react": "0.468.0",
+    "@supabase/supabase-js": "2.117.3",
+    "@supabase/ssr": "0.6.1",
+    "server-only": "0.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "5.9.3",
+    "tailwindcss": "3.4.19",
+    "postcss": "8.5.30",
+    "autoprefixer": "10.6.1",
+    "eslint": "9.39.1",
+    "@typescript-eslint/parser": "8.46.1"
+  }
+}

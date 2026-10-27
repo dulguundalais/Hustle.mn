@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root { color-scheme: light; --bg:#f8f9fc; --panel:#fff; --ink:#151923; --muted:#667085; --line:#e6e9ef; --accent:#6d55f5; }
+.dark { color-scheme: dark; --bg:#0d1019; --panel:#171b28; --ink:#f5f6fb; --muted:#a0a8ba; --line:#303647; --accent:#a194ff; }
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif} .panel{background:var(--panel);border:1px solid var(--line)} .muted{color:var(--muted)} .outline{border:1px solid var(--line)} .pill{border-radius:999px} button,a{transition:all .18s ease} button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:3px} .service-card:hover{transform:translateY(-4px);box-shadow:0 18px 35px #00000012} .hero-glow{background:radial-gradient(circle at 70% 40%,#927aff3d,transparent 42%),radial-gradient(circle at 90% 85%,#46d9c52a,transparent 32%)}

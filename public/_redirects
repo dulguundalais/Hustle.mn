@@ -1,0 +1,9 @@
+# V50: retired routes. Pages keeps the query string on redirects.
+/premium /  301
+/premium/ /  301
+/editorial /  301
+/editorial/ /  301
+/showcase /explore/  301
+/showcase/* /explore/  301
+/workspace /buyer/  301
+/workspace/ /buyer/  301

@@ -1,0 +1,304 @@
+/* ==========================================================================
+   HUSTLE V51 — one colour system derived from the hero.
+   The hero (v50-hero.css) is the reference: deep ink #040b1f, royal glow
+   #2b5cde → #1c3ea8, a cyan rim #4fd7ff, cool mist text #eef3ff / #a9b9de and
+   ink controls #0a1430. Every value below is a tone of those five families, so
+   sections can differ (light, tinted, stage) yet read as one product.
+   Loaded last on public pages; selectors match the V45 layer they replace.
+   ========================================================================== */
+
+/* 1. Primitive ramps (theme-independent) */
+.hustle-v5:not(.workspace){
+  --hx-ink-950:#040b1f;--hx-ink-900:#071330;--hx-ink-850:#0a1a3f;--hx-ink-800:#0e2350;--hx-ink-700:#16306a;
+  --hx-royal-800:#1d3a78;--hx-royal-700:#1c3ea8;--hx-royal-600:#2b5cde;--hx-royal-500:#4a77ee;--hx-royal-300:#9db6ff;--hx-royal-100:#e3eaff;--hx-royal-50:#f1f4ff;
+  --hx-cyan-500:#1fb6e8;--hx-cyan-400:#4fd7ff;--hx-cyan-300:#8be6ff;
+  --hx-mist-0:#ffffff;--hx-mist-25:#f6f8fd;--hx-mist-50:#eef2fa;--hx-mist-100:#e1e7f3;--hx-mist-200:#cdd6e8;--hx-mist-300:#a9b9de;--hx-mist-500:#6b769a;--hx-mist-600:#4a5677;--hx-mist-900:#0a1430;
+  --hx-radius-card:20px;--hx-radius-ctl:12px;
+  --hx-focus:0 0 0 3px rgb(79 215 255/.55);
+  /* The hero's light field, reusable for every dark "stage" surface. */
+  --hx-stage:
+    radial-gradient(48% 70% at 12% 0%,rgb(43 92 222/.55),transparent 72%),
+    radial-gradient(36% 60% at 92% 8%,rgb(79 215 255/.16),transparent 70%),
+    radial-gradient(50% 80% at 70% 110%,rgb(28 62 168/.45),transparent 72%),
+    #040b1f;
+}
+
+/* 2. Semantic tokens — light */
+.hustle-v5:not(.workspace){
+  --paper:var(--hx-mist-25);--surface:var(--hx-mist-0);--text:var(--hx-mist-900);--sub:var(--hx-mist-600);
+  --border:var(--hx-mist-100);--purple:var(--hx-royal-600);--soft:var(--hx-royal-50);
+  --v45-accent:var(--hx-cyan-400);--v45-ink:var(--hx-mist-900);
+  --hx-tint:linear-gradient(180deg,var(--hx-mist-50),var(--hx-mist-25));
+  --hx-card:var(--hx-mist-0);--hx-card-border:var(--hx-mist-100);--hx-card-hover:var(--hx-royal-300);
+  --hx-card-shadow:0 1px 2px rgb(10 20 48/.04),0 8px 24px rgb(10 20 48/.05);
+  --hx-card-shadow-hover:0 2px 4px rgb(10 20 48/.05),0 22px 48px rgb(28 62 168/.14);
+  --hx-icon-bg:var(--hx-royal-50);--hx-icon-fg:var(--hx-royal-600);
+  --hx-eyebrow:var(--hx-royal-600);
+  --hx-accent-text:linear-gradient(100deg,var(--hx-royal-600) 10%,var(--hx-cyan-500) 95%);
+  --hx-btn-bg:var(--hx-mist-900);--hx-btn-fg:#fff;--hx-btn-hover:var(--hx-royal-800);
+  --hx-btn2-border:var(--hx-mist-200);--hx-btn2-hover:var(--hx-royal-50);
+}
+/* 3. Semantic tokens — dark (same families, lower lightness) */
+.hustle-v5.night:not(.workspace){
+  --paper:#050c22;--surface:#0b1636;--text:#eef3ff;--sub:var(--hx-mist-300);
+  --border:#1c2b55;--purple:var(--hx-royal-300);--soft:#0f1d45;
+  --v45-accent:var(--hx-cyan-400);--v45-ink:#eef3ff;
+  --hx-tint:linear-gradient(180deg,#071230,#050c22);
+  --hx-card:#0b1636;--hx-card-border:#1c2b55;--hx-card-hover:#3b5bb8;
+  --hx-card-shadow:0 1px 2px rgb(0 0 0/.25);
+  --hx-card-shadow-hover:0 24px 50px rgb(0 0 0/.35),0 0 0 1px rgb(79 215 255/.08);
+  --hx-icon-bg:rgb(43 92 222/.18);--hx-icon-fg:var(--hx-royal-300);
+  --hx-eyebrow:var(--hx-cyan-300);
+  --hx-accent-text:linear-gradient(100deg,var(--hx-royal-300) 0%,var(--hx-cyan-400) 90%);
+  --hx-btn-bg:#eef3ff;--hx-btn-fg:var(--hx-mist-900);--hx-btn-hover:#ffffff;
+  --hx-btn2-border:#2a3b6b;--hx-btn2-hover:#0f1d45;
+  color-scheme:dark;
+}
+.hustle-v5:not(.workspace):not(.hx-header){background:var(--paper);color:var(--text)}
+.hustle-v5:not(.workspace) :is(button,a,input,select,summary):focus-visible{outline:0;box-shadow:var(--hx-focus);border-radius:var(--hx-radius-ctl)}
+
+/* 4. Shared building blocks: eyebrow, accent text, buttons */
+.hustle-v5:not(.workspace) :is(.hx-eyebrow,.business-overline,.signature-section-eyebrow,.v39-section-eyebrow,.footer-eyebrow){
+  display:inline-flex;align-items:center;gap:10px;margin:0;padding:0;border:0;background:none;
+  font-size:12px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;line-height:1.4;color:var(--hx-eyebrow);
+}
+.hustle-v5:not(.workspace) :is(.hx-eyebrow,.business-overline,.signature-section-eyebrow,.v39-section-eyebrow,.footer-eyebrow)::before{
+  content:'';width:18px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--hx-royal-600),var(--hx-cyan-400));flex:none;
+}
+.hustle-v5:not(.workspace) .v39-section-eyebrow>span:empty{display:none}
+.hustle-v5:not(.workspace) .hx-eyebrow{margin-bottom:12px}
+.hustle-v5:not(.workspace) :is(.business-intro h2 em,.signature-seller-text em){
+  font-style:normal;background:var(--hx-accent-text);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+}
+/* Section titles share one scale. */
+.hustle-v5:not(.workspace) :is(.business-intro h2,.cat-showcase-head h2,.v39-section-head h2,.signature-section-heading h2,.signature-seller-text h2,.footer-callout h2){
+  font-size:clamp(32px,1.4rem + 2vw,52px);font-weight:800;line-height:1.08;letter-spacing:-.045em;text-wrap:balance;
+}
+.hustle-v5:not(.workspace) :is(.business-intro p,.cat-showcase-head p,.v39-section-head p,.signature-section-heading p){font-size:16px;line-height:1.6;color:var(--sub)}
+/* Primary / secondary buttons */
+.hustle-v5:not(.workspace) :is(.business-solution-main-cta,.v39-primary,.signature-cta-button,.footer-main-cta){
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border:0;border-radius:var(--hx-radius-ctl);
+  background:var(--hx-btn-bg);color:var(--hx-btn-fg)!important;font-size:14.5px;font-weight:750;letter-spacing:0;text-decoration:none;box-shadow:none;
+  transition:background-color .18s ease,transform .18s ease;
+}
+.hustle-v5:not(.workspace) :is(.business-solution-main-cta,.v39-primary,.signature-cta-button,.footer-main-cta):hover{background:var(--hx-btn-hover);transform:translateY(-1px)}
+.hustle-v5:not(.workspace) :is(.business-solution-main-cta,.v39-primary,.signature-cta-button,.footer-main-cta) svg{transition:transform .18s ease}
+.hustle-v5:not(.workspace) :is(.business-solution-main-cta,.signature-cta-button,.footer-main-cta):hover svg{transform:translate(2px,-2px)}
+.hustle-v5:not(.workspace) :is(.cat-showcase-all,.v39-more,.footer-outline-cta){
+  border-radius:var(--hx-radius-ctl);border:1px solid var(--hx-btn2-border);background:transparent;color:var(--text)!important;
+  transition:background-color .18s ease,border-color .18s ease;
+}
+.hustle-v5:not(.workspace) :is(.cat-showcase-all,.v39-more):hover{background:var(--hx-btn2-hover);border-color:var(--hx-card-hover);color:var(--text)!important}
+.hustle-v5:not(.workspace) .cat-arrow:hover:not(:disabled){border-color:var(--hx-card-hover);color:var(--purple)}
+.hustle-v5:not(.workspace) .cat-progress i{background:linear-gradient(90deg,var(--hx-royal-600),var(--hx-cyan-400))}
+
+/* 5. Hero refinements ------------------------------------------------------ */
+/* Smart Finder: an editorial label, not a control. */
+.signature-hero.hx-hero .hx-hero-eyebrow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 14px;margin:0;cursor:default;user-select:text;
+  font-size:14px;font-weight:500;line-height:1.4;color:rgb(222 231 252/.78)}
+.signature-hero.hx-hero .hx-eyebrow-name{font-size:12px;font-weight:750;letter-spacing:.16em;text-transform:uppercase;color:var(--hx-cyan-300)}
+.signature-hero.hx-hero .hx-eyebrow-rule{width:28px;height:1px;background:linear-gradient(90deg,rgb(79 215 255/.8),rgb(43 92 222/.2))}
+.signature-hero.hx-hero h1.hx-hero-title{margin-top:22px}
+/* Start-point selector, then the language hint: a calm centred stack under the search. */
+.hustle-v5:not(.workspace) .signature-hero.hx-hero{background:var(--paper)}
+.signature-hero.hx-hero .hx-hero-meta{display:flex;flex-direction:column;align-items:center;gap:14px;width:min(780px,100%);margin-top:22px}
+.signature-hero.hx-hero .hx-hero-meta>.hx-hero-subline{order:2}
+.signature-hero.hx-hero .hx-hero-subline{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:0;font-size:13px;letter-spacing:0;color:#a9b9de}
+.signature-hero.hx-hero .hx-hero-subline svg{color:var(--hx-cyan-400)}
+.signature-hero.hx-hero .hx-hero-guided{width:auto;margin:0}
+.signature-hero.hx-hero .guided-entry-intro{display:flex;align-items:center;gap:12px;max-width:none;margin:0}
+.signature-hero.hx-hero .guided-entry-intro h2{margin:0;font-size:13px;font-weight:600;letter-spacing:0;color:#a9b9de;white-space:nowrap;text-align:left}
+/* Segmented control: one track, two equal segments. */
+.signature-hero.hx-hero .guided-entry-choices{display:inline-grid;grid-template-columns:1fr 1fr;gap:2px;padding:3px;border-radius:12px;
+  background:rgb(4 11 31/.55);box-shadow:inset 0 0 0 1px rgb(169 185 222/.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.signature-hero.hx-hero .guided-entry-choice,.signature-hero.hx-hero .guided-entry-choice.guided-entry-business{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;min-width:0;width:auto;padding:0 14px;margin:0;
+  border:0;border-radius:9px;background:transparent;box-shadow:none;color:#dbe4fa;transform:none;backdrop-filter:none;
+  font:inherit;font-size:13.5px;font-weight:650;white-space:nowrap;cursor:pointer;transition:background-color .16s ease,color .16s ease}
+.signature-hero.hx-hero .guided-entry-choice:hover{background:rgb(255 255 255/.08);color:#fff;box-shadow:none}
+.signature-hero.hx-hero .guided-entry-choice:focus-visible{outline:0;box-shadow:var(--hx-focus)}
+.signature-hero.hx-hero .guided-entry-choice.is-current{background:#eef3ff;color:var(--hx-mist-900)}
+.signature-hero.hx-hero .guided-entry-choice.is-current:hover{background:#fff;color:var(--hx-mist-900)}
+.signature-hero.hx-hero .guided-entry-symbol{display:inline-grid;place-items:center;width:auto;height:auto;flex:none;margin:0;padding:0;border:0;border-radius:0;background:none;color:inherit;box-shadow:none}
+.signature-hero.hx-hero .guided-entry-symbol svg{width:16px;height:16px}
+.signature-hero.hx-hero .guided-entry-choice-copy{display:inline;min-width:0;text-align:left}
+.signature-hero.hx-hero .guided-entry-choice-copy strong{font-size:inherit;font-weight:inherit;color:inherit}
+.signature-hero.hx-hero .guided-entry-choice-copy small,.signature-hero.hx-hero .guided-entry-choice>svg:last-child{display:none}
+
+/* The hero's own controls keep the hero ink, overriding the older teal search button. */
+.hustle-v5:not(.workspace) .signature-hero.hx-hero .hx-searchbar-go{background:var(--hx-mist-900);color:#fff!important;border-radius:11px}
+.hustle-v5:not(.workspace) .signature-hero.hx-hero .hx-searchbar-go:hover{background:var(--hx-royal-800)}
+
+/* 6. Business solutions (tinted section) ---------------------------------- */
+.hustle-v5:not(.workspace) .business-solutions-section{padding:clamp(72px,7vw,112px) 0 clamp(56px,5vw,84px);border:0;background:var(--hx-tint);color:var(--text)}
+.hustle-v5.night:not(.workspace) .business-solutions-section{background:var(--hx-tint);color:var(--text)}
+.hustle-v5:not(.workspace) .business-intro{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:24px 48px;margin-bottom:36px}
+.hustle-v5:not(.workspace) .business-intro h2{margin:14px 0 12px}
+.hustle-v5:not(.workspace) .business-intro h2 br{display:none}
+.hustle-v5:not(.workspace) .business-intro h2 em::before{content:' '}
+.hustle-v5:not(.workspace) .business-intro p{margin:0}
+.hustle-v5.night:not(.workspace) .business-intro p{color:var(--sub)}
+.hustle-v5:not(.workspace) .business-solution-grid{gap:16px}
+.hustle-v5:not(.workspace) .business-solution-card,.hustle-v5.night:not(.workspace) .business-solution-card{
+  position:relative;min-height:236px;gap:0;padding:26px;border:1px solid var(--hx-card-border);border-radius:var(--hx-radius-card);
+  background:var(--hx-card);color:var(--text)!important;box-shadow:var(--hx-card-shadow);overflow:hidden;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.hustle-v5:not(.workspace) .business-solution-card::after{content:'';position:absolute;inset:auto 0 0;height:3px;background:linear-gradient(90deg,var(--hx-royal-600),var(--hx-cyan-400));transform:scaleX(0);transform-origin:left;transition:transform .3s ease}
+.hustle-v5:not(.workspace) .business-solution-card:hover{transform:translateY(-3px);border-color:var(--hx-card-hover);box-shadow:var(--hx-card-shadow-hover)}
+.hustle-v5:not(.workspace) .business-solution-card:hover::after{transform:scaleX(1)}
+.hustle-v5:not(.workspace) .business-card-top small{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--sub);font-variant-numeric:tabular-nums}
+.hustle-v5:not(.workspace) .business-solution-icon{width:48px;height:48px;border-radius:14px;background:var(--hx-icon-bg);color:var(--hx-icon-fg)}
+.hustle-v5:not(.workspace) .business-solution-card h3{margin:22px 0 8px;font-size:19px;font-weight:750;line-height:1.3;letter-spacing:-.025em}
+.hustle-v5:not(.workspace) .business-solution-card p,.hustle-v5.night:not(.workspace) .business-solution-card p{font-size:14px;line-height:1.5;color:var(--sub)}
+.hustle-v5:not(.workspace) .business-card-action{margin-top:auto;padding-top:22px;font-size:14px;font-weight:700;color:var(--purple)}
+.hustle-v5:not(.workspace) .business-card-action svg{transition:transform .2s ease}
+.hustle-v5:not(.workspace) .business-solution-card:hover .business-card-action svg{transform:translate(2px,-2px)}
+
+/* 7. Categories + catalogue (plain paper) --------------------------------- */
+.hustle-v5:not(.workspace) .cat-showcase-head{align-items:flex-end}
+.hustle-v5:not(.workspace) .v39-section-head{margin-bottom:32px}
+.hustle-v5:not(.workspace) .v39-talent-card{border-color:var(--hx-card-border);background:var(--hx-card);border-radius:var(--hx-radius-card);box-shadow:var(--hx-card-shadow)}
+.hustle-v5:not(.workspace) .v39-talent-card:hover{border-color:var(--hx-card-hover);box-shadow:var(--hx-card-shadow-hover)}
+.hustle-v5:not(.workspace) .v39-card-cover{background:radial-gradient(70% 90% at 15% 10%,rgb(43 92 222/.55),transparent 70%),radial-gradient(50% 70% at 95% 0%,rgb(79 215 255/.35),transparent 70%),linear-gradient(135deg,#dfe7fb,#a9bdf0)}
+.hustle-v5.night:not(.workspace) .v39-card-cover{background:var(--hx-stage)}
+.hustle-v5:not(.workspace) .v39-primary{flex:1;min-height:48px}
+.hustle-v5:not(.workspace) :is(.v39-contact,.v39-compare-toggle){border-color:var(--hx-btn2-border);border-radius:var(--hx-radius-ctl)}
+.hustle-v5:not(.workspace) .v39-market-note{font-size:13px;color:var(--sub)}
+
+/* 8. How it works (stage — the hero's light field) ------------------------ */
+.hustle-v5:not(.workspace) .signature-process{position:relative;padding:clamp(80px,8vw,120px) 0;background:var(--hx-stage);color:#eef3ff;overflow:hidden}
+.hustle-v5:not(.workspace) .signature-process .signature-section-eyebrow{color:var(--hx-cyan-300)}
+.hustle-v5:not(.workspace) .signature-process .signature-section-heading{align-items:flex-end;margin-bottom:44px}
+.hustle-v5:not(.workspace) .signature-process .signature-section-heading h2{color:#fff;margin:14px 0 10px}
+.hustle-v5:not(.workspace) .signature-process .signature-section-heading p{color:#a9b9de}
+.hustle-v5:not(.workspace) .signature-process-switch{gap:2px;padding:3px;border:0;border-radius:12px;background:rgb(4 11 31/.55);box-shadow:inset 0 0 0 1px rgb(169 185 222/.22)}
+.hustle-v5:not(.workspace) .signature-process-switch button{min-height:38px;padding:0 16px;border-radius:9px;font-size:13.5px;font-weight:650;color:#dbe4fa}
+.hustle-v5:not(.workspace) .signature-process-switch button:hover{background:rgb(255 255 255/.08);color:#fff}
+.hustle-v5:not(.workspace) .signature-process-switch button.active{background:#eef3ff;color:var(--hx-mist-900)}
+/* Steps read as one connected path. */
+.hustle-v5:not(.workspace) .signature-step-grid{position:relative;gap:20px;counter-reset:none}
+.hustle-v5:not(.workspace) .signature-step{min-height:0;padding:28px;border:1px solid rgb(157 182 255/.16);border-radius:var(--hx-radius-card);
+  background:linear-gradient(180deg,rgb(14 35 80/.62),rgb(7 19 48/.62));box-shadow:inset 0 1px 0 rgb(255 255 255/.05);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.hustle-v5:not(.workspace) .signature-step-top{align-items:center}
+.hustle-v5:not(.workspace) .signature-step-icon{width:48px;height:48px;border:0;border-radius:14px;background:rgb(43 92 222/.22);color:var(--hx-cyan-300);box-shadow:inset 0 0 0 1px rgb(79 215 255/.25)}
+.hustle-v5:not(.workspace) .signature-step-top strong{font-size:14px;font-weight:750;letter-spacing:.12em;color:#a9b9de;font-variant-numeric:tabular-nums}
+.hustle-v5:not(.workspace) .signature-step h3{margin:28px 0 8px;font-size:20px;font-weight:750;letter-spacing:-.025em;color:#fff}
+.hustle-v5:not(.workspace) .signature-step p{margin:0;font-size:15px;line-height:1.6;color:#a9b9de}
+.hustle-v5:not(.workspace) .signature-step-line{left:28px;right:28px;bottom:0;width:auto;height:2px;background:linear-gradient(90deg,var(--hx-royal-500),var(--hx-cyan-400) 60%,transparent)}
+.hustle-v5:not(.workspace) .signature-process-note{margin-top:32px;font-size:13px;color:#a9b9de}
+.hustle-v5:not(.workspace) .signature-process-note svg{color:var(--hx-cyan-400)}
+
+/* 9. People spotlight (plain) --------------------------------------------- */
+.hustle-v5:not(.workspace) .signature-spotlight .signature-section-eyebrow{color:var(--hx-eyebrow)}
+.hustle-v5:not(.workspace) .signature-person{border-color:var(--hx-card-border);border-radius:var(--hx-radius-card);background:var(--hx-card);box-shadow:var(--hx-card-shadow)}
+.hustle-v5:not(.workspace) .signature-person:hover{border-color:var(--hx-card-hover);box-shadow:var(--hx-card-shadow-hover)}
+.hustle-v5:not(.workspace) .signature-person-avatar{background:var(--hx-icon-bg);color:var(--hx-icon-fg)}
+.hustle-v5:not(.workspace) .signature-person-caption>span{font-size:11px;letter-spacing:.1em;color:var(--purple)}
+.hustle-v5:not(.workspace) .signature-person-caption p{font-size:14px}
+/* Names may contain long Cyrillic or Latin tokens: keep the card in its grid track. */
+.hustle-v5:not(.workspace) .signature-person,
+.hustle-v5:not(.workspace) .signature-person-caption{min-width:0}
+.hustle-v5:not(.workspace) .signature-person-caption h3,
+.hustle-v5:not(.workspace) .signature-person-caption p{overflow-wrap:anywhere}
+.hustle-v5:not(.workspace) .signature-person-caption small{font-size:12.5px}
+.hustle-v5:not(.workspace) .signature-text-link{font-size:14px}
+
+/* 10. Freelancer band (stage card) ---------------------------------------- */
+.hustle-v5:not(.workspace) .signature-seller-band.shell{position:relative;isolation:isolate;overflow:hidden;align-items:center;min-height:0;
+  padding:clamp(40px,5vw,72px) clamp(28px,5vw,72px)!important;border-radius:28px;background:var(--hx-stage);color:#eef3ff;
+  box-shadow:inset 0 0 0 1px rgb(169 185 222/.14)}
+.hustle-v5:not(.workspace) .signature-seller-band .signature-section-eyebrow{color:var(--hx-cyan-300)}
+.hustle-v5:not(.workspace) .signature-seller-text h2{margin:16px 0 14px;color:#fff}
+.hustle-v5:not(.workspace) .signature-seller-text em{background:linear-gradient(100deg,var(--hx-royal-300),var(--hx-cyan-400));-webkit-background-clip:text;background-clip:text}
+.hustle-v5:not(.workspace) .signature-seller-text p{max-width:46ch;margin:0 0 28px;font-size:16px;line-height:1.6;color:#a9b9de}
+.hustle-v5:not(.workspace) .signature-seller-band .signature-cta-button{background:#eef3ff;color:var(--hx-mist-900)!important}
+.hustle-v5:not(.workspace) .signature-seller-band .signature-cta-button:hover{background:#fff}
+.hustle-v5:not(.workspace) .signature-art-window{border:1px solid rgb(157 182 255/.3);background:linear-gradient(180deg,rgb(14 35 80/.9),rgb(7 19 48/.9));box-shadow:0 40px 80px rgb(0 0 0/.45),inset 0 1px 0 rgb(255 255 255/.06)}
+.hustle-v5:not(.workspace) .signature-window-dots{color:var(--hx-cyan-400)}
+.hustle-v5:not(.workspace) .signature-art-line{background:linear-gradient(90deg,rgb(74 119 238/.75),rgb(79 215 255/.45))}
+.hustle-v5:not(.workspace) .signature-art-line.medium{background:rgb(169 185 222/.25)}
+.hustle-v5:not(.workspace) .signature-art-row i{background:linear-gradient(180deg,rgb(74 119 238/.35),rgb(28 62 168/.25));border-color:rgb(157 182 255/.25)}
+.hustle-v5:not(.workspace) .signature-art-badge{background:var(--hx-ink-950);border-color:rgb(79 215 255/.35);color:var(--hx-cyan-300);font-size:10px;letter-spacing:.08em}
+.hustle-v5:not(.workspace) .signature-art-cube{border-color:rgb(157 182 255/.45)}
+
+/* 11. Partners (light card with an editorial stat row) --------------------- */
+.hustle-v5:not(.workspace) .signature-partner{padding-bottom:clamp(72px,7vw,112px)}
+.hustle-v5:not(.workspace) .signature-partner-inner{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:40px;padding:clamp(28px,4vw,48px);
+  border:1px solid var(--hx-card-border);border-radius:28px;background:var(--hx-card);box-shadow:var(--hx-card-shadow)}
+.hustle-v5:not(.workspace) .signature-partner .signature-section-eyebrow{color:var(--hx-eyebrow)}
+.hustle-v5:not(.workspace) .signature-partner-copy h2{margin:14px 0 12px;font-size:clamp(26px,1rem + 1.6vw,38px);font-weight:800;letter-spacing:-.035em}
+.hustle-v5:not(.workspace) .signature-partner-copy p{max-width:52ch;font-size:15px;line-height:1.65;color:var(--sub)}
+.hustle-v5:not(.workspace) .signature-partner-link{margin-top:20px;font-size:14px;color:var(--purple)!important}
+.hustle-v5:not(.workspace) .signature-partner-stats{gap:0;border:1px solid var(--hx-card-border);border-radius:var(--hx-radius-card);background:var(--hx-tint);overflow:hidden}
+.hustle-v5:not(.workspace) .signature-partner-stats>div{display:grid;align-content:center;gap:6px;padding:28px 16px;border:0;border-radius:0;background:transparent;text-align:left}
+.hustle-v5:not(.workspace) .signature-partner-stats>div+div{border-left:1px solid var(--hx-card-border)}
+.hustle-v5:not(.workspace) .signature-partner-stats strong{font-size:clamp(28px,1.2rem + 1.2vw,40px);font-weight:800;letter-spacing:-.04em;line-height:1;
+  background:var(--hx-accent-text);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hustle-v5:not(.workspace) .signature-partner-stats span{font-size:13px;line-height:1.35;color:var(--sub)}
+
+/* 12. Footer (stage) ------------------------------------------------------- */
+/* Dividers sit on the content column (same gutter as the header shell), not the viewport edge. */
+.hustle-v5:not(.workspace) :is(.footer-callout,.footer-bottom){position:relative;border-top:0!important;border-bottom:0!important}
+.hustle-v5:not(.workspace) .footer-callout::after,.hustle-v5:not(.workspace) .footer-bottom::before{content:'';position:absolute;left:var(--hustle-page-gutter,48px);right:var(--hustle-page-gutter,48px);height:1px;background:rgb(169 185 222/.16)}
+.hustle-v5:not(.workspace) .footer-callout::after{bottom:0}
+.hustle-v5:not(.workspace) .footer-bottom::before{top:0}
+.hustle-v5:not(.workspace) .hustle-premium-footer{background:var(--hx-stage);color:#dbe4fa}
+.hustle-v5:not(.workspace) .footer-eyebrow{color:var(--hx-cyan-300)}
+.hustle-v5:not(.workspace) .footer-callout h2{color:#fff}
+.hustle-v5:not(.workspace) .footer-callout p{color:#a9b9de}
+.hustle-v5:not(.workspace) .footer-main-cta{background:#eef3ff;color:var(--hx-mist-900)!important}
+.hustle-v5:not(.workspace) .footer-main-cta:hover{background:#fff}
+.hustle-v5:not(.workspace) .footer-outline-cta{min-height:48px;padding:0 20px;border-color:rgb(169 185 222/.35);color:#eef3ff!important}
+.hustle-v5:not(.workspace) .footer-outline-cta:hover{background:rgb(255 255 255/.06);border-color:rgb(169 185 222/.6)}
+.hustle-v5:not(.workspace) .footer-brand>p,.hustle-v5:not(.workspace) .footer-columns nav a{color:#a9b9de!important}
+.hustle-v5:not(.workspace) .footer-columns nav a:hover,.hustle-v5:not(.workspace) .footer-bottom a:hover{color:var(--hx-cyan-300)!important}
+.hustle-v5:not(.workspace) .footer-status{border-color:rgb(79 215 255/.3)!important;background:rgb(43 92 222/.14)!important;color:#dbe4fa!important}
+.hustle-v5:not(.workspace) .footer-status svg{color:var(--hx-cyan-400)}
+.hustle-v5:not(.workspace) .footer-bottom{color:#8d9cc4}
+.hustle-v5:not(.workspace) .footer-bottom a{color:#a9b9de!important}
+
+/* 14. Responsive */
+@media(max-width:440px){
+ .signature-hero.hx-hero .guided-entry-choice,.signature-hero.hx-hero .guided-entry-choice.guided-entry-business{gap:6px;padding:0 8px;font-size:13px}
+ .signature-hero.hx-hero .guided-entry-choice-copy strong{white-space:normal;line-height:1.2;text-align:center}
+ .signature-hero.hx-hero .guided-entry-symbol svg{width:15px;height:15px}
+}
+@media(max-width:1050px){
+ .hustle-v5:not(.workspace) .signature-partner-inner{grid-template-columns:1fr}
+}
+@media(max-width:860px){
+ .hustle-v5:not(.workspace) .business-intro{grid-template-columns:1fr;align-items:start}
+ .hustle-v5:not(.workspace) .business-solution-main-cta{justify-self:start}
+ .hustle-v5:not(.workspace) .signature-process .signature-section-heading{align-items:flex-start}
+}
+@media(max-width:760px){
+ .signature-hero.hx-hero .guided-entry-intro{flex-direction:column;gap:10px}
+ .signature-hero.hx-hero .hx-hero-guided{width:100%}
+ .signature-hero.hx-hero .guided-entry-choices{display:grid;width:100%}
+ .signature-hero.hx-hero .guided-entry-choice,.signature-hero.hx-hero .guided-entry-choice.guided-entry-business{min-height:44px;padding:0 10px}
+ .hustle-v5:not(.workspace) .signature-step-grid{grid-template-columns:1fr;gap:12px}
+ .hustle-v5:not(.workspace) .signature-step{padding:22px}
+ .hustle-v5:not(.workspace) .signature-step h3{margin-top:18px}
+ .hustle-v5:not(.workspace) .signature-seller-band.shell{border-radius:22px}
+}
+@media(max-width:560px){
+ .signature-hero.hx-hero .hx-hero-eyebrow{flex-direction:column;gap:8px}
+ .signature-hero.hx-hero .hx-eyebrow-rule{display:none}
+ .hustle-v5:not(.workspace) .business-solution-card{min-height:0;padding:22px}
+ .hustle-v5:not(.workspace) .business-solution-card h3{margin-top:18px}
+ .hustle-v5:not(.workspace) .signature-partner-stats{grid-template-columns:1fr 1fr 1fr}
+ .hustle-v5:not(.workspace) .signature-partner-stats>div{padding:20px 12px}
+ .hustle-v5:not(.workspace) .signature-partner-stats>div:last-child{grid-column:auto}
+ .hustle-v5:not(.workspace) .signature-partner-stats span{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ .hustle-v5:not(.workspace) :is(.business-solution-card,.business-solution-card::after,.business-solution-main-cta,.v39-primary,.signature-cta-button,.footer-main-cta){transition:none}
+}
+.hustle-v5:not(.workspace) .v39-retry{padding:0;border:0;background:none;color:var(--purple);font:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.hustle-v5:not(.workspace) .v39-heart[aria-busy=true]{opacity:.55;cursor:progress}
+.hustle-v5:not(.workspace) .v52-empty-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 18px;margin-top:6px}
+/* V52: touch targets of at least 24px on phones and tablets (WCAG 2.5.8) */
+@media(max-width:900px){
+ .hustle-premium-footer nav a{display:inline-flex;align-items:center;min-height:32px}
+ .signature-text-link,.signature-partner-link{min-height:32px}
+}

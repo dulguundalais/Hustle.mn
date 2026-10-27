@@ -1,0 +1,15 @@
+node_modules
+.next
+.env*
+!.env.example
+.DS_Store
+*.tsbuildinfo
+
+.preview-build/
+out/
+*.tsbuildinfo
+
+supabase/.temp/
+test-results*/
+playwright-report/
+qa-local.config.mjs
