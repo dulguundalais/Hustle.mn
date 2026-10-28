@@ -80,3 +80,11 @@ test('referral capture retains attribution until a confirmed database claim',()=
  assert.match(source,/try\{storage\.removeItem\(KEY\)\}catch/);
  assert.match(source,/now-parsed\.at<=TTL/);
 });
+
+test('V53 preview starts in the preferred dark appearance without changing real domains',()=>{
+ const layout=read('app/layout.tsx');
+ assert.match(layout,/feature-partner-self-service\.hustle-mn-preview\.pages\.dev/);
+ assert.match(layout,/hustle:v53-preview-initialized/);
+ assert.match(layout,/localStorage\.setItem\("hustle-theme","dark"\)/);
+ assert.doesNotMatch(layout,/location\.hostname\.endsWith/);
+});
