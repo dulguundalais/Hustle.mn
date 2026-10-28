@@ -12,7 +12,7 @@ const login=read('lib/marketplace/ux-flows.ts');
 test('existing homepage uses its original Partner section and /referrals route',()=>{
  assert.match(home,/<section className="signature-partner shell">/);
  assert.match(home,/href="\/referrals\/"/);
- assert.match(home,/Түнш болох/);
+ assert.match(home,/Түншийн мэдээлэл үзэх/);
  assert.match(page,/PartnerProgram/);
  assert.match(login,/['"]\/referrals\/['"]/);
 });
