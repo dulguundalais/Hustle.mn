@@ -11,7 +11,7 @@ const protectedFiles={
 for(const [path,expected] of Object.entries(protectedFiles)){
  test('Claude V51/V52 protected source unchanged: '+path,()=>{
   const b=readFileSync(new URL('../'+path,import.meta.url));
-  const blobSha=createHash('sha1').update('blob '+b.length+'\\0').update(b).digest('hex');
+  const blobSha=createHash('sha1').update('blob '+b.length + String.fromCharCode(0)).update(b).digest('hex');
   assert.equal(blobSha,expected,'Protect Claude original design; changes need owner review');
  });
 }
@@ -19,6 +19,6 @@ test('Partner CTA is the only allowed homepage story adjustment',()=>{
  const source=readFileSync(new URL('../components/signature-home.tsx',import.meta.url),'utf8');
  const original=source.replace("t('Түнш болох','Become a Partner')","t('Түншийн мэдээлэл үзэх','Explore referrals')");
  const b=Buffer.from(original);
- const hash=createHash('sha1').update('blob '+b.length+'\\0').update(b).digest('hex');
+ const hash=createHash('sha1').update('blob '+b.length + String.fromCharCode(0)).update(b).digest('hex');
  assert.equal(hash,'00f7d26696bc0e8f573a8ee6e8c20722627e4317');
 });
