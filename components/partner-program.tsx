@@ -7,7 +7,6 @@ import PremiumFooter from './premium-footer';
 import {marketplaceClient} from '../lib/marketplace/client';
 import {signInWithReturn} from '../lib/marketplace/ux-flows';
 import '../app/marketplace.css';
-import '../app/v51-home-system.css';
 import '../app/partner-program.css';
 
 type Membership={user_id:string;display_name:string;partner_kind:'individual'|'business';promotion_channel:string;website:string;tier:'community'|'growth';status:'active'|'suspended';created_at:string};
