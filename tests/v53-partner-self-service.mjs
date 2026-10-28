@@ -67,3 +67,12 @@ test('admin management is isolated, explicit, and audited',()=>{
  assert.match(sql,/role='admin' and enabled/);
  assert.match(sql,/insert into public\.audit_events/);
 });
+
+test('referral capture retains attribution until a confirmed database claim',()=>{
+ const source=read('components/partner-referral-capture.tsx');
+ assert.match(source,/result\.data===true/);
+ assert.match(source,/localStorage\.removeItem\(KEY\)/);
+ assert.match(source,/if\(!result\.error&&result\.data===true\)/);
+ assert.match(source,/try\{storage\.removeItem\(KEY\)\}catch/);
+ assert.match(source,/now-parsed\.at<=TTL/);
+});
