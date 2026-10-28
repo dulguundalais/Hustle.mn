@@ -1,3 +1,34 @@
+/* V53 tokens are intentionally scoped to the Partner route. Importing the
+   shared V51 stylesheet here changed Next's global CSS chunk/cascade order on
+   the homepage and overrode Claude's original light/dark visual system.
+   The actual Claude V51 CSS remains imported only by PremiumMarketplace. */
+.hustle-v5.partner-program{
+ --hx-royal-600:#2b5cde;--hx-royal-300:#9db6ff;--hx-cyan-400:#4fd7ff;
+ --hx-stage:radial-gradient(48% 70% at 12% 0%,rgb(43 92 222/.55),transparent 72%),radial-gradient(36% 60% at 92% 8%,rgb(79 215 255/.16),transparent 70%),radial-gradient(50% 80% at 70% 110%,rgb(28 62 168/.45),transparent 72%),#040b1f;
+ --paper:#f6f8fd;--surface:#fff;--text:#0a1430;--sub:#4a5677;--border:#e1e7f3;
+ --purple:#2b5cde;--soft:#f1f4ff;--hx-card:#fff;--hx-card-border:#e1e7f3;
+ --hx-card-shadow:0 1px 2px rgb(10 20 48/.04),0 8px 24px rgb(10 20 48/.05);
+ --hx-tint:linear-gradient(180deg,#eef2fa,#f6f8fd);
+ --hx-btn-bg:#0a1430;--hx-btn-fg:#fff;
+}
+.hustle-v5.partner-program.night{
+ --paper:#050c22;--surface:#0b1636;--text:#eef3ff;--sub:#a9b9de;--border:#1c2b55;
+ --purple:#9db6ff;--soft:#0f1d45;--hx-card:#0b1636;--hx-card-border:#1c2b55;
+ --hx-card-shadow:0 1px 2px rgb(0 0 0/.25);
+ --hx-tint:linear-gradient(180deg,#071230,#050c22);
+ --hx-btn-bg:#eef3ff;--hx-btn-fg:#0a1430;
+ color-scheme:dark;
+}
+.partner-program .signature-section-eyebrow{
+ display:inline-flex;align-items:center;gap:10px;margin:0;padding:0;border:0;background:none;
+ color:var(--purple);font-size:12px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;line-height:1.4;
+}
+.partner-program .signature-section-eyebrow::before{
+ content:'';width:18px;height:2px;flex:none;border-radius:2px;
+ background:linear-gradient(90deg,#2b5cde,#4fd7ff);
+}
+.partner-program .pp-hero .signature-section-eyebrow{color:#8be6ff}
+
 .partner-program{min-height:100vh;background:var(--paper);color:var(--text);font-family:Manrope,Inter,Arial,sans-serif}
 .partner-program a{text-decoration:none}
 .partner-program .pp-hero{background:var(--hx-stage);color:#eef3ff;padding:100px 0 90px;overflow:hidden}
