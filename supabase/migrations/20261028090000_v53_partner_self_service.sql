@@ -18,7 +18,7 @@ create table public.partner_memberships(
 );
 create index partner_memberships_status_idx on public.partner_memberships(status,tier);
 alter table public.partner_memberships enable row level security;
-revoke all on public.partner_memberships from anon,authenticated;
+revoke all on public.partner_memberships from public,anon,authenticated;
 grant select on public.partner_memberships to authenticated;
 create policy partner_memberships_own on public.partner_memberships for select to authenticated
  using(user_id=(select auth.uid()) or (select public.beta_role())='admin');
@@ -52,7 +52,7 @@ create table public.partner_rewards(
 );
 create index partner_rewards_owner_idx on public.partner_rewards(partner_id,created_at desc);
 alter table public.partner_rewards enable row level security;
-revoke all on public.partner_rewards from anon,authenticated;
+revoke all on public.partner_rewards from public,anon,authenticated;
 grant select on public.partner_rewards to authenticated;
 create policy partner_rewards_own on public.partner_rewards for select to authenticated
  using(partner_id=(select auth.uid()) or (select public.beta_role())='admin');
