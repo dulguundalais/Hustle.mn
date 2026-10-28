@@ -23,15 +23,20 @@ grant select on public.partner_memberships to authenticated;
 create policy partner_memberships_own on public.partner_memberships for select to authenticated
  using(user_id=(select auth.uid()) or (select public.beta_role())='admin');
 
+-- SECURITY AUDIT V53: Supabase default grants on legacy tables included
+-- DELETE/TRUNCATE/REFERENCES/TRIGGER. TRUNCATE bypasses RLS. Narrow *both*
+-- PUBLIC and authenticated grants; row policies alone are not enough.
+revoke all on public.partner_codes,public.referrals,public.business_rules from public,anon,authenticated;
+grant select on public.partner_codes to authenticated;
+grant select,update on public.referrals to authenticated;
+grant select,update on public.business_rules to authenticated;
 -- Close legacy client-side code creation. A private transactional function owns this operation.
-revoke insert on public.partner_codes from authenticated;
 drop policy if exists codes_create on public.partner_codes;
 drop policy if exists codes_read on public.partner_codes;
 create policy codes_read_own on public.partner_codes for select to authenticated
  using(partner_id=(select auth.uid()) or (select public.beta_role())='admin');
 
 -- Referral identity cannot be freely asserted by arbitrary clients.
-revoke insert on public.referrals from authenticated;
 drop policy if exists referrals_add on public.referrals;
 
 create table public.partner_rewards(
@@ -98,6 +103,8 @@ grant execute on function public.enroll_community_partner(text,text,text,text,bo
 
 -- First-touch attribution from URL is claimed only after verified signup,
 -- and only for new accounts within the configured signup window.
+-- IMPORTANT: browser-stored referral source is not cryptographic proof of
+-- a server-observed click. Do not use this mechanism for real-money payouts.
 create function hustle_private.v53_claim_referral(p_code text)
  returns boolean language plpgsql security definer set search_path='' as $$
 declare v_uid uuid:=auth.uid();v_partner uuid;v_created timestamptz;v_email text;v_days integer;
@@ -118,7 +125,7 @@ begin
  if exists(select 1 from public.referrals where referred_id=v_uid) then return false;end if;
  -- Profiles must exist for referral foreign keys. Never modify an existing seller profile.
  insert into public.profiles(id,display_name)
- values(v_uid,left(coalesce(nullif(split_part(v_email,'@',1),''),'Member'),80))
+ values(v_uid,'Hustle member')
  on conflict(id) do nothing;
  insert into public.referrals(partner_id,referred_id,eligible_until)
  values(v_partner,v_uid,now())
@@ -151,7 +158,7 @@ begin
  if v_tier is null or v_rules.id is null or new.quoted_price<=0 then return new;end if;
  v_percent:=case when v_tier='growth' then v_rules.active_partner_percent else v_rules.partner_percent end;
  insert into public.partner_rewards(partner_id,referral_id,order_id,basis_amount,partner_percent,estimated_amount)
- values(v_ref.partner_id,v_ref.id,new.id,new.quoted_price,v_percent,round(new.quoted_price*v_percent/100,2))
+ values(v_ref.partner_id,v_ref.id,new.id,new.quoted_price,v_percent,round(new.quoted_price*v_percent/100,0))
  on conflict(order_id) do nothing;
  -- "verified" here means eligible completed beta order; NOT financial settlement.
  if v_ref.status='pending' then
@@ -186,6 +193,8 @@ $$;
 revoke all on function public.manage_partner_membership(uuid,text,text) from public,anon;
 grant execute on function public.manage_partner_membership(uuid,text,text) to authenticated;
 
+-- Existing profile/order tables have separate legacy grants; their remediation
+-- requires a broader migration after verifying all Buyer/Seller workflows.
 comment on table public.partner_rewards is
  'V53 beta-only simulated reward ledger. No payment obligation or payouts.';
 commit;
