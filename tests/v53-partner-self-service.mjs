@@ -37,7 +37,7 @@ test('browser cannot directly create partner codes, referrals or rewards',()=>{
  assert.match(sql,/revoke all on public\.partner_codes,public\.referrals,public\.business_rules from public,anon,authenticated/);
  assert.match(sql,/drop policy if exists codes_create/);
  assert.match(sql,/grant select,update on public\.referrals to authenticated/);
- assert.match(sql,/revoke all on public\.partner_rewards from anon,authenticated/);
+ assert.match(sql,/revoke all on public\.partner_rewards from public,anon,authenticated/);
  assert.match(sql,/partner_rewards_own/);
 });
 test('secure conversion ties reward to completed order, not clicks',()=>{
