@@ -50,3 +50,26 @@ test('V53 signup requires authentication, not a hidden dummy Partner account',as
  const link=page.locator('.pp-join-card a').first();
  await expect(link).toHaveAttribute('href',/\/login\//);
 });
+
+
+test('V53 keeps the original Claude V51 night palette, not the older teal V45 palette',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});
+ await page.goto('/');
+ const toggle=page.getByRole('button',{name:/Өнгөний горим солих|Toggle color theme/});
+ await toggle.click();
+ await expect(page.locator('.hustle-v5.night')).toBeVisible();
+ const colors=await page.evaluate(()=>{
+  const home=document.querySelector('.hustle-v5.night');
+  const section=document.querySelector('.business-solutions-section');
+  const card=document.querySelector('.business-solution-card');
+  if(!home||!section||!card)throw new Error('Claude V51 sections missing');
+  return {
+   paper:getComputedStyle(home).getPropertyValue('--paper').trim(),
+   card:getComputedStyle(card).backgroundColor,
+   section:getComputedStyle(section).backgroundImage
+  };
+ });
+ expect(colors.paper).toBe('#050c22');
+ expect(colors.card).toBe('rgb(11, 22, 54)');
+ expect(colors.section).toContain('linear-gradient');
+});
