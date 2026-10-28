@@ -19,7 +19,11 @@ test('existing homepage uses its original Partner section and /referrals route',
 test('program uses V51 tokens, shared site header and footer',()=>{
  assert.match(ui,/import SiteHeader/);
  assert.match(ui,/import PremiumFooter/);
- assert.match(ui,/v51-home-system.css/);
+ // Partner styles must NOT import Claude's shared homepage sheet: Next can
+ // hoist it ahead of V45 and silently replace the V51 colour system.
+ assert.doesNotMatch(ui,/import ['"]\.\.\/app\/v51-home-system\.css/);
+ assert.match(read('components/premium-marketplace.tsx'),/import ['"]\.\.\/app\/v51-home-system\.css/);
+ assert.match(read('app/partner-program.css'),/\.hustle-v5\.partner-program\.night/);
  assert.match(ui,/partner-program.css/);
  assert.match(ui,/Beta|бета/);
  assert.match(ui,/simulated rewards|туршилтын урамшуулал/i);
