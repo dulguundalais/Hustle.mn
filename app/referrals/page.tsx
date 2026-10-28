@@ -1,3 +1,3 @@
-import InformationPage from '../../components/information-page';
-export const metadata={title:'Referrals — Hustle.mn',description:'Hustle.mn official beta information: referrals in Mongolian and English.'};
-export default function Page(){return <InformationPage page="referrals"/>}
+import PartnerProgram from '../../components/partner-program';
+export const metadata={title:'Түншлэлийн хөтөлбөр — Hustle.mn',description:'Hustle Partner Program: automatic enrollment and referral tracking.'};
+export default function Page(){return <PartnerProgram/>}
