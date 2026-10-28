@@ -12,6 +12,9 @@ begin
  if has_table_privilege('authenticated','public.partner_rewards','INSERT') then raise exception 'Reward direct INSERT leaked';end if;
  if has_table_privilege('authenticated','public.partner_rewards','UPDATE') then raise exception 'Reward direct UPDATE leaked';end if;
  if has_table_privilege('authenticated','public.partner_memberships','TRUNCATE') then raise exception 'Membership TRUNCATE leaked';end if;
+ if has_table_privilege('anon','public.partner_memberships','SELECT') then raise exception 'Anonymous can select member records';end if;
+ if has_table_privilege('anon','public.partner_rewards','TRUNCATE') then raise exception 'Anonymous reward TRUNCATE leaked';end if;
+ if has_table_privilege('authenticated','public.partner_rewards','TRUNCATE') then raise exception 'Reward TRUNCATE leaked';end if;
  if has_function_privilege('anon','public.enroll_community_partner(text,text,text,text,boolean)','EXECUTE')
   then raise exception 'Anon can enroll without signing in';end if;
  if has_function_privilege('anon','public.manage_partner_membership(uuid,text,text)','EXECUTE')
