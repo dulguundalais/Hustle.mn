@@ -41,7 +41,7 @@ export default function PartnerProgram(){
     db.from('profiles').select('display_name').eq('id',user.id).maybeSingle()
    ]);
    // Preview may deploy before the separately-reviewed V53 migration.
-   if(m.error){if(/relation|schema cache|could not find the table/i.test(m.error.message))throw new Error(t('Partner backend шинэчлэл Supabase-д хараахан идэвхжээгүй. Migration баталгаажсаны дараа бүртгэл ажиллана.','Partner backend is awaiting the reviewed Supabase migration. Enrollment is not active yet.'));throw m.error}
+   if(m.error){if(/relation|schema cache|could not find the table/i.test(m.error.message))throw new Error(t('Түншийн бүртгэл одоогоор идэвхгүй байна. Тун удахгүй боломжтой болно.','Partner enrollment is not available in this preview yet.'));throw m.error}
    for(const r of [c,rs,rw])if(r.error)throw r.error;
    setMembership(m.data as Membership|null);setCode(c.data?.code||'');setReferrals((rs.data||[]) as Referral[]);setRewards((rw.data||[]) as Reward[]);
    setName(old=>old||m.data?.display_name||profile.data?.display_name||user.email?.split('@')[0]||'');
