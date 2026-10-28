@@ -19,6 +19,8 @@ export function rememberReferral(search:string,storage:Storage,now=Date.now()):T
  try{const raw=storage.getItem(KEY);if(raw){const parsed=JSON.parse(raw) as Touch;if(VALID.test(parsed.code)&&Number.isFinite(parsed.at)&&now>=parsed.at&&now-parsed.at<=TTL)previous=parsed}}
  catch{}
  if(previous)return previous;
+ // Never leave expired or malformed codes persisted between sessions.
+ try{storage.removeItem(KEY)}catch{}
  if(!current)return null;
  const touch={code:current,at:now};
  try{storage.setItem(KEY,JSON.stringify(touch))}catch{}
@@ -37,8 +39,11 @@ export default function PartnerReferralCapture(){
     const {data:{user},error}=await db.auth.getUser();
     if(error||!user||!alive)return;
     const result=await db.rpc('claim_partner_referral',{input_code:touch.code});
-    if(!result.error){
-     // A valid account can claim once; no need to retain a reusable code.
+    // A false response means attribution was NOT recorded (for example the
+    // account is awaiting email confirmation). Retain the bounded first touch
+    // so confirmation/sign-in can retry without losing the Partner link.
+    // Only a confirmed database claim may consume it.
+    if(!result.error&&result.data===true){
      try{localStorage.removeItem(KEY)}catch{}
     }
    }catch{/* Auth may be initializing or migration may not yet be active. */}
