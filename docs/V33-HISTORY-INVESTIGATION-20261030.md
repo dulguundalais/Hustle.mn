@@ -6,11 +6,17 @@ Scope: original Hustle.mn project pgrxsphkjudvfbpaudbd, read-only metadata on 20
 
 V33 has no matching row in original migration history, even though its application objects exist. The later V34 stored migration does not contain the V33 project_requests CREATE TABLE statement. This does not establish when or by whom V33 was applied; do not invent a history timestamp or rerun it.
 
-The checked-in live evidence contains 127 scoped entries: 3 table RLS states, 29 columns (including profiles.accepting_projects), 26 constraints, 9 indexes, 3 policies, 4 triggers, 42 table privilege checks, and 11 public/trigger routine definitions and execution/configuration flags. The snapshot contains no user rows or credentials.
+The checked-in live evidence contains 133 scoped entries: 3 table RLS states, 29 columns (including profiles.accepting_projects), 26 constraints, 9 indexes, 3 policies, 4 triggers, 42 table privilege checks, 6 effective column-grant lists and 11 public/trigger routine definitions and execution/configuration flags. The snapshot contains no user rows or credentials. Column checks include SELECT/INSERT/UPDATE/REFERENCES so table-level absence is not mistaken for effective denial.
 
-scripts/v33-schema-evidence.sql is the same read-only query used for both the captured original metadata and the disposable PostgreSQL replay. CI requires an exact comparison using scripts/compare-schema-evidence.mjs, with no difference allowlist. A mismatch blocks this job and must be investigated, not overwritten by a refreshed baseline.
+scripts/v33-schema-evidence.sql is the same read-only query used for both the captured original metadata and the disposable PostgreSQL replay. CI compares with scripts/compare-schema-evidence.mjs; there is no object/privilege exception allowlist. A mismatch blocks this job and must be investigated, not overwritten by a refreshed baseline.
 
-Routine fingerprints use MD5 of whitespace-normalized pg_get_functiondef for change detection, alongside separate SECURITY DEFINER, search_path/config and anon/authenticated EXECUTE checks. These are not signatures, a proof of semantic equivalence, or a substitute for reviewing privileged code. Database ownership, all other application objects, Auth/Storage services and concurrency are outside this scoped comparison.
+The initial strict fingerprint check matched 126/127 entries and flagged create_project_request. Read-only inspection of its actual body established that live omits two explanatory matching comments present in the repo. Code tokens are identical. This is a representation difference, not evidence of a behavioral mismatch.
+
+Raw whitespace-normalized pg_get_functiondef MD5 fingerprints remain in captured evidence. Routine bodies are also captured and compared as conservative SQL token streams: comments and spacing are ignored outside literals; quoted identifiers, strings and dollar-quoted string contents retain their exact bytes. Arguments/defaults, return type, language, volatility, parallel/strict/leakproof/kind/cost/rows/support attributes, SECURITY DEFINER, search_path/config and anon/authenticated EXECUTE are compared separately. Only an otherwise identical routine may be reported as representation-only; there is no fingerprint-pair bypass.
+
+The original 127 metadata values remain unchanged; the base snapshot was expanded only with six effective column-grant lists. Separate routine-body evidence is accepted only when its exact function scope and all raw capture fingerprints match that base, preventing a silent baseline refresh.
+
+These fingerprints are not signatures, a formal proof of semantic equivalence, or a substitute for privileged-code review. Database ownership, all other application objects, Auth/Storage services and concurrency are outside this scoped comparison.
 
 ## Backup / restore history reviewed without reading backup rows
 

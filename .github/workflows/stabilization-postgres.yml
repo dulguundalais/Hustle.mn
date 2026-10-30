@@ -61,4 +61,4 @@ jobs:
       - name: Order delivery and private file actors
         run: psql -X -v ON_ERROR_STOP=1 -f tests/sql/v52-order-deliveries.sql
       - name: Compare replay with read-only original V33 schema evidence
-        run: node scripts/compare-schema-evidence.mjs tests/fixtures/v33-live-schema-20261030.json /tmp/v33-replay.json
+        run: node scripts/compare-schema-evidence.mjs tests/fixtures/v33-live-schema-20261030.json /tmp/v33-replay.json tests/fixtures/v33-live-routines-20261030.json

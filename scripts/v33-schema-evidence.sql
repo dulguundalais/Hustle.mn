@@ -39,13 +39,25 @@ with targets as (
  from targets t cross join (values('anon'),('authenticated')) r(role_name)
  cross join (values('SELECT'),('INSERT'),('UPDATE'),('DELETE'),('TRUNCATE'),('REFERENCES'),('TRIGGER')) p(priv)
  union all
+ select 'column-grants:'||t.relname||'.'||r.role_name,
+ jsonb_build_object(
+ 'select',coalesce((select jsonb_agg(a.attname order by a.attnum) from pg_attribute a where a.attrelid=t.oid and a.attnum>0 and not a.attisdropped and has_column_privilege(r.role_name,t.oid,a.attnum,'SELECT')),'[]'::jsonb),
+ 'insert',coalesce((select jsonb_agg(a.attname order by a.attnum) from pg_attribute a where a.attrelid=t.oid and a.attnum>0 and not a.attisdropped and has_column_privilege(r.role_name,t.oid,a.attnum,'INSERT')),'[]'::jsonb),
+ 'update',coalesce((select jsonb_agg(a.attname order by a.attnum) from pg_attribute a where a.attrelid=t.oid and a.attnum>0 and not a.attisdropped and has_column_privilege(r.role_name,t.oid,a.attnum,'UPDATE')),'[]'::jsonb),
+ 'references',coalesce((select jsonb_agg(a.attname order by a.attnum) from pg_attribute a where a.attrelid=t.oid and a.attnum>0 and not a.attisdropped and has_column_privilege(r.role_name,t.oid,a.attnum,'REFERENCES')),'[]'::jsonb))
+ from targets t cross join (values('anon'),('authenticated'))r(role_name)
+ union all
  select 'function:'||n.nspname||'.'||p.proname||'('||pg_get_function_identity_arguments(p.oid)||')',
  jsonb_build_object(
  'definition_md5',md5(regexp_replace(pg_get_functiondef(p.oid),E'\\s+',' ','g')),
+ 'body',p.prosrc,'arguments',pg_get_function_arguments(p.oid),'returns',pg_get_function_result(p.oid),
+ 'language',l.lanname,'volatility',p.provolatile,'parallel',p.proparallel,
+ 'strict',p.proisstrict,'leakproof',p.proleakproof,'kind',p.prokind,
+ 'cost',p.procost,'rows',p.prorows,'support',p.prosupport::regproc::text,
  'security_definer',p.prosecdef,'config',p.proconfig,
  'anon_execute',has_function_privilege('anon',p.oid,'EXECUTE'),
  'authenticated_execute',has_function_privilege('authenticated',p.oid,'EXECUTE'))
- from pg_proc p join pg_namespace n on n.oid=p.pronamespace
+ from pg_proc p join pg_namespace n on n.oid=p.pronamespace join pg_language l on l.oid=p.prolang
  where (n.nspname='public' and p.proname in (
  'create_project_request','seller_project_inbox','submit_project_proposal',
  'decline_project_invitation','award_project_proposal','cancel_project_request','withdraw_project_proposal'))
