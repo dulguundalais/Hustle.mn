@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - codex/stabilize-db-ci-20261030
       - feature/interactive-functional-v6
       - fix/auth-portfolio-security-20261020
       - feature/v43-premium-editorial-polish-20261025
