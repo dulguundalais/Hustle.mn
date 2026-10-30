@@ -167,8 +167,13 @@ async function routeSignedIn(){
  history.replaceState(null,'',target);
 }
 async function auth(e:FormEvent){e.preventDefault();if(register&&emailCooldown>0)return;setBusy(true);setError('');setNotice('');try{const db=await marketplaceClient();const response=register?await db.auth.signUp({email:email.trim().toLowerCase(),password,options:{emailRedirectTo:location.origin+'/login/'}}):await db.auth.signInWithPassword({email:email.trim().toLowerCase(),password});if(response.error){if(response.error.code==='email_not_confirmed'||/email not confirmed/i.test(response.error.message||''))throw new Error(t('Имэйлээ баталгаажуулаагүй байна. Ирсэн имэйл болон Спам хавтаснаас баталгаажуулах холбоосоо нээнэ үү. Имэйл ирээгүй бол доорх товчоор дахин хүсэж болно.','Your email is not confirmed. Check Inbox and Spam for Confirm your email, or resend it below.'));throw response.error;}if(register&&!response.data.session)setNotice(t('Бүртгэлийн хүсэлтийг хүлээн авлаа. Шинээр бүртгүүлж байгаа бол имэйлээ баталгаажуулаад нэвтрээрэй. Имэйл ирээгүй бол Спам хавтсаа шалгаарай.','Signup request accepted. New accounts can sign in after confirming their email—no admin approval needed. Email delivery depends on the configured provider.'));else{
+ // Do not expose navigation until both the workspace data and its initial route
+ // are ready: late startup work must not overwrite a conversation just opened.
+ setLoading(true);
+ try{
  await load();
  await routeSignedIn();
+ }finally{setLoading(false)}
  }}catch(e){fail(e)}finally{setBusy(false)}}
 useEffect(()=>{if(emailCooldown<=0)return;const timer=setInterval(()=>setEmailCooldown(v=>Math.max(0,v-1)),1000);return()=>clearInterval(timer)},[emailCooldown>0]);
 async function resendConfirmation(){if(busy||emailCooldown>0)return;setBusy(true);setError('');setNotice('');try{if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))throw new Error(t('Эхлээд имэйл хаягаа оруулна уу.','Enter your email address first.'));const db=await marketplaceClient();const r=await db.auth.resend({type:'signup',email:email.trim().toLowerCase(),options:{emailRedirectTo:location.origin+'/login/'}});if(r.error)throw r.error;setEmailCooldown(60);setNotice(t('Хүсэлтийг хүлээн авлаа. Ирсэн имэйл болон Спам хавтсаа шалгаарай. Өмнө бүртгүүлсэн бол “Нэвтрэх” эсвэл “Нууц үг сэргээх” сонголтыг ашиглаарай.','Request accepted; email delivery is not guaranteed. Already registered? Sign in or reset your password instead.'));}catch(e){fail(e)}finally{setBusy(false)}}
