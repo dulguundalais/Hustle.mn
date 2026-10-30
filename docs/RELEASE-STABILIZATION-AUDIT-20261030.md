@@ -4,6 +4,13 @@
 
 Энэ нь эхний шатны бодит аудит ба хэрэгжүүлэх backlog. Application code/UI, live DB, production hosting өөрчлөөгүй. Payment integration нь амьд хөгжүүлэгчийн тусдаа ажил. Аудитад илрээгүй зүйлийг ажилладаг/аюулгүй гэж тооцоогүй.
 
+## Залруулга — implementation үеийн нэмэлт шалгалт (2026-10-30)
+
+**Доорх анхны B03 ба B04-ийн зарим дүгнэлтийг энэ залруулга орлоно.**
+- B03: has_table_privilege=false нь column-level GRANT-ийг тооцдоггүй. LIVE information_schema.column_privileges-аар message_reports, category_suggestions, professional_verifications-д шаардлагатай INSERT/UPDATE баганын эрхүүд байгааг баталсан. Report/category flows-ийг эвдэрсэн гэж үзсэн нь буруу; blanket GRANT нэмэхгүй. B03-ийг **P2 — column privilege / RLS regression verification** болгон өөрчилсөн. professional_verifications upsert update payload дахь immutable key columns-ийн compatibility-г жинхэнэ SQL тестээр шалгах үлдсэн.
+- B04: LIVE hustle_private.referral_guard() нь created_at, eligible_until, status-г server-ээс тогтоож, ownership/eligibility өөрчлөхийг хориглодог. Client-controlled eligibility гэж дүгнэсэн нь буруу. B04-ийн P1 хүрээ нь overbroad codes_read, existing flow-ийн баталгаажуулалт хэвээр.
+- Иймээс corrected backlog: **7 P1, 4 P2, 2 P3**. Анхны snapshot мөрүүдийг түүхэн нотолгоо байдлаар үлдээсэн; энэ залруулгыг precedence-тэй уншина.
+
 ## Baseline ба хамрах хүрээ
 
 - Repo: https://github.com/dulguundalais/Hustle.mn
@@ -54,7 +61,7 @@ P2 = launch-аас өмнө дуусгах UX/operations/quality ажил.
 P3 = бага нөлөөтэй засвар, баримтжуулалтын зөрүү.
 
 **Нотлогдсон P0 incident байхгүй. Энэ нь P0 эрсдэл байхгүй гэсэн баталгаа биш.**
-Доорх 13 item нь давхардахгүй ажлын багц: 8 P1, 3 P2, 2 P3.
+Доорх 13 item нь давхардахгүй ажлын багц: 7 P1, 4 P2, 2 P3.
 
 ## Release stabilization backlog — хэрэгжүүлэх дарааллаар
 
