@@ -5,11 +5,12 @@ import {schemaDifferences,withRoutineEvidence} from '../scripts/compare-schema-e
 import {sqlTokens} from '../scripts/sql-tokens.mjs';
 test('routine body evidence must match the original scope and capture digest',()=>{
  const base={'function:rpc':{definition_md5:'original',security_definer:true}};
- const body={'function:rpc':{definition_md5:'original',body:'begin return 1;end;'}};
+ const body={'function:rpc':{definition_md5:'original',security_definer:true,body:'begin return 1;end;'}};
  assert.equal(withRoutineEvidence(base,body)['function:rpc'].security_definer,true);
  assert.throws(()=>withRoutineEvidence(base,{}),/scope differs/);
  assert.throws(()=>withRoutineEvidence(base,{'function:other':body['function:rpc']}),/scope differs/);
  assert.throws(()=>withRoutineEvidence(base,{'function:rpc':{...body['function:rpc'],definition_md5:'changed'}}),/digest changed/);
+ assert.throws(()=>withRoutineEvidence(base,{'function:rpc':{...body['function:rpc'],security_definer:false}}),/attributes changed/);
  assert.equal(base['function:rpc'].body,undefined);
 });
 test('SQL tokens ignore comments but preserve quoted and dollar-quoted literal content',()=>{

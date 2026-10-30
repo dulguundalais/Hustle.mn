@@ -13,6 +13,7 @@ export function withRoutineEvidence(base,routines){
  const merged={...base};
  for(const key of keys){
   if(routines[key].definition_md5!==base[key].definition_md5)throw new Error('Routine digest changed since original capture: '+key);
+  if(Object.keys(base[key]).some(attribute=>!isDeepStrictEqual(base[key][attribute],routines[key][attribute])))throw new Error('Routine attributes changed since original capture: '+key);
   merged[key]={...base[key],...routines[key]};
  }
  return merged;

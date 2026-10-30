@@ -14,7 +14,7 @@ The initial strict fingerprint check matched 126/127 entries and flagged create_
 
 Raw whitespace-normalized pg_get_functiondef MD5 fingerprints remain in captured evidence. Routine bodies are also captured and compared as conservative SQL token streams: comments and spacing are ignored outside literals; quoted identifiers, strings and dollar-quoted string contents retain their exact bytes. Arguments/defaults, return type, language, volatility, parallel/strict/leakproof/kind/cost/rows/support attributes, SECURITY DEFINER, search_path/config and anon/authenticated EXECUTE are compared separately. Only an otherwise identical routine may be reported as representation-only; there is no fingerprint-pair bypass.
 
-The original 127 metadata values remain unchanged; the base snapshot was expanded only with six effective column-grant lists. Separate routine-body evidence is accepted only when its exact function scope and all raw capture fingerprints match that base, preventing a silent baseline refresh.
+The original 127 metadata values remain unchanged; the base snapshot was expanded only with six effective column-grant lists. Separate routine-body evidence is accepted only when its exact function scope, raw capture fingerprints and every original routine attribute match that base, preventing a silent baseline refresh.
 
 These fingerprints are not signatures, a formal proof of semantic equivalence, or a substitute for privileged-code review. Database ownership, all other application objects, Auth/Storage services and concurrency are outside this scoped comparison.
 
