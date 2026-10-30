@@ -8,9 +8,6 @@ jobs:
   isolated-supabase:
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    env:
-      HUSTLE_LOCAL_STATUS: ${{ runner.temp }}/hustle-local-status.json
-      HUSTLE_LOCAL_FIXTURES: ${{ runner.temp }}/hustle-local-fixtures.json
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,6 +18,10 @@ jobs:
       - uses: supabase/setup-cli@v1
         with:
           version: 2.122.0
+      - name: Set private runner paths
+        run: |
+          echo "HUSTLE_LOCAL_STATUS=$RUNNER_TEMP/hustle-local-status.json" >> "$GITHUB_ENV"
+          echo "HUSTLE_LOCAL_FIXTURES=$RUNNER_TEMP/hustle-local-fixtures.json" >> "$GITHUB_ENV"
       - name: Install local test clients
         run: |
           sudo apt-get update -qq && sudo apt-get install -y postgresql-client
