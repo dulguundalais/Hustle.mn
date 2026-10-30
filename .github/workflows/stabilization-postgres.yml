@@ -40,6 +40,8 @@ jobs:
             echo "Applying $migration"
             psql -X -v ON_ERROR_STOP=1 -f "$migration"
           done
+      - name: Reproduce and harden legacy grants in disposable database
+        run: psql -X -v ON_ERROR_STOP=1 -f tests/sql/stabilization-legacy-grants.sql
       - name: Effective column privileges
         run: psql -X -v ON_ERROR_STOP=1 -f tests/sql/stabilization-column-grants.sql
       - name: Chat safety actors

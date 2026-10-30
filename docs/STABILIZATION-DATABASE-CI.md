@@ -21,3 +21,11 @@ Fresh replay tests repository bootstrap compatibility; it does not reconcile ori
 - Changes remain independent of V53 PR #70 and preserve V52 UI.
 - Production and original Supabase remain unchanged.
 - Hosted isolated preview/backend, cross-account HTTP tests and marketplace-wide grant hardening remain the next increments.
+
+## Tested grant-hardening candidate
+
+supabase/proposals/revoke-legacy-table-privileges.sql removes only TRUNCATE, REFERENCES and TRIGGER privileges across public tables and the current migration owner's future-table defaults. It preserves all CRUD/column grants and RLS.
+
+CI first injects the observed legacy privileges, applies the exact candidate twice, verifies effective denial (without issuing TRUNCATE), then reruns the column privilege and actor suites. This checks both removal and preservation of existing flows.
+
+The SQL is deliberately outside migrations until history reconciliation and CLI migration generation. It has not been applied to original Supabase. Default privileges belonging to other object creators, unexpected DML rights and Partner code visibility need separate review.
