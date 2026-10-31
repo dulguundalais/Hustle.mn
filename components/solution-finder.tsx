@@ -21,6 +21,7 @@ export default function SolutionFinder({compact=false,embedded=false,en:language
  // Each search (typed, example chip or arriving with ?q=) asks for the results to be revealed.
  const [reveal,setReveal]=useState(0);
  const [tooShort,setTooShort]=useState(false);
+ const [arrival,setArrival]=useState(false);
  const resultsTitle=useRef<HTMLHeadingElement>(null);
  const needField=useRef<HTMLTextAreaElement>(null);
  const t=(mn:string,english:string)=>en?english:mn;
@@ -33,7 +34,7 @@ export default function SolutionFinder({compact=false,embedded=false,en:language
   setTimeline((params.get('timeline')||'').slice(0,80));
   if(params.get('audience')==='business'||params.get('audience')==='personal')setAudience(params.get('audience') as Audience);
   const need=params.get('q')||'';
-  if(need.trim()){setQuery(need.slice(0,1200));setSubmitted(need.slice(0,1200));setReveal(r=>r+1)}
+  if(need.trim()){setQuery(need.slice(0,1200));setSubmitted(need.slice(0,1200));setArrival(true)}
   void marketplaceClient().then(db=>db.rpc('marketplace_catalog')).then(res=>{
    if(!active)return;
    if(res.error)throw res.error;
@@ -50,6 +51,9 @@ export default function SolutionFinder({compact=false,embedded=false,en:language
  const run=(need:string)=>{setSubmitted(need);setCopied(false);setTooShort(false);remember(need);setReveal(r=>r+1)};
  const submit=(e:FormEvent<HTMLFormElement>)=>{e.preventDefault();const need=query.trim().slice(0,1200);if(need.length<5){setTooShort(true);needField.current?.focus();return}run(need)};
  const ask=(example:string)=>{setQuery(example);run(example)};
+ // Arriving with ?q= (e.g. from the homepage search): reveal once the matches have
+ // loaded, so the page no longer shifts underneath the scroll.
+ useEffect(()=>{if(arrival&&catalogState!=='loading'){setArrival(false);setReveal(r=>r+1)}},[arrival,catalogState]);
  // Results render below the form; bring them into view and move focus to their heading.
  useEffect(()=>{
   if(!reveal)return;
