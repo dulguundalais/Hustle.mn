@@ -22,6 +22,22 @@ async function openConversation(page){
  await expect(page.locator('.chat-thread-head')).toContainText('QA Seller');
 }
 test.beforeEach(async({page})=>{await mockMessenger(page)});
+test('refresh after successful startup preserves the open conversation',async({page})=>{
+ await signIn(page);
+ await openConversation(page);
+ const entered=deferred(),release=deferred();
+ await page.route('https://mock-messenger.invalid/rest/v1/business_rules**',async route=>{
+  entered.resolve();await release.promise;await route.fallback();
+ });
+ try{
+  await page.locator('.v49-refresh').click();
+  await entered.promise;
+  await expect(page.locator('.chat-thread-head')).toContainText('QA Seller');
+  await expect(page.locator('.workspace-loading')).toHaveCount(0);
+ }finally{release.resolve()}
+ await expect(page.locator('.v49-refresh')).toBeEnabled();
+ await expect(page.locator('.chat-thread-head')).toContainText('QA Seller');
+});
 for(const width of [390,768,1440]){
  test('startup waits for data at '+width,async({page})=>{
   await page.setViewportSize({width,height:900});
@@ -60,17 +76,38 @@ test('startup also waits for the post-login route decision',async({page})=>{
  }finally{release.resolve()}
  await openConversation(page);
 });
-test('failed startup releases the loading state and can recover',async({page})=>{
+for(const recovery of ['refresh','focus']){
+test('failed startup releases the loading state and can recover via '+recovery,async({page})=>{
  let failing=true;
+ const entered=deferred(),release=deferred();
+ const routeEntered=deferred(),routeRelease=deferred();
+ await page.route('https://mock-messenger.invalid/rest/v1/profiles**',async route=>{
+  if(new URL(route.request().url()).searchParams.get('select')!=='is_seller'){
+   await route.fallback();return;
+  }
+  routeEntered.resolve();await routeRelease.promise;
+  await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({is_seller:false})});
+ });
  await page.route('https://mock-messenger.invalid/rest/v1/business_rules**',async route=>{
-  if(!failing){await route.fallback();return;}
+  if(!failing){entered.resolve();await release.promise;await route.fallback();return;}
   await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({code:'XX000',message:'Synthetic startup failure'})});
  });
  await signIn(page);
  await expect(page.locator('.workspace-message.error')).toBeVisible();
  await expect(page.locator('.workspace-loading')).toHaveCount(0);
- failing=false;
- await page.locator('.v49-refresh').click();
+ try{
+  failing=false;
+  if(recovery==='refresh')await page.locator('.v49-refresh').click();
+  else await page.evaluate(()=>window.dispatchEvent(new Event('focus')));
+  await entered.promise;
+  await expect(page.locator('.workspace-loading')).toBeVisible();
+  await expect(page.locator('.workspace-main')).toHaveCount(0);
+  release.resolve();
+  await routeEntered.promise;
+  await expect(page.locator('.workspace-loading')).toBeVisible();
+  await expect(page.locator('.workspace-main')).toHaveCount(0);
+ }finally{release.resolve();routeRelease.resolve()}
  await expect(page.locator('.workspace-message.error')).toHaveCount(0);
  await openConversation(page);
 });
+}

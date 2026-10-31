@@ -120,8 +120,15 @@ useEffect(()=>{const mode=new URLSearchParams(location.search).get('mode');
  // V52: keep the visitor's intent across sign-up and the e-mail confirmation round trip.
  if(login){const p=new URLSearchParams(location.search);rememberReturnIntent(intentFromLoginParams(p));if(p.get('confirmed')==='1'||/type=signup/.test(location.hash))setNotice(en?'Your e-mail is confirmed. Welcome to Hustle!':'Имэйл баталгаажлаа. Hustle-д тавтай морил!')}
  if(mode==='seller'){setEntryMode('seller');if(!login)setRegister(false);}
- try{setEn(localStorage.getItem('hustle-language')==='en');setDark(localStorage.getItem('hustle-theme')==='dark')}catch{};load().then(()=>login?routeSignedIn():undefined).catch(fail).finally(()=>setLoading(false));const refresh=()=>{load().catch(fail)};window.addEventListener('focus',refresh);return()=>window.removeEventListener('focus',refresh);},[]);
-async function perform(fn:()=>Promise<void>,message:string){if(busy)return;setBusy(true);setError('');setNotice('');try{await fn();await load();setNotice(message)}catch(e){fail(e)}finally{setBusy(false)}}
+ try{setEn(localStorage.getItem('hustle-language')==='en');setDark(localStorage.getItem('hustle-theme')==='dark')}catch{};load().then(()=>login?routeSignedIn():undefined).catch(fail).finally(()=>setLoading(false));const refresh=()=>{reloadWorkspace().catch(fail)};window.addEventListener('focus',refresh);return()=>window.removeEventListener('focus',refresh);},[]);
+async function reloadWorkspace(){
+ if(entryApplied.current){await load();return}
+ // A failed first load still has a pending initial route. Finish recovery before
+ // exposing navigation, just as we do after signing in.
+ setLoading(true);setError('');
+ try{await load();await routeSignedIn()}finally{setLoading(false)}
+}
+async function perform(fn:()=>Promise<void>,message:string){if(busy)return;setBusy(true);setError('');setNotice('');try{await fn();await reloadWorkspace();setNotice(message)}catch(e){fail(e)}finally{setBusy(false)}}
 useEffect(()=>{if(!focusOrder||(tab!=='orders'&&tab!=='seller-orders'))return;const id=window.setTimeout(()=>document.getElementById('order-'+focusOrder)?.scrollIntoView({behavior:'smooth',block:'start'}),250);return()=>window.clearTimeout(id)},[focusOrder,tab,orders.length]);
 // V52: keep the address in step with the open tab, chat and order so refresh and shared links return here.
 useEffect(()=>{
