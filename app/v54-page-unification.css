@@ -68,3 +68,11 @@
 .hustle-v5:not(.night) .hustle-auth-scene .hustle-auth-submit{background:#0a1430}
 .hustle-v5:not(.night) .hustle-auth-scene .hustle-auth-submit:hover{background:#1d3a78}
 .hustle-v5:not(.night) .hustle-auth-scene .hustle-auth-back:hover{color:var(--auth-text)}
+.hustle-v5:not(.night) .hustle-auth-scene :is(.hustle-auth-form>label,.hustle-auth-label-row label){color:var(--auth-text)}
+.hustle-v5:not(.night) .hustle-auth-scene .hustle-buyer-context legend{color:var(--auth-text)}
+.hustle-v5:not(.night) .hustle-auth-scene .hustle-auth-feedback{background:#f1f4ff;border-color:#cdd6e8;color:var(--auth-text)}
+.hustle-v5:not(.night) .hustle-auth-scene .hustle-auth-feedback.is-success{background:#e6f6ef;border-color:#a7dfc6;color:#0b4d3a}
+.hustle-v5:not(.night) .hustle-auth-scene .hustle-auth-feedback.is-error{background:#fdecea;border-color:#f3b8b2;color:#7a1f16}
+.hustle-v5:not(.night) .hustle-auth-scene .hustle-choice-icon{background:#f1f4ff}
+.hustle-v5:not(.night) .hustle-auth-scene :is(.hustle-auth-back,.hustle-auth-footer a){color:var(--auth-muted)}
+.hustle-v5:not(.night) .hustle-auth-scene .hustle-auth-input input::placeholder{color:#8a94ad}
