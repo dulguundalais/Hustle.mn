@@ -88,7 +88,10 @@ test('real signup, unconfirmed denial, resend, confirmation and member-only admi
 });
 
 test('real recovery email changes password, logs out, rejects replay and does not enumerate accounts',async({page,browser})=>{
- const email=fixture.users.outsider.email,newPassword='HustleChangedLocal456!';
+ const email='hustle-auth-recovery@example.test',newPassword='HustleChangedLocal456!',setup=client();
+ ok(await setup.auth.signUp({email,password:fixture.password,options:{emailRedirectTo:localAppURL+'/login/'}}));
+ const confirmation=await emailLink(email,'signup');
+ await verifyLink(confirmation.link,'/login/');
  await page.goto('/login/?reset=1');
  await page.locator('#hustle-recovery-email').fill(email);
  await page.locator('.hustle-auth-submit').click();
@@ -108,8 +111,6 @@ test('real recovery email changes password, logs out, rejects replay and does no
  const db=client();
  expect((await db.auth.signInWithPassword({email,password:fixture.password})).error?.code).toBe('invalid_credentials');
  ok(await db.auth.signInWithPassword({email,password:newPassword}));
- // Restore the existing marketplace fixture through the user's own API.
- ok(await db.auth.updateUser({password:fixture.password}));
  await db.auth.signOut();
  const replay=await verifyLink(message.link,'/auth/reset/',false);
  const clean=await browser.newContext(),replayPage=await clean.newPage();
@@ -130,6 +131,28 @@ test('a signed-in member cannot turn a plain query parameter into a recovery lin
  await page.goto('/auth/reset/?type=recovery');
  await expect(page.locator('.hustle-auth-feedback')).toContainText('missing, expired');
  await expect(page.locator('#reset-pass')).toHaveCount(0);
+});
+
+test('logout revokes refresh credentials and an expired saved session returns to sign-in',async({page})=>{
+ await page.goto('/buyer/');await form(page,fixture.users.buyer.email,fixture.password);
+ await expect(page.locator('.workspace-main')).toBeVisible();
+ const db=await signed('buyer'),session=ok(await db.auth.getSession()).session;
+ ok(await db.auth.signOut());
+ expect((await db.auth.refreshSession({refresh_token:session.refresh_token})).error).toBeTruthy();
+ // Simulate expiry of the browser's saved session after global logout. Leave
+ // its authentic access/refresh tokens untouched; real GoTrue rejects refresh.
+ const changed=await page.evaluate(()=>{
+  for(const storageKey of Object.keys(localStorage)){
+   if(!/^sb-.+-auth-token$/.test(storageKey))continue;
+   const saved=JSON.parse(localStorage.getItem(storageKey));
+   if(saved?.access_token&&saved?.refresh_token){saved.expires_at=1;localStorage.setItem(storageKey,JSON.stringify(saved));return true;}
+  }
+  return false;
+ });
+ expect(changed).toBe(true);
+ await page.reload();
+ await expect(page.locator('#hustle-auth-email')).toBeVisible();
+ await expect(page.locator('.workspace-main')).toHaveCount(0);
 });
 
 test('expired confirmation/recovery links fail and confirmation never re-enables a disabled account',async()=>{
