@@ -68,7 +68,8 @@ export default function SolutionFinder({compact=false,embedded=false,en:language
   const frame=requestAnimationFrame(()=>{
    const heading=resultsTitle.current;if(!heading)return;
    const still=instant||window.matchMedia('(prefers-reduced-motion: reduce)').matches;setInstant(false);
-   heading.closest('.finder-results')?.scrollIntoView({behavior:still?'auto':'smooth',block:'start'});
+   // 'auto' would inherit the site's CSS smooth scrolling, which page-load layout cancels.
+   heading.closest('.finder-results')?.scrollIntoView({behavior:still?'instant':'smooth',block:'start'});
    heading.focus({preventScroll:true});
   });
   return()=>cancelAnimationFrame(frame);
