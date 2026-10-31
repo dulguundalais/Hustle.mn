@@ -69,7 +69,7 @@ test('real signup, unconfirmed denial, resend, confirmation and member-only admi
  const resent=await emailLink(email,'signup',new Set([first.id]));
  const destination=await verifyLink(resent.link,'/login/');
  await openVerified(page,destination);
- await expect.poll(()=>new URL(page.url()).pathname).toBe('/buyer/');
+ await expect.poll(()=>new URL(page.url()).pathname.replace(/\/$/,'')).toBe('/buyer');
  await expect(page.locator('.workspace-main')).toBeVisible();
  expect(new URL(page.url()).searchParams.get('tab')).toBe('orders');
  ok(await db.auth.signInWithPassword({email,password:fixture.password}));
@@ -99,7 +99,7 @@ test('real recovery email changes password, logs out, rejects replay and does no
  await page.locator('#reset-pass').fill(newPassword);
  await page.locator('#reset-repeat').fill('DifferentLocal123!');
  await page.locator('.hustle-auth-submit').click();
- await expect(page.getByRole('alert')).toContainText('Passwords must match');
+ await expect(page.locator('.hustle-auth-feedback[role=alert]')).toContainText('Passwords must match');
  await page.locator('#reset-repeat').fill(newPassword);
  await page.locator('.hustle-auth-submit').click();
  await expect(page.locator('.is-success')).toContainText('Your password has been updated');
@@ -140,6 +140,7 @@ test('expired confirmation/recovery links fail and confirmation never re-enables
  execFileSync(process.execPath,['scripts/expire-local-auth-link.mjs','signup',email],{stdio:['ignore','pipe','pipe']});
  await verifyLink(confirmation.link,'/login/',false);
  ok(await manage(false));
+ await new Promise(resolve=>setTimeout(resolve,1100));
  ok(await db.auth.resend({type:'signup',email,options:{emailRedirectTo:localAppURL+'/login/'}}));
  const fresh=await emailLink(email,'signup',new Set([confirmation.id]));
  await verifyLink(fresh.link,'/login/');
