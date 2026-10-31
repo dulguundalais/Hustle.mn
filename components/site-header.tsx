@@ -11,6 +11,7 @@ import {signInWithReturn} from '../lib/marketplace/ux-flows';
 import '../app/marketplace.css';
 import '../app/account-menu.css';
 import '../app/site-header.css';
+import '../app/v53-linkup-minimal.css';
 
 export type SessionState='checking'|'signed-in'|'guest';
 export type SiteSection='services'|'categories'|'solutions'|null;

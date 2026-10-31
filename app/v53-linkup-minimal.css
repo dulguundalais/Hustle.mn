@@ -1,0 +1,83 @@
+/* ==========================================================================
+   LINKUP V53 — minimal, modern public UI.
+   Palette from the owner's references: clean white, baby blue fading into a
+   deep steel/navy blue, navy text. No cyan glow, no grain, lighter type.
+   Only colour tokens and a few surfaces are redefined; layout, components and
+   behaviour stay as they are. `html` raises specificity above the V51 layer so
+   import order does not matter.
+   ========================================================================== */
+
+/* 1. Primitive ramps — light */
+html .hustle-v5:not(.workspace){
+  --hx-ink-950:#0f1a2e;--hx-ink-900:#16233b;--hx-ink-850:#1b2a45;--hx-ink-800:#1e355f;--hx-ink-700:#2c4a7e;
+  --hx-royal-800:#1e355f;--hx-royal-700:#2c4a7e;--hx-royal-600:#3d64a8;--hx-royal-500:#5b80c0;--hx-royal-300:#a6bfe6;--hx-royal-100:#dbe6f5;--hx-royal-50:#eef3fa;
+  --hx-cyan-500:#7fa0d6;--hx-cyan-400:#a6bfe6;--hx-cyan-300:#c6d6ef;
+  --hx-mist-0:#ffffff;--hx-mist-25:#f8fafd;--hx-mist-50:#f1f5fa;--hx-mist-100:#e3eaf3;--hx-mist-200:#ccd7e6;--hx-mist-300:#a9b8cf;--hx-mist-500:#6c7a92;--hx-mist-600:#52627d;--hx-mist-900:#16233b;
+  --hx-radius-card:18px;--hx-radius-ctl:12px;
+  --hx-focus:0 0 0 3px rgb(91 128 192/.45);
+  /* The reference gradient: baby blue into deep navy. Used by every "stage". */
+  --hx-stage:linear-gradient(170deg,#5b80c0 0%,#3d64a8 38%,#22385f 100%);
+  --lk-hero:linear-gradient(180deg,#f6f8fc 0%,#e3ebf6 30%,#b3c8ea 58%,#6f93cf 82%,#2f4e86 100%);
+  --lk-hero-title:#16233b;--lk-hero-sub:#3f5170;
+}
+/* 2. Semantic tokens — light */
+html .hustle-v5:not(.workspace){
+  --paper:#ffffff;--surface:#ffffff;--text:var(--hx-mist-900);--sub:var(--hx-mist-600);
+  --border:var(--hx-mist-100);--purple:var(--hx-royal-600);--soft:var(--hx-royal-50);
+  --v45-accent:var(--hx-royal-500);--v45-ink:var(--hx-mist-900);
+  --hx-tint:linear-gradient(180deg,#f4f7fb,#ffffff);
+  --hx-card:#ffffff;--hx-card-border:var(--hx-mist-100);--hx-card-hover:var(--hx-royal-300);
+  --hx-card-shadow:0 1px 2px rgb(22 35 59/.04);
+  --hx-card-shadow-hover:0 18px 40px rgb(61 100 168/.12);
+  --hx-icon-bg:var(--hx-royal-50);--hx-icon-fg:var(--hx-royal-600);
+  --hx-eyebrow:var(--hx-royal-600);
+  --hx-accent-text:linear-gradient(100deg,var(--hx-royal-600),var(--hx-royal-500));
+  --hx-btn-bg:var(--hx-mist-900);--hx-btn-fg:#fff;--hx-btn-hover:var(--hx-royal-700);
+  --hx-btn2-border:var(--hx-mist-200);--hx-btn2-hover:var(--hx-royal-50);
+}
+/* 3. Dark: the same blues, deeper */
+html .hustle-v5.night:not(.workspace){
+  --paper:#0d1524;--surface:#141f33;--text:#eef3fb;--sub:#a9b8cf;
+  --border:#22324d;--purple:var(--hx-royal-300);--soft:#18243b;
+  --v45-accent:var(--hx-royal-300);--v45-ink:#eef3fb;
+  --hx-tint:linear-gradient(180deg,#111b2d,#0d1524);
+  --hx-card:#141f33;--hx-card-border:#22324d;--hx-card-hover:#3d64a8;
+  --hx-card-shadow:0 1px 2px rgb(0 0 0/.25);
+  --hx-card-shadow-hover:0 18px 40px rgb(0 0 0/.35);
+  --hx-icon-bg:rgb(91 128 192/.18);--hx-icon-fg:var(--hx-royal-300);
+  --hx-eyebrow:var(--hx-royal-300);
+  --hx-accent-text:linear-gradient(100deg,var(--hx-royal-300),#dbe6f5);
+  --hx-btn-bg:#eef3fb;--hx-btn-fg:#16233b;--hx-btn-hover:#ffffff;
+  --hx-btn2-border:#2c3e5e;--hx-btn2-hover:#18243b;
+  --hx-stage:linear-gradient(170deg,#2c4a7e 0%,#1e355f 45%,#0f1a2e 100%);
+  --lk-hero:linear-gradient(180deg,#0f1a2e 0%,#16233b 35%,#2c4a7e 75%,#5b80c0 100%);
+  --lk-hero-title:#ffffff;--lk-hero-sub:#c6d6ef;
+}
+
+/* 4. Type: calmer, lighter headings */
+html .hustle-v5:not(.workspace) :is(h2,h3){font-family:'Geologica',Manrope,Arial,sans-serif}
+html .hustle-v5:not(.workspace) section h2{font-weight:500;letter-spacing:-.035em}
+html .hustle-v5:not(.workspace) section h3{font-weight:500;letter-spacing:-.015em}
+html .hustle-v5:not(.workspace) :is(.hx-eyebrow,.signature-section-eyebrow,.v39-section-eyebrow,.business-overline){display:none}
+
+/* 5. Hero: the white → baby blue → navy field from the references */
+html .hustle-v5 .signature-hero.hx-hero .hx-hero-frame{background:var(--lk-hero);box-shadow:none}
+html .hustle-v5 .signature-hero.hx-hero :is(.hx-hero-light,.hx-hero-grain){display:none}
+html .hustle-v5 .signature-hero.hx-hero h1.hx-hero-title{font-weight:500;letter-spacing:-.05em;color:var(--lk-hero-title)}
+html .hustle-v5 .signature-hero.hx-hero h1.hx-hero-title span{-webkit-text-fill-color:var(--lk-hero-title);color:var(--lk-hero-title)}
+html .hustle-v5 .signature-hero.hx-hero .hx-hero-sub{margin-top:22px;color:var(--lk-hero-sub)}
+html .hustle-v5 .signature-hero.hx-hero .signature-search.hx-searchbar{background:#fff;box-shadow:0 18px 50px rgb(30 53 95/.18),0 0 0 1px rgb(22 35 59/.06)}
+html .hustle-v5 .signature-hero.hx-hero .signature-search.hx-searchbar:focus-within{box-shadow:0 18px 50px rgb(30 53 95/.18),0 0 0 4px rgb(91 128 192/.35)}
+html .hustle-v5 .signature-hero.hx-hero .hx-searchbar-go{background:#16233b}
+html .hustle-v5 .signature-hero.hx-hero .hx-searchbar-go:hover{background:#2c4a7e}
+html .hustle-v5 .signature-hero.hx-hero .hx-searchbar-go:focus-visible{outline-color:#5b80c0}
+html .hustle-v5 .signature-hero.hx-hero .hx-suggest .signature-search-all{color:#3d64a8!important}
+html .hustle-v5 .signature-hero.hx-hero .guided-entry-intro h2{color:#ffffff;font-weight:500}
+html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice,.guided-entry-choice.guided-entry-business){background:rgb(255 255 255/.16);box-shadow:inset 0 0 0 1px rgb(255 255 255/.32)}
+html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice:hover,.guided-entry-choice:focus-visible){background:rgb(255 255 255/.26);box-shadow:inset 0 0 0 1px rgb(255 255 255/.5)}
+
+/* 6. Accents: no cyan gradients, one quiet blue */
+html .hustle-v5:not(.workspace) :is(.business-solution-card::after,.signature-step-line){background:var(--hx-royal-300)}
+html .hustle-v5:not(.workspace) .cat-progress i{background:var(--hx-royal-500)}
+html .hustle-v5:not(.workspace) .signature-seller-text em{background:none;-webkit-text-fill-color:#dbe6f5;color:#dbe6f5}
+html .hustle-v5:not(.workspace) .signature-seller-art{display:none}

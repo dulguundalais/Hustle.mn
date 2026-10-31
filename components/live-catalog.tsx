@@ -54,9 +54,8 @@ export default function LiveCatalog({en,signedIn=false,query='',category='all',s
  const toggleCompare=(id:string)=>setCompared(current=>compareSelection(current,id));
  return <section className={'shell live-catalog v39-catalog '+(homePreview?'v39-catalog-home':'v39-catalog-explore')} aria-labelledby={homePreview?'real-listings-title':undefined} aria-label={homePreview?undefined:t('Нийтлэгдсэн үйлчилгээ','Published services')}>
   {homePreview&&<div className="v39-section-head">
-   <div><span className="v39-section-eyebrow"><span/>{homePreview?(en?'Services':'Үйлчилгээ'):(en?'Explore':'Бүх үйлчилгээ')}</span>
+   <div>
     <h2 id="real-listings-title">{homePreview?t('Төслөө хэрэгжүүлэх хүнээ олоорой.','Meet your next collaborator.'):t('Өөрт тохирох мэргэжилтнээ олоорой.','Find your kind of talent.')}</h2>
-    <p>{homePreview?t('Үйлчилгээ, эхлэх үнийг нэг дороос.','Real services. Clear starting prices.'):t('Үйлчилгээ, үнэ, хугацааг харьцуулж, тохирох мэргэжилтэнтэй холбогдоорой.','Discover services, compare starting prices and connect with professionals.')}</p>
    </div>
    <Link className="v39-head-link" href="/explore/">{t('Бүгдийг үзэх','View all')} <ArrowUpRight size={16}/></Link>
   </div>}

@@ -42,3 +42,12 @@ test('favicon and share card use the Linkup brand',()=>{
  assert.match(read('lib/marketplace/public-portfolio-render.ts'),/\/og\/linkup\.png/);
  assert.match(read('app/layout.tsx'),/title: 'Linkup — /);
 });
+
+test('V53 minimal theme: baby blue palette, no cyan glow, eyebrows hidden, loaded on every public page',()=>{
+ const css=read('app/v53-linkup-minimal.css');
+ assert.match(read('components/site-header.tsx'),/import '\.\.\/app\/v53-linkup-minimal\.css';/);
+ assert.match(css,/--hx-stage:linear-gradient\(170deg,#5b80c0 0%,#3d64a8 38%,#22385f 100%\)/);
+ assert.match(css,/--hx-cyan-400:#a6bfe6/);
+ assert.match(css,/:is\(\.hx-eyebrow,\.signature-section-eyebrow,\.v39-section-eyebrow,\.business-overline\)\{display:none\}/);
+ assert.doesNotMatch(read('components/category-art.tsx'),/\+48%/);
+});

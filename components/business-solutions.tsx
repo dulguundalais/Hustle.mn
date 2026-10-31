@@ -12,7 +12,7 @@ export default function BusinessSolutions({en}:{en:boolean}){
  ];
  return <section className="business-solutions-section" aria-labelledby="business-solutions-heading">
   <div className="shell business-solutions-inner">
-   <div className="business-intro"><div><span className="business-overline">{t('Бизнесийн шийдэл','Business solutions')}</span><h2 id="business-solutions-heading">{t('Бизнесээ','Make business')}<br/><em>{t('урагшлуул.','move forward.')}</em></h2><p>{t('Зорилгодоо хүрэхэд туслах мэргэжилтнээ олоорой.','Find expertise for your next move.')}</p></div>
+   <div className="business-intro"><div><h2 id="business-solutions-heading">{t('Бизнесээ','Make business')}<br/><em>{t('урагшлуул.','move forward.')}</em></h2></div>
    <Link className="business-solution-main-cta" href="/solutions/?audience=business">{t('Шийдлээ олох','Find a solution')}<ArrowUpRight size={17}/></Link></div>
    <div className="business-solution-grid">{cards.map(({id,mn,eng,descMn,descEn,need,englishNeed,Icon},i)=><Link className="business-solution-card" href={'/solutions/?audience=business&q='+encodeURIComponent(en?englishNeed:need)} key={id}>
     <div className="business-card-top"><span className="business-solution-icon"><Icon size={25} strokeWidth={1.7}/></span><small>0{i+1}</small></div>

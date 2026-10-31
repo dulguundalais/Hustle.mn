@@ -35,9 +35,7 @@ export default function CategoryShowcase({en}:{en:boolean}){
  return <section className="cat-showcase shell" aria-labelledby="cat-showcase-title">
   <div className="cat-showcase-head">
    <div>
-    <span className="hx-eyebrow">{t('Ангилал','Categories')}</span>
     <h2 id="cat-showcase-title">{t('Мэргэжлийн үйлчилгээ','Professional services')}</h2>
-    <p>{t('Бизнес болон хувь хүнд зориулсан туршлагатай мэргэжилтнүүд.','Experienced professionals for businesses and individuals.')}</p>
    </div>
    <div className="cat-showcase-tools">
     <Link className="cat-showcase-all" href="/categories/">{t('Бүх ангиллыг үзэх','Explore all categories')}<ArrowUpRight size={17} aria-hidden="true"/></Link>
