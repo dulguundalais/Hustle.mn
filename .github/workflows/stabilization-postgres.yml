@@ -1,7 +1,7 @@
 name: V52 isolated database verification
 on:
   pull_request:
-    branches: [main, codex/stabilize-db-ci-20261030, codex/stabilize-migration-history-20261030, codex/release-stabilization-integration-20261030]
+    branches: [main, codex/stabilize-db-ci-20261030, codex/stabilize-migration-history-20261030, codex/release-stabilization-integration-20261030, codex/fix-worker-preview-20261031]
   workflow_dispatch:
 permissions:
   contents: read
