@@ -1,106 +1,133 @@
 /* ==========================================================================
-   LINKUP V53 — minimal, modern public UI.
-   Palette from the owner's references: clean white, baby blue fading into a
-   deep steel/navy blue, navy text. No cyan glow, no grain, lighter type.
-   Only colour tokens and a few surfaces are redefined; layout, components and
-   behaviour stay as they are. `html` raises specificity above the V51 layer so
+   LINKUP V53 — public UI design system
+   Brief (owner): minimal, modern, professional; clean white with baby blue
+   fading into deep steel/navy, navy text, far less copy.
+
+   Palette            Type                       Shape
+   paper   #ffffff    Geologica, one family      stage panels 28px
+   mist    #f1f5fa    display 400–500, tight     cards 16px
+   baby    #c6d6ef    body 400                   controls 12px, pills 999
+   steel   #5b80c0
+   navy    #1e355f
+   ink     #16233b
+
+   Signature: the "sky" — a vertical white → baby blue → steel → navy fade.
+   It appears on full-width stages only (hero, how it works, freelancer band,
+   footer), so the page alternates calm white sections with blue stages.
+   Cards stay white with hairline borders; no decorative washes on them.
+
+   Only tokens and surface rules are redefined; markup, layout grid and
+   behaviour stay as they are. `html` raises specificity above V45–V51 so
    import order does not matter.
    ========================================================================== */
 
-/* 1. Primitive ramps — light */
+@font-face{font-family:'Geologica';src:url('/fonts/geologica.woff') format('woff');font-weight:300 800;font-style:normal;font-display:swap}
+
+/* 1. Primitives (light) */
 html .hustle-v5:not(.workspace){
+  --lk-paper:#ffffff;--lk-mist:#f1f5fa;--lk-baby:#c6d6ef;--lk-steel:#5b80c0;--lk-navy:#1e355f;--lk-ink:#16233b;
+  --lk-ink-2:#4b5b76;--lk-line:#e2e9f3;--lk-line-strong:#cfdaea;
+  --lk-sky:linear-gradient(180deg,#f7f9fd 0%,#dfe8f6 26%,#a9c1e8 52%,#5f86c7 78%,#22385f 100%);
+  --lk-stage:linear-gradient(175deg,#7a9bd2 0%,#5b80c0 22%,#3d64a8 52%,#1e355f 100%);
+  --lk-font:'Geologica',Manrope,'Segoe UI',Arial,sans-serif;
+  --lk-hero-title:#16233b;--lk-hero-sub:#4b5b76;--lk-hero-kicker:#3d64a8;
+
+  /* V51 primitives remapped so every existing rule follows the new palette */
   --hx-ink-950:#0f1a2e;--hx-ink-900:#16233b;--hx-ink-850:#1b2a45;--hx-ink-800:#1e355f;--hx-ink-700:#2c4a7e;
   --hx-royal-800:#1e355f;--hx-royal-700:#2c4a7e;--hx-royal-600:#3d64a8;--hx-royal-500:#5b80c0;--hx-royal-300:#a6bfe6;--hx-royal-100:#dbe6f5;--hx-royal-50:#eef3fa;
-  --hx-cyan-500:#7fa0d6;--hx-cyan-400:#a6bfe6;--hx-cyan-300:#c6d6ef;
-  --hx-mist-0:#ffffff;--hx-mist-25:#f8fafd;--hx-mist-50:#f1f5fa;--hx-mist-100:#e3eaf3;--hx-mist-200:#ccd7e6;--hx-mist-300:#a9b8cf;--hx-mist-500:#6c7a92;--hx-mist-600:#52627d;--hx-mist-900:#16233b;
-  --hx-radius-card:18px;--hx-radius-ctl:12px;
+  --hx-cyan-500:#7a9bd2;--hx-cyan-400:#a6bfe6;--hx-cyan-300:#c6d6ef;
+  --hx-mist-0:#ffffff;--hx-mist-25:#f8fafd;--hx-mist-50:#f1f5fa;--hx-mist-100:#e2e9f3;--hx-mist-200:#cfdaea;--hx-mist-300:#a9b8cf;--hx-mist-500:#6c7a92;--hx-mist-600:#4b5b76;--hx-mist-900:#16233b;
+  --hx-radius-card:16px;--hx-radius-ctl:12px;
   --hx-focus:0 0 0 3px rgb(91 128 192/.45);
-  /* The reference gradient: baby blue into deep navy. Used by every "stage". */
-  --hx-stage:linear-gradient(170deg,#5b80c0 0%,#3d64a8 38%,#22385f 100%);
-  --lk-hero:linear-gradient(180deg,#f6f8fc 0%,#e3ebf6 30%,#b3c8ea 58%,#6f93cf 82%,#2f4e86 100%);
-  --lk-hero-title:#16233b;--lk-hero-sub:#3f5170;
+  --hx-stage:var(--lk-stage);
 }
-/* 2. Semantic tokens — light */
+/* 2. Semantic tokens (light) */
 html .hustle-v5:not(.workspace){
-  --paper:#ffffff;--surface:#ffffff;--text:var(--hx-mist-900);--sub:var(--hx-mist-600);
-  --border:var(--hx-mist-100);--purple:var(--hx-royal-600);--soft:var(--hx-royal-50);
-  --v45-accent:var(--hx-royal-500);--v45-ink:var(--hx-mist-900);
-  --hx-tint:linear-gradient(180deg,#f4f7fb,#ffffff);
-  --hx-card:#ffffff;--hx-card-border:var(--hx-mist-100);--hx-card-hover:var(--hx-royal-300);
-  --hx-card-shadow:0 1px 2px rgb(22 35 59/.04);
-  --hx-card-shadow-hover:0 18px 40px rgb(61 100 168/.12);
-  --hx-icon-bg:var(--hx-royal-50);--hx-icon-fg:var(--hx-royal-600);
-  --hx-eyebrow:var(--hx-royal-600);
-  --hx-accent-text:linear-gradient(100deg,var(--hx-royal-600),var(--hx-royal-500));
-  --hx-btn-bg:var(--hx-mist-900);--hx-btn-fg:#fff;--hx-btn-hover:var(--hx-royal-700);
-  --hx-btn2-border:var(--hx-mist-200);--hx-btn2-hover:var(--hx-royal-50);
+  --paper:#ffffff;--surface:#ffffff;--text:#16233b;--sub:#4b5b76;
+  --border:#e2e9f3;--purple:#3d64a8;--soft:#f1f5fa;
+  --v45-accent:#5b80c0;--v45-ink:#16233b;
+  --hx-tint:#f1f5fa;
+  --hx-card:#ffffff;--hx-card-border:#e2e9f3;--hx-card-hover:#cfdaea;
+  --hx-card-shadow:none;
+  --hx-card-shadow-hover:0 12px 32px rgb(30 53 95/.08);
+  --hx-icon-bg:#f1f5fa;--hx-icon-fg:#3d64a8;
+  --hx-eyebrow:#3d64a8;
+  --hx-accent-text:linear-gradient(100deg,#3d64a8,#5b80c0);
+  --hx-btn-bg:#16233b;--hx-btn-fg:#fff;--hx-btn-hover:#1e355f;
+  --hx-btn2-border:#cfdaea;--hx-btn2-hover:#f1f5fa;
 }
-/* 3. Dark: the same blues, deeper */
+/* 3. Dark: the same sky, at night */
 html .hustle-v5.night:not(.workspace){
-  --paper:#0d1524;--surface:#141f33;--text:#eef3fb;--sub:#a9b8cf;
-  --border:#22324d;--purple:var(--hx-royal-300);--soft:#18243b;
-  --v45-accent:var(--hx-royal-300);--v45-ink:#eef3fb;
-  --hx-tint:linear-gradient(180deg,#111b2d,#0d1524);
-  --hx-card:#141f33;--hx-card-border:#22324d;--hx-card-hover:#3d64a8;
-  --hx-card-shadow:0 1px 2px rgb(0 0 0/.25);
-  --hx-card-shadow-hover:0 18px 40px rgb(0 0 0/.35);
-  --hx-icon-bg:rgb(91 128 192/.18);--hx-icon-fg:var(--hx-royal-300);
-  --hx-eyebrow:var(--hx-royal-300);
-  --hx-accent-text:linear-gradient(100deg,var(--hx-royal-300),#dbe6f5);
+  --lk-paper:#0d1524;--lk-mist:#131d30;--lk-ink:#eef3fb;--lk-ink-2:#a9b8cf;--lk-line:#22324d;--lk-line-strong:#2e4266;
+  --lk-sky:linear-gradient(180deg,#0d1524 0%,#16233b 30%,#2c4a7e 70%,#5b80c0 100%);
+  --lk-stage:linear-gradient(175deg,#2c4a7e 0%,#1e355f 45%,#0f1a2e 100%);
+  --lk-hero-title:#ffffff;--lk-hero-sub:#c6d6ef;--lk-hero-kicker:#a6bfe6;
+  --hx-stage:var(--lk-stage);
+  --paper:#0d1524;--surface:#131d30;--text:#eef3fb;--sub:#a9b8cf;
+  --border:#22324d;--purple:#a6bfe6;--soft:#131d30;
+  --v45-accent:#a6bfe6;--v45-ink:#eef3fb;
+  --hx-tint:#111a2b;
+  --hx-card:#131d30;--hx-card-border:#22324d;--hx-card-hover:#2e4266;
+  --hx-card-shadow:none;--hx-card-shadow-hover:0 12px 32px rgb(0 0 0/.35);
+  --hx-icon-bg:rgb(91 128 192/.16);--hx-icon-fg:#a6bfe6;
+  --hx-eyebrow:#a6bfe6;
+  --hx-accent-text:linear-gradient(100deg,#a6bfe6,#dbe6f5);
   --hx-btn-bg:#eef3fb;--hx-btn-fg:#16233b;--hx-btn-hover:#ffffff;
-  --hx-btn2-border:#2c3e5e;--hx-btn2-hover:#18243b;
-  --hx-stage:linear-gradient(170deg,#2c4a7e 0%,#1e355f 45%,#0f1a2e 100%);
-  --lk-hero:linear-gradient(180deg,#0f1a2e 0%,#16233b 35%,#2c4a7e 75%,#5b80c0 100%);
-  --lk-hero-title:#ffffff;--lk-hero-sub:#c6d6ef;
+  --hx-btn2-border:#2e4266;--hx-btn2-hover:#18243b;
 }
 
-/* 4. Type: calmer, lighter headings */
-html .hustle-v5:not(.workspace) :is(h2,h3){font-family:'Geologica',Manrope,Arial,sans-serif}
-html .hustle-v5:not(.workspace) section h2{font-weight:500;letter-spacing:-.035em}
-html .hustle-v5:not(.workspace) section h3{font-weight:500;letter-spacing:-.015em}
-html .hustle-v5:not(.workspace) :is(.hx-eyebrow,.signature-section-eyebrow,.v39-section-eyebrow,.business-overline){display:none}
+/* 4. Typography — one family, light display weights */
+html .hustle-v5:not(.workspace){font-family:var(--lk-font);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html .hustle-v5:not(.workspace) :is(h1,h2,h3,h4,button,input,select,textarea){font-family:var(--lk-font)}
+html .hustle-v5:not(.workspace) section :is(h2,h2 em){font-weight:450!important;letter-spacing:-.035em!important;line-height:1.08}
+html .hustle-v5:not(.workspace) section h3{font-weight:500!important;letter-spacing:-.015em}
+html .hustle-v5:not(.workspace) .hustle-premium-footer .footer-callout h2{font-weight:450!important;letter-spacing:-.035em}
+/* Section labels are dropped below the hero; the hero keeps its finder line (owner). */
+html .hustle-v5:not(.workspace) :is(.hx-eyebrow,.signature-section-eyebrow,.v39-section-eyebrow,.business-overline,.footer-eyebrow){display:none}
+html .hustle-v5:not(.workspace) :is(.v39-results-bar,.footer-columns h3,.footer-columns h4){text-transform:none;letter-spacing:0}
 
-/* 5. Hero: the white → baby blue → navy field from the references */
-html .hustle-v5 .signature-hero.hx-hero .hx-hero-frame{background:var(--lk-hero);box-shadow:none}
+/* 5. Hero — the sky, headline on its white top */
+html .hustle-v5 .signature-hero.hx-hero{background:var(--paper)}
+html .hustle-v5 .signature-hero.hx-hero .hx-hero-frame{background:var(--lk-sky);box-shadow:none;border-radius:28px}
 html .hustle-v5 .signature-hero.hx-hero :is(.hx-hero-light,.hx-hero-grain){display:none}
-html .hustle-v5 .signature-hero.hx-hero h1.hx-hero-title{font-weight:500;letter-spacing:-.05em;color:var(--lk-hero-title)}
+html .hustle-v5 .signature-hero.hx-hero .hx-hero-eyebrow{color:var(--lk-hero-sub);font-size:14px}
+html .hustle-v5 .signature-hero.hx-hero .hx-eyebrow-name{color:var(--lk-hero-kicker)}
+html .hustle-v5 .signature-hero.hx-hero .hx-eyebrow-rule{background:var(--lk-hero-kicker);opacity:.45}
+html .hustle-v5 .signature-hero.hx-hero h1.hx-hero-title{font-weight:400;letter-spacing:-.055em;line-height:.98;color:var(--lk-hero-title)}
 html .hustle-v5 .signature-hero.hx-hero h1.hx-hero-title span{-webkit-text-fill-color:var(--lk-hero-title);color:var(--lk-hero-title)}
-html .hustle-v5 .signature-hero.hx-hero .hx-hero-sub{margin-top:22px;color:var(--lk-hero-sub)}
-html .hustle-v5 .signature-hero.hx-hero .signature-search.hx-searchbar{background:#fff;box-shadow:0 18px 50px rgb(30 53 95/.18),0 0 0 1px rgb(22 35 59/.06)}
-html .hustle-v5 .signature-hero.hx-hero .signature-search.hx-searchbar:focus-within{box-shadow:0 18px 50px rgb(30 53 95/.18),0 0 0 4px rgb(91 128 192/.35)}
-html .hustle-v5 .signature-hero.hx-hero .hx-searchbar-go{background:#16233b}
-html .hustle-v5 .signature-hero.hx-hero .hx-searchbar-go:hover{background:#2c4a7e}
+html .hustle-v5 .signature-hero.hx-hero .hx-hero-sub{margin-top:22px;font-size:clamp(16px,.95rem + .3vw,19px);color:var(--lk-hero-sub)}
+html .hustle-v5 .signature-hero.hx-hero .signature-search.hx-searchbar{background:#fff;box-shadow:0 20px 50px rgb(30 53 95/.16),0 0 0 1px rgb(22 35 59/.06)}
+html .hustle-v5 .signature-hero.hx-hero .signature-search.hx-searchbar:focus-within{box-shadow:0 20px 50px rgb(30 53 95/.16),0 0 0 4px rgb(91 128 192/.35)}
+html .hustle-v5 .signature-hero.hx-hero .hx-searchbar-go{background:#16233b;font-weight:500}
+html .hustle-v5 .signature-hero.hx-hero .hx-searchbar-go:hover{background:#1e355f}
 html .hustle-v5 .signature-hero.hx-hero .hx-searchbar-go:focus-visible{outline-color:#5b80c0}
 html .hustle-v5 .signature-hero.hx-hero .hx-suggest .signature-search-all{color:#3d64a8!important}
-html .hustle-v5 .signature-hero.hx-hero .guided-entry-intro h2{color:#ffffff;font-weight:500}
-html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice,.guided-entry-choice.guided-entry-business){background:rgb(255 255 255/.16);box-shadow:inset 0 0 0 1px rgb(255 255 255/.32)}
-html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice:hover,.guided-entry-choice:focus-visible){background:rgb(255 255 255/.26);box-shadow:inset 0 0 0 1px rgb(255 255 255/.5)}
+html .hustle-v5 .signature-hero.hx-hero .guided-entry-intro h2{display:none}
+html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice,.guided-entry-choice.guided-entry-business){min-height:50px;border-radius:999px;background:rgb(255 255 255/.92);box-shadow:none;backdrop-filter:none}
+html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice,.guided-entry-choice.guided-entry-business) *{color:#16233b}
+html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice:hover,.guided-entry-choice:focus-visible){background:#fff;box-shadow:0 10px 26px rgb(15 26 46/.25)}
 
-/* 6. Accents: no cyan gradients, one quiet blue */
-html .hustle-v5:not(.workspace) :is(.business-solution-card::after,.signature-step-line){background:var(--hx-royal-300)}
-html .hustle-v5:not(.workspace) .cat-progress i{background:var(--hx-royal-500)}
-html .hustle-v5:not(.workspace) .signature-seller-text em{background:none;-webkit-text-fill-color:#dbe6f5;color:#dbe6f5}
-html .hustle-v5:not(.workspace) .signature-seller-art{display:none}
-
-/* 7. Review pass 1 (owner preview): quieter type and fewer extras on home */
-html .hustle-v5:not(.workspace) section :is(h2,h2 em){font-weight:500!important}
-html .hustle-v5:not(.workspace) section h3{font-weight:500!important}
-html .hustle-v5:not(.workspace) .hustle-premium-footer .footer-callout h2{font-weight:500!important;letter-spacing:-.035em}
-html .hustle-v5:not(.workspace) .signature-seller-text em{-webkit-text-fill-color:rgb(255 255 255/.78);color:rgb(255 255 255/.78)}
+/* 6. White sections: hairlines, no shadows, no decorative washes */
+html .hustle-v5:not(.workspace) .business-solutions-section{background:var(--paper);border:0}
+html .hustle-v5:not(.workspace) .business-solution-card{background:var(--hx-card);border:1px solid var(--hx-card-border);box-shadow:none;border-radius:16px}
+html .hustle-v5:not(.workspace) .business-solution-card::after{display:none}
+html .hustle-v5:not(.workspace) .business-solution-card:hover{border-color:var(--hx-card-hover);box-shadow:var(--hx-card-shadow-hover)}
+html .hustle-v5:not(.workspace) .business-card-top small{display:none} /* 01–04 are not a sequence */
+html .hustle-v5:not(.workspace) .cat-progress i{background:#5b80c0}
 html .hustle-v5:not(.workspace) .v39-catalog-home .v39-results-bar{display:none}
 html .hustle-v5:not(.workspace) .signature-partner-stats{display:none}
-html .hustle-v5 .signature-hero.hx-hero .guided-entry-intro h2{display:none}
-html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice,.guided-entry-choice.guided-entry-business){min-height:52px;border-radius:999px;background:rgb(255 255 255/.9);box-shadow:none;color:#16233b}
-html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice,.guided-entry-choice.guided-entry-business) *{color:#16233b}
-html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice:hover,.guided-entry-choice:focus-visible){background:#fff;box-shadow:0 10px 26px rgb(15 26 46/.22)}
+html .hustle-v5:not(.workspace) .signature-partner-inner{background:var(--soft);border:0;box-shadow:none;border-radius:28px}
 
-/* 8. Review pass 2: the faded blue must be visible across the page, not only in the hero */
-html .hustle-v5:not(.workspace):not(.night){
-  --hx-tint:linear-gradient(180deg,#ffffff 0%,#e9f0fa 55%,#d3e0f3 100%);
-  --lk-hero:linear-gradient(180deg,#f7f9fd 0%,#dfe8f6 26%,#a9c1e8 52%,#5f86c7 78%,#24406f 100%);
-}
-html .hustle-v5:not(.workspace):not(.night) .business-solutions-section{background:var(--hx-tint)}
-html .hustle-v5:not(.workspace):not(.night) .cat-showcase{background:linear-gradient(180deg,#d3e0f3 0%,#eef3fa 40%,#ffffff 100%);border-radius:28px}
-html .hustle-v5:not(.workspace):not(.night) .v39-catalog-home{background:linear-gradient(180deg,#ffffff 0%,#edf3fb 100%);border-radius:28px}
-html .hustle-v5:not(.workspace):not(.night) .signature-partner-inner{background:linear-gradient(135deg,#ffffff 0%,#e3ebf7 60%,#c3d4ee 100%);border-color:#dbe6f5}
-html .hustle-v5:not(.workspace):not(.night) .business-solution-card{background:linear-gradient(180deg,#ffffff 0%,#f3f7fc 100%)}
+/* 7. Blue stages: how it works, freelancer band, footer */
+html .hustle-v5:not(.workspace) .signature-process{background:var(--lk-stage)}
+html .hustle-v5:not(.workspace) .signature-step{background:rgb(255 255 255/.08);border:1px solid rgb(255 255 255/.18);box-shadow:none}
+html .hustle-v5:not(.workspace) .signature-step-line{background:rgb(255 255 255/.35)}
+html .hustle-v5:not(.workspace) .signature-step-icon{background:rgb(255 255 255/.14);color:#fff;box-shadow:none}
+html .hustle-v5:not(.workspace) .signature-seller-band{background:var(--lk-stage)!important;border-radius:28px}
+html .hustle-v5:not(.workspace) .signature-seller-text em{background:none;-webkit-text-fill-color:rgb(255 255 255/.72);color:rgb(255 255 255/.72)}
+html .hustle-v5:not(.workspace) .signature-seller-art{display:none}
+html .hustle-v5:not(.workspace) .hustle-premium-footer{background:var(--lk-stage)}
+
+/* 8. Focus and motion floor */
+html .hustle-v5:not(.workspace) :is(a,button,input,select,summary):focus-visible{outline:2px solid #5b80c0;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){html .hustle-v5:not(.workspace) *{transition:none!important;animation:none!important}}

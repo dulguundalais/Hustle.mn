@@ -37,6 +37,7 @@ export function SignatureHero({en}:{en:boolean}){
     <span className="hx-hero-light" aria-hidden="true"/>
     <span className="hx-hero-grain" aria-hidden="true"/>
     <div className="shell signature-hero-inner hx-hero-inner">
+       <p className="hx-hero-eyebrow"><span className="hx-eyebrow-name">{t('Шийдэл хайх','Smart Finder')}</span><span className="hx-eyebrow-rule" aria-hidden="true"/><span>{t('Хэрэгцээгээ бичээд шийдлээ олоорой','Describe a problem, get a solution')}</span></p>
        <h1 id="signature-hero-title" className="hx-hero-title"><span>{t('Асуудал бүрт','Every problem')}</span> <span>{t('шийдэл бий.','has a solution.')}</span></h1>
        <p className="hx-hero-sub">{t('Хэрэгцээгээ бичээд тохирох мэргэжилтнээ олоорой.','Describe what you need. Meet the right expert.')}</p>
        <div className="signature-search-shell hx-hero-search" onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node|null))setShowSuggestions(false)}}>
