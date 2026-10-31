@@ -22,6 +22,7 @@ export default function SolutionFinder({compact=false,embedded=false,en:language
  const [reveal,setReveal]=useState(0);
  const [tooShort,setTooShort]=useState(false);
  const [arrival,setArrival]=useState(false);
+ const [instant,setInstant]=useState(false);
  const resultsTitle=useRef<HTMLHeadingElement>(null);
  const needField=useRef<HTMLTextAreaElement>(null);
  const t=(mn:string,english:string)=>en?english:mn;
@@ -53,13 +54,20 @@ export default function SolutionFinder({compact=false,embedded=false,en:language
  const ask=(example:string)=>{setQuery(example);run(example)};
  // Arriving with ?q= (e.g. from the homepage search): reveal once the matches have
  // loaded, so the page no longer shifts underneath the scroll.
- useEffect(()=>{if(arrival&&catalogState!=='loading'){setArrival(false);setReveal(r=>r+1)}},[arrival,catalogState]);
+ // Wait for the page load event as well: the browser settles its own scroll
+ // position on load and would otherwise undo an earlier jump.
+ useEffect(()=>{
+  if(!arrival||catalogState==='loading')return;
+  const go=()=>{setArrival(false);setInstant(true);setReveal(r=>r+1)};
+  if(document.readyState==='complete'){const id=window.setTimeout(go,0);return()=>window.clearTimeout(id)}
+  window.addEventListener('load',go,{once:true});return()=>window.removeEventListener('load',go);
+ },[arrival,catalogState]);
  // Results render below the form; bring them into view and move focus to their heading.
  useEffect(()=>{
   if(!reveal)return;
   const frame=requestAnimationFrame(()=>{
    const heading=resultsTitle.current;if(!heading)return;
-   const still=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+   const still=instant||window.matchMedia('(prefers-reduced-motion: reduce)').matches;setInstant(false);
    heading.closest('.finder-results')?.scrollIntoView({behavior:still?'auto':'smooth',block:'start'});
    heading.focus({preventScroll:true});
   });
