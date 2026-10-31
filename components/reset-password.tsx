@@ -24,12 +24,11 @@ export default function ResetPassword(){
        if(event==='PASSWORD_RECOVERY'&&session){setReady(true);setLoading(false)}
      });
      cleanup=()=>subscription.unsubscribe();
-     // Browser Supabase client detects recovery tokens via URL. Without a
-     // valid recovery session we must never allow an unauthenticated password update.
-     const session=await db.auth.getSession();
+     // Initializing the client verifies URL tokens and emits PASSWORD_RECOVERY.
+     // A saved session plus a caller-controlled ?type=recovery is not evidence
+     // of a recovery link and could change the wrong signed-in account.
+     await db.auth.getSession();
      if(!active)return;
-     const url=new URL(location.href);
-     if(session.data.session&&((url.searchParams.get('type')==='recovery')||url.hash.includes('type=recovery'))){setReady(true)}
      setLoading(false);
    }).catch(()=>{if(active){setError(localStorage.getItem('hustle-language')==='en'?'Unable to verify the recovery link.':'Сэргээх холбоосыг шалгаж чадсангүй.');setLoading(false)}});
    return()=>{active=false;cleanup()};

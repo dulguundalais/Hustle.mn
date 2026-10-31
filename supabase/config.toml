@@ -31,7 +31,7 @@ enabled = false
 [auth]
 enabled = true
 site_url = "http://127.0.0.1:4179"
-additional_redirect_urls = ["http://127.0.0.1:4179/auth/reset/"]
+additional_redirect_urls = ["http://127.0.0.1:4179/login/", "http://127.0.0.1:4179/auth/reset/"]
 enable_signup = true
 enable_anonymous_sign_ins = false
 minimum_password_length = 8
