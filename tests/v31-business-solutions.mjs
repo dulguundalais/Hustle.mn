@@ -43,5 +43,5 @@ test('UX integration includes real Hero route and optional signup context',()=>{
  assert.match(read('components/premium-marketplace.tsx'),/<BusinessSolutions en=\{en\}/);
  assert.match(read('components/premium-auth.tsx'),/hustle-buyer-context/);
  assert.match(read('components/solution-finder.tsx'),/rpc\('marketplace_catalog'\)/);
- assert.match(read('app/solutions/page.tsx'),/SolutionFinder/);
+ assert.match(read('app/solutions/page.tsx'),/<PremiumMarketplace view="solutions"\/>/);assert.match(read('components/premium-marketplace.tsx'),/\{view==='solutions'&&<SolutionFinder en=\{en\} embedded\/>\}/);
 });

@@ -7,8 +7,10 @@ import {marketplaceClient} from '../lib/marketplace/client';
 import {buildProjectBrief,classifyNeed,matchingPublished,problemExamples,type Audience,type PublishedMatch} from '../lib/marketplace/solution-finder';
 import '../app/solution-finder.css';
 
-export default function SolutionFinder({compact=false,en:language=false}:{compact?:boolean;en?:boolean}){
- const [en,setEn]=useState(language);
+export default function SolutionFinder({compact=false,embedded=false,en:language=false}:{compact?:boolean;embedded?:boolean;en?:boolean}){
+ // Embedded in the shared site shell, language comes from the site header.
+ const [ownEn,setEn]=useState(language);
+ const en=embedded?language:ownEn;
  const [audience,setAudience]=useState<Audience>('business');
  const [query,setQuery]=useState('');
  const [submitted,setSubmitted]=useState('');
@@ -43,7 +45,7 @@ export default function SolutionFinder({compact=false,en:language=false}:{compac
  const copy=async()=>{try{await navigator.clipboard.writeText(brief);setCopied(true)}catch{setCopied(false)}};
  return <section className={'solution-finder '+(compact?'finder-compact':'')} aria-labelledby="hustle-finder-title">
   <div className="solution-shell">
-   {!compact&&<div className="solution-top"><Link href="/" className="solution-brand" aria-label="Linkup"><LinkupWordmark decorative/></Link><Link href="/explore/">{t('Бүх үйлчилгээг үзэх','Browse all services')} <ArrowUpRight size={16}/></Link></div>}
+   {!compact&&!embedded&&<div className="solution-top"><Link href="/" className="solution-brand" aria-label="Linkup"><LinkupWordmark decorative/></Link><Link href="/explore/">{t('Бүх үйлчилгээг үзэх','Browse all services')} <ArrowUpRight size={16}/></Link></div>}
    <div className="finder-heading"><div className="finder-eyebrow"><Sparkles size={15}/>{t('LINKUP · Шийдэл хайх','LINKUP SMART FINDER · BETA')}</div>
     <h1 id="hustle-finder-title">{t('Ямар асуудал шийдэх хэрэгтэй байна?','What are you trying to solve?')}</h1>
     <p>{t('Үйлчилгээний нэрийг мэдэхгүй байсан ч болно. Хийлгэх ажлаа тайлбарлаарай. Бид боломжит шийдэл, тохирох үйлчилгээг санал болгоно.','No need to know the service name. Describe your challenge and explore possible solutions and real published services.')}</p>
