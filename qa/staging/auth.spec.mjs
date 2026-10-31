@@ -77,11 +77,18 @@ test('real signup, unconfirmed denial, resend, confirmation and member-only admi
  expect((await db.rpc('list_beta')).error).toBeTruthy();
  expect((await db.auth.signInWithPassword({email,password:'WrongPassword123!'})).error?.code).toBe('invalid_credentials');
  await page.goto('/admin/');
+ // Admin is an auth entry: an ordinary member is routed to their buyer area.
+ await expect.poll(()=>new URL(page.url()).pathname.replace(/\/$/,'')).toBe('/buyer');
+ await expect(page.locator('.workspace-main')).toBeVisible();
+ await expect(page.locator('.workspace-role-admin')).toHaveCount(0);
+ await page.goto('/admin/?mode=admin');
  await expect(page.locator('.access-card')).toContainText('Admin access required');
  await verifyLink(resent.link,'/login/',false);
  await page.goto('/buyer/');
  await page.locator('.global-account-trigger').click();
  await page.locator('.global-account-signout').click();
+ await expect.poll(()=>new URL(page.url()).pathname).toBe('/');
+ await page.goto('/buyer/');
  await expect(page.locator('#hustle-auth-email')).toBeVisible();
  await page.reload();
  await expect(page.locator('#hustle-auth-email')).toBeVisible();
