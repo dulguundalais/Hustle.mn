@@ -131,3 +131,4 @@ html .hustle-v5:not(.workspace) .hustle-premium-footer{background:var(--lk-stage
 /* 8. Focus and motion floor */
 html .hustle-v5:not(.workspace) :is(a,button,input,select,summary):focus-visible{outline:2px solid #5b80c0;outline-offset:2px}
 @media (prefers-reduced-motion:reduce){html .hustle-v5:not(.workspace) *{transition:none!important;animation:none!important}}
+html .hustle-v5 .signature-hero.hx-hero .guided-entry-choices{gap:10px;padding:0;background:none;box-shadow:none;border:0}
