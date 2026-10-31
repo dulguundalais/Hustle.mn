@@ -8,6 +8,7 @@ on:
       - codex/fix-worker-preview-20261031
       - codex/patch-next-security-20261031
       - codex/stabilize-auth-flows-20261031
+      - codex/linkup-brand-20261031
       - codex/stabilize-db-ci-20261030
       - codex/stabilize-migration-history-20261030
       - feature/interactive-functional-v6

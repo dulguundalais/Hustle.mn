@@ -194,7 +194,11 @@ test('existing JWT obeys disable, re-enable, partner and administrator revocatio
   expect((await actor.from('beta_allowlist').update({role:'admin'}).eq('email',email)).error).toBeTruthy();
   expect((await actor.from('partner_codes').insert({partner_id:fixture.users.outsider.id,code:'AUTHLOCAL79'})).error).toBeTruthy();
   ok(await manage('partner',true));expect(ok(await roles())).toBe('partner');
-  ok(await actor.from('partner_codes').insert({partner_id:fixture.users.outsider.id,code:'AUTHLOCAL79'}));
+  // V53: codes are issued only by self-service enrollment; direct writes stay closed for every role.
+  expect((await actor.from('partner_codes').insert({partner_id:fixture.users.outsider.id,code:'AUTHLOCAL79'})).error).toBeTruthy();
+  const enrolled=ok(await actor.rpc('enroll_community_partner',{p_name:'Local Partner',p_kind:'individual',p_channel:'Instagram',p_website:'',p_accept:true}));
+  expect(enrolled.code).toMatch(/^[0-9a-f]{32}$/);
+  expect(ok(await buyer.from('partner_codes').select('code'))).toEqual([]);
   ok(await manage('member',false));expect(ok(await roles())).toBeNull();
   expect(ok(await actor.from('orders').select('id'))).toEqual([]);
   expect((await actor.from('messages').insert({sender_id:fixture.users.outsider.id,recipient_id:fixture.users.buyer.id,body:'A disabled account must never send this message.'})).error).toBeTruthy();
