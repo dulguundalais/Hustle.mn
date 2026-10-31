@@ -1,7 +1,7 @@
 name: V52 full isolated Supabase rehearsal
 on:
   pull_request:
-    branches: [main, codex/release-stabilization-integration-20261030, codex/fix-worker-preview-20261031, codex/patch-next-security-20261031]
+    branches: [main, codex/release-stabilization-integration-20261030, codex/fix-worker-preview-20261031, codex/patch-next-security-20261031, codex/stabilize-auth-flows-20261031]
 permissions:
   contents: read
 jobs:
@@ -27,12 +27,13 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y postgresql-client
           npm install --no-save --no-package-lock @playwright/test@1.56.1
           npx playwright install --with-deps chromium
-      - name: Start real local services at V52 before grant hardening
+      - name: Start real local services at V52 before grant hardening and B04
         shell: bash
         run: |
           set -euo pipefail
           umask 077
           mv supabase/migrations/20261030115938_revoke_legacy_nonrow_privileges.sql "$RUNNER_TEMP/held-hardening.sql"
+          mv supabase/migrations/20261031090000_partner_code_visibility.sql "$RUNNER_TEMP/held-partner-codes.sql"
           supabase start -x studio,imgproxy,postgres-meta,edge-runtime,logflare,vector,supavisor > "$RUNNER_TEMP/supabase-start.log"
           supabase status -o json > "$HUSTLE_LOCAL_STATUS"
           node scripts/local-supabase-fixtures.mjs env
@@ -42,6 +43,7 @@ jobs:
         run: |
           set -euo pipefail
           mv "$RUNNER_TEMP/held-hardening.sql" supabase/migrations/20261030115938_revoke_legacy_nonrow_privileges.sql
+          mv "$RUNNER_TEMP/held-partner-codes.sql" supabase/migrations/20261031090000_partner_code_visibility.sql
           supabase migration up --local
           node scripts/local-supabase-fixtures.mjs verify
       - name: Build runtime against loopback backend
