@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - codex/release-stabilization-integration-20261030
+      - codex/fix-worker-preview-20261031
       - codex/stabilize-db-ci-20261030
       - codex/stabilize-migration-history-20261030
       - feature/interactive-functional-v6
@@ -33,6 +34,8 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
+      - name: Production dependency security gate
+        run: npm audit --omit=dev --audit-level=high
       - name: Unit and security tests
         run: npm test
       - name: Type check
