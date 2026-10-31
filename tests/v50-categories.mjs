@@ -43,6 +43,6 @@ test('service search terms stay specific to the service subcategory',()=>{
   assert.match(video,/эвлүүлэг/);
   assert.doesNotMatch(video,/лого/);
 });
-test('five service models; inquiry-style models never mention payment through Hustle',()=>{
+test('five service models; inquiry-style models never mention payment through Linkup',()=>{
   assert.deepEqual(tax.SERVICE_TYPES.map(s=>s.id),['fixed','hourly','custom','monthly','mentoring']);
 });
