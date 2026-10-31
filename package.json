@@ -12,7 +12,7 @@
     "typecheck:worker": "tsc -p worker/tsconfig.json",
     "test:worker": "node --test qa/worker/*.mjs",
     "test": "node --test tests/*.mjs",
-    "lint": "eslint components/interactive-stage.tsx components/premium-marketplace.tsx components/account-menu.tsx components/workspace.tsx lib/marketplace functions worker app/login app/workspace app/api/config"
+    "lint": "eslint components/interactive-stage.tsx components/premium-marketplace.tsx components/account-menu.tsx components/workspace.tsx components/premium-auth.tsx components/reset-password.tsx lib/marketplace functions worker app/login app/workspace app/api/config"
   },
   "dependencies": {
     "@supabase/ssr": "0.6.1",
