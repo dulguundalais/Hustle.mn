@@ -36,7 +36,7 @@
 .hustle-v5 .hustle-premium-footer .footer-bottom a{color:var(--v54-on-stage-muted)!important}
 
 /* 2. Hero bands become the homepage's rounded stage */
-.hustle-v5 :is(.info-hero,.partner-program .pp-hero){margin:10px;border-radius:24px;background:var(--v54-stage);overflow:hidden}
+.hustle-v5 :is(.info-hero,.pp-hero){margin:10px;border-radius:24px;background:var(--v54-stage);overflow:hidden}
 .hustle-v5 .info-eyebrow{color:var(--v54-kicker)}
 .hustle-v5 .info-hero p{color:var(--v54-on-stage-muted)}
 .hustle-v5 .info-back{color:var(--v54-on-stage-muted)}
