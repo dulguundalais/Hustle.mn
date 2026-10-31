@@ -1,5 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import {createClient} from '@supabase/supabase-js';
 import {localAppURL} from './local-guard.mjs';
 
@@ -78,6 +79,12 @@ test('real signup, unconfirmed denial, resend, confirmation and member-only admi
  await page.goto('/admin/');
  await expect(page.locator('.access-card')).toContainText('Admin access required');
  await verifyLink(resent.link,'/login/',false);
+ await page.goto('/buyer/');
+ await page.locator('.global-account-trigger').click();
+ await page.locator('.global-account-signout').click();
+ await expect(page.locator('#hustle-auth-email')).toBeVisible();
+ await page.reload();
+ await expect(page.locator('#hustle-auth-email')).toBeVisible();
 });
 
 test('real recovery email changes password, logs out, rejects replay and does not enumerate accounts',async({page,browser})=>{
@@ -123,6 +130,27 @@ test('a signed-in member cannot turn a plain query parameter into a recovery lin
  await page.goto('/auth/reset/?type=recovery');
  await expect(page.locator('.hustle-auth-feedback')).toContainText('missing, expired');
  await expect(page.locator('#reset-pass')).toHaveCount(0);
+});
+
+test('expired confirmation/recovery links fail and confirmation never re-enables a disabled account',async()=>{
+ const email='hustle-auth-expiry@example.test',db=client(),admin=await signed('admin');
+ const manage=enabled=>admin.rpc('manage_beta',{target_email:email,target_role:'member',target_enabled:enabled});
+ ok(await db.auth.signUp({email,password:fixture.password,options:{emailRedirectTo:localAppURL+'/login/'}}));
+ const confirmation=await emailLink(email,'signup');
+ execFileSync(process.execPath,['scripts/expire-local-auth-link.mjs','signup',email],{stdio:['ignore','pipe','pipe']});
+ await verifyLink(confirmation.link,'/login/',false);
+ ok(await manage(false));
+ ok(await db.auth.resend({type:'signup',email,options:{emailRedirectTo:localAppURL+'/login/'}}));
+ const fresh=await emailLink(email,'signup',new Set([confirmation.id]));
+ await verifyLink(fresh.link,'/login/');
+ ok(await db.auth.signInWithPassword({email,password:fixture.password}));
+ expect(ok(await db.rpc('beta_role'))).toBeNull();
+ ok(await manage(true));expect(ok(await db.rpc('beta_role'))).toBe('member');
+ ok(await db.auth.resetPasswordForEmail(email,{redirectTo:localAppURL+'/auth/reset/'}));
+ const recovery=await emailLink(email,'recovery');
+ execFileSync(process.execPath,['scripts/expire-local-auth-link.mjs','recovery',email],{stdio:['ignore','pipe','pipe']});
+ await verifyLink(recovery.link,'/auth/reset/',false);
+ await Promise.all([db.auth.signOut(),admin.auth.signOut()]);
 });
 
 test('existing JWT obeys disable, re-enable, partner and administrator revocation immediately',async()=>{
