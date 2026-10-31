@@ -164,3 +164,8 @@ main{margin:0;max-width:none;padding:0}
 .portfolio-hero .v42-hero-cover-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
 .portfolio-hero:has(.v42-hero-cover-image)::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(95deg,#0b1629ee 0%,#12223ad4 40%,#111d30a3 100%)}
 .portfolio-hero:has(.v42-hero-cover-image) .portfolio-hero-inner{position:relative;z-index:2}
+
+/* Linkup wordmark: the SVG is an alpha mask, so the mark takes the text colour. */
+.brand{display:inline-flex;align-items:center}
+.brand .linkup-wordmark{display:block;height:30px;aspect-ratio:1475/452;background:currentColor;-webkit-mask:url(/brand/linkup-wordmark-mask.svg) center/contain no-repeat;mask:url(/brand/linkup-wordmark-mask.svg) center/contain no-repeat}
+@media(max-width:640px){.brand .linkup-wordmark{height:26px}}

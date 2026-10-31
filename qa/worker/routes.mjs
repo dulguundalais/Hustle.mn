@@ -67,7 +67,7 @@ test('Worker enforces methods, malformed paths, HEAD and unknown API routing',as
 
 test('Wrangler serves real static assets, redirects and missing-route 404s',async()=>{
  const home=await local.fetch('/');assert.equal(home.status,200);
- assert.ok((await home.text()).includes('Hustle.mn'));
+ assert.ok((await home.text()).includes('Linkup'));
  assert.match(home.headers.get('X-Robots-Tag'),/noindex/);
  const marker=await local.fetch('/preview-build.json');assert.equal(marker.status,200);
  assert.match((await marker.json()).commit_sha,/^[0-9a-f]{40}$/);
