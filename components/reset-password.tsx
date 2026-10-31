@@ -6,6 +6,7 @@ import {ArrowLeft,ArrowRight,Eye,EyeOff,LockKeyhole,ShieldCheck} from 'lucide-re
 import {marketplaceClient} from '../lib/marketplace/client';
 import {friendlyError} from '../lib/marketplace/friendly-errors';
 import '../app/premium-auth.css';
+import '../app/v54-page-unification.css';
 
 export default function ResetPassword(){
  const [password,setPassword]=useState(''),[repeat,setRepeat]=useState('');
@@ -48,7 +49,7 @@ export default function ResetPassword(){
    }catch(e){setError(friendlyError(e,en))}
    finally{setBusy(false)}
  }
- return <main className="hustle-auth-scene"><section className="hustle-auth-panel">
+ return <div className="hustle-v5"><main className="hustle-auth-scene"><section className="hustle-auth-panel">
    <div className="hustle-auth-brand"><LinkupWordmark/></div>
    <div className="hustle-auth-intro"><span className="hustle-auth-eyebrow">{t('НУУЦ ҮГ СЭРГЭЭХ','ACCOUNT RECOVERY')}</span><h1>{t('Шинэ нууц үгээ сонгоно уу.','Choose a new password.')}</h1><p>{t('Linkup бүртгэлээ дор хаяж 8 тэмдэгттэй нууц үгээр хамгаална уу.','Secure your Linkup account with a password of at least 8 characters.')}</p></div>
    {loading?<p role="status">{t('Сэргээх холбоосыг шалгаж байна…','Checking recovery link…')}</p>:ready?<form className="hustle-auth-form" onSubmit={save}>
@@ -59,5 +60,5 @@ export default function ResetPassword(){
    {error&&<div className="hustle-auth-feedback is-error" role="alert">{error}</div>}
    {notice&&<div className="hustle-auth-feedback is-success" role="status">{notice}</div>}
    <div className="hustle-auth-footer"><Link href="/login/"><ArrowLeft size={16}/>{t('Нэвтрэх хуудас руу буцах','Back to sign in')}</Link></div>
- </section></main>
+ </section></main></div>
 }

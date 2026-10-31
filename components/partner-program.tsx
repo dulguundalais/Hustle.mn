@@ -8,6 +8,7 @@ import {marketplaceClient} from '../lib/marketplace/client';
 import {signInWithReturn} from '../lib/marketplace/ux-flows';
 import '../app/marketplace.css';
 import '../app/partner-program.css';
+import '../app/v54-page-unification.css';
 
 type Membership={user_id:string;display_name:string;partner_kind:'individual'|'business';promotion_channel:string;website:string;tier:'community'|'growth';status:'active'|'suspended';created_at:string};
 type Referral={id:string;partner_id:string;status:string;created_at:string};

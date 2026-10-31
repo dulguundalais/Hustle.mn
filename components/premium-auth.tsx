@@ -6,6 +6,7 @@ import LinkupWordmark from './linkup-wordmark';
 import {ArrowLeft,ArrowRight,BadgeCheck,Building2,Check,CheckCircle2,Eye,EyeOff,Inbox,Info,LockKeyhole,Mail,MessageCircle,Package,ShieldCheck,UserRound} from 'lucide-react';
 import {marketplaceClient} from '../lib/marketplace/client';
 import '../app/premium-auth.css';
+import '../app/v54-page-unification.css';
 
 type Entry='buyer'|'seller'|'admin';
 type Props={

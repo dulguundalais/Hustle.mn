@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {ArrowLeft,ArrowUpRight,ChevronDown,Search,ShieldCheck,Mail,Info} from 'lucide-react';
 import {informationPages,helpTopics} from '../lib/site-information';
 import '../app/info-center.css';
+import '../app/v54-page-unification.css';
 import SiteHeader,{useSiteAccount} from './site-header';
 import type {SupportChannel} from '../lib/marketplace/support-channel';
 export default function InformationPage({page}:{page:string}){
