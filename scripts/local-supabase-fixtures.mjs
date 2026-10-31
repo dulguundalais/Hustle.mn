@@ -47,6 +47,7 @@ if(action === 'env') {
  assert.deepEqual(snapshot(),fixture.before,'Upgrade changed existing synthetic rows');
  assert.equal(sql("select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace cross join (values ('anon'),('authenticated')) r(role_name) cross join (values ('TRUNCATE'),('REFERENCES'),('TRIGGER')) p(privilege_name) where n.nspname='public' and c.relkind in ('r','p') and has_table_privilege(r.role_name,c.oid,p.privilege_name);"),'0');
  assert.equal(sql("select count(*) from supabase_migrations.schema_migrations where version='20261030115938';"),'1');
+ assert.equal(sql("select count(*) from supabase_migrations.schema_migrations where version='20261031090000';"),'1');
  console.log('Upgrade PASS: existing profiles/services/packages/orders/messages preserved; legacy non-row grants denied.');
 } else throw new Error('Expected env, seed or verify');
 
