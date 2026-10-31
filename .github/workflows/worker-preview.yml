@@ -1,7 +1,7 @@
 name: Worker preview runtime verification
 on:
   pull_request:
-    branches: [main, codex/release-stabilization-integration-20261030, codex/fix-worker-preview-20261031]
+    branches: [main, codex/release-stabilization-integration-20261030, codex/fix-worker-preview-20261031, codex/patch-next-security-20261031]
 permissions:
   contents: read
 jobs:
