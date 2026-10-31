@@ -12,4 +12,5 @@ out/
 supabase/.temp/
 test-results*/
 playwright-report/
+playwright-staging-report/
 qa-local.config.mjs

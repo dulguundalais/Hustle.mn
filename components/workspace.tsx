@@ -120,8 +120,15 @@ useEffect(()=>{const mode=new URLSearchParams(location.search).get('mode');
  // V52: keep the visitor's intent across sign-up and the e-mail confirmation round trip.
  if(login){const p=new URLSearchParams(location.search);rememberReturnIntent(intentFromLoginParams(p));if(p.get('confirmed')==='1'||/type=signup/.test(location.hash))setNotice(en?'Your e-mail is confirmed. Welcome to Hustle!':'Имэйл баталгаажлаа. Hustle-д тавтай морил!')}
  if(mode==='seller'){setEntryMode('seller');if(!login)setRegister(false);}
- try{setEn(localStorage.getItem('hustle-language')==='en');setDark(localStorage.getItem('hustle-theme')==='dark')}catch{};load().then(()=>login?routeSignedIn():undefined).catch(fail).finally(()=>setLoading(false));const refresh=()=>{load().catch(fail)};window.addEventListener('focus',refresh);return()=>window.removeEventListener('focus',refresh);},[]);
-async function perform(fn:()=>Promise<void>,message:string){if(busy)return;setBusy(true);setError('');setNotice('');try{await fn();await load();setNotice(message)}catch(e){fail(e)}finally{setBusy(false)}}
+ try{setEn(localStorage.getItem('hustle-language')==='en');setDark(localStorage.getItem('hustle-theme')==='dark')}catch{};load().then(()=>login?routeSignedIn():undefined).catch(fail).finally(()=>setLoading(false));const refresh=()=>{reloadWorkspace().catch(fail)};window.addEventListener('focus',refresh);return()=>window.removeEventListener('focus',refresh);},[]);
+async function reloadWorkspace(){
+ if(entryApplied.current){await load();return}
+ // A failed first load still has a pending initial route. Finish recovery before
+ // exposing navigation, just as we do after signing in.
+ setLoading(true);setError('');
+ try{await load();await routeSignedIn()}finally{setLoading(false)}
+}
+async function perform(fn:()=>Promise<void>,message:string){if(busy)return;setBusy(true);setError('');setNotice('');try{await fn();await reloadWorkspace();setNotice(message)}catch(e){fail(e)}finally{setBusy(false)}}
 useEffect(()=>{if(!focusOrder||(tab!=='orders'&&tab!=='seller-orders'))return;const id=window.setTimeout(()=>document.getElementById('order-'+focusOrder)?.scrollIntoView({behavior:'smooth',block:'start'}),250);return()=>window.clearTimeout(id)},[focusOrder,tab,orders.length]);
 // V52: keep the address in step with the open tab, chat and order so refresh and shared links return here.
 useEffect(()=>{
@@ -167,8 +174,13 @@ async function routeSignedIn(){
  history.replaceState(null,'',target);
 }
 async function auth(e:FormEvent){e.preventDefault();if(register&&emailCooldown>0)return;setBusy(true);setError('');setNotice('');try{const db=await marketplaceClient();const response=register?await db.auth.signUp({email:email.trim().toLowerCase(),password,options:{emailRedirectTo:location.origin+'/login/'}}):await db.auth.signInWithPassword({email:email.trim().toLowerCase(),password});if(response.error){if(response.error.code==='email_not_confirmed'||/email not confirmed/i.test(response.error.message||''))throw new Error(t('Имэйлээ баталгаажуулаагүй байна. Ирсэн имэйл болон Спам хавтаснаас баталгаажуулах холбоосоо нээнэ үү. Имэйл ирээгүй бол доорх товчоор дахин хүсэж болно.','Your email is not confirmed. Check Inbox and Spam for Confirm your email, or resend it below.'));throw response.error;}if(register&&!response.data.session)setNotice(t('Бүртгэлийн хүсэлтийг хүлээн авлаа. Шинээр бүртгүүлж байгаа бол имэйлээ баталгаажуулаад нэвтрээрэй. Имэйл ирээгүй бол Спам хавтсаа шалгаарай.','Signup request accepted. New accounts can sign in after confirming their email—no admin approval needed. Email delivery depends on the configured provider.'));else{
+ // Do not expose navigation until both the workspace data and its initial route
+ // are ready: late startup work must not overwrite a conversation just opened.
+ setLoading(true);
+ try{
  await load();
  await routeSignedIn();
+ }finally{setLoading(false)}
  }}catch(e){fail(e)}finally{setBusy(false)}}
 useEffect(()=>{if(emailCooldown<=0)return;const timer=setInterval(()=>setEmailCooldown(v=>Math.max(0,v-1)),1000);return()=>clearInterval(timer)},[emailCooldown>0]);
 async function resendConfirmation(){if(busy||emailCooldown>0)return;setBusy(true);setError('');setNotice('');try{if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))throw new Error(t('Эхлээд имэйл хаягаа оруулна уу.','Enter your email address first.'));const db=await marketplaceClient();const r=await db.auth.resend({type:'signup',email:email.trim().toLowerCase(),options:{emailRedirectTo:location.origin+'/login/'}});if(r.error)throw r.error;setEmailCooldown(60);setNotice(t('Хүсэлтийг хүлээн авлаа. Ирсэн имэйл болон Спам хавтсаа шалгаарай. Өмнө бүртгүүлсэн бол “Нэвтрэх” эсвэл “Нууц үг сэргээх” сонголтыг ашиглаарай.','Request accepted; email delivery is not guaranteed. Already registered? Sign in or reset your password instead.'));}catch(e){fail(e)}finally{setBusy(false)}}
