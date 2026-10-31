@@ -81,3 +81,26 @@ html .hustle-v5:not(.workspace) :is(.business-solution-card::after,.signature-st
 html .hustle-v5:not(.workspace) .cat-progress i{background:var(--hx-royal-500)}
 html .hustle-v5:not(.workspace) .signature-seller-text em{background:none;-webkit-text-fill-color:#dbe6f5;color:#dbe6f5}
 html .hustle-v5:not(.workspace) .signature-seller-art{display:none}
+
+/* 7. Review pass 1 (owner preview): quieter type and fewer extras on home */
+html .hustle-v5:not(.workspace) section :is(h2,h2 em){font-weight:500!important}
+html .hustle-v5:not(.workspace) section h3{font-weight:500!important}
+html .hustle-v5:not(.workspace) .hustle-premium-footer .footer-callout h2{font-weight:500!important;letter-spacing:-.035em}
+html .hustle-v5:not(.workspace) .signature-seller-text em{-webkit-text-fill-color:rgb(255 255 255/.78);color:rgb(255 255 255/.78)}
+html .hustle-v5:not(.workspace) .v39-catalog-home .v39-results-bar{display:none}
+html .hustle-v5:not(.workspace) .signature-partner-stats{display:none}
+html .hustle-v5 .signature-hero.hx-hero .guided-entry-intro h2{display:none}
+html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice,.guided-entry-choice.guided-entry-business){min-height:52px;border-radius:999px;background:rgb(255 255 255/.9);box-shadow:none;color:#16233b}
+html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice,.guided-entry-choice.guided-entry-business) *{color:#16233b}
+html .hustle-v5 .signature-hero.hx-hero :is(.guided-entry-choice:hover,.guided-entry-choice:focus-visible){background:#fff;box-shadow:0 10px 26px rgb(15 26 46/.22)}
+
+/* 8. Review pass 2: the faded blue must be visible across the page, not only in the hero */
+html .hustle-v5:not(.workspace):not(.night){
+  --hx-tint:linear-gradient(180deg,#ffffff 0%,#e9f0fa 55%,#d3e0f3 100%);
+  --lk-hero:linear-gradient(180deg,#f7f9fd 0%,#dfe8f6 26%,#a9c1e8 52%,#5f86c7 78%,#24406f 100%);
+}
+html .hustle-v5:not(.workspace):not(.night) .business-solutions-section{background:var(--hx-tint)}
+html .hustle-v5:not(.workspace):not(.night) .cat-showcase{background:linear-gradient(180deg,#d3e0f3 0%,#eef3fa 40%,#ffffff 100%);border-radius:28px}
+html .hustle-v5:not(.workspace):not(.night) .v39-catalog-home{background:linear-gradient(180deg,#ffffff 0%,#edf3fb 100%);border-radius:28px}
+html .hustle-v5:not(.workspace):not(.night) .signature-partner-inner{background:linear-gradient(135deg,#ffffff 0%,#e3ebf7 60%,#c3d4ee 100%);border-color:#dbe6f5}
+html .hustle-v5:not(.workspace):not(.night) .business-solution-card{background:linear-gradient(180deg,#ffffff 0%,#f3f7fc 100%)}
